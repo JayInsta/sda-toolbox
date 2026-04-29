@@ -218,6 +218,10 @@
     <div class="fmt-group" id="fmt-group">
       <div class="fmt-btn active" onclick="setFmt(this,'png')">PNG</div>
       <div class="fmt-btn"        onclick="setFmt(this,'jpeg')">JPG</div>
+      <div class="fmt-btn"        onclick="setFmt(this,'svg')">SVG</div>
+    </div>
+    <div id="svg-fmt-info" style="display:none;margin-top:12px;background:#1e2d45;border:1px solid #2563eb33;border-radius:10px;padding:10px 14px;font-size:13px;color:#93c5fd;line-height:1.6">
+      SVG output embeds the source image as a scaled SVG file. Best used when the source is already an SVG. PNG/JPG sources will be embedded as base64 inside the SVG wrapper.
     </div>
     <div class="quality-row" id="quality-section" style="display:none">
       <label>Quality <span id="quality-val">90%</span></label>
@@ -358,7 +362,8 @@
   function setFmt(el, fmt) {
     document.querySelectorAll('.fmt-btn').forEach(function(b){ b.classList.remove('active'); });
     el.classList.add('active'); outputFmt = fmt;
-    document.getElementById('quality-section').style.display = fmt==='png' ? 'none' : 'block';
+    document.getElementById('quality-section').style.display = fmt==='jpeg' ? 'block' : 'none';
+    document.getElementById('svg-fmt-info').style.display    = fmt==='svg'  ? 'block' : 'none';
   }
 
   /* ── BTN STATE ── */
@@ -429,7 +434,47 @@
         ctx.drawImage(img, 0, 0, tw, th);
 
         var mime    = outputFmt==='jpeg' ? 'image/jpeg' : 'image/png';
-        var q       = outputFmt==='png'  ? undefined : quality;
+        var q       = outputFmt==='png'  ? undefined : (outputFmt==='jpeg' ? quality : undefined);
+
+        // SVG output — wrap in an SVG with the image embedded
+        if (outputFmt==='svg') {
+          var isSrcSVG = /\.svg$/i.test(f.name);
+          if (isSrcSVG) {
+            // For SVG sources, read raw text and resize via viewBox
+            var svgReader = new FileReader();
+            svgReader.onload = function(ev) {
+              var parser = new DOMParser();
+              var doc = parser.parseFromString(ev.target.result, 'image/svg+xml');
+              var svgEl = doc.querySelector('svg');
+              if (svgEl) {
+                svgEl.setAttribute('width', tw);
+                svgEl.setAttribute('height', th);
+                if (!svgEl.getAttribute('viewBox')) {
+                  svgEl.setAttribute('viewBox', '0 0 '+tw+' '+th);
+                }
+              }
+              var serialized = new XMLSerializer().serializeToString(doc);
+              var dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(serialized);
+              var base = f.name.replace(/\.[^.]+$/, '');
+              var outName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase()+'.svg' : base+'_'+tw+'x'+th+'.svg';
+              results[idx] = { dataUrl: dataUrl, name: outName, w: tw, h: th };
+              done++; if (done===files.length) renderResults();
+            };
+            svgReader.readAsText(f);
+            return; // skip canvas path
+          } else {
+            // For PNG/JPG sources, embed as base64 inside SVG wrapper
+            var pngData = canvas.toDataURL('image/png');
+            var svgStr = '<svg xmlns="http://www.w3.org/2000/svg" width="'+tw+'" height="'+th+'" viewBox="0 0 '+tw+' '+th+'"><image href="'+pngData+'" width="'+tw+'" height="'+th+'"/></svg>';
+            var dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
+            var base = f.name.replace(/\.[^.]+$/, '');
+            var outName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase()+'.svg' : base+'_'+tw+'x'+th+'.svg';
+            results[idx] = { dataUrl: dataUrl, name: outName, w: tw, h: th };
+            done++; if (done===files.length) renderResults();
+            return;
+          }
+        }
+
         var dataUrl = canvas.toDataURL(mime, q);
         var base    = f.name.replace(/\.[^.]+$/,'');
         var ext     = outputFmt==='jpeg' ? 'jpg' : 'png';
