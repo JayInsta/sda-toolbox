@@ -300,7 +300,7 @@
       <div class="output-block-header">
         <div class="output-block-meta">
           <div class="output-block-title">one_order_mailer YAML</div>
-          <div class="output-block-hint">Add to <code>en_US-[SLUG].yml</code> — footer links, order messages, email content.</div>
+          <div class="output-block-hint">Save as <code>one_order_mailer.yml</code> — add this under <code id="hint-folder-t1">en-US-[slug]</code></div>
         </div>
         <button class="btn-copy bc-green" onclick="copyBox('box3',this)">Copy</button>
       </div>
@@ -316,7 +316,7 @@
       <div class="output-block-header">
         <div class="output-block-meta">
           <div class="output-block-title">class_scoped YAML</div>
-          <div class="output-block-hint">Add to <code>en_US-[SLUG]-class-scoped.yml</code> — email headings and order detail labels.</div>
+          <div class="output-block-hint">Save as <code>orders.yml</code> — add this under <code id="hint-folder-t2">en-US-[slug]</code></div>
         </div>
         <button class="btn-copy bc-orange" onclick="copyBox('box4',this)">Copy</button>
       </div>
@@ -437,6 +437,10 @@
     var rhd = headingsOn ? v('receipt-heading-delivery', "%{first_name}, here's your receipt")                        : "%{first_name}, here's your receipt";
     var rhp = headingsOn ? v('receipt-heading-pickup',   "%{first_name}, here's your receipt")                        : "%{first_name}, here's your receipt";
     var cih = headingsOn ? v('cancel-items-heading',     'Canceled Items')                                            : 'Canceled Items';
+
+    /* Update file hints with actual folder name */
+    document.getElementById('hint-folder-t1').textContent = folderName;
+    document.getElementById('hint-folder-t2').textContent = folderName;
 
     /* OUTPUT 1 + 2 */
     renderPlain('box1', localeVar);
