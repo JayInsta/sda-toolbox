@@ -192,26 +192,105 @@
     </div>
   </div>
 
-  <!-- GENERATE -->
+  <!-- STEP 3 — EMAIL HEADINGS -->
+  <div class="card">
+    <div class="card-top">
+      <div class="step-badge s3">3</div>
+      <div><div class="card-title">Email headings & order details</div><div class="card-sub">Subject line headings shown in each email type</div></div>
+    </div>
+
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-label sl-purple">Order cancellation headings</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label>Delivery cancellation heading</label>
+        <input type="text" id="cancel-heading-delivery" placeholder="Your order has been canceled." oninput="onInput()">
+      </div>
+      <div class="field">
+        <label>Pickup cancellation heading</label>
+        <input type="text" id="cancel-heading-pickup" placeholder="Your order has been canceled." oninput="onInput()">
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-label sl-blue">Order confirmation headings</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label>Delivery confirmation heading</label>
+        <input type="text" id="confirm-heading-delivery" placeholder="Hi %{first_name}, your [Retailer] order is all set." oninput="onInput()">
+      </div>
+      <div class="field">
+        <label>Pickup confirmation heading</label>
+        <input type="text" id="confirm-heading-pickup" placeholder="Hi %{first_name}, your [Retailer] order is all set." oninput="onInput()">
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-label sl-green">Order receipt headings</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label>Delivery receipt heading</label>
+        <input type="text" id="receipt-heading-delivery" placeholder="%{first_name}, here's your receipt" oninput="onInput()">
+      </div>
+      <div class="field">
+        <label>Pickup receipt heading</label>
+        <input type="text" id="receipt-heading-pickup" placeholder="%{first_name}, here's your receipt" oninput="onInput()">
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-label sl-purple">Order details</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="field">
+      <label>Cancellation items heading</label>
+      <input type="text" id="cancel-items-heading" placeholder="Canceled Items" oninput="onInput()">
+    </div>
+  </div>
   <button class="btn-generate" onclick="generate()">⚡ &nbsp;Generate template</button>
 
-  <!-- OUTPUT -->
+      <!-- OUTPUT -->
   <div class="output-wrap" id="output-wrap">
 
     <div class="section-divider" style="margin-top:2rem">
       <div class="section-divider-line"></div>
-      <div class="section-label sl-green">✓ &nbsp;Generated template</div>
+      <div class="section-label sl-purple">✓ &nbsp;Template 1 — one_order_mailer</div>
       <div class="section-divider-line"></div>
     </div>
-
-    <div class="output-header">
-      <span class="output-title">YAML output — ready to copy</span>
-      <button class="btn-copy-all" onclick="copyAll()">Copy all</button>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.6">
+      Add this to <code style="background:#0f1117;padding:1px 6px;border-radius:4px;color:#c084fc;font-size:11px">en_US-[SLUG].yml</code> — contains footer links, order messages, and email content.
     </div>
+    <div class="output-header">
+      <span class="output-title">YAML — File 1</span>
+      <button class="btn-copy-all" onclick="copyOutput('output-box-1')" style="background:#2d1e3d;border-color:#7c3aed44;color:#c084fc">Copy template 1</button>
+    </div>
+    <div class="output-box" id="output-box-1"></div>
 
-    <div class="output-box" id="output-box"></div>
+    <div class="section-divider" style="margin-top:2rem">
+      <div class="section-divider-line"></div>
+      <div class="section-label sl-blue">✓ &nbsp;Template 2 — class_scoped</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.6">
+      Add this to <code style="background:#0f1117;padding:1px 6px;border-radius:4px;color:#60a5fa;font-size:11px">en_US-[SLUG]-class-scoped.yml</code> — contains email headings and order detail labels.
+    </div>
+    <div class="output-header">
+      <span class="output-title">YAML — File 2</span>
+      <button class="btn-copy-all" onclick="copyOutput('output-box-2')" style="background:#1e3a5f;border-color:#2563eb44;color:#60a5fa">Copy template 2</button>
+    </div>
+    <div class="output-box" id="output-box-2"></div>
 
-    <div class="info-box" id="output-info"></div>
+    <div class="info-box" id="output-info" style="margin-top:14px"></div>
   </div>
 
   <div class="footer">
@@ -266,6 +345,7 @@
 
     var envKey = slugToEnvKey(slug);
 
+    // Template 1 values
     var orderDesc   = getVal('order-desc',   defaults.orderDesc   + retailer);
     var familyDesc  = getVal('family-desc',  defaults.familyDesc  + retailer);
     var pickup      = getVal('pickup',        defaults.pickup);
@@ -274,7 +354,17 @@
     var rateHeading = getVal('rate-heading', defaults.rateHeading);
     var rateContent = getVal('rate-content', defaults.rateContent);
 
-    var lines = [
+    // Template 2 values
+    var cancelHeadingDelivery  = getVal('cancel-heading-delivery',  'Your order has been canceled.');
+    var cancelHeadingPickup    = getVal('cancel-heading-pickup',    'Your order has been canceled.');
+    var confirmHeadingDelivery = getVal('confirm-heading-delivery', 'Hi %{first_name}, your ' + retailer + ' order is all set.');
+    var confirmHeadingPickup   = getVal('confirm-heading-pickup',   'Hi %{first_name}, your ' + retailer + ' order is all set.');
+    var receiptHeadingDelivery = getVal('receipt-heading-delivery', "%{first_name}, here's your receipt");
+    var receiptHeadingPickup   = getVal('receipt-heading-pickup',   "%{first_name}, here's your receipt");
+    var cancelItemsHeading     = getVal('cancel-items-heading',     'Canceled Items');
+
+    /* ── TEMPLATE 1 ── */
+    var t1Lines = [
       'en_US-' + envKey + ':',
       '  one_order_mailer:',
       '    fine_print:',
@@ -306,50 +396,71 @@
       '      delivery_content: "' + rateContent + '"',
     ];
 
-    var raw = lines.join('\n');
+    /* ── TEMPLATE 2 ── */
+    var t2Lines = [
+      'en_US-' + envKey + ':',
+      '  class_scoped:',
+      '    orders:',
+      '      one_order_mailer:',
+      '        module_data:',
+      '          email_heading:',
+      '            order_cancellation:',
+      '              delivery: ' + cancelHeadingDelivery,
+      '              pickup: '   + cancelHeadingPickup,
+      '            order_confirmation:',
+      '              delivery: ' + confirmHeadingDelivery,
+      '              pickup: '   + confirmHeadingPickup,
+      '            order_receipt:',
+      '              delivery: "' + receiptHeadingDelivery + '"',
+      '              pickup: "'   + receiptHeadingPickup   + '"',
+      '          order_details:',
+      '            order_cancellation:',
+      '              heading: ' + cancelItemsHeading,
+    ];
 
-    // Syntax-highlighted version for display
+    renderOutput('output-box-1', t1Lines);
+    renderOutput('output-box-2', t2Lines);
+
+    document.getElementById('output-info').textContent =
+      'Templates generated for "' + retailer + '" (slug: ' + slug + '). ' +
+      'Copy each template into its respective file.';
+    document.getElementById('output-wrap').style.display = 'block';
+    document.getElementById('output-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function renderOutput(boxId, lines) {
+    var raw = lines.join('\n');
     var highlighted = lines.map(function(line) {
-      // Top-level key (e.g. en_US-SLUG:)
+      if (/^#/.test(line.trim())) return '<span class="out-comment">' + esc(line) + '</span>';
+      if (!line.trim()) return '';
       if (/^[a-zA-Z0-9_\-]+:$/.test(line.trim()) && !line.startsWith(' ')) {
         return '<span class="out-key">' + esc(line) + '</span>';
       }
-      // Match key: "value" lines
-      var m = line.match(/^(\s*)([a-zA-Z0-9_]+):\s*(".*"|)$/);
+      var m = line.match(/^(\s*)([a-zA-Z0-9_]+):\s*(.*)$/);
       if (m) {
-        var indent = m[1];
-        var key    = m[2];
-        var val    = m[3];
-        var keyClass = indent.length <= 2 ? 'out-indent1' : indent.length <= 4 ? 'out-indent2' : 'out-key';
+        var indent   = m[1];
+        var key      = m[2];
+        var val      = m[3];
+        var keyClass = indent.length <= 4 ? 'out-indent1' : indent.length <= 8 ? 'out-indent2' : 'out-key';
         return indent + '<span class="' + keyClass + '">' + esc(key) + ':</span> <span class="out-val">' + esc(val) + '</span>';
       }
       return esc(line);
     }).join('\n');
 
-    document.getElementById('output-box').innerHTML = highlighted;
-    document.getElementById('output-info').textContent =
-      'Template generated for "' + retailer + '" (slug: ' + slug + '). ' +
-      'All links use whitelabel domain: ' + whitelabel;
-    document.getElementById('output-wrap').style.display = 'block';
-    document.getElementById('output-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    // Store raw for copy
-    document.getElementById('output-box').dataset.raw = raw;
+    var box = document.getElementById(boxId);
+    box.innerHTML = highlighted;
+    box.dataset.raw = raw;
   }
 
-  function esc(s) {
-    return String(s)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;');
-  }
-
-  function copyAll() {
-    var raw = document.getElementById('output-box').dataset.raw || '';
+  function copyOutput(boxId) {
+    var raw = document.getElementById(boxId).dataset.raw || '';
     navigator.clipboard.writeText(raw).then(function() {
-      var btn = document.querySelector('.btn-copy-all');
+      var btn = boxId === 'output-box-1'
+        ? document.querySelectorAll('.btn-copy-all')[0]
+        : document.querySelectorAll('.btn-copy-all')[1];
       var orig = btn.textContent;
-      btn.textContent = '✅ Copied!'; btn.style.color = '#4ade80';
+      btn.textContent = '✅ Copied!';
+      btn.style.color = '#4ade80';
       setTimeout(function(){ btn.textContent = orig; btn.style.color = ''; }, 2000);
     });
   }
