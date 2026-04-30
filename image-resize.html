@@ -258,7 +258,7 @@
       { label: 'Dark background (Light Text)',  w: 1360, h: null, note: 'Width locked — height scales', fmt: 'png' },
       { label: 'Light square background',       w: 54,   h: 54,  note: 'Exact 54×54 px',               fmt: 'png' },
       { label: 'Favicon icon',                  w: 48,   h: 48,  note: 'Exact 48×48 px',               fmt: 'png' },
-      { label: 'Store Config Logo',             w: 540,  h: 168, note: 'Exact 540×168 px',             fmt: 'png' },
+      { label: 'Store Config Logo',             w: 540,  h: 168, note: 'Max 540×168 px — aspect ratio locked', fmt: 'png', fit: 'contain' },
     ],
     android: [
       { label: 'app_icon.png',          w: 1024, h: 1024, note: 'Application icon — exact 1024×1024', fmt: 'png' },
@@ -414,7 +414,12 @@
           th = parseInt(document.getElementById('custom-h').value);
         } else {
           var p = activePreset;
-          if (p.w && p.h) {
+          if (p.fit === 'contain' && p.w && p.h) {
+            // fit within max bounds — lock aspect ratio, no stretching
+            var ratio = Math.min(p.w / srcW, p.h / srcH);
+            tw = Math.round(srcW * ratio);
+            th = Math.round(srcH * ratio);
+          } else if (p.w && p.h) {
             // exact fixed dimensions
             tw = p.w; th = p.h;
           } else if (p.w && !p.h) {
