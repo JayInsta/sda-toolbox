@@ -22,66 +22,56 @@
     .s2 { background: #1e3a5f; color: #60a5fa; }
     .s3 { background: #1e3d2f; color: #4ade80; }
     .card-title { font-size: 15px; font-weight: 600; color: #e2e8f0; }
-    .card-sub   { font-size: 12px; color: #475569; margin-top: 2px; }
+    .card-sub { font-size: 12px; color: #475569; margin-top: 2px; }
 
     .field { margin-bottom: 14px; }
     .field:last-child { margin-bottom: 0; }
     .field label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
-    .field input, .field textarea {
-      width: 100%; padding: 10px 12px;
-      background: #0f1117; border: 1px solid #2a2d3e;
-      border-radius: 10px; font-size: 14px; color: #e2e8f0;
-      outline: none; font-family: 'Courier New', monospace;
-      transition: border-color 0.15s;
-    }
+    .field input, .field textarea { width: 100%; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 14px; color: #e2e8f0; outline: none; font-family: 'Courier New', monospace; transition: border-color 0.15s; }
     .field input:focus, .field textarea:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
     .field input::placeholder, .field textarea::placeholder { color: #374151; }
-    .field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+    .field textarea { resize: vertical; min-height: 80px; line-height: 1.6; font-size: 13px; }
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-    .section-divider { display: flex; align-items: center; gap: 14px; margin: 1.5rem 0 1rem; }
+    /* TOGGLE */
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; }
+    .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-slider { position: absolute; inset: 0; background: #2a2d3e; border-radius: 99px; cursor: pointer; transition: background 0.2s; }
+    .toggle-slider:before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #64748b; border-radius: 50%; transition: transform 0.2s, background 0.2s; }
+    .toggle-switch input:checked + .toggle-slider { background: #1e3a5f; }
+    .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); background: #60a5fa; }
+
+    .section-divider { display: flex; align-items: center; gap: 14px; margin: 1.25rem 0 1rem; }
     .section-divider-line { flex: 1; height: 1px; background: #2a2d3e; }
     .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; white-space: nowrap; }
     .sl-purple { background: #2d1e3d; color: #c084fc; border: 1px solid #7c3aed33; }
     .sl-blue   { background: #1e3a5f; color: #60a5fa; border: 1px solid #2563eb33; }
     .sl-green  { background: #1e3d2f; color: #4ade80; border: 1px solid #16a34a33; }
 
-    .btn-generate {
-      width: 100%; padding: 14px;
-      background: linear-gradient(135deg, #7c3aed, #2563eb);
-      border: none; border-radius: 12px;
-      color: #fff; font-size: 15px; font-weight: 700;
-      cursor: pointer; transition: opacity 0.15s;
-      letter-spacing: 0.02em; margin-top: 4px;
-    }
+    .btn-generate { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c3aed, #2563eb); border: none; border-radius: 12px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.02em; margin-top: 4px; }
     .btn-generate:hover { opacity: 0.9; }
 
     /* OUTPUT */
     .output-wrap { display: none; margin-top: 14px; }
-    .output-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .output-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
     .output-title { font-size: 13px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em; }
-    .btn-copy-all {
-      padding: 7px 16px; background: #1e3a5f;
-      border: 1px solid #2563eb44; border-radius: 8px;
-      color: #60a5fa; font-size: 12px; font-weight: 600;
-      cursor: pointer; transition: opacity 0.15s;
-    }
-    .btn-copy-all:hover { opacity: 0.8; }
+    .btn-copy { padding: 7px 16px; border: 1px solid; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
+    .btn-copy:hover { opacity: 0.8; }
+    .btn-copy-purple { background: #2d1e3d; border-color: #7c3aed44; color: #c084fc; }
+    .btn-copy-blue   { background: #1e3a5f; border-color: #2563eb44; color: #60a5fa; }
 
-    .output-box {
-      background: #0f1117; border: 1px solid #2a2d3e;
-      border-radius: 12px; padding: 1.25rem;
-      font-family: 'Courier New', monospace; font-size: 12px;
-      color: #94a3b8; line-height: 2; white-space: pre;
-      overflow-x: auto; max-height: 600px; overflow-y: auto;
-    }
+    .output-box { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 12px; padding: 1.25rem; font-family: 'Courier New', monospace; font-size: 12px; color: #94a3b8; line-height: 2; white-space: pre; overflow-x: auto; max-height: 500px; overflow-y: auto; }
     .out-key     { color: #60a5fa; }
     .out-val     { color: #4ade80; }
-    .out-comment { color: #475569; }
+    .out-comment { color: #374151; font-style: italic; }
     .out-indent1 { color: #c084fc; }
     .out-indent2 { color: #fb923c; }
 
-    .info-box { background: #1e2d1e; border: 1px solid #16a34a33; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #4ade80; line-height: 1.6; margin-top: 10px; }
+    .file-hint { font-size: 12px; color: #64748b; margin-bottom: 8px; line-height: 1.6; }
+    .file-hint code { background: #0f1117; padding: 1px 6px; border-radius: 4px; font-size: 11px; }
+
+    .info-box { background: #1e2d1e; border: 1px solid #16a34a33; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #4ade80; line-height: 1.6; margin-top: 14px; }
 
     .footer { text-align: center; padding: 2rem 0 0.5rem; font-size: 12px; color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #2a2d3e; }
@@ -97,169 +87,114 @@
       <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
     </div>
     <h1>Email template generator</h1>
-    <p>Enter the retailer details below and generate the complete email configuration template instantly.</p>
+    <p>Enter retailer details to generate both YAML email configuration templates instantly.</p>
   </div>
 
   <!-- STEP 1 — CORE DETAILS -->
   <div class="card">
     <div class="card-top">
       <div class="step-badge s1">1</div>
-      <div><div class="card-title">Core retailer details</div><div class="card-sub">These are used to generate all URLs and identifiers in the template</div></div>
+      <div><div class="card-title">Core retailer details</div><div class="card-sub">Required — used to generate all URLs and identifiers</div></div>
     </div>
     <div class="two-col">
       <div class="field">
-        <label>Slug <span style="color:#475569;font-weight:400;text-transform:none">(e.g. longs-picpac-sfp)</span></label>
-        <input type="text" id="slug" placeholder="longs-picpac-sfp" oninput="onInput()">
+        <label>Slug <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">(e.g. longs-picpac-sfp)</span></label>
+        <input type="text" id="slug" placeholder="longs-picpac-sfp">
       </div>
       <div class="field">
-        <label>Retailer name <span style="color:#475569;font-weight:400;text-transform:none">(e.g. Long's Pic Pac)</span></label>
-        <input type="text" id="retailer-name" placeholder="Long's Pic Pac" oninput="onInput()">
+        <label>Retailer name <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">(e.g. Long's Pic Pac)</span></label>
+        <input type="text" id="retailer-name" placeholder="Long's Pic Pac">
       </div>
     </div>
-    <div class="field">
-      <label>Whitelabel domain <span style="color:#475569;font-weight:400;text-transform:none">(e.g. https://longspicpac-whitelabel.instacart.com)</span></label>
-      <input type="text" id="whitelabel" placeholder="https://longspicpac-whitelabel.instacart.com" oninput="onInput()">
-    </div>
-    <div class="field">
-      <label>Retailer website <span style="color:#475569;font-weight:400;text-transform:none">(e.g. https://www.longspicpac.com/)</span></label>
-      <input type="text" id="retailer-url" placeholder="https://www.longspicpac.com/" oninput="onInput()">
+    <div class="two-col">
+      <div class="field">
+        <label>Whitelabel domain</label>
+        <input type="text" id="whitelabel" placeholder="https://longspicpac-whitelabel.instacart.com">
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>Retailer website</label>
+        <input type="text" id="retailer-url" placeholder="https://www.longspicpac.com/">
+      </div>
     </div>
   </div>
 
-  <!-- STEP 2 — CUSTOM CONTENT -->
+  <!-- STEP 2 — CUSTOM CONTENT (OPTIONAL) -->
   <div class="card">
-    <div class="card-top">
+    <div class="card-top" style="margin-bottom:0">
       <div class="step-badge s2">2</div>
-      <div><div class="card-title">Custom message content</div><div class="card-sub">Personalise the messages shown in each email type</div></div>
-    </div>
-
-    <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-purple">Order information</div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <div class="field">
-      <label>Order description</label>
-      <textarea id="order-desc" placeholder="Keep an eye out for order updates, and any messages from your shopper if replacements are needed. &#10;&#10;Thanks, &#10;[Retailer Name]" oninput="onInput()"></textarea>
-    </div>
-    <div class="field">
-      <label>Family order description</label>
-      <textarea id="family-desc" placeholder="Keep an eye out for order updates... Remember, only %{owner_name} can add items at this time...&#10;&#10;Thanks,&#10;[Retailer Name]" oninput="onInput()"></textarea>
-    </div>
-    <div class="field">
-      <label>Pickup instructions</label>
-      <textarea id="pickup" placeholder="Pull into the designated parking area for pickup and let us know you have arrived, and we'll bring your groceries right out!" oninput="onInput()" style="min-height:60px"></textarea>
-    </div>
-
-    <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-blue">Order cancellation</div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <div class="field">
-      <label>Cancellation body</label>
-      <textarea id="cancel-body" placeholder="This email is to confirm that you have canceled your order. If there are charges on your account, you can expect them to disappear between 3-5 business days..." oninput="onInput()"></textarea>
-    </div>
-
-    <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-green">Order receipt</div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <div class="field">
-      <label>Receipt body</label>
-      <textarea id="receipt-body" placeholder="Thank you for shopping at [Retailer Name]. We hope you enjoyed the convenience of ordering online and will try our service again soon..." oninput="onInput()"></textarea>
-    </div>
-
-    <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-purple">Order rating</div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <div class="two-col">
-      <div class="field">
-        <label>Rate your order heading</label>
-        <input type="text" id="rate-heading" placeholder="We'd love to hear from you!" oninput="onInput()">
+      <div style="flex:1">
+        <div class="toggle-row">
+          <div>
+            <div class="card-title">Custom message content &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
+            <div class="card-sub">Customise order descriptions, cancellation body, receipt body and ratings</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-content" onchange="toggleSection('content-section', this)"><span class="toggle-slider"></span></label>
+        </div>
       </div>
-      <div class="field">
-        <label>Delivery rating content</label>
-        <input type="text" id="rate-content" placeholder="Don't forget to rate and tip your shopper..." oninput="onInput()">
+    </div>
+
+    <div id="content-section" style="display:none;margin-top:1.25rem">
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order information</div><div class="section-divider-line"></div></div>
+      <div class="field"><label>Order description</label><textarea id="order-desc" placeholder="Keep an eye out for order updates, and any messages from your shopper if replacements are needed. &#10;&#10;Thanks,&#10;[Retailer Name]"></textarea></div>
+      <div class="field"><label>Family order description</label><textarea id="family-desc" placeholder="Keep an eye out for order updates... Remember, only %{owner_name} can add items at this time...&#10;&#10;Thanks,&#10;[Retailer Name]"></textarea></div>
+      <div class="field"><label>Pickup instructions</label><textarea id="pickup" placeholder="Pull into the designated parking area for pickup and let us know you have arrived, and we'll bring your groceries right out!" style="min-height:60px"></textarea></div>
+
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">Order cancellation</div><div class="section-divider-line"></div></div>
+      <div class="field"><label>Cancellation body</label><textarea id="cancel-body" placeholder="This email is to confirm that you have canceled your order. If there are charges on your account, you can expect them to disappear between 3-5 business days..."></textarea></div>
+
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">Order receipt</div><div class="section-divider-line"></div></div>
+      <div class="field"><label>Receipt body</label><textarea id="receipt-body" placeholder="Thank you for shopping at [Retailer Name]. We hope you enjoyed the convenience of ordering online and will try our service again soon..."></textarea></div>
+
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order rating</div><div class="section-divider-line"></div></div>
+      <div class="two-col">
+        <div class="field"><label>Rate your order heading</label><input type="text" id="rate-heading" placeholder="We'd love to hear from you!"></div>
+        <div class="field" style="margin-bottom:0"><label>Delivery rating content</label><input type="text" id="rate-content" placeholder="Don't forget to rate and tip your shopper..."></div>
       </div>
     </div>
   </div>
 
-  <!-- STEP 3 — EMAIL HEADINGS -->
+  <!-- STEP 3 — EMAIL HEADINGS (OPTIONAL) -->
   <div class="card">
-    <div class="card-top">
+    <div class="card-top" style="margin-bottom:0">
       <div class="step-badge s3">3</div>
-      <div><div class="card-title">Email headings & order details</div><div class="card-sub">Subject line headings shown in each email type</div></div>
-    </div>
-
-    <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-purple">Order cancellation headings</div>
-      <div class="section-divider-line"></div>
-    </div>
-    <div class="two-col">
-      <div class="field">
-        <label>Delivery cancellation heading</label>
-        <input type="text" id="cancel-heading-delivery" placeholder="Your order has been canceled." oninput="onInput()">
-      </div>
-      <div class="field">
-        <label>Pickup cancellation heading</label>
-        <input type="text" id="cancel-heading-pickup" placeholder="Your order has been canceled." oninput="onInput()">
+      <div style="flex:1">
+        <div class="toggle-row">
+          <div>
+            <div class="card-title">Email headings &amp; order details &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
+            <div class="card-sub">Customise subject headings for cancellation, confirmation and receipt emails</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-headings" onchange="toggleSection('headings-section', this)"><span class="toggle-slider"></span></label>
+        </div>
       </div>
     </div>
 
-    <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-blue">Order confirmation headings</div>
-      <div class="section-divider-line"></div>
-    </div>
-    <div class="two-col">
-      <div class="field">
-        <label>Delivery confirmation heading</label>
-        <input type="text" id="confirm-heading-delivery" placeholder="Hi %{first_name}, your [Retailer] order is all set." oninput="onInput()">
+    <div id="headings-section" style="display:none;margin-top:1.25rem">
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order cancellation headings</div><div class="section-divider-line"></div></div>
+      <div class="two-col">
+        <div class="field"><label>Delivery</label><input type="text" id="cancel-heading-delivery" placeholder="Your order has been canceled."></div>
+        <div class="field"><label>Pickup</label><input type="text" id="cancel-heading-pickup" placeholder="Your order has been canceled."></div>
       </div>
-      <div class="field">
-        <label>Pickup confirmation heading</label>
-        <input type="text" id="confirm-heading-pickup" placeholder="Hi %{first_name}, your [Retailer] order is all set." oninput="onInput()">
-      </div>
-    </div>
 
-    <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-green">Order receipt headings</div>
-      <div class="section-divider-line"></div>
-    </div>
-    <div class="two-col">
-      <div class="field">
-        <label>Delivery receipt heading</label>
-        <input type="text" id="receipt-heading-delivery" placeholder="%{first_name}, here's your receipt" oninput="onInput()">
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">Order confirmation headings</div><div class="section-divider-line"></div></div>
+      <div class="two-col">
+        <div class="field"><label>Delivery</label><input type="text" id="confirm-heading-delivery" placeholder="Hi %{first_name}, your [Retailer] order is all set."></div>
+        <div class="field"><label>Pickup</label><input type="text" id="confirm-heading-pickup" placeholder="Hi %{first_name}, your [Retailer] order is all set."></div>
       </div>
-      <div class="field">
-        <label>Pickup receipt heading</label>
-        <input type="text" id="receipt-heading-pickup" placeholder="%{first_name}, here's your receipt" oninput="onInput()">
-      </div>
-    </div>
 
-    <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-purple">Order details</div>
-      <div class="section-divider-line"></div>
-    </div>
-    <div class="field">
-      <label>Cancellation items heading</label>
-      <input type="text" id="cancel-items-heading" placeholder="Canceled Items" oninput="onInput()">
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">Order receipt headings</div><div class="section-divider-line"></div></div>
+      <div class="two-col">
+        <div class="field"><label>Delivery</label><input type="text" id="receipt-heading-delivery" placeholder="%{first_name}, here's your receipt"></div>
+        <div class="field"><label>Pickup</label><input type="text" id="receipt-heading-pickup" placeholder="%{first_name}, here's your receipt"></div>
+      </div>
+
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order details</div><div class="section-divider-line"></div></div>
+      <div class="field" style="margin-bottom:0"><label>Cancellation items heading</label><input type="text" id="cancel-items-heading" placeholder="Canceled Items"></div>
     </div>
   </div>
-  <button class="btn-generate" onclick="generate()">⚡ &nbsp;Generate template</button>
 
-      <!-- OUTPUT -->
+  <button class="btn-generate" onclick="generate()">⚡ &nbsp;Generate templates</button>
+
+  <!-- OUTPUT -->
   <div class="output-wrap" id="output-wrap">
 
     <div class="section-divider" style="margin-top:2rem">
@@ -267,30 +202,26 @@
       <div class="section-label sl-purple">✓ &nbsp;Template 1 — one_order_mailer</div>
       <div class="section-divider-line"></div>
     </div>
-    <div style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.6">
-      Add this to <code style="background:#0f1117;padding:1px 6px;border-radius:4px;color:#c084fc;font-size:11px">en_US-[SLUG].yml</code> — contains footer links, order messages, and email content.
-    </div>
+    <div class="file-hint">Add this to <code style="color:#c084fc">en_US-[SLUG].yml</code> — footer links, order messages and email content.</div>
     <div class="output-header">
       <span class="output-title">YAML — File 1</span>
-      <button class="btn-copy-all" onclick="copyOutput('output-box-1')" style="background:#2d1e3d;border-color:#7c3aed44;color:#c084fc">Copy template 1</button>
+      <button class="btn-copy btn-copy-purple" onclick="copyBox('box1', this)">Copy template 1</button>
     </div>
-    <div class="output-box" id="output-box-1"></div>
+    <div class="output-box" id="box1"></div>
 
     <div class="section-divider" style="margin-top:2rem">
       <div class="section-divider-line"></div>
       <div class="section-label sl-blue">✓ &nbsp;Template 2 — class_scoped</div>
       <div class="section-divider-line"></div>
     </div>
-    <div style="font-size:12px;color:#64748b;margin-bottom:8px;line-height:1.6">
-      Add this to <code style="background:#0f1117;padding:1px 6px;border-radius:4px;color:#60a5fa;font-size:11px">en_US-[SLUG]-class-scoped.yml</code> — contains email headings and order detail labels.
-    </div>
+    <div class="file-hint">Add this to <code style="color:#60a5fa">en_US-[SLUG]-class-scoped.yml</code> — email headings and order detail labels.</div>
     <div class="output-header">
       <span class="output-title">YAML — File 2</span>
-      <button class="btn-copy-all" onclick="copyOutput('output-box-2')" style="background:#1e3a5f;border-color:#2563eb44;color:#60a5fa">Copy template 2</button>
+      <button class="btn-copy btn-copy-blue" onclick="copyBox('box2', this)">Copy template 2</button>
     </div>
-    <div class="output-box" id="output-box-2"></div>
+    <div class="output-box" id="box2"></div>
 
-    <div class="info-box" id="output-info" style="margin-top:14px"></div>
+    <div class="info-box" id="output-info"></div>
   </div>
 
   <div class="footer">
@@ -301,70 +232,71 @@
 </div>
 
 <script>
-  var defaults = {
-    orderDesc:    "Keep an eye out for order updates, and any messages from your shopper if replacements are needed. <br/><br/>Thanks, <br/>",
-    familyDesc:   "Keep an eye out for order updates, and any messages from your shopper if replacements are needed. Remember, only %{owner_name} can add items at this time, let them know if you forgot anything. <br/><br/>Thanks, <br/>",
-    pickup:       "Pull into the designated parking area for pickup and let us know you have arrived, and we'll bring your groceries right out!",
-    cancelBody:   "This email is to confirm that you have canceled your order. If there are charges on your account, you can expect them to disappear between 3-5 business days, depending on your bank.<br/><br/>We look forward to taking care of your next grocery order.<br/><br/>Thank you,<br/>",
-    receiptBody:  "Thank you for shopping at {{RETAILER}}. We hope you enjoyed the convenience of ordering online and will try our service again soon. <br/><br/>Your order details are below along with any adjustments made.",
-    rateHeading:  "We'd love to hear from you!",
-    rateContent:  "Don't forget to rate and tip your shopper if you want to recognize their efforts. 100% of tips goes to your shopper."
-  };
+  function gv(id) { return (document.getElementById(id).value || '').trim(); }
 
-  function g(id) { return document.getElementById(id).value.trim(); }
-
-  function slugToEnvKey(slug) {
-    return slug.toUpperCase().replace(/-/g, '_');
+  function toggleSection(sectionId, checkbox) {
+    document.getElementById(sectionId).style.display = checkbox.checked ? 'block' : 'none';
   }
 
   function ensureHttps(url) {
     if (!url) return '';
-    if (!/^https?:\/\//i.test(url)) return 'https://' + url;
-    return url;
+    return /^https?:\/\//i.test(url) ? url : 'https://' + url;
   }
 
-  function onInput() {
-    // Auto-fill retailer name into descriptions if still empty
+  function slugToKey(slug) {
+    return slug.toUpperCase().replace(/-/g, '_');
   }
 
-  function getVal(id, fallback) {
-    var v = g(id);
+  function val(id, fallback) {
+    var v = gv(id);
     return v || fallback;
   }
 
+  var D = {
+    orderDesc:   'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. <br/><br/>Thanks, <br/>',
+    familyDesc:  'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. Remember, only %{owner_name} can add items at this time, let them know if you forgot anything. <br/><br/>Thanks, <br/>',
+    pickup:      "Pull into the designated parking area for pickup and let us know you have arrived, and we'll bring your groceries right out!",
+    cancelBody:  'This email is to confirm that you have canceled your order. If there are charges on your account, you can expect them to disappear between 3-5 business days, depending on your bank.<br/><br/>We look forward to taking care of your next grocery order.<br/><br/>Thank you,<br/>',
+    receiptBody: 'Thank you for shopping at {{R}}. We hope you enjoyed the convenience of ordering online and will try our service again soon. <br/><br/>Your order details are below along with any adjustments made.',
+    rateHeading: "We'd love to hear from you!",
+    rateContent: "Don't forget to rate and tip your shopper if you want to recognize their efforts. 100% of tips goes to your shopper."
+  };
+
   function generate() {
-    var slug        = g('slug');
-    var retailer    = g('retailer-name');
-    var whitelabel  = ensureHttps(g('whitelabel')).replace(/\/+$/,'');
-    var retailerUrl = ensureHttps(g('retailer-url'));
+    var slug       = gv('slug');
+    var retailer   = gv('retailer-name');
+    var whitelabel = ensureHttps(gv('whitelabel')).replace(/\/+$/, '');
+    var retailerUrl = ensureHttps(gv('retailer-url'));
 
     if (!slug || !retailer || !whitelabel) {
-      alert('Please fill in Slug, Retailer name, and Whitelabel domain before generating.');
+      alert('Please fill in Slug, Retailer name, and Whitelabel domain (Step 1) before generating.');
       return;
     }
 
-    var envKey = slugToEnvKey(slug);
+    var envKey = slugToKey(slug);
+    var contentOn  = document.getElementById('toggle-content').checked;
+    var headingsOn = document.getElementById('toggle-headings').checked;
 
-    // Template 1 values
-    var orderDesc   = getVal('order-desc',   defaults.orderDesc   + retailer);
-    var familyDesc  = getVal('family-desc',  defaults.familyDesc  + retailer);
-    var pickup      = getVal('pickup',        defaults.pickup);
-    var cancelBody  = getVal('cancel-body',  defaults.cancelBody  + retailer);
-    var receiptBody = getVal('receipt-body', defaults.receiptBody.replace('{{RETAILER}}', retailer));
-    var rateHeading = getVal('rate-heading', defaults.rateHeading);
-    var rateContent = getVal('rate-content', defaults.rateContent);
+    /* ── TEMPLATE 1 VALUES ── */
+    var orderDesc   = contentOn ? val('order-desc',   D.orderDesc   + retailer) : D.orderDesc   + retailer;
+    var familyDesc  = contentOn ? val('family-desc',  D.familyDesc  + retailer) : D.familyDesc  + retailer;
+    var pickup      = contentOn ? val('pickup',        D.pickup)                 : D.pickup;
+    var cancelBody  = contentOn ? val('cancel-body',  D.cancelBody  + retailer) : D.cancelBody  + retailer;
+    var receiptBody = contentOn ? val('receipt-body', D.receiptBody.replace('{{R}}', retailer)) : D.receiptBody.replace('{{R}}', retailer);
+    var rateHeading = contentOn ? val('rate-heading', D.rateHeading)             : D.rateHeading;
+    var rateContent = contentOn ? val('rate-content', D.rateContent)             : D.rateContent;
 
-    // Template 2 values
-    var cancelHeadingDelivery  = getVal('cancel-heading-delivery',  'Your order has been canceled.');
-    var cancelHeadingPickup    = getVal('cancel-heading-pickup',    'Your order has been canceled.');
-    var confirmHeadingDelivery = getVal('confirm-heading-delivery', 'Hi %{first_name}, your ' + retailer + ' order is all set.');
-    var confirmHeadingPickup   = getVal('confirm-heading-pickup',   'Hi %{first_name}, your ' + retailer + ' order is all set.');
-    var receiptHeadingDelivery = getVal('receipt-heading-delivery', "%{first_name}, here's your receipt");
-    var receiptHeadingPickup   = getVal('receipt-heading-pickup',   "%{first_name}, here's your receipt");
-    var cancelItemsHeading     = getVal('cancel-items-heading',     'Canceled Items');
+    /* ── TEMPLATE 2 VALUES ── */
+    var chd = headingsOn ? val('cancel-heading-delivery',  'Your order has been canceled.')                          : 'Your order has been canceled.';
+    var chp = headingsOn ? val('cancel-heading-pickup',    'Your order has been canceled.')                          : 'Your order has been canceled.';
+    var cfd = headingsOn ? val('confirm-heading-delivery', 'Hi %{first_name}, your ' + retailer + ' order is all set.') : 'Hi %{first_name}, your ' + retailer + ' order is all set.';
+    var cfp = headingsOn ? val('confirm-heading-pickup',   'Hi %{first_name}, your ' + retailer + ' order is all set.') : 'Hi %{first_name}, your ' + retailer + ' order is all set.';
+    var rhd = headingsOn ? val('receipt-heading-delivery', "%{first_name}, here's your receipt")                     : "%{first_name}, here's your receipt";
+    var rhp = headingsOn ? val('receipt-heading-pickup',   "%{first_name}, here's your receipt")                     : "%{first_name}, here's your receipt";
+    var cih = headingsOn ? val('cancel-items-heading',     'Canceled Items')                                         : 'Canceled Items';
 
-    /* ── TEMPLATE 1 ── */
-    var t1Lines = [
+    /* ── BUILD T1 ── */
+    var t1 = [
       'en_US-' + envKey + ':',
       '  one_order_mailer:',
       '    fine_print:',
@@ -394,10 +326,10 @@
       '    order_rating:',
       '      rate_your_order: "' + rateHeading + '"',
       '      delivery_content: "' + rateContent + '"',
-    ];
+    ].join('\n');
 
-    /* ── TEMPLATE 2 ── */
-    var t2Lines = [
+    /* ── BUILD T2 ── */
+    var t2 = [
       'en_US-' + envKey + ':',
       '  class_scoped:',
       '    orders:',
@@ -405,62 +337,58 @@
       '        module_data:',
       '          email_heading:',
       '            order_cancellation:',
-      '              delivery: ' + cancelHeadingDelivery,
-      '              pickup: '   + cancelHeadingPickup,
+      '              delivery: ' + chd,
+      '              pickup: '   + chp,
       '            order_confirmation:',
-      '              delivery: ' + confirmHeadingDelivery,
-      '              pickup: '   + confirmHeadingPickup,
+      '              delivery: ' + cfd,
+      '              pickup: '   + cfp,
       '            order_receipt:',
-      '              delivery: "' + receiptHeadingDelivery + '"',
-      '              pickup: "'   + receiptHeadingPickup   + '"',
+      '              delivery: "' + rhd + '"',
+      '              pickup: "'   + rhp + '"',
       '          order_details:',
       '            order_cancellation:',
-      '              heading: ' + cancelItemsHeading,
-    ];
+      '              heading: ' + cih,
+    ].join('\n');
 
-    renderOutput('output-box-1', t1Lines);
-    renderOutput('output-box-2', t2Lines);
+    renderBox('box1', t1);
+    renderBox('box2', t2);
 
     document.getElementById('output-info').textContent =
-      'Templates generated for "' + retailer + '" (slug: ' + slug + '). ' +
-      'Copy each template into its respective file.';
+      'Generated for "' + retailer + '" · slug: ' + slug + ' · ' + whitelabel;
     document.getElementById('output-wrap').style.display = 'block';
     document.getElementById('output-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function renderOutput(boxId, lines) {
-    var raw = lines.join('\n');
-    var highlighted = lines.map(function(line) {
-      if (/^#/.test(line.trim())) return '<span class="out-comment">' + esc(line) + '</span>';
+  function renderBox(id, raw) {
+    var lines = raw.split('\n');
+    var html = lines.map(function(line) {
       if (!line.trim()) return '';
       if (/^[a-zA-Z0-9_\-]+:$/.test(line.trim()) && !line.startsWith(' ')) {
         return '<span class="out-key">' + esc(line) + '</span>';
       }
       var m = line.match(/^(\s*)([a-zA-Z0-9_]+):\s*(.*)$/);
       if (m) {
-        var indent   = m[1];
-        var key      = m[2];
-        var val      = m[3];
-        var keyClass = indent.length <= 4 ? 'out-indent1' : indent.length <= 8 ? 'out-indent2' : 'out-key';
-        return indent + '<span class="' + keyClass + '">' + esc(key) + ':</span> <span class="out-val">' + esc(val) + '</span>';
+        var ind = m[1], key = m[2], v = m[3];
+        var kc = ind.length <= 4 ? 'out-indent1' : ind.length <= 8 ? 'out-indent2' : 'out-key';
+        return ind + '<span class="' + kc + '">' + esc(key) + ':</span> <span class="out-val">' + esc(v) + '</span>';
       }
       return esc(line);
     }).join('\n');
 
-    var box = document.getElementById(boxId);
-    box.innerHTML = highlighted;
-    box.dataset.raw = raw;
+    var el = document.getElementById(id);
+    el.innerHTML = html;
+    el.dataset.raw = raw;
   }
 
-  function copyOutput(boxId) {
-    var raw = document.getElementById(boxId).dataset.raw || '';
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function copyBox(id, btn) {
+    var raw = document.getElementById(id).dataset.raw || '';
     navigator.clipboard.writeText(raw).then(function() {
-      var btn = boxId === 'output-box-1'
-        ? document.querySelectorAll('.btn-copy-all')[0]
-        : document.querySelectorAll('.btn-copy-all')[1];
       var orig = btn.textContent;
-      btn.textContent = '✅ Copied!';
-      btn.style.color = '#4ade80';
+      btn.textContent = '✅ Copied!'; btn.style.color = '#4ade80';
       setTimeout(function(){ btn.textContent = orig; btn.style.color = ''; }, 2000);
     });
   }
