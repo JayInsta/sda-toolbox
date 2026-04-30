@@ -238,7 +238,7 @@
   <div class="card" id="v-current-section">
     <div class="card-top">
       <div class="step-badge sv3">3</div>
-      <div><div class="card-title">Current app's version code offset</div><div class="card-sub">From Play Console → Latest releases and bundles → Latest app bundles</div></div>
+      <div><div class="card-title">Current app version code offset</div><div class="card-sub">From Play Console or IPP</div></div>
     </div>
     <div class="full-field">
       <label>Current version code offset</label>
@@ -326,12 +326,13 @@
       finalEl.textContent  = '1';
       finalSub.textContent = '9 + (−8) = 1';
     } else if (offset <= 0) {
-      html += '<div class="warn-box"><div class="warn-dot"></div><div>Result is negative — app major version is lower than IC major version. Leave <strong>major_version_offset</strong> blank in IPP.</div></div>';
-      ippEl.textContent    = 'Leave blank';
-      badgeEl.innerHTML    = '<span class="badge b-amber">Leave blank</span>';
-      ippSub.textContent   = '';
-      finalEl.textContent  = fmt(IC_MAJOR);
-      finalSub.textContent = 'IC major version used as default';
+      // negative result — still valid, enter the negative number in IPP
+      html += '<div class="info-box"><div class="info-dot"></div><div>Result is negative — this is valid. Enter <strong style="color:#c084fc">' + offset + '</strong> as the <strong>major_version_offset</strong> in IPP. The platform will add it to the IC major version (' + IC_MAJOR + ' + (' + offset + ') = ' + (IC_MAJOR + offset) + ').</div></div>';
+      ippEl.textContent    = fmt(offset);
+      badgeEl.innerHTML    = '<span class="badge b-purple">Enter this value (negative)</span>';
+      ippSub.textContent   = appVer + ' − ' + IC_MAJOR + ' + 1 = ' + offset;
+      finalEl.textContent  = fmt(IC_MAJOR + offset);
+      finalSub.textContent = IC_MAJOR + ' + (' + offset + ') = ' + fmt(IC_MAJOR + offset);
     } else {
       ippEl.textContent    = fmt(offset);
       badgeEl.innerHTML    = '<span class="badge b-purple">Enter this value</span>';
