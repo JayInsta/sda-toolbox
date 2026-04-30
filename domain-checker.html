@@ -14,7 +14,6 @@
     .hero-icon svg { width: 28px; height: 28px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .hero h1 { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: -0.4px; margin-bottom: 8px; }
     .hero p { font-size: 14px; color: #64748b; line-height: 1.6; }
-    .hero code { background: #1a1d27; border: 1px solid #2a2d3e; padding: 2px 7px; border-radius: 5px; color: #60a5fa; font-size: 13px; font-family: 'Courier New', monospace; }
 
     .card { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 16px; padding: 1.5rem; margin-bottom: 14px; }
     .card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
@@ -22,7 +21,6 @@
     .s1 { background: #1e3a5f; color: #60a5fa; }
     .s2 { background: #1e3d2f; color: #4ade80; }
     .s3 { background: #3d2a1e; color: #fb923c; }
-    .s4 { background: #2d1e3d; color: #c084fc; }
     .card-title { font-size: 15px; font-weight: 600; color: #e2e8f0; }
     .card-sub { font-size: 12px; color: #475569; margin-top: 2px; }
 
@@ -38,7 +36,7 @@
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* TOGGLE */
-    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; }
     .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
     .toggle-slider { position: absolute; inset: 0; background: #2a2d3e; border-radius: 99px; cursor: pointer; transition: background 0.2s; }
@@ -46,15 +44,15 @@
     .toggle-switch input:checked + .toggle-slider { background: #1e3a5f; }
     .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); background: #60a5fa; }
 
-    /* REDIRECT */
-    .redirect-entry { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
-    .redirect-entry-fields { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: end; }
-    .redirect-num { width: 22px; height: 22px; border-radius: 6px; background: #2d1e3d; color: #c084fc; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; margin-right: 6px; }
+    /* SPLIT DOMAIN ENTRIES */
+    .domain-entry { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+    .domain-entry-fields { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
+    .entry-num { width: 22px; height: 22px; border-radius: 6px; background: #3d2a1e; color: #fb923c; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; margin-right: 6px; }
     .btn-remove { padding: 9px 12px; background: #2d1a1a; border: 1px solid #dc262644; border-radius: 8px; color: #f87171; font-size: 13px; cursor: pointer; white-space: nowrap; }
     .btn-add { padding: 10px 16px; background: #1e2130; border: 1px solid #2a2d3e; border-radius: 10px; color: #94a3b8; font-size: 13px; font-weight: 500; cursor: pointer; width: 100%; text-align: center; margin-top: 4px; transition: all 0.15s; }
-    .btn-add:hover { border-color: #7c3aed; color: #c084fc; background: #1e1528; }
+    .btn-add:hover { border-color: #fb923c; color: #fb923c; background: #1e1a12; }
 
-    /* SECTION DIVIDERS */
+    /* DIVIDERS */
     .section-divider { display: flex; align-items: center; gap: 14px; margin: 2rem 0 1.25rem; }
     .section-divider-line { flex: 1; height: 1px; background: #2a2d3e; }
     .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; white-space: nowrap; }
@@ -62,7 +60,6 @@
     .sl-green  { background: #1e3d2f; color: #4ade80; border: 1px solid #16a34a33; }
     .sl-orange { background: #3d1f0e; color: #fb923c; border: 1px solid #ea580c33; }
     .sl-purple { background: #2d1e3d; color: #c084fc; border: 1px solid #7c3aed33; }
-    .sl-red    { background: #2d1e3d; color: #c084fc; border: 1px solid #7c3aed33; }
 
     /* STATUS CARDS */
     .status-card { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 14px; padding: 1.25rem; margin-bottom: 12px; transition: border-color 0.3s; }
@@ -70,7 +67,6 @@
     .status-card.fail    { border-color: #dc262655; }
     .status-card.pending { border-color: #d9770655; }
     .status-card.checking{ border-color: #2563eb55; }
-    .status-card.idle    { border-color: #2a2d3e; }
 
     .status-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
     .status-title { font-size: 14px; font-weight: 600; color: #e2e8f0; margin-bottom: 3px; }
@@ -86,7 +82,7 @@
     .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .dot-ok      { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
     .dot-fail    { background: #f87171; box-shadow: 0 0 6px #f87171; }
-    .dot-pending { background: #fb923c; box-shadow: 0 0 6px #fb923c; animation: pulse 1.5s infinite; }
+    .dot-pending { background: #fb923c; animation: pulse 1.5s infinite; }
     .dot-checking{ background: #60a5fa; animation: pulse 1s infinite; }
     .dot-idle    { background: #374151; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
@@ -102,22 +98,22 @@
     .ah-fail    { background: #2d1a1a; border: 1px solid #dc262622; color: #fca5a5; }
     .ah-pending { background: #2d200e; border: 1px solid #d9770622; color: #fdba74; }
 
-    /* SPLIT HOSTING */
+    /* SPLIT WARN BOX */
     .split-warn { background: linear-gradient(135deg,#2d1a0e,#1e1208); border: 1px solid #ea580c55; border-radius: 12px; padding: 1.25rem; margin-top: 12px; }
     .split-warn-title { font-size: 15px; font-weight: 700; color: #fb923c; margin-bottom: 8px; }
     .split-warn-body  { font-size: 13px; color: #fdba74; line-height: 1.8; }
     .split-warn-body code { background: #3d2010; padding: 1px 6px; border-radius: 4px; font-family: 'Courier New',monospace; font-size:12px; }
 
-    /* AUTO REFRESH */
+    /* REFRESH */
     .refresh-bar { display: flex; align-items: center; justify-content: space-between; background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; }
     .refresh-left { font-size: 13px; color: #64748b; }
     .refresh-right { display: flex; align-items: center; gap: 10px; }
-    .countdown { font-family: 'Courier New', monospace; color: #60a5fa; font-weight: 700; font-size: 14px; min-width: 36px; text-align: right; }
+    .countdown { font-family: 'Courier New', monospace; color: #60a5fa; font-weight: 700; font-size: 14px; min-width: 40px; text-align: right; }
     .btn-stop { padding: 5px 12px; background: #2d1a1a; border: 1px solid #dc262644; border-radius: 6px; color: #f87171; font-size: 11px; font-weight: 600; cursor: pointer; }
 
     /* OVERALL */
-    .overall { border: 1px solid #2a2d3e; border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .overall-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .overall { border: 1px solid #2a2d3e; border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #1a1d27; }
+    .overall-label  { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
     .overall-status { font-size: 18px; font-weight: 700; }
 
     /* COPY */
@@ -125,20 +121,14 @@
     .copy-val { font-family: 'Courier New', monospace; font-size: 12px; color: #93c5fd; flex: 1; word-break: break-all; }
     .btn-copy { padding: 5px 10px; background: #1e3a5f; border: 1px solid #2563eb44; border-radius: 6px; color: #60a5fa; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
 
-    /* NEXT STEPS */
     .next-step-item { padding: 8px 0; border-bottom: 1px solid #1e2130; font-size: 13px; line-height: 1.6; }
     .next-step-item:last-child { border-bottom: none; }
-
     .last-checked { font-size: 11px; color: #374151; text-align: center; margin-top: 10px; }
     .sep { border: none; border-top: 1px solid #2a2d3e; margin: 14px 0; }
-
     .footer { text-align: center; padding: 2rem 0 0.5rem; font-size: 12px; color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #2a2d3e; }
 
-    @media (max-width: 500px) {
-      .two-col { grid-template-columns: 1fr; }
-      .redirect-entry-fields { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 500px) { .two-col { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -149,22 +139,22 @@
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
     </div>
     <h1>Domain launch status checker</h1>
-    <p>Real-time DNS validation — certificate CNAME, domain pointing, split-hosting detection, and redirect checks.</p>
+    <p>Real-time DNS validation — certificate CNAME, domain pointing, TTL propagation, and split-hosting detection.</p>
   </div>
 
-  <!-- STEP 1 -->
+  <!-- STEP 1 — DOMAIN DETAILS -->
   <div class="card">
     <div class="card-top">
       <div class="step-badge s1">1</div>
       <div><div class="card-title">Domain details</div><div class="card-sub">Enter the retailer domain and Instacart whitelabel target</div></div>
     </div>
     <div class="two-col">
-      <div class="field"><label>Retailer domain</label><input type="text" id="retailer-domain" placeholder="www.abc.com" oninput="onRetailerInput()"></div>
+      <div class="field"><label>Retailer domain</label><input type="text" id="retailer-domain" placeholder="www.abc.com"></div>
       <div class="field"><label>Whitelabel target</label><input type="text" id="whitelabel-domain" placeholder="abc-whitelabel.instacart.com"></div>
     </div>
   </div>
 
-  <!-- STEP 2 -->
+  <!-- STEP 2 — ACM CNAME -->
   <div class="card">
     <div class="card-top">
       <div class="step-badge s2">2</div>
@@ -174,43 +164,27 @@
     <div class="field"><label>CNAME value (from ACM)</label><input type="text" id="cname-value" placeholder="_xyz789.acm-validations.aws."></div>
   </div>
 
-  <!-- STEP 3 — SPLIT HOSTING -->
+  <!-- STEP 3 — SPLIT HOSTING (OPTIONAL) -->
   <div class="card">
     <div class="card-top" style="margin-bottom:0">
       <div class="step-badge s3">3</div>
       <div style="flex:1">
         <div class="toggle-row">
           <div>
-            <div class="card-title">Split-hosting detection &nbsp;<span style="font-size:11px;color:#fb923c;font-weight:600;background:#3d1f0e;padding:2px 8px;border-radius:99px">Recommended</span></div>
-            <div class="card-sub">Detects if www and bare domain are on different DNS providers</div>
+            <div class="card-title">Split-hosting detection &nbsp;<span style="font-size:11px;color:#fb923c;font-weight:600;background:#3d1f0e;padding:2px 8px;border-radius:99px">Optional</span></div>
+            <div class="card-sub">Check if multiple domains are managed by different DNS providers</div>
           </div>
-          <label class="toggle-switch"><input type="checkbox" id="split-toggle" checked><span class="toggle-slider"></span></label>
+          <label class="toggle-switch"><input type="checkbox" id="split-toggle" onchange="onSplitToggle()"><span class="toggle-slider"></span></label>
         </div>
       </div>
     </div>
-    <div id="split-info" style="margin-top:12px;padding:10px 12px;background:#0f1117;border:1px solid #2a2d3e;border-radius:10px;font-size:12px;color:#64748b;line-height:1.6">
-      Compares NS records of <code style="background:#1a1d27;padding:1px 5px;border-radius:4px;color:#93c5fd;font-size:11px" id="split-www-label">www.abc.com</code> and <code style="background:#1a1d27;padding:1px 5px;border-radius:4px;color:#93c5fd;font-size:11px" id="split-bare-label">abc.com</code>. If they differ, DNS records must be added to two different providers — a common cause of failed launches.
-    </div>
-  </div>
 
-  <!-- STEP 4 — REDIRECTS -->
-  <div class="card">
-    <div class="card-top" style="margin-bottom:0">
-      <div class="step-badge s4">4</div>
-      <div style="flex:1">
-        <div class="toggle-row">
-          <div>
-            <div class="card-title">Redirect domain checks &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
-            <div class="card-sub">Check if other domains are redirecting to the main retailer domain</div>
-          </div>
-          <label class="toggle-switch"><input type="checkbox" id="redirect-toggle" onchange="onRedirectToggle()"><span class="toggle-slider"></span></label>
-        </div>
+    <div id="split-section" style="display:none; margin-top:1.25rem">
+      <div style="font-size:13px;color:#64748b;margin-bottom:12px;line-height:1.6">
+        Add each domain pair you want to compare. The tool will check if both domains in each pair use the same DNS provider (same NS records). A mismatch means they are split-hosted — DNS records must be added to both providers separately.
       </div>
-    </div>
-    <div id="redirect-section" style="display:none;margin-top:1.25rem">
-      <div style="font-size:13px;color:#64748b;margin-bottom:12px;line-height:1.6">Add domains that should redirect to <code style="background:#0f1117;padding:2px 6px;border-radius:4px;color:#a78bfa;font-size:12px" id="redirect-target-label">the main domain</code>.</div>
-      <div id="redirect-entries"></div>
-      <div class="btn-add" onclick="addRedirectEntry()">+ Add redirect domain</div>
+      <div id="split-entries"></div>
+      <div class="btn-add" onclick="addSplitEntry()">+ Add domain pair to compare</div>
     </div>
   </div>
 
@@ -227,7 +201,8 @@
       </div>
     </div>
 
-    <div class="overall" id="overall-card" style="background:#1a1d27">
+    <!-- OVERALL -->
+    <div class="overall" id="overall-card">
       <div><div class="overall-label">Overall launch status</div><div class="overall-status" id="overall-text">Checking…</div></div>
       <div class="status-badge badge-checking" id="overall-badge"><div class="status-dot dot-checking"></div>…</div>
     </div>
@@ -235,18 +210,7 @@
     <!-- SPLIT HOSTING RESULTS -->
     <div id="split-results" style="display:none">
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-orange">⚠️ Split-hosting detection</div><div class="section-divider-line"></div></div>
-      <div class="status-card" id="card-split">
-        <div class="status-top">
-          <div><div class="status-title">DNS provider consistency</div><div class="status-desc" id="desc-split">Comparing nameservers…</div></div>
-          <div class="status-badge badge-checking" id="badge-split"><div class="status-dot dot-checking"></div>Checking…</div>
-        </div>
-        <div class="dns-detail" id="detail-split">Querying NS records…</div>
-        <div id="hint-split"></div>
-      </div>
-      <div id="split-warn" style="display:none" class="split-warn">
-        <div class="split-warn-title">⚠️ Split-hosting detected — action required before launch</div>
-        <div class="split-warn-body" id="split-warn-body"></div>
-      </div>
+      <div id="split-cards"></div>
     </div>
 
     <!-- ACM CNAME -->
@@ -259,11 +223,10 @@
       <div class="dns-detail" id="detail-cname">Querying DNS…</div>
       <div id="hint-cname"></div>
     </div>
-
-    <div class="card" style="margin-top:2px">
+    <div class="card" style="margin-top:2px;margin-bottom:14px">
       <div style="font-size:12px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px">Send to retailer</div>
-      <div class="copy-row"><span style="font-size:11px;color:#64748b;min-width:90px">CNAME Name</span><span class="copy-val" id="copy-name">—</span><button class="btn-copy" onclick="copyEl('copy-name', this)">Copy</button></div>
-      <div class="copy-row"><span style="font-size:11px;color:#64748b;min-width:90px">CNAME Value</span><span class="copy-val" id="copy-value">—</span><button class="btn-copy" onclick="copyEl('copy-value', this)">Copy</button></div>
+      <div class="copy-row"><span style="font-size:11px;color:#64748b;min-width:90px">CNAME Name</span><span class="copy-val" id="copy-name">—</span><button class="btn-copy" onclick="copyEl('copy-name',this)">Copy</button></div>
+      <div class="copy-row"><span style="font-size:11px;color:#64748b;min-width:90px">CNAME Value</span><span class="copy-val" id="copy-value">—</span><button class="btn-copy" onclick="copyEl('copy-value',this)">Copy</button></div>
     </div>
 
     <!-- DOMAIN POINTING -->
@@ -287,12 +250,6 @@
       <div class="dns-detail" id="detail-ttl">Waiting for DNS results…</div>
     </div>
 
-    <!-- REDIRECTS -->
-    <div id="redirect-results" style="display:none">
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">④ Redirect checks</div><div class="section-divider-line"></div></div>
-      <div id="redirect-cards"></div>
-    </div>
-
     <!-- NEXT STEPS -->
     <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">📋 Next steps</div><div class="section-divider-line"></div></div>
     <div class="card"><div id="next-steps" style="font-size:13px;color:#64748b">Running checks…</div></div>
@@ -310,396 +267,343 @@
 <script>
   var countdownTimer = null;
   var countdownSec   = 60;
-  var redirectCount  = 0;
+  var splitCount     = 0;
   var isRunning      = false;
 
-  /* ── DNS over HTTPS — Google Public DNS ── */
+  function clean(v) { return (v||'').trim().replace(/^https?:\/\//,'').replace(/\/+$/,'').toLowerCase(); }
+
+  /* ── SPLIT HOSTING TOGGLE & ENTRIES ── */
+  function onSplitToggle() {
+    var on = document.getElementById('split-toggle').checked;
+    document.getElementById('split-section').style.display = on ? 'block' : 'none';
+    if (on && document.getElementById('split-entries').children.length === 0) addSplitEntry();
+  }
+
+  function addSplitEntry() {
+    splitCount++;
+    var n = splitCount;
+    var d = document.createElement('div');
+    d.className = 'domain-entry'; d.id = 'se-' + n;
+    d.innerHTML =
+      '<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">' +
+        '<div class="entry-num">' + n + '</div>' +
+        '<span style="font-size:13px;color:#64748b">Domain pair ' + n + '</span>' +
+      '</div>' +
+      '<div class="domain-entry-fields">' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">' +
+          '<div class="field" style="margin:0"><label>Domain A</label><input type="text" id="spa-'+n+'" placeholder="www.abc.com"></div>' +
+          '<div class="field" style="margin:0"><label>Domain B</label><input type="text" id="spb-'+n+'" placeholder="abc.com"></div>' +
+        '</div>' +
+        '<button class="btn-remove" onclick="document.getElementById(\'se-'+n+'\').remove()" style="margin-top:18px">✕</button>' +
+      '</div>';
+    document.getElementById('split-entries').appendChild(d);
+  }
+
+  /* ── DNS QUERY ── */
   async function doh(name, type) {
     try {
       var url = 'https://dns.google/resolve?name=' + encodeURIComponent(name) + '&type=' + encodeURIComponent(type);
       var r = await fetch(url, { cache: 'no-store' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return await r.json();
-    } catch(e) {
-      return { error: e.message };
-    }
+    } catch(e) { return { error: e.message }; }
   }
 
-  /* ── INPUT HELPERS ── */
-  function clean(v) { return (v||'').trim().replace(/^https?:\/\//,'').replace(/\/+$/,''); }
-
-  function onRetailerInput() {
-    var r = clean(document.getElementById('retailer-domain').value);
-    var bare = r.replace(/^www\./,'');
-    document.getElementById('split-www-label').textContent  = r    || 'www domain';
-    document.getElementById('split-bare-label').textContent = bare || 'bare domain';
-    document.getElementById('redirect-target-label').textContent = r || 'the main domain';
-  }
-
-  function onRedirectToggle() {
-    var on = document.getElementById('redirect-toggle').checked;
-    document.getElementById('redirect-section').style.display = on ? 'block' : 'none';
-    if (on && document.getElementById('redirect-entries').children.length === 0) addRedirectEntry();
-  }
-
-  function addRedirectEntry() {
-    redirectCount++;
-    var n = redirectCount;
-    var d = document.createElement('div');
-    d.className = 'redirect-entry'; d.id = 're-' + n;
-    d.innerHTML =
-      '<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px"><div class="redirect-num">'+n+'</div><span style="font-size:13px;color:#64748b">Redirect domain '+n+'</span></div>' +
-      '<div class="redirect-entry-fields">' +
-        '<div class="field" style="margin:0"><label>From domain</label><input type="text" id="rsrc-'+n+'" placeholder="www.xyz.com"></div>' +
-        '<div class="field" style="margin:0"><label>Expected destination</label><input type="text" id="rdst-'+n+'" placeholder="www.abc.com"></div>' +
-        '<button class="btn-remove" onclick="document.getElementById(\'re-'+n+'\').remove()">✕</button>' +
-      '</div>';
-    document.getElementById('redirect-entries').appendChild(d);
-  }
-
-  /* ── BADGE HELPERS ── */
-  var BADGE_CFG = {
-    ok:       { cls: 'badge-ok',       dot: 'dot-ok',       label: '✅ Validated'   },
-    fail:     { cls: 'badge-fail',     dot: 'dot-fail',     label: '❌ Not found'   },
-    pending:  { cls: 'badge-pending',  dot: 'dot-pending',  label: '⚠️ Mismatch'   },
-    checking: { cls: 'badge-checking', dot: 'dot-checking', label: 'Checking…'     },
-    idle:     { cls: 'badge-idle',     dot: 'dot-idle',     label: 'Pending'       },
-    warn:     { cls: 'badge-pending',  dot: 'dot-pending',  label: '⚠️ Warning'    }
+  /* ── HELPERS ── */
+  var BADGE = {
+    ok:       { cls:'badge-ok',       dot:'dot-ok',       lbl:'✅ Validated'  },
+    fail:     { cls:'badge-fail',     dot:'dot-fail',     lbl:'❌ Not found'  },
+    pending:  { cls:'badge-pending',  dot:'dot-pending',  lbl:'⚠️ Mismatch'  },
+    checking: { cls:'badge-checking', dot:'dot-checking', lbl:'Checking…'    },
+    idle:     { cls:'badge-idle',     dot:'dot-idle',     lbl:'Pending'      },
+    warn:     { cls:'badge-pending',  dot:'dot-pending',  lbl:'⚠️ Warning'   },
+    split:    { cls:'badge-fail',     dot:'dot-fail',     lbl:'❌ Split-host' }
   };
 
-  function setBadge(id, state, label) {
+  function setBadge(id, state, customLabel) {
     var el = document.getElementById(id); if (!el) return;
-    var cfg = BADGE_CFG[state] || BADGE_CFG.idle;
-    el.className = 'status-badge ' + cfg.cls;
-    el.innerHTML = '<div class="status-dot ' + cfg.dot + '"></div>' + (label || cfg.label);
+    var c = BADGE[state] || BADGE.idle;
+    el.className = 'status-badge ' + c.cls;
+    el.innerHTML = '<div class="status-dot ' + c.dot + '"></div>' + (customLabel || c.lbl);
   }
-
-  function setCard(id, state) {
-    var el = document.getElementById(id); if (!el) return;
-    el.className = 'status-card ' + state;
-  }
-
+  function setCard(id, state) { var el = document.getElementById(id); if (el) el.className = 'status-card ' + state; }
+  function setDetail(id, html) { var el = document.getElementById(id); if (el) el.innerHTML = html; }
   function setHint(id, state, msg) {
     var el = document.getElementById(id); if (!el) return;
-    var cls = state === 'ok' ? 'ah-ok' : state === 'pending' ? 'ah-pending' : 'ah-fail';
+    var cls = state==='ok' ? 'ah-ok' : state==='pending' ? 'ah-pending' : 'ah-fail';
     el.innerHTML = '<div class="action-hint ' + cls + '">' + msg + '</div>';
   }
-
-  function setDetail(id, html) {
-    var el = document.getElementById(id); if (!el) return;
-    el.innerHTML = html;
-  }
-
   function fmtTTL(s) {
     if (!s || s < 0) return 'N/A';
     if (s < 60)   return s + 's';
-    if (s < 3600) return Math.round(s / 60) + 'm';
-    return Math.round(s / 3600) + 'h';
+    if (s < 3600) return Math.round(s/60) + 'm';
+    return Math.round(s/3600) + 'h';
   }
-
-  function extractRecords(res, type) {
+  function getRecs(res, type) {
     if (!res || res.error || !res.Answer) return [];
-    return res.Answer.filter(function(a) { return a.type === type; });
+    return res.Answer.filter(function(a){ return a.type === type; });
   }
-
-  function extractNS(res) {
+  function getNS(res) {
     if (!res || res.error) return [];
-    var recs = (res.Answer || []).concat(res.Authority || []);
-    return recs.filter(function(a){ return a.type === 2; })
-               .map(function(a){ return a.data.replace(/\.$/,'').toLowerCase(); })
-               .sort();
+    return ((res.Answer||[]).concat(res.Authority||[]))
+      .filter(function(a){ return a.type===2; })
+      .map(function(a){ return a.data.replace(/\.$/,'').toLowerCase(); })
+      .sort();
   }
-
-  function detectProvider(servers) {
-    var s = servers.join(' ').toLowerCase();
-    if (s.includes('awsdns'))           return 'AWS Route 53';
-    if (s.includes('cloudflare'))       return 'Cloudflare';
-    if (s.includes('domaincontrol') || s.includes('godaddy')) return 'GoDaddy';
-    if (s.includes('google'))           return 'Google Cloud DNS';
-    if (s.includes('registrar-servers') || s.includes('namecheap')) return 'Namecheap';
-    if (s.includes('azure') || s.includes('msft')) return 'Azure DNS';
-    if (s.includes('nsone') || s.includes('ns1.')) return 'NS1';
-    if (s.includes('name.com'))         return 'Name.com';
-    if (s.includes('squarespace'))      return 'Squarespace';
-    if (s.includes('shopify'))          return 'Shopify';
-    if (s.includes('wixdns'))           return 'Wix';
-    if (s.includes('dnsimple'))         return 'DNSimple';
-    if (s.includes('networksolutions')) return 'Network Solutions';
-    return null;
-  }
-
   function nsRootMatch(a, b) {
-    function root(ns) { var p = ns.split('.'); return p.length >= 2 ? p.slice(-2).join('.') : ns; }
+    function root(ns){ var p=ns.split('.'); return p.length>=2?p.slice(-2).join('.'):ns; }
     var ra = a.map(root).sort().join(',');
     var rb = b.map(root).sort().join(',');
-    return ra === rb && ra !== '';
+    return ra===rb && ra!=='';
+  }
+  function detectProvider(servers) {
+    var s = servers.join(' ').toLowerCase();
+    if (s.includes('awsdns'))                       return 'AWS Route 53';
+    if (s.includes('cloudflare'))                   return 'Cloudflare';
+    if (s.includes('domaincontrol')||s.includes('godaddy')) return 'GoDaddy';
+    if (s.includes('google'))                       return 'Google Cloud DNS';
+    if (s.includes('registrar-servers')||s.includes('namecheap')) return 'Namecheap';
+    if (s.includes('azure')||s.includes('msft'))    return 'Azure DNS';
+    if (s.includes('nsone')||s.includes('ns1.'))    return 'NS1';
+    if (s.includes('name.com'))                     return 'Name.com';
+    if (s.includes('squarespace'))                  return 'Squarespace';
+    if (s.includes('shopify'))                      return 'Shopify';
+    if (s.includes('wixdns'))                       return 'Wix';
+    if (s.includes('dnsimple'))                     return 'DNSimple';
+    if (s.includes('networksolutions'))             return 'Network Solutions';
+    return null;
+  }
+  function provBadge(p) {
+    return p ? ' <span style="background:#1e293b;padding:1px 6px;border-radius:4px;font-size:11px;color:#60a5fa">' + p + '</span>' : '';
   }
 
-  /* ── MAIN CHECKS ── */
+  /* ── MAIN ── */
   async function runAllChecks() {
     if (isRunning) return;
     isRunning = true;
 
     var retailer   = clean(document.getElementById('retailer-domain').value);
     var whitelabel = clean(document.getElementById('whitelabel-domain').value);
-    var cnameName  = clean(document.getElementById('cname-name').value);
-    var cnameValue = clean(document.getElementById('cname-value').value);
+    var cnameName  = document.getElementById('cname-name').value.trim();
+    var cnameValue = document.getElementById('cname-value').value.trim();
 
     if (!retailer || !whitelabel || !cnameName || !cnameValue) {
-      alert('Please fill in all fields (Steps 1 & 2) before running checks.');
+      alert('Please fill in all fields in Steps 1 & 2 before running checks.');
       isRunning = false; return;
     }
 
-    /* Show results section */
     document.getElementById('results-wrap').style.display = 'block';
-    document.getElementById('results-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    /* Reset UI */
+    document.getElementById('results-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
     document.getElementById('check-btn').disabled = true;
     document.getElementById('check-btn').textContent = '⏳ Checking…';
     document.getElementById('copy-name').textContent  = cnameName;
     document.getElementById('copy-value').textContent = cnameValue;
     document.getElementById('overall-text').textContent = 'Checking…';
     document.getElementById('overall-card').style.background = '#1a1d27';
+    document.getElementById('overall-card').style.borderColor = '#2a2d3e';
     document.getElementById('next-steps').textContent = 'Running checks…';
-    ['cname','point','ttl','split'].forEach(function(k){
-      setCard('card-'+k, 'checking');
-      setBadge('badge-'+k, 'checking');
-    });
-    setDetail('detail-cname', 'Querying DNS…');
-    setDetail('detail-point', 'Querying DNS…');
-    setDetail('detail-ttl',   'Waiting for DNS results…');
-    setDetail('detail-split', 'Querying NS records…');
-    document.getElementById('hint-cname').innerHTML = '';
-    document.getElementById('hint-point').innerHTML = '';
-    document.getElementById('hint-split').innerHTML = '';
-    document.getElementById('split-warn').style.display = 'none';
-
-    var bare = retailer.replace(/^www\./, '');
-    var hasBare = (bare !== retailer);
     document.getElementById('desc-point').textContent = 'Checking if ' + retailer + ' → ' + whitelabel;
+    ['cname','point'].forEach(function(k){ setCard('card-'+k,'checking'); setBadge('badge-'+k,'checking'); setDetail('detail-'+k,'Querying DNS…'); document.getElementById('hint-'+k).innerHTML=''; });
+    setCard('card-ttl','checking'); setBadge('badge-ttl','checking','Checking…'); setDetail('detail-ttl','Waiting…');
 
-    /* Run all queries in parallel */
-    var splitOn    = document.getElementById('split-toggle').checked;
-    var redirectOn = document.getElementById('redirect-toggle').checked;
+    var splitOn = document.getElementById('split-toggle').checked;
 
-    var [cnameRes, pointRes, wwwNS, bareNS] = await Promise.all([
-      doh(cnameName,  'CNAME'),
-      doh(retailer,   'CNAME'),
-      splitOn ? doh(retailer, 'NS') : Promise.resolve(null),
-      splitOn && hasBare ? doh(bare, 'NS') : Promise.resolve(null)
-    ]);
+    /* Collect split pairs */
+    var splitPairs = [];
+    if (splitOn) {
+      document.querySelectorAll('.domain-entry').forEach(function(entry) {
+        var id  = entry.id.replace('se-','');
+        var a   = clean((document.getElementById('spa-'+id)||{}).value||'');
+        var b   = clean((document.getElementById('spb-'+id)||{}).value||'');
+        if (a && b && a !== b) splitPairs.push({ id:id, a:a, b:b });
+      });
+    }
+
+    /* Build DNS query list */
+    var queries = [
+      doh(cnameName, 'CNAME'),
+      doh(retailer,  'CNAME')
+    ];
+    splitPairs.forEach(function(p){
+      queries.push(doh(p.a, 'NS'));
+      queries.push(doh(p.b, 'NS'));
+    });
+
+    var results = await Promise.all(queries);
+    var cnameRes = results[0];
+    var pointRes = results[1];
 
     var cnameOk = false, pointOk = false;
     var cnameTTL = null, pointTTL = null;
 
     /* ── SPLIT HOSTING ── */
-    document.getElementById('split-results').style.display = splitOn ? 'block' : 'none';
-    if (splitOn) {
-      var wwwServers  = extractNS(wwwNS);
-      var bareServers = hasBare ? extractNS(bareNS) : [];
-      var wwwProv  = detectProvider(wwwServers);
-      var bareProv = detectProvider(bareServers);
+    document.getElementById('split-results').style.display = splitOn && splitPairs.length > 0 ? 'block' : 'none';
+    if (splitOn && splitPairs.length > 0) {
+      var splitCards = document.getElementById('split-cards');
+      splitCards.innerHTML = '';
 
-      document.getElementById('desc-split').textContent =
-        hasBare ? 'Comparing NS records: ' + retailer + ' vs ' + bare
-                : 'Checking NS records for ' + retailer + ' (no www prefix)';
+      splitPairs.forEach(function(p, idx) {
+        var nsA = getNS(results[2 + idx*2]);
+        var nsB = getNS(results[2 + idx*2 + 1]);
+        var provA = detectProvider(nsA);
+        var provB = detectProvider(nsB);
+        var match = nsRootMatch(nsA, nsB);
+        var noData = !nsA.length || !nsB.length;
 
-      if (!hasBare) {
-        setCard('card-split', 'ok'); setBadge('badge-split', 'ok', '✅ Single domain');
-        setDetail('detail-split',
-          '<span class="dk">Nameservers: </span><span class="dok">' + (wwwServers.join(', ') || 'N/A') + '</span><br>' +
-          '<span class="dk">Note:        </span><span class="dv">No bare domain to compare.</span>');
-        setHint('hint-split', 'ok', 'No split-hosting risk — only one domain variant detected.');
-      } else if (!wwwServers.length || !bareServers.length) {
-        setCard('card-split', 'pending'); setBadge('badge-split', 'warn', '⚠️ NS lookup failed');
-        setDetail('detail-split',
-          '<span class="dk">' + retailer + ' NS: </span><span class="' + (wwwServers.length?'dok':'dno') + '">' + (wwwServers.join(', ')||'Not found') + '</span><br>' +
-          '<span class="dk">' + bare      + ' NS: </span><span class="' + (bareServers.length?'dok':'dno') + '">' + (bareServers.join(', ')||'Not found') + '</span>');
-        setHint('hint-split', 'pending', '⚠️ Could not retrieve NS records for one or both domains. Retry in a minute.');
-      } else if (!nsRootMatch(wwwServers, bareServers)) {
-        setCard('card-split', 'fail'); setBadge('badge-split', 'fail', '❌ Split-hosting');
-        setDetail('detail-split',
-          '<span class="dk">' + retailer + ' NS: </span><span class="dno">' + wwwServers.join(', ') + '</span>' + (wwwProv  ? ' <span style="background:#1e293b;padding:1px 6px;border-radius:4px;font-size:11px;color:#60a5fa">' + wwwProv  + '</span>' : '') + '<br>' +
-          '<span class="dk">' + bare      + ' NS: </span><span class="dno">' + bareServers.join(', ') + '</span>' + (bareProv ? ' <span style="background:#1e293b;padding:1px 6px;border-radius:4px;font-size:11px;color:#60a5fa">' + bareProv + '</span>' : '') + '<br>' +
-          '<span class="dno">❌ Different DNS providers — split-hosting confirmed</span>');
-        setHint('hint-split', 'fail', '❌ <strong>' + retailer + '</strong> and <strong>' + bare + '</strong> are on different DNS providers. DNS records added to one provider will NOT affect the other. Resolve this before launch.');
-        document.getElementById('split-warn').style.display = 'block';
-        document.getElementById('split-warn-body').innerHTML =
-          '<code>' + retailer + '</code> → <strong>' + (wwwProv||'Unknown') + '</strong> (' + wwwServers.slice(0,2).join(', ') + ')<br>' +
-          '<code>' + bare + '</code> → <strong>' + (bareProv||'Unknown') + '</strong> (' + bareServers.slice(0,2).join(', ') + ')<br><br>' +
-          '<strong>What happened with Woods Supermarket:</strong> The ACM CNAME and whitelabel CNAME were added to the wrong provider because no one knew the domains were split. This was only discovered on the live launch call.<br><br>' +
-          '<strong>What to do now:</strong> Before the launch call, confirm with the retailer which DNS provider controls each domain. Ensure all records (ACM CNAME + whitelabel CNAME) are added to the <strong>correct provider</strong> for each domain.';
-      } else {
-        setCard('card-split', 'ok'); setBadge('badge-split', 'ok', '✅ Same provider');
-        setDetail('detail-split',
-          '<span class="dk">' + retailer + ' NS: </span><span class="dok">' + wwwServers.join(', ') + '</span>' + (wwwProv ? ' <span style="background:#1e293b;padding:1px 6px;border-radius:4px;font-size:11px;color:#60a5fa">' + wwwProv + '</span>' : '') + '<br>' +
-          '<span class="dk">' + bare      + ' NS: </span><span class="dok">' + bareServers.join(', ') + '</span><br>' +
-          '<span class="dok">✅ Same DNS provider — no split-hosting risk</span>');
-        setHint('hint-split', 'ok', '✅ Both <strong>' + retailer + '</strong> and <strong>' + bare + '</strong> use the same DNS provider. No split-hosting risk.');
-      }
+        var state = noData ? 'pending' : match ? 'ok' : 'fail';
+
+        var card = document.createElement('div');
+        card.className = 'status-card ' + state;
+
+        var badgeHtml = noData
+          ? '<div class="status-badge badge-pending"><div class="status-dot dot-pending"></div>⚠️ NS lookup failed</div>'
+          : match
+            ? '<div class="status-badge badge-ok"><div class="status-dot dot-ok"></div>✅ Same provider</div>'
+            : '<div class="status-badge badge-fail"><div class="status-dot dot-fail"></div>❌ Split-hosting</div>';
+
+        var detailHtml =
+          '<span class="dk">' + p.a + ' NS: </span><span class="' + (nsA.length?'dok':'dno') + '">' + (nsA.join(', ')||'Not found') + '</span>' + provBadge(provA) + '<br>' +
+          '<span class="dk">' + p.b + ' NS: </span><span class="' + (nsB.length?'dok':'dno') + '">' + (nsB.join(', ')||'Not found') + '</span>' + provBadge(provB) + '<br>';
+
+        if (noData) {
+          detailHtml += '<span class="dv">Could not retrieve NS for one or both domains. Retry in a moment.</span>';
+        } else if (match) {
+          detailHtml += '<span class="dok">✅ Both domains use the same DNS provider — no split-hosting risk.</span>';
+        } else {
+          detailHtml += '<span class="dno">❌ Different DNS providers detected — split-hosting confirmed.</span>';
+        }
+
+        var warnHtml = '';
+        if (!match && !noData) {
+          warnHtml =
+            '<div class="split-warn" style="margin-top:10px">' +
+              '<div class="split-warn-title">⚠️ Split-hosting detected — action required before launch</div>' +
+              '<div class="split-warn-body">' +
+                '<code>' + p.a + '</code> is managed by <strong>' + (provA||'Unknown provider') + '</strong> (' + (nsA.slice(0,2).join(', ')||'N/A') + ')<br>' +
+                '<code>' + p.b + '</code> is managed by <strong>' + (provB||'Unknown provider') + '</strong> (' + (nsB.slice(0,2).join(', ')||'N/A') + ')<br><br>' +
+                '<strong>What this means:</strong> DNS records (ACM CNAME, whitelabel CNAME) added to one provider will NOT affect the other. Each domain needs its records added to its own DNS provider separately.<br><br>' +
+                '<strong>Before the launch call:</strong> Confirm with the retailer which DNS admin controls each domain and ensure records are added to the correct provider for each.' +
+              '</div>' +
+            '</div>';
+        }
+
+        card.innerHTML =
+          '<div class="status-top">' +
+            '<div>' +
+              '<div class="status-title">' + p.a + ' vs ' + p.b + '</div>' +
+              '<div class="status-desc">Comparing NS records for DNS provider consistency</div>' +
+            '</div>' + badgeHtml +
+          '</div>' +
+          '<div class="dns-detail">' + detailHtml + '</div>' +
+          warnHtml;
+
+        splitCards.appendChild(card);
+      });
     }
 
     /* ── ACM CNAME ── */
-    var cnameAnswers = extractRecords(cnameRes, 5);
+    var cnRecs = getRecs(cnameRes, 5);
     if (cnameRes.error) {
       setCard('card-cname','fail'); setBadge('badge-cname','fail');
-      setDetail('detail-cname', '<span class="dno">DNS query error: ' + cnameRes.error + '</span>');
-      setHint('hint-cname','fail','DNS query failed. Check your network and try again.');
-    } else if (cnameAnswers.length > 0) {
-      var found = cnameAnswers[0].data.replace(/\.$/,'');
-      cnameTTL = cnameAnswers[0].TTL;
-      var expClean   = cnameValue.replace(/\.$/,'').toLowerCase();
-      var foundClean = found.toLowerCase();
-      cnameOk = foundClean === expClean || foundClean.includes(expClean) || expClean.includes(foundClean);
-      if (cnameOk) {
-        setCard('card-cname','ok'); setBadge('badge-cname','ok');
-        setDetail('detail-cname',
-          '<span class="dk">Found:    </span><span class="dok">' + found + '</span><br>' +
-          '<span class="dk">Expected: </span><span class="dv">' + cnameValue + '</span><br>' +
-          '<span class="dk">TTL:      </span><span class="dv">' + cnameTTL + 's (' + fmtTTL(cnameTTL) + ')</span>');
-        setHint('hint-cname','ok','✅ ACM CNAME found and matches. AWS Certificate Manager should show this certificate as <strong>Issued</strong>.');
-      } else {
-        setCard('card-cname','pending'); setBadge('badge-cname','pending');
-        setDetail('detail-cname',
-          '<span class="dk">Found:    </span><span class="dno">' + found + '</span><br>' +
-          '<span class="dk">Expected: </span><span class="dv">' + cnameValue + '</span><br>' +
-          '<span class="dk">TTL:      </span><span class="dv">' + cnameTTL + 's</span>');
-        setHint('hint-cname','pending','⚠️ A CNAME exists but does not match the ACM value. Ask the retailer to double-check the value they added.');
-      }
+      setDetail('detail-cname','<span class="dno">DNS query error: ' + cnameRes.error + '</span>');
+      setHint('hint-cname','fail','DNS query failed. Check network and try again.');
+    } else if (cnRecs.length) {
+      var cnFound = cnRecs[0].data.replace(/\.$/,'');
+      cnameTTL = cnRecs[0].TTL;
+      var expC   = cnameValue.replace(/\.$/,'').toLowerCase();
+      var fndC   = cnFound.toLowerCase();
+      cnameOk = fndC===expC || fndC.includes(expC) || expC.includes(fndC);
+      setCard('card-cname', cnameOk?'ok':'pending');
+      setBadge('badge-cname', cnameOk?'ok':'pending');
+      setDetail('detail-cname',
+        '<span class="dk">Found:    </span><span class="'+(cnameOk?'dok':'dno')+'">' + cnFound + '</span><br>' +
+        '<span class="dk">Expected: </span><span class="dv">' + cnameValue + '</span><br>' +
+        '<span class="dk">TTL:      </span><span class="dv">' + cnameTTL + 's (' + fmtTTL(cnameTTL) + ')</span>');
+      setHint('hint-cname', cnameOk?'ok':'pending',
+        cnameOk ? '✅ ACM CNAME found and matches. AWS Certificate Manager should show this as <strong>Issued</strong>.'
+                : '⚠️ CNAME found but does not match ACM value. Ask the retailer to double-check the value they added.');
     } else {
       setCard('card-cname','fail'); setBadge('badge-cname','fail');
-      setDetail('detail-cname', '<span class="dno">No CNAME record found for: ' + cnameName + '</span>');
+      setDetail('detail-cname','<span class="dno">No CNAME record found for: ' + cnameName + '</span>');
       setHint('hint-cname','fail','❌ ACM CNAME not found. The retailer needs to add the CNAME Name + Value (shown below) to their DNS provider.');
     }
 
     /* ── DOMAIN POINTING ── */
-    var pointAnswers = extractRecords(pointRes, 5);
-    var aAnswers     = extractRecords(pointRes, 1);
+    var ptRecs = getRecs(pointRes, 5);
+    var aRecs  = getRecs(pointRes, 1);
     if (pointRes.error) {
       setCard('card-point','fail'); setBadge('badge-point','fail');
-      setDetail('detail-point', '<span class="dno">DNS query error: ' + pointRes.error + '</span>');
-      setHint('hint-point','fail','DNS query failed for ' + retailer + '. Check your network.');
-    } else if (pointAnswers.length > 0) {
-      var pfound = pointAnswers[0].data.replace(/\.$/,'');
-      pointTTL = pointAnswers[0].TTL;
-      var wlClean = whitelabel.toLowerCase().replace(/\.$/,'');
-      var pfClean = pfound.toLowerCase().replace(/\.$/,'');
-      pointOk = pfClean === wlClean || pfClean.includes(wlClean) || wlClean.includes(pfClean);
-      if (pointOk) {
-        setCard('card-point','ok'); setBadge('badge-point','ok');
-        setDetail('detail-point',
-          '<span class="dk">' + retailer + ' → </span><span class="dok">' + pfound + '</span><br>' +
-          '<span class="dk">Expected →  </span><span class="dv">' + whitelabel + '</span><br>' +
-          '<span class="dk">TTL:        </span><span class="dv">' + pointTTL + 's (' + fmtTTL(pointTTL) + ')</span>');
-        setHint('hint-point','ok','✅ ' + retailer + ' is correctly pointed to the Instacart whitelabel.');
-      } else {
-        setCard('card-point','pending'); setBadge('badge-point','pending');
-        setDetail('detail-point',
-          '<span class="dk">' + retailer + ' → </span><span class="dno">' + pfound + '</span><br>' +
-          '<span class="dk">Expected →  </span><span class="dv">' + whitelabel + '</span><br>' +
-          '<span class="dk">TTL:        </span><span class="dv">' + pointTTL + 's</span>');
-        setHint('hint-point','pending','⚠️ Domain is CNAMEd but to a different target. Ask the retailer to update it to point to <strong>' + whitelabel + '</strong>.');
-      }
-    } else if (aAnswers.length > 0) {
-      var ips = aAnswers.map(function(a){ return a.data; }).join(', ');
+      setDetail('detail-point','<span class="dno">DNS query error: ' + pointRes.error + '</span>');
+      setHint('hint-point','fail','DNS query failed for ' + retailer + '.');
+    } else if (ptRecs.length) {
+      var ptFound = ptRecs[0].data.replace(/\.$/,'');
+      pointTTL = ptRecs[0].TTL;
+      var wlC = whitelabel.replace(/\.$/,'').toLowerCase();
+      var pfC = ptFound.replace(/\.$/,'').toLowerCase();
+      pointOk = pfC===wlC || pfC.includes(wlC) || wlC.includes(pfC);
+      setCard('card-point', pointOk?'ok':'pending');
+      setBadge('badge-point', pointOk?'ok':'pending');
+      setDetail('detail-point',
+        '<span class="dk">' + retailer + ' → </span><span class="'+(pointOk?'dok':'dno')+'">' + ptFound + '</span><br>' +
+        '<span class="dk">Expected →  </span><span class="dv">' + whitelabel + '</span><br>' +
+        '<span class="dk">TTL:        </span><span class="dv">' + pointTTL + 's (' + fmtTTL(pointTTL) + ')</span>');
+      setHint('hint-point', pointOk?'ok':'pending',
+        pointOk ? '✅ ' + retailer + ' is correctly pointed to the Instacart whitelabel.'
+                : '⚠️ Domain is CNAMEd but to a different target. Ask the retailer to update it to <strong>' + whitelabel + '</strong>.');
+    } else if (aRecs.length) {
       setCard('card-point','fail'); setBadge('badge-point','fail','❌ A record found');
       setDetail('detail-point',
-        '<span class="dk">' + retailer + ' → </span><span class="dno">A record(s): ' + ips + '</span><br>' +
-        '<span class="dno">Using A records instead of CNAME.</span>');
-      setHint('hint-point','fail','❌ The domain has A records instead of a CNAME. Ask the retailer to remove A records and add a CNAME pointing to <strong>' + whitelabel + '</strong>.');
+        '<span class="dk">' + retailer + ' → </span><span class="dno">A record(s): ' + aRecs.map(function(a){return a.data;}).join(', ') + '</span><br>' +
+        '<span class="dno">Using A records instead of CNAME — this will not work correctly.</span>');
+      setHint('hint-point','fail','❌ Domain has A records instead of CNAME. Ask the retailer to remove A records and add a CNAME pointing to <strong>' + whitelabel + '</strong>.');
     } else {
       setCard('card-point','fail'); setBadge('badge-point','fail','❌ Not configured');
-      setDetail('detail-point', '<span class="dno">No DNS records found for ' + retailer + '.</span>');
-      setHint('hint-point','fail','❌ No DNS records found for ' + retailer + '. The retailer has not yet configured this domain.');
+      setDetail('detail-point','<span class="dno">No DNS records found for ' + retailer + '.</span>');
+      setHint('hint-point','fail','❌ No DNS records found. The retailer has not yet configured this domain.');
     }
 
     /* ── TTL ── */
     if (cnameTTL !== null || pointTTL !== null) {
-      var minTTL = Math.min(cnameTTL !== null ? cnameTTL : 99999, pointTTL !== null ? pointTTL : 99999);
-      var propMsg =
-        minTTL <= 60   ? 'Very fast (~1 min or less)' :
-        minTTL <= 300  ? 'Fast (~5 min)' :
-        minTTL <= 900  ? 'Moderate (~15 min)' :
-        minTTL <= 3600 ? 'Standard (~1 hour)' :
-                         'Slow (~' + fmtTTL(minTTL) + ') — consider asking retailer to lower TTL first';
+      var minTTL = Math.min(cnameTTL!==null?cnameTTL:99999, pointTTL!==null?pointTTL:99999);
+      var prop = minTTL<=60?'Very fast (~1 min)':minTTL<=300?'Fast (~5 min)':minTTL<=900?'Moderate (~15 min)':minTTL<=3600?'Standard (~1 hour)':'Slow (~'+fmtTTL(minTTL)+') — consider asking retailer to lower TTL first';
+      setCard('card-ttl', minTTL>3600?'pending':'ok');
+      setBadge('badge-ttl', minTTL>3600?'pending':'ok', minTTL>3600?'⚠️ High TTL':'✅ Good TTL');
       setDetail('detail-ttl',
-        '<span class="dk">ACM CNAME TTL:    </span><span class="dv">' + (cnameTTL !== null ? cnameTTL + 's (' + fmtTTL(cnameTTL) + ')' : 'N/A') + '</span><br>' +
-        '<span class="dk">Domain CNAME TTL: </span><span class="dv">' + (pointTTL !== null ? pointTTL + 's (' + fmtTTL(pointTTL) + ')' : 'N/A') + '</span><br>' +
-        '<span class="dk">Propagation:      </span><span class="dok">' + propMsg + '</span>');
-      setCard('card-ttl', minTTL > 3600 ? 'pending' : 'ok');
-      setBadge('badge-ttl', minTTL > 3600 ? 'pending' : 'ok', minTTL > 3600 ? '⚠️ High TTL' : '✅ Good TTL');
+        '<span class="dk">ACM CNAME TTL:    </span><span class="dv">' + (cnameTTL!==null?cnameTTL+'s ('+fmtTTL(cnameTTL)+')':'N/A') + '</span><br>' +
+        '<span class="dk">Domain CNAME TTL: </span><span class="dv">' + (pointTTL!==null?pointTTL+'s ('+fmtTTL(pointTTL)+')':'N/A') + '</span><br>' +
+        '<span class="dk">Propagation est:  </span><span class="dok">' + prop + '</span>');
     } else {
       setCard('card-ttl','idle'); setBadge('badge-ttl','idle');
-      setDetail('detail-ttl','No TTL data available yet — no DNS records found.');
+      setDetail('detail-ttl','No TTL data — no DNS records found yet.');
     }
 
-    /* ── REDIRECTS ── */
-    document.getElementById('redirect-results').style.display = redirectOn ? 'block' : 'none';
-    if (redirectOn) {
-      var entries = document.querySelectorAll('.redirect-entry');
-      var rcards  = document.getElementById('redirect-cards');
-      rcards.innerHTML = '';
-      var rJobs = [];
-      entries.forEach(function(entry) {
-        var id  = entry.id.replace('re-','');
-        var src = clean((document.getElementById('rsrc-'+id)||{}).value||'');
-        var dst = clean((document.getElementById('rdst-'+id)||{}).value||'');
-        if (!src || !dst) return;
-        var card = document.createElement('div');
-        card.className = 'status-card checking'; card.id = 'rc-'+id;
-        card.innerHTML =
-          '<div class="status-top">' +
-            '<div><div class="status-title">' + src + ' → ' + dst + '</div><div class="status-desc">Checking CNAME redirect…</div></div>' +
-            '<div class="status-badge badge-checking" id="rb-'+id+'"><div class="status-dot dot-checking"></div>Checking…</div>' +
-          '</div>' +
-          '<div class="dns-detail" id="rd-'+id+'">Querying DNS…</div>' +
-          '<div id="rh-'+id+'"></div>';
-        rcards.appendChild(card);
-        rJobs.push({ id: id, src: src, dst: dst });
-      });
-
-      await Promise.all(rJobs.map(async function(j) {
-        var res = await doh(j.src, 'CNAME');
-        var recs = extractRecords(res, 5);
-        var arecs = extractRecords(res, 1);
-        var card = document.getElementById('rc-'+j.id);
-
-        if (res.error) {
-          if (card) card.className = 'status-card fail';
-          setBadge('rb-'+j.id,'fail');
-          setDetail('rd-'+j.id,'<span class="dno">Error: ' + res.error + '</span>');
-          setHint('rh-'+j.id,'fail','DNS query failed for ' + j.src + '.');
-        } else if (recs.length > 0) {
-          var found = recs[0].data.replace(/\.$/,'');
-          var ttl   = recs[0].TTL;
-          var ok = found.toLowerCase().replace(/\.$/,'') === j.dst.toLowerCase().replace(/\.$/,'') ||
-                   found.toLowerCase().includes(j.dst.toLowerCase());
-          if (card) card.className = 'status-card ' + (ok ? 'ok' : 'pending');
-          setBadge('rb-'+j.id, ok ? 'ok' : 'pending', ok ? '✅ Redirecting' : '⚠️ Wrong target');
-          setDetail('rd-'+j.id,
-            '<span class="dk">' + j.src + ' → </span><span class="' + (ok?'dok':'dno') + '">' + found + '</span><br>' +
-            '<span class="dk">Expected →  </span><span class="dv">' + j.dst + '</span><br>' +
-            '<span class="dk">TTL:        </span><span class="dv">' + ttl + 's (' + fmtTTL(ttl) + ')</span>');
-          setHint('rh-'+j.id, ok ? 'ok' : 'pending',
-            ok ? '✅ ' + j.src + ' is correctly redirecting to ' + j.dst + '.'
-               : '⚠️ ' + j.src + ' is CNAMEd to a different target. Ask the retailer to update it to ' + j.dst + '.');
-        } else if (arecs.length > 0) {
-          if (card) card.className = 'status-card fail';
-          setBadge('rb-'+j.id,'fail','❌ A record');
-          setDetail('rd-'+j.id,'<span class="dno">A record(s) found: ' + arecs.map(function(a){return a.data;}).join(', ') + '</span>');
-          setHint('rh-'+j.id,'fail','❌ ' + j.src + ' uses A records instead of CNAME. Ask the retailer to add a CNAME pointing to ' + j.dst + '.');
-        } else {
-          if (card) card.className = 'status-card fail';
-          setBadge('rb-'+j.id,'fail','❌ Not configured');
-          setDetail('rd-'+j.id,'<span class="dno">No records found for ' + j.src + '.</span>');
-          setHint('rh-'+j.id,'fail','❌ No DNS records found for ' + j.src + '. Not yet configured.');
-        }
-      }));
+    /* ── OVERALL + NEXT STEPS ── */
+    var allOk = cnameOk && pointOk;
+    var oc = document.getElementById('overall-card');
+    var ob = document.getElementById('overall-badge');
+    var ot = document.getElementById('overall-text');
+    var n  = (cnameOk?1:0)+(pointOk?1:0);
+    if (allOk) {
+      oc.style.background = 'linear-gradient(135deg,#1a2d1e,#132015)';
+      oc.style.borderColor = '#16a34a55';
+      ot.textContent = '✅ All checks passed — ready to launch';
+      ob.className = 'status-badge badge-ok';
+      ob.innerHTML = '<div class="status-dot dot-ok"></div>Ready';
+    } else {
+      oc.style.background = '#1a1d27';
+      oc.style.borderColor = n===0?'#dc262655':'#d9770655';
+      ot.textContent = n===0?'❌ No checks passed yet':'⏳ '+n+' of 2 checks passed';
+      ob.className = 'status-badge '+(n===0?'badge-fail':'badge-pending');
+      ob.innerHTML = '<div class="status-dot '+(n===0?'dot-fail':'dot-pending')+'"></div>'+(n===0?'Not ready':'In progress');
     }
 
-    /* ── OVERALL & NEXT STEPS ── */
-    buildSummary(cnameOk, pointOk, retailer, whitelabel, cnameName, cnameValue);
+    var steps = [];
+    if (!cnameOk) steps.push('<div class="next-step-item"><strong style="color:#f87171">Action needed:</strong> Retailer must add the ACM CNAME to their DNS:<br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Name: '+cnameName+'</code><br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Value: '+cnameValue+'</code></div>');
+    else steps.push('<div class="next-step-item"><span style="color:#4ade80">✅ ACM CNAME validated.</span> Verify the certificate shows as <strong>Issued</strong> in AWS ACM and mark it <strong>In Use</strong>.</div>');
+    if (!pointOk) steps.push('<div class="next-step-item"><strong style="color:#f87171">Action needed:</strong> Ask the retailer to add a CNAME:<br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Name: '+retailer+'</code><br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Value: '+whitelabel+'</code></div>');
+    else steps.push('<div class="next-step-item"><span style="color:#4ade80">✅ Domain correctly pointed to whitelabel.</span> Content from '+whitelabel+' should now be live at '+retailer+'.</div>');
+    if (allOk) steps.push('<div class="next-step-item"><span style="color:#4ade80">🚀 Launch complete!</span> Verify the site loads at <strong>'+retailer+'</strong> and check the SSL padlock in the browser.</div>');
+    document.getElementById('next-steps').innerHTML = steps.join('');
 
     document.getElementById('check-btn').disabled = false;
     document.getElementById('check-btn').textContent = '🔍 Run DNS checks';
@@ -708,62 +612,17 @@
     startCountdown();
   }
 
-  function buildSummary(cnameOk, pointOk, retailer, whitelabel, cname, cval) {
-    var allOk = cnameOk && pointOk;
-    var oc = document.getElementById('overall-card');
-    var ob = document.getElementById('overall-badge');
-    var ot = document.getElementById('overall-text');
-
-    if (allOk) {
-      oc.style.background = 'linear-gradient(135deg,#1a2d1e,#132015)';
-      oc.style.borderColor = '#16a34a55';
-      ot.textContent = '✅ All checks passed — ready to launch';
-      ob.className = 'status-badge badge-ok';
-      ob.innerHTML = '<div class="status-dot dot-ok"></div>Ready';
-    } else {
-      var n = (cnameOk?1:0)+(pointOk?1:0);
-      oc.style.background = '#1a1d27';
-      oc.style.borderColor = n===0 ? '#dc262655' : '#d9770655';
-      ot.textContent = n === 0 ? '❌ No checks passed yet' : '⏳ ' + n + ' of 2 checks passed';
-      ob.className = 'status-badge ' + (n===0?'badge-fail':'badge-pending');
-      ob.innerHTML = '<div class="status-dot ' + (n===0?'dot-fail':'dot-pending') + '"></div>' + (n===0?'Not ready':'In progress');
-    }
-
-    var steps = [];
-    if (!cnameOk) {
-      steps.push('<div class="next-step-item"><strong style="color:#f87171">Action needed:</strong> Retailer has not added the ACM CNAME. Send them:<br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Name: ' + cname + '</code><br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Value: ' + cval + '</code></div>');
-    } else {
-      steps.push('<div class="next-step-item"><span style="color:#4ade80">✅ ACM CNAME validated.</span> Check AWS Certificate Manager — it should show the certificate as <strong>Issued</strong>. Mark it <strong>In Use</strong>.</div>');
-    }
-    if (!pointOk) {
-      steps.push('<div class="next-step-item"><strong style="color:#f87171">Action needed:</strong> Ask the retailer to add a CNAME:<br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Name: ' + retailer + '</code><br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Value: ' + whitelabel + '</code></div>');
-    } else {
-      steps.push('<div class="next-step-item"><span style="color:#4ade80">✅ Domain is correctly pointed to whitelabel.</span> Content from ' + whitelabel + ' should now be live at ' + retailer + '.</div>');
-    }
-    if (allOk) {
-      steps.push('<div class="next-step-item"><span style="color:#4ade80">🚀 Launch complete!</span> Verify the site loads correctly at <strong>' + retailer + '</strong> and check SSL certificate in the browser.</div>');
-    }
-    document.getElementById('next-steps').innerHTML = steps.join('');
-  }
-
-  /* ── AUTO REFRESH ── */
+  /* ── COUNTDOWN ── */
   function startCountdown() {
     stopRefresh();
     countdownSec = 60;
-    updateCountdown();
+    document.getElementById('countdown').textContent = countdownSec + 's';
     countdownTimer = setInterval(function() {
       countdownSec--;
-      updateCountdown();
-      if (countdownSec <= 0) {
-        stopRefresh();
-        runAllChecks();
-      }
+      var el = document.getElementById('countdown');
+      if (el) el.textContent = countdownSec + 's';
+      if (countdownSec <= 0) { stopRefresh(); runAllChecks(); }
     }, 1000);
-  }
-
-  function updateCountdown() {
-    var el = document.getElementById('countdown');
-    if (el) el.textContent = countdownSec + 's';
   }
 
   function stopRefresh() {
@@ -776,7 +635,7 @@
     var val = document.getElementById(id).textContent;
     navigator.clipboard.writeText(val).then(function() {
       var orig = btn.textContent; btn.textContent = 'Copied!'; btn.style.color = '#4ade80';
-      setTimeout(function() { btn.textContent = orig; btn.style.color = ''; }, 1500);
+      setTimeout(function(){ btn.textContent=orig; btn.style.color=''; }, 1500);
     });
   }
 </script>
