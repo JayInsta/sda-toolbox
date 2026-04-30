@@ -127,6 +127,13 @@
     .toggle-switch input:checked + .toggle-slider { background: #1e3a5f; }
     .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); background: #60a5fa; }
 
+    /* SPLIT HOST WARNING */
+    .split-host-warn { background: linear-gradient(135deg,#2d1a0e,#1e1208); border: 1px solid #ea580c55; border-radius: 12px; padding: 1.25rem; margin-bottom: 14px; }
+    .split-host-warn .sw-title { font-size: 15px; font-weight: 700; color: #fb923c; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .split-host-warn .sw-body  { font-size: 13px; color: #fdba74; line-height: 1.7; }
+    .split-host-warn .sw-body code { background: #3d2010; padding: 1px 6px; border-radius: 4px; font-family: 'Courier New',monospace; font-size:12px; }
+    .sl-split { background: #3d1f0e; color: #fb923c; border: 1px solid #ea580c33; }
+
     /* REDIRECT LIST */
     .redirect-entry { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
     .redirect-entry-top { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
@@ -242,6 +249,32 @@
     <div class="overall" id="overall-card">
       <div class="overall-label">Overall launch status</div>
       <div class="overall-status" id="overall-status">Checking…</div>
+    </div>
+
+    <!-- CHECK 0: SPLIT HOSTING -->
+    <div id="split-results-section" style="display:none">
+      <div class="section-divider">
+        <div class="section-divider-line"></div>
+        <div class="section-label sl-split">⚠️ Split-hosting detection</div>
+        <div class="section-divider-line"></div>
+      </div>
+      <div class="status-card" id="card-split">
+        <div class="status-top">
+          <div>
+            <div class="status-title">DNS provider consistency check</div>
+            <div class="status-desc" id="desc-split">Comparing NS records for www and bare domain</div>
+          </div>
+          <div class="status-badge badge-checking" id="badge-split">
+            <div class="status-dot dot-checking"></div>Checking…
+          </div>
+        </div>
+        <div class="dns-detail" id="detail-split">Querying nameservers…</div>
+        <div id="hint-split"></div>
+      </div>
+      <div id="split-warn-card" style="display:none" class="split-host-warn">
+        <div class="sw-title">⚠️ Split-hosting detected — action required before launch</div>
+        <div class="sw-body" id="split-warn-body"></div>
+      </div>
     </div>
 
     <!-- CHECK 1: ACM CNAME -->
@@ -408,7 +441,17 @@
     q('redirect-target-label').textContent = retailer || 'the main domain';
   }
 
-  q('retailer-domain').addEventListener('input', updateRedirectTargetLabel);
+  q('retailer-domain').addEventListener('input', function() {
+    updateRedirectTargetLabel();
+    updateSplitLabels();
+  });
+
+  function updateSplitLabels() {
+    var retailer = q('retailer-domain').value.trim().replace(/^https?:\/\//,'').replace(/\/$/,'');
+    var bare = retailer.replace(/^www\./,'');
+    q('split-www-label').textContent  = retailer || 'www domain';
+    q('split-bare-label').textContent = bare !== retailer ? bare : 'bare domain';
+  }
 
   /* ── DNS QUERY ── */
   async function dnsQuery(name, type) {
@@ -455,6 +498,73 @@
 
     var cnameOk  = false, cnameFound = null, cnameTTL = null;
     var pointOk  = false, pointFound = null, pointTTL = null;
+
+    /* ── SPLIT HOSTING CHECK ── */
+    var splitOn = q('split-toggle').checked;
+    q('split-results-section').style.display = splitOn ? 'block' : 'none';
+    q('split-warn-card').style.display = 'none';
+
+    if (splitOn) {
+      setBadge('split', 'checking');
+      q('detail-split').textContent = 'Querying nameservers…';
+
+      var bare = retailer.replace(/^www\./, '');
+      var isBareAndWww = bare !== retailer;
+      q('desc-split').textContent = isBareAndWww
+        ? 'Comparing NS records for ' + retailer + ' and ' + bare
+        : 'Comparing NS records for ' + retailer + ' (no www prefix detected)';
+
+      var [wwwNS, bareNS] = await Promise.all([
+        dnsQuery(retailer, 'NS'),
+        isBareAndWww ? dnsQuery(bare, 'NS') : Promise.resolve(null)
+      ]);
+
+      var wwwServers  = extractNS(wwwNS);
+      var bareServers = isBareAndWww ? extractNS(bareNS) : [];
+
+      if (!isBareAndWww) {
+        // No www prefix — just show what NS is found
+        setBadge('split', 'ok');
+        q('detail-split').innerHTML =
+          '<span class="dk">Domain:       </span><span class="dv">'+retailer+'</span><br>' +
+          '<span class="dk">Nameservers:  </span><span class="dv-ok">'+(wwwServers.length ? wwwServers.join(', ') : 'None found')+'</span><br>' +
+          '<span class="dv" style="color:#64748b">No bare domain to compare (domain does not start with www).</span>';
+        setHint('split', 'ok', 'Only one domain variant detected — no split-hosting risk identified.');
+      } else {
+        var wwwProvider  = detectProvider(wwwServers);
+        var bareProvider = detectProvider(bareServers);
+        var isSplit = wwwServers.length > 0 && bareServers.length > 0 && !nsMatch(wwwServers, bareServers);
+
+        q('detail-split').innerHTML =
+          '<span class="dk">'+retailer+' NS:  </span><span class="'+(wwwServers.length?'dv-ok':'dv-bad')+'">'+
+            (wwwServers.length ? wwwServers.join(', ') : 'Not found')+
+          '</span>'+(wwwProvider ? ' <span style="background:#1e293b;padding:1px 6px;border-radius:4px;font-size:11px;color:#60a5fa">'+wwwProvider+'</span>' : '')+'<br>' +
+          '<span class="dk">'+bare+' NS:  </span><span class="'+(bareServers.length?'dv-ok':'dv-bad')+'">'+
+            (bareServers.length ? bareServers.join(', ') : 'Not found')+
+          '</span>'+(bareProvider ? ' <span style="background:#1e293b;padding:1px 6px;border-radius:4px;font-size:11px;color:#60a5fa">'+bareProvider+'</span>' : '')+'<br>' +
+          '<span class="dk">Match:        </span><span class="'+(isSplit?'dv-bad':'dv-ok')+'">'+(!isSplit ? '✅ Same provider' : '❌ Different providers — SPLIT HOSTING')+'</span>';
+
+        if (isSplit) {
+          setBadge('split', 'fail');
+          setHint('split', 'fail',
+            '❌ Split-hosting detected: '+retailer+' and '+bare+' are on different DNS providers. '+
+            'DNS changes made on one provider will NOT affect the other. This must be resolved before launch.');
+          q('split-warn-card').style.display = 'block';
+          q('split-warn-body').innerHTML =
+            'The domains <code>'+retailer+'</code> and <code>'+bare+'</code> are managed by <strong>different DNS providers</strong>:<br><br>' +
+            '&nbsp;&nbsp;• <code>'+retailer+'</code> → <strong>'+(wwwProvider||'Unknown provider')+'</strong> ('+wwwServers.slice(0,2).join(', ')+')<br>' +
+            '&nbsp;&nbsp;• <code>'+bare+'</code> → <strong>'+(bareProvider||'Unknown provider')+'</strong> ('+bareServers.slice(0,2).join(', ')+')<br><br>' +
+            '<strong>Why this matters:</strong> If the retailer adds DNS records (like the ACM CNAME or whitelabel CNAME) to the wrong provider, the changes will have no effect. This is a common cause of failed or delayed launches.<br><br>' +
+            '<strong>What to do:</strong> Before the launch call, ask the retailer to confirm which DNS provider controls each domain and ensure all required records are added to the <strong>correct provider</strong> for each domain variant.';
+        } else if (wwwServers.length === 0 || bareServers.length === 0) {
+          setBadge('split', 'pending');
+          setHint('split', 'pending', '⚠️ Could not retrieve NS records for one or both domains. This may be a propagation delay or the domain may not be configured yet. Retry after a few minutes.');
+        } else {
+          setBadge('split', 'ok');
+          setHint('split', 'ok', '✅ Both '+retailer+' and '+bare+' use the same DNS provider. No split-hosting risk detected.');
+        }
+      }
+    }
 
     /* ── ACM CNAME CHECK ── */
     if (cnameRes.error) {
@@ -740,6 +850,48 @@
     var el = q('hint-'+key); if (!el) return;
     var cls = { ok:'ah-ok', fail:'ah-fail', pending:'ah-pending' };
     el.innerHTML = '<div class="action-hint '+(cls[state]||'ah-fail')+'"><span class="ah-icon">'+(state==='ok'?'✅':state==='pending'?'⚠️':'❌')+'</span><span>'+msg+'</span></div>';
+  }
+
+  function extractNS(res) {
+    if (!res || res.error) return [];
+    return (res.Answer || res.Authority || [])
+      .filter(function(a){ return a.type === 2; })
+      .map(function(a){ return a.data.replace(/\.$/,'').toLowerCase(); })
+      .sort();
+  }
+
+  function nsMatch(a, b) {
+    if (!a.length || !b.length) return false;
+    var rootA = a.map(rootNS).sort().join(',');
+    var rootB = b.map(rootNS).sort().join(',');
+    return rootA === rootB;
+  }
+
+  function rootNS(ns) {
+    var parts = ns.split('.');
+    return parts.length >= 2 ? parts.slice(-2).join('.') : ns;
+  }
+
+  function detectProvider(servers) {
+    if (!servers.length) return null;
+    var all = servers.join(' ').toLowerCase();
+    if (all.includes('awsdns'))          return 'AWS Route 53';
+    if (all.includes('cloudflare'))      return 'Cloudflare';
+    if (all.includes('godaddy'))         return 'GoDaddy';
+    if (all.includes('domaincontrol'))   return 'GoDaddy';
+    if (all.includes('googledomains') || all.includes('google'))  return 'Google Domains / Cloud DNS';
+    if (all.includes('namecheap') || all.includes('registrar-servers')) return 'Namecheap';
+    if (all.includes('name.com'))        return 'Name.com';
+    if (all.includes('azure') || all.includes('msft')) return 'Azure DNS';
+    if (all.includes('nsone') || all.includes('ns1.')) return 'NS1';
+    if (all.includes('ultradns'))        return 'UltraDNS';
+    if (all.includes('dnsimple'))        return 'DNSimple';
+    if (all.includes('hover'))           return 'Hover';
+    if (all.includes('networksolutions')) return 'Network Solutions';
+    if (all.includes('squarespace'))     return 'Squarespace';
+    if (all.includes('shopify'))         return 'Shopify';
+    if (all.includes('wixdns'))          return 'Wix';
+    return null;
   }
 
   function fmtTTL(s) {
