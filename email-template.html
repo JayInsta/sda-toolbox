@@ -82,7 +82,11 @@
     .derived-tile-label { font-size: 11px; color: #475569; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
     .derived-tile-value { font-family: 'Courier New', monospace; font-size: 14px; color: #e2e8f0; font-weight: 600; word-break: break-all; }
 
-    .info-box { background: #1e2d1e; border: 1px solid #16a34a33; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #4ade80; line-height: 1.6; margin-top: 14px; }
+    .country-btn { padding: 9px 16px; border-radius: 10px; border: 1px solid #2a2d3e; background: #0f1117; color: #64748b; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; user-select: none; display: flex; align-items: center; gap: 6px; }
+    .country-btn:hover { border-color: #3a3d4e; color: #94a3b8; }
+    .country-btn.active { background: #2d1e3d; border-color: #7c3aed; color: #c084fc; }
+    .locale-tag { font-family: 'Courier New', monospace; font-size: 11px; background: #1a1228; padding: 1px 6px; border-radius: 4px; margin-left: 2px; }
+    .country-btn.active .locale-tag { background: #3d1e5f; color: #e2d4ff; }
 
     /* QA SECTION */
     .qa-wrap { margin-top: 2rem; }
@@ -155,6 +159,17 @@
       <div class="step-badge s1">1</div>
       <div><div class="card-title">Core retailer details</div><div class="card-sub">Required — all outputs are derived from these values</div></div>
     </div>
+
+    <!-- COUNTRY SELECTOR -->
+    <div class="field">
+      <label>Country / Locale</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="country-group">
+        <div class="country-btn active" id="c-US" onclick="setCountry('US')">🇺🇸 &nbsp;United States <span class="locale-tag">en_US</span></div>
+        <div class="country-btn" id="c-CA" onclick="setCountry('CA')">🇨🇦 &nbsp;Canada <span class="locale-tag">en_CA</span></div>
+        <div class="country-btn" id="c-FR" onclick="setCountry('FR')">🇫🇷 &nbsp;France <span class="locale-tag">en_FR</span></div>
+      </div>
+    </div>
+
     <div class="two-col">
       <div class="field">
         <label>Slug <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">(e.g. longs-picpac-sfp)</span></label>
@@ -376,11 +391,35 @@
 </div>
 
 <script>
+  var selectedCountry = 'US';
+
+  var COUNTRIES = {
+    US: { code: 'US', locale: 'en_US', folderPrefix: 'en-US', flag: '🇺🇸' },
+    CA: { code: 'CA', locale: 'en_CA', folderPrefix: 'en-CA', flag: '🇨🇦' },
+    FR: { code: 'FR', locale: 'en_FR', folderPrefix: 'en-FR', flag: '🇫🇷' }
+  };
+
+  function setCountry(code) {
+    selectedCountry = code;
+    document.querySelectorAll('.country-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.getElementById('c-' + code).classList.add('active');
+    updatePreviews();
+  }
+
   function gv(id) { return (document.getElementById(id) ? document.getElementById(id).value || '' : '').trim(); }
   function toggleSection(id, cb) { document.getElementById(id).style.display = cb.checked ? 'block' : 'none'; }
   function ensureHttps(url) { if (!url) return ''; return /^https?:\/\//i.test(url) ? url : 'https://' + url; }
-  function slugToLocale(slug) { return 'en_US-' + slug.toUpperCase().replace(/-/g, '_'); }
-  function slugToFolder(slug) { return 'en-US-' + slug.toLowerCase(); }
+
+  function slugToLocale(slug) {
+    var c = COUNTRIES[selectedCountry];
+    return c.locale + '-' + slug.toUpperCase().replace(/-/g, '_');
+  }
+
+  function slugToFolder(slug) {
+    var c = COUNTRIES[selectedCountry];
+    return c.folderPrefix + '-' + slug.toLowerCase();
+  }
+
   function updatePreviews() {
     var slug = gv('slug');
     document.getElementById('preview-locale').textContent = slug ? slugToLocale(slug) : '—';
@@ -415,8 +454,9 @@
     }
 
     var envKey     = slug.toUpperCase().replace(/-/g, '_');
-    var localeVar  = slugToLocale(slug);
-    var folderName = slugToFolder(slug);
+    var localeVar  = slugToLocale(slug);    // e.g. en_CA-LONGS_PICPAC_SFP
+    var folderName = slugToFolder(slug);    // e.g. en-CA-longs-picpac-sfp
+    var yamlKey    = COUNTRIES[selectedCountry].locale + '-' + envKey; // used in YAML top-level key
     var contentOn  = document.getElementById('toggle-content').checked;
     var headingsOn = document.getElementById('toggle-headings').checked;
 
@@ -448,7 +488,7 @@
 
     /* OUTPUT 3 */
     var t1 = [
-      'en_US-' + envKey + ':',
+      yamlKey + ':',
       '  one_order_mailer:',
       '    fine_print:',
       '      content: ""',
@@ -482,7 +522,7 @@
 
     /* OUTPUT 4 */
     var t2 = [
-      'en_US-' + envKey + ':',
+      yamlKey + ':',
       '  class_scoped:',
       '    orders:',
       '      one_order_mailer:',
@@ -504,7 +544,7 @@
     renderYAML('box4', t2);
 
     document.getElementById('output-info').textContent =
-      'Generated for "' + retailer + ' Team" · locale: ' + localeVar + ' · folder: ' + folderName;
+      'Generated for "' + retailer + ' Team" · ' + COUNTRIES[selectedCountry].flag + ' ' + COUNTRIES[selectedCountry].locale + ' · locale: ' + localeVar + ' · folder: ' + folderName;
     document.getElementById('output-wrap').style.display = 'block';
     document.getElementById('output-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
   }
