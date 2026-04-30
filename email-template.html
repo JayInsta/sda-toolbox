@@ -7,7 +7,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; padding: 2rem 1rem 4rem; }
-    .page { max-width: 820px; margin: 0 auto; }
+    .page { max-width: 860px; margin: 0 auto; }
 
     .hero { text-align: center; padding: 3rem 1rem 2.5rem; }
     .hero-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #7c3aed, #2563eb); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
@@ -21,6 +21,7 @@
     .s1 { background: #2d1e3d; color: #c084fc; }
     .s2 { background: #1e3a5f; color: #60a5fa; }
     .s3 { background: #1e3d2f; color: #4ade80; }
+    .s4 { background: #3d1f0e; color: #fb923c; }
     .card-title { font-size: 15px; font-weight: 600; color: #e2e8f0; }
     .card-sub { font-size: 12px; color: #475569; margin-top: 2px; }
 
@@ -49,27 +50,25 @@
     .sl-blue   { background: #1e3a5f; color: #60a5fa; border: 1px solid #2563eb33; }
     .sl-green  { background: #1e3d2f; color: #4ade80; border: 1px solid #16a34a33; }
     .sl-orange { background: #3d2a1e; color: #fb923c; border: 1px solid #fb923c33; }
-    .sl-teal   { background: #1e3d3d; color: #2dd4bf; border: 1px solid #2dd4bf33; }
+    .sl-red    { background: #3d1010; color: #f87171; border: 1px solid #f8717133; }
 
     .btn-generate { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c3aed, #2563eb); border: none; border-radius: 12px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.02em; margin-top: 4px; }
     .btn-generate:hover { opacity: 0.9; }
 
     /* OUTPUT BLOCKS */
     .output-wrap { display: none; margin-top: 14px; }
-
     .output-block { margin-bottom: 24px; }
     .output-block-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
     .output-block-meta { flex: 1; }
     .output-block-title { font-size: 13px; font-weight: 700; color: #e2e8f0; margin-bottom: 3px; }
     .output-block-hint { font-size: 12px; color: #64748b; line-height: 1.5; }
     .output-block-hint code { background: #0f1117; padding: 1px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 11px; }
-
     .output-box { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 12px; padding: 1.25rem; font-family: 'Courier New', monospace; font-size: 12px; color: #94a3b8; line-height: 2; white-space: pre; overflow-x: auto; max-height: 440px; overflow-y: auto; }
     .out-key     { color: #60a5fa; }
     .out-val     { color: #4ade80; }
     .out-indent1 { color: #c084fc; }
     .out-indent2 { color: #fb923c; }
-    .out-plain   { color: #2dd4bf; }
+    .out-plain   { color: #2dd4bf; font-size: 18px; font-weight: 600; }
 
     .btn-copy { padding: 7px 14px; border: 1px solid; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; flex-shrink: 0; }
     .btn-copy:hover { opacity: 0.8; }
@@ -85,12 +84,57 @@
 
     .info-box { background: #1e2d1e; border: 1px solid #16a34a33; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #4ade80; line-height: 1.6; margin-top: 14px; }
 
+    /* QA SECTION */
+    .qa-wrap { margin-top: 2rem; }
+    .qa-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .qa-cols textarea { width: 100%; padding: 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 12px; color: #e2e8f0; outline: none; resize: vertical; min-height: 260px; line-height: 1.8; transition: border-color 0.15s; }
+    .qa-cols textarea:focus { border-color: #fb923c; box-shadow: 0 0 0 3px rgba(251,146,60,0.15); }
+    .qa-col-label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+
+    .btn-validate { width: 100%; padding: 13px; background: linear-gradient(135deg, #fb923c, #ef4444); border: none; border-radius: 12px; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.02em; }
+    .btn-validate:hover { opacity: 0.9; }
+
+    .diff-wrap { display: none; margin-top: 14px; }
+    .diff-summary { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .diff-stat { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 10px 16px; text-align: center; flex: 1; min-width: 80px; }
+    .diff-stat-num { font-size: 22px; font-weight: 700; margin-bottom: 2px; }
+    .diff-stat-label { font-size: 11px; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; }
+    .ds-ok   .diff-stat-num { color: #4ade80; }
+    .ds-diff .diff-stat-num { color: #f87171; }
+    .ds-miss .diff-stat-num { color: #fb923c; }
+
+    .diff-box { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 12px; overflow: hidden; }
+    .diff-line { display: flex; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.8; border-bottom: 1px solid #1a1d27; }
+    .diff-line:last-child { border-bottom: none; }
+    .diff-line-num { width: 36px; text-align: right; padding: 4px 8px; color: #374151; font-size: 11px; flex-shrink: 0; border-right: 1px solid #1a1d27; background: #0a0c12; user-select: none; }
+    .diff-line-content { flex: 1; padding: 4px 12px; word-break: break-all; white-space: pre-wrap; }
+    .diff-line.dl-ok   .diff-line-content { color: #64748b; }
+    .diff-line.dl-add  { background: #0d2010; }
+    .diff-line.dl-add  .diff-line-content { color: #4ade80; }
+    .diff-line.dl-add  .diff-line-num { background: #0a1a0c; color: #16a34a; }
+    .diff-line.dl-del  { background: #200d0d; }
+    .diff-line.dl-del  .diff-line-content { color: #f87171; }
+    .diff-line.dl-del  .diff-line-num { background: #1a0a0a; color: #dc2626; }
+    .diff-line.dl-chg  { background: #1e1a0a; }
+    .diff-line.dl-chg  .diff-line-content { color: #fbbf24; }
+    .diff-line.dl-chg  .diff-line-num { background: #18150a; color: #d97706; }
+
+    .diff-legend { display: flex; gap: 16px; font-size: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+    .dl-badge { padding: 2px 10px; border-radius: 4px; font-family: 'Courier New', monospace; }
+    .dlb-ok   { background: #1e2130; color: #64748b; }
+    .dlb-add  { background: #0d2010; color: #4ade80; }
+    .dlb-del  { background: #200d0d; color: #f87171; }
+    .dlb-chg  { background: #1e1a0a; color: #fbbf24; }
+
+    .match-banner { padding: 14px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; margin-bottom: 10px; }
+    .mb-ok   { background: #1e2d1e; border: 1px solid #16a34a44; color: #4ade80; }
+    .mb-diff { background: #2d1a1a; border: 1px solid #dc262644; color: #f87171; }
+
     .footer { text-align: center; padding: 2rem 0 0.5rem; font-size: 12px; color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #2a2d3e; }
 
-    @media (max-width: 500px) {
-      .two-col { grid-template-columns: 1fr; }
-      .derived-grid { grid-template-columns: 1fr; }
+    @media (max-width: 600px) {
+      .two-col, .derived-grid, .qa-cols { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -102,10 +146,10 @@
       <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
     </div>
     <h1>Email template generator</h1>
-    <p>Enter retailer details to generate locale variables, folder name, and both YAML email templates instantly.</p>
+    <p>Generate locale variables, folder name, and both YAML email templates. Includes QA diff validator.</p>
   </div>
 
-  <!-- STEP 1 — CORE DETAILS -->
+  <!-- STEP 1 -->
   <div class="card">
     <div class="card-top">
       <div class="step-badge s1">1</div>
@@ -131,8 +175,6 @@
         <input type="text" id="retailer-url" placeholder="https://www.longspicpac.com/">
       </div>
     </div>
-
-    <!-- LIVE DERIVED PREVIEWS -->
     <div style="margin-top:14px;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Derived values preview</div>
     <div class="derived-grid">
       <div class="derived-tile">
@@ -146,7 +188,7 @@
     </div>
   </div>
 
-  <!-- STEP 2 — CUSTOM CONTENT (OPTIONAL) -->
+  <!-- STEP 2 — CUSTOM CONTENT -->
   <div class="card">
     <div class="card-top" style="margin-bottom:0">
       <div class="step-badge s2">2</div>
@@ -156,17 +198,17 @@
             <div class="card-title">Custom message content &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
             <div class="card-sub">Customise order descriptions, cancellation body, receipt and ratings</div>
           </div>
-          <label class="toggle-switch"><input type="checkbox" id="toggle-content" onchange="toggleSection('content-section', this)"><span class="toggle-slider"></span></label>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-content" onchange="toggleSection('content-section',this)"><span class="toggle-slider"></span></label>
         </div>
       </div>
     </div>
     <div id="content-section" style="display:none;margin-top:1.25rem">
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order information</div><div class="section-divider-line"></div></div>
-      <div class="field"><label>Order description</label><textarea id="order-desc" placeholder="Keep an eye out for order updates...&#10;&#10;Thanks,&#10;[Retailer Name]"></textarea></div>
-      <div class="field"><label>Family order description</label><textarea id="family-desc" placeholder="Keep an eye out for order updates... Remember, only %{owner_name} can add items...&#10;&#10;Thanks,&#10;[Retailer Name]"></textarea></div>
+      <div class="field"><label>Order description</label><textarea id="order-desc" placeholder="Keep an eye out for order updates...&#10;&#10;Thanks,&#10;[Retailer Name] Team"></textarea></div>
+      <div class="field"><label>Family order description</label><textarea id="family-desc" placeholder="Keep an eye out for order updates... Remember, only %{owner_name} can add items...&#10;&#10;Thanks,&#10;[Retailer Name] Team"></textarea></div>
       <div class="field"><label>Pickup instructions</label><textarea id="pickup" placeholder="Pull into the designated parking area..." style="min-height:60px"></textarea></div>
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">Order cancellation</div><div class="section-divider-line"></div></div>
-      <div class="field"><label>Cancellation body</label><textarea id="cancel-body" placeholder="This email is to confirm that you have canceled your order..."></textarea></div>
+      <div class="field"><label>Cancellation body</label><textarea id="cancel-body" placeholder="This email is to confirm that you have canceled your order...&#10;&#10;Thank you,&#10;[Retailer Name] Team"></textarea></div>
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">Order receipt</div><div class="section-divider-line"></div></div>
       <div class="field"><label>Receipt body</label><textarea id="receipt-body" placeholder="Thank you for shopping at [Retailer Name]..."></textarea></div>
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order rating</div><div class="section-divider-line"></div></div>
@@ -177,7 +219,7 @@
     </div>
   </div>
 
-  <!-- STEP 3 — EMAIL HEADINGS (OPTIONAL) -->
+  <!-- STEP 3 — EMAIL HEADINGS -->
   <div class="card">
     <div class="card-top" style="margin-bottom:0">
       <div class="step-badge s3">3</div>
@@ -187,7 +229,7 @@
             <div class="card-title">Email headings &amp; order details &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
             <div class="card-sub">Customise subject headings for cancellation, confirmation and receipt emails</div>
           </div>
-          <label class="toggle-switch"><input type="checkbox" id="toggle-headings" onchange="toggleSection('headings-section', this)"><span class="toggle-slider"></span></label>
+          <label class="toggle-switch"><input type="checkbox" id="toggle-headings" onchange="toggleSection('headings-section',this)"><span class="toggle-slider"></span></label>
         </div>
       </div>
     </div>
@@ -217,7 +259,6 @@
   <!-- OUTPUTS -->
   <div class="output-wrap" id="output-wrap">
 
-    <!-- OUTPUT 1 — locale.rb variable -->
     <div class="section-divider" style="margin-top:2rem">
       <div class="section-divider-line"></div>
       <div class="section-label sl-purple">Output 1 — locale.rb variable</div>
@@ -227,14 +268,13 @@
       <div class="output-block-header">
         <div class="output-block-meta">
           <div class="output-block-title">locale.rb variable</div>
-          <div class="output-block-hint">Add this to <code>locale.rb</code> — the Ruby locale identifier derived from the slug.</div>
+          <div class="output-block-hint">Add to <code>locale.rb</code> — Ruby locale identifier.</div>
         </div>
-        <button class="btn-copy bc-purple" onclick="copyBox('box1', this)">Copy</button>
+        <button class="btn-copy bc-purple" onclick="copyBox('box1',this)">Copy</button>
       </div>
       <div class="output-box" id="box1"></div>
     </div>
 
-    <!-- OUTPUT 2 — Folder name -->
     <div class="section-divider">
       <div class="section-divider-line"></div>
       <div class="section-label sl-blue">Output 2 — Folder name</div>
@@ -244,14 +284,13 @@
       <div class="output-block-header">
         <div class="output-block-meta">
           <div class="output-block-title">Email template folder name</div>
-          <div class="output-block-hint">Create the email template folder using this name — derived from the slug in <code>en-US-[slug]</code> format.</div>
+          <div class="output-block-hint">Create the email template folder using this name.</div>
         </div>
-        <button class="btn-copy bc-blue" onclick="copyBox('box2', this)">Copy</button>
+        <button class="btn-copy bc-blue" onclick="copyBox('box2',this)">Copy</button>
       </div>
       <div class="output-box" id="box2"></div>
     </div>
 
-    <!-- OUTPUT 3 — Template 1 -->
     <div class="section-divider">
       <div class="section-divider-line"></div>
       <div class="section-label sl-green">Output 3 — Template 1 (one_order_mailer)</div>
@@ -261,14 +300,13 @@
       <div class="output-block-header">
         <div class="output-block-meta">
           <div class="output-block-title">one_order_mailer YAML</div>
-          <div class="output-block-hint">Add to <code>en_US-[SLUG].yml</code> — footer links, order messages and email content.</div>
+          <div class="output-block-hint">Add to <code>en_US-[SLUG].yml</code> — footer links, order messages, email content.</div>
         </div>
-        <button class="btn-copy bc-green" onclick="copyBox('box3', this)">Copy</button>
+        <button class="btn-copy bc-green" onclick="copyBox('box3',this)">Copy</button>
       </div>
       <div class="output-box" id="box3"></div>
     </div>
 
-    <!-- OUTPUT 4 — Template 2 -->
     <div class="section-divider">
       <div class="section-divider-line"></div>
       <div class="section-label sl-orange">Output 4 — Template 2 (class_scoped)</div>
@@ -280,12 +318,54 @@
           <div class="output-block-title">class_scoped YAML</div>
           <div class="output-block-hint">Add to <code>en_US-[SLUG]-class-scoped.yml</code> — email headings and order detail labels.</div>
         </div>
-        <button class="btn-copy bc-orange" onclick="copyBox('box4', this)">Copy</button>
+        <button class="btn-copy bc-orange" onclick="copyBox('box4',this)">Copy</button>
       </div>
       <div class="output-box" id="box4"></div>
     </div>
 
     <div class="info-box" id="output-info"></div>
+  </div>
+
+  <!-- QA VALIDATOR -->
+  <div class="qa-wrap">
+    <div class="section-divider" style="margin-top:2rem">
+      <div class="section-divider-line"></div>
+      <div class="section-label sl-red">🔍 QA validator — diff checker</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <div class="step-badge s4">QA</div>
+        <div>
+          <div class="card-title">Template diff validator</div>
+          <div class="card-sub">Paste the generated template on the left and the actual deployed/file content on the right — the tool highlights every difference</div>
+        </div>
+      </div>
+      <div class="qa-cols">
+        <div>
+          <div class="qa-col-label" style="color:#60a5fa">Expected (generated)</div>
+          <textarea id="qa-expected" placeholder="Paste the generated template here (from Output 3 or 4 above)..."></textarea>
+        </div>
+        <div>
+          <div class="qa-col-label" style="color:#4ade80">Actual (deployed / file content)</div>
+          <textarea id="qa-actual" placeholder="Paste the actual content from the file or deployed environment here..."></textarea>
+        </div>
+      </div>
+      <button class="btn-validate" onclick="runDiff()">🔍 &nbsp;Validate &amp; highlight differences</button>
+
+      <div class="diff-wrap" id="diff-wrap">
+        <div style="margin-top:1.25rem"></div>
+        <div class="match-banner" id="diff-banner"></div>
+        <div class="diff-summary" id="diff-summary"></div>
+        <div class="diff-legend">
+          <span class="dl-badge dlb-ok">Matching line</span>
+          <span class="dl-badge dlb-add">+ Expected only (missing in actual)</span>
+          <span class="dl-badge dlb-del">− Actual only (not in expected)</span>
+          <span class="dl-badge dlb-chg">~ Changed line</span>
+        </div>
+        <div class="diff-box" id="diff-box"></div>
+      </div>
+    </div>
   </div>
 
   <div class="footer">
@@ -297,47 +377,31 @@
 
 <script>
   function gv(id) { return (document.getElementById(id) ? document.getElementById(id).value || '' : '').trim(); }
-
-  function toggleSection(id, cb) {
-    document.getElementById(id).style.display = cb.checked ? 'block' : 'none';
-  }
-
-  function ensureHttps(url) {
-    if (!url) return '';
-    return /^https?:\/\//i.test(url) ? url : 'https://' + url;
-  }
-
-  /* ── DERIVED VALUE HELPERS ── */
-  function slugToLocale(slug) {
-    // longs-picpac-sfp  →  en_US-LONGS_PICPAC_SFP
-    return 'en_US-' + slug.toUpperCase().replace(/-/g, '_');
-  }
-
-  function slugToFolder(slug) {
-    // longs-picpac-sfp  →  en-US-longs-picpac-sfp
-    return 'en-US-' + slug.toLowerCase();
-  }
-
+  function toggleSection(id, cb) { document.getElementById(id).style.display = cb.checked ? 'block' : 'none'; }
+  function ensureHttps(url) { if (!url) return ''; return /^https?:\/\//i.test(url) ? url : 'https://' + url; }
+  function slugToLocale(slug) { return 'en_US-' + slug.toUpperCase().replace(/-/g, '_'); }
+  function slugToFolder(slug) { return 'en-US-' + slug.toLowerCase(); }
   function updatePreviews() {
     var slug = gv('slug');
     document.getElementById('preview-locale').textContent = slug ? slugToLocale(slug) : '—';
     document.getElementById('preview-folder').textContent = slug ? slugToFolder(slug) : '—';
   }
+  function v(id, fallback) { var val = gv(id); return val || fallback; }
 
-  function v(id, fallback) {
-    var val = gv(id);
-    return val || fallback;
-  }
-
+  /* ── DEFAULTS — "Team" appended to all sign-offs ── */
   var D = {
-    orderDesc:   'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. <br/><br/>Thanks, <br/>',
-    familyDesc:  'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. Remember, only %{owner_name} can add items at this time, let them know if you forgot anything. <br/><br/>Thanks, <br/>',
+    orderDesc:   'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. <br/><br/>Thanks, <br/>{{R}} Team',
+    familyDesc:  'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. Remember, only %{owner_name} can add items at this time, let them know if you forgot anything. <br/><br/>Thanks, <br/>{{R}} Team',
     pickup:      "Pull into the designated parking area for pickup and let us know you have arrived, and we'll bring your groceries right out!",
-    cancelBody:  'This email is to confirm that you have canceled your order. If there are charges on your account, you can expect them to disappear between 3-5 business days, depending on your bank.<br/><br/>We look forward to taking care of your next grocery order.<br/><br/>Thank you,<br/>',
+    cancelBody:  'This email is to confirm that you have canceled your order. If there are charges on your account, you can expect them to disappear between 3-5 business days, depending on your bank.<br/><br/>We look forward to taking care of your next grocery order.<br/><br/>Thank you,<br/>{{R}} Team',
     receiptBody: 'Thank you for shopping at {{R}}. We hope you enjoyed the convenience of ordering online and will try our service again soon. <br/><br/>Your order details are below along with any adjustments made.',
     rateHeading: "We'd love to hear from you!",
     rateContent: "Don't forget to rate and tip your shopper if you want to recognize their efforts. 100% of tips goes to your shopper."
   };
+
+  function fillDefaults(template, retailer) {
+    return template.replace(/\{\{R\}\}/g, retailer);
+  }
 
   function generate() {
     var slug        = gv('slug');
@@ -350,38 +414,35 @@
       return;
     }
 
-    var localeVar  = slugToLocale(slug);   // en_US-LONGS_PICPAC_SFP
-    var folderName = slugToFolder(slug);   // en-US-longs-picpac-sfp
-    var envKey     = slug.toUpperCase().replace(/-/g, '_'); // LONGS_PICPAC_SFP
-
+    var envKey     = slug.toUpperCase().replace(/-/g, '_');
+    var localeVar  = slugToLocale(slug);
+    var folderName = slugToFolder(slug);
     var contentOn  = document.getElementById('toggle-content').checked;
     var headingsOn = document.getElementById('toggle-headings').checked;
 
-    /* ── T1 VALUES ── */
-    var orderDesc   = contentOn ? v('order-desc',   D.orderDesc   + retailer) : D.orderDesc   + retailer;
-    var familyDesc  = contentOn ? v('family-desc',  D.familyDesc  + retailer) : D.familyDesc  + retailer;
-    var pickup      = contentOn ? v('pickup',        D.pickup)                 : D.pickup;
-    var cancelBody  = contentOn ? v('cancel-body',  D.cancelBody  + retailer) : D.cancelBody  + retailer;
-    var receiptBody = contentOn ? v('receipt-body', D.receiptBody.replace('{{R}}', retailer)) : D.receiptBody.replace('{{R}}', retailer);
-    var rateHeading = contentOn ? v('rate-heading', D.rateHeading)             : D.rateHeading;
-    var rateContent = contentOn ? v('rate-content', D.rateContent)             : D.rateContent;
+    /* T1 values — defaults always include " Team" after retailer in sign-offs */
+    var orderDesc   = contentOn ? v('order-desc',   fillDefaults(D.orderDesc,   retailer)) : fillDefaults(D.orderDesc,   retailer);
+    var familyDesc  = contentOn ? v('family-desc',  fillDefaults(D.familyDesc,  retailer)) : fillDefaults(D.familyDesc,  retailer);
+    var pickup      = contentOn ? v('pickup',        D.pickup)                               : D.pickup;
+    var cancelBody  = contentOn ? v('cancel-body',  fillDefaults(D.cancelBody,  retailer)) : fillDefaults(D.cancelBody,  retailer);
+    var receiptBody = contentOn ? v('receipt-body', fillDefaults(D.receiptBody, retailer)) : fillDefaults(D.receiptBody, retailer);
+    var rateHeading = contentOn ? v('rate-heading', D.rateHeading)                          : D.rateHeading;
+    var rateContent = contentOn ? v('rate-content', D.rateContent)                          : D.rateContent;
 
-    /* ── T2 VALUES ── */
-    var chd = headingsOn ? v('cancel-heading-delivery',  'Your order has been canceled.')                             : 'Your order has been canceled.';
-    var chp = headingsOn ? v('cancel-heading-pickup',    'Your order has been canceled.')                             : 'Your order has been canceled.';
+    /* T2 values */
+    var chd = headingsOn ? v('cancel-heading-delivery',  'Your order has been canceled.')                              : 'Your order has been canceled.';
+    var chp = headingsOn ? v('cancel-heading-pickup',    'Your order has been canceled.')                              : 'Your order has been canceled.';
     var cfd = headingsOn ? v('confirm-heading-delivery', 'Hi %{first_name}, your ' + retailer + ' order is all set.') : 'Hi %{first_name}, your ' + retailer + ' order is all set.';
     var cfp = headingsOn ? v('confirm-heading-pickup',   'Hi %{first_name}, your ' + retailer + ' order is all set.') : 'Hi %{first_name}, your ' + retailer + ' order is all set.';
     var rhd = headingsOn ? v('receipt-heading-delivery', "%{first_name}, here's your receipt")                        : "%{first_name}, here's your receipt";
     var rhp = headingsOn ? v('receipt-heading-pickup',   "%{first_name}, here's your receipt")                        : "%{first_name}, here's your receipt";
     var cih = headingsOn ? v('cancel-items-heading',     'Canceled Items')                                            : 'Canceled Items';
 
-    /* ── OUTPUT 1: locale.rb variable ── */
+    /* OUTPUT 1 + 2 */
     renderPlain('box1', localeVar);
-
-    /* ── OUTPUT 2: folder name ── */
     renderPlain('box2', folderName);
 
-    /* ── OUTPUT 3: Template 1 YAML ── */
+    /* OUTPUT 3 */
     var t1 = [
       'en_US-' + envKey + ':',
       '  one_order_mailer:',
@@ -415,7 +476,7 @@
     ].join('\n');
     renderYAML('box3', t1);
 
-    /* ── OUTPUT 4: Template 2 YAML ── */
+    /* OUTPUT 4 */
     var t2 = [
       'en_US-' + envKey + ':',
       '  class_scoped:',
@@ -439,19 +500,17 @@
     renderYAML('box4', t2);
 
     document.getElementById('output-info').textContent =
-      'Generated for "' + retailer + '" · locale: ' + localeVar + ' · folder: ' + folderName;
+      'Generated for "' + retailer + ' Team" · locale: ' + localeVar + ' · folder: ' + folderName;
     document.getElementById('output-wrap').style.display = 'block';
-    document.getElementById('output-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('output-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
   }
 
-  /* render plain single-line output */
   function renderPlain(id, text) {
     var el = document.getElementById(id);
     el.innerHTML = '<span class="out-plain">' + esc(text) + '</span>';
     el.dataset.raw = text;
   }
 
-  /* render syntax-highlighted YAML */
   function renderYAML(id, raw) {
     var lines = raw.split('\n');
     var html = lines.map(function(line) {
@@ -473,7 +532,7 @@
   }
 
   function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
   function copyBox(id, btn) {
@@ -481,8 +540,106 @@
     navigator.clipboard.writeText(raw).then(function() {
       var orig = btn.textContent;
       btn.textContent = '✅ Copied!'; btn.style.color = '#4ade80';
-      setTimeout(function() { btn.textContent = orig; btn.style.color = ''; }, 2000);
+      setTimeout(function(){ btn.textContent = orig; btn.style.color = ''; }, 2000);
     });
+  }
+
+  /* ── QA DIFF ENGINE ── */
+  function runDiff() {
+    var expText = document.getElementById('qa-expected').value;
+    var actText = document.getElementById('qa-actual').value;
+
+    if (!expText.trim() && !actText.trim()) {
+      alert('Please paste content into both fields before validating.');
+      return;
+    }
+
+    var expLines = expText.split('\n');
+    var actLines = actText.split('\n');
+
+    /* LCS-based diff */
+    var diff = computeDiff(expLines, actLines);
+
+    var matchCount = 0, addCount = 0, delCount = 0, chgCount = 0;
+    var html = '';
+    var lineNum = 0;
+
+    diff.forEach(function(item) {
+      lineNum++;
+      var cls, prefix, content;
+      if (item.type === 'equal') {
+        matchCount++;
+        cls = 'dl-ok'; prefix = ' '; content = item.value;
+      } else if (item.type === 'add') {
+        addCount++;
+        cls = 'dl-add'; prefix = '+'; content = item.value;
+      } else if (item.type === 'remove') {
+        delCount++;
+        cls = 'dl-del'; prefix = '−'; content = item.value;
+      } else {
+        chgCount++;
+        cls = 'dl-chg'; prefix = '~'; content = item.value;
+      }
+      html +=
+        '<div class="diff-line ' + cls + '">' +
+          '<div class="diff-line-num">' + lineNum + '</div>' +
+          '<div class="diff-line-content">' + prefix + ' ' + esc(content) + '</div>' +
+        '</div>';
+    });
+
+    var total = matchCount + addCount + delCount + chgCount;
+    var isMatch = (addCount === 0 && delCount === 0 && chgCount === 0);
+
+    document.getElementById('diff-banner').className = 'match-banner ' + (isMatch ? 'mb-ok' : 'mb-diff');
+    document.getElementById('diff-banner').textContent = isMatch
+      ? '✅ Perfect match — no differences found!'
+      : '❌ Differences found — ' + (addCount + delCount + chgCount) + ' line(s) differ out of ' + total;
+
+    document.getElementById('diff-summary').innerHTML =
+      '<div class="diff-stat ds-ok"><div class="diff-stat-num">' + matchCount + '</div><div class="diff-stat-label">Matching</div></div>' +
+      '<div class="diff-stat ds-diff"><div class="diff-stat-num">' + addCount + '</div><div class="diff-stat-label">Missing in actual</div></div>' +
+      '<div class="diff-stat ds-miss"><div class="diff-stat-num">' + delCount + '</div><div class="diff-stat-label">Extra in actual</div></div>' +
+      '<div class="diff-stat ds-miss" style="border-color:#fbbf2433"><div class="diff-stat-num" style="color:#fbbf24">' + chgCount + '</div><div class="diff-stat-label">Changed</div></div>';
+
+    document.getElementById('diff-box').innerHTML = html;
+    document.getElementById('diff-wrap').style.display = 'block';
+    document.getElementById('diff-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  /* Simple LCS diff — compares line by line */
+  function computeDiff(a, b) {
+    var m = a.length, n = b.length;
+    /* Build LCS table */
+    var dp = [];
+    for (var i = 0; i <= m; i++) { dp[i] = []; for (var j = 0; j <= n; j++) dp[i][j] = 0; }
+    for (var i = 1; i <= m; i++) {
+      for (var j = 1; j <= n; j++) {
+        if (a[i-1].trim() === b[j-1].trim()) dp[i][j] = dp[i-1][j-1] + 1;
+        else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+      }
+    }
+    /* Backtrack */
+    var result = [], i = m, j = n;
+    while (i > 0 || j > 0) {
+      if (i > 0 && j > 0 && a[i-1].trim() === b[j-1].trim()) {
+        result.unshift({ type: 'equal', value: a[i-1] });
+        i--; j--;
+      } else if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) {
+        result.unshift({ type: 'remove', value: b[j-1] });
+        j--;
+      } else {
+        result.unshift({ type: 'add', value: a[i-1] });
+        i--;
+      }
+    }
+    /* Mark adjacent add/remove pairs as changed */
+    for (var k = 0; k < result.length - 1; k++) {
+      if (result[k].type === 'add' && result[k+1].type === 'remove') {
+        result[k].type   = 'chg';
+        result[k+1].type = 'chg';
+      }
+    }
+    return result;
   }
 </script>
 </body>
