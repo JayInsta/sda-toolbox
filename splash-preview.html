@@ -7,7 +7,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; padding: 2rem 1rem 4rem; }
-    .page { max-width: 820px; margin: 0 auto; }
+    .page { max-width: 900px; margin: 0 auto; }
 
     /* HERO */
     .hero { text-align: center; padding: 3rem 1rem 2.5rem; }
@@ -21,114 +21,103 @@
     .card { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 16px; padding: 1.5rem; margin-bottom: 14px; }
     .card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
     .step-badge { width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-    .s1 { background: #2d1e3d; color: #c084fc; }
-    .s2 { background: #1e3a5f; color: #60a5fa; }
-    .s3 { background: #1e3d2f; color: #4ade80; }
+    .sa { background: #1e3d2f; color: #4ade80; }
+    .si { background: #1e3a5f; color: #60a5fa; }
+    .sp { background: #2d1e3d; color: #c084fc; }
     .card-title { font-size: 15px; font-weight: 600; color: #e2e8f0; }
     .card-sub   { font-size: 12px; color: #475569; margin-top: 2px; }
 
     /* PLATFORM TABS */
     .platform-tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; }
-    .platform-tab { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #2a2d3e; background: #0f1117; color: #64748b; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.15s; user-select: none; }
+    .platform-tab { flex: 1; padding: 13px; border-radius: 12px; border: 1px solid #2a2d3e; background: #0f1117; color: #64748b; font-size: 14px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.15s; user-select: none; }
     .platform-tab:hover { border-color: #3a3d4e; color: #94a3b8; }
     .platform-tab.active-android { background: #1e3d2f; border-color: #16a34a; color: #4ade80; }
     .platform-tab.active-ios     { background: #1e3a5f; border-color: #2563eb; color: #60a5fa; }
 
-    /* TWO-COL LAYOUT */
+    /* SECTION PANELS */
+    .platform-panel { display: none; }
+    .platform-panel.active { display: block; }
+
+    /* SECTION DIVIDER */
+    .section-divider { display: flex; align-items: center; gap: 14px; margin: 1.5rem 0 1.25rem; }
+    .section-divider-line { flex: 1; height: 1px; background: #2a2d3e; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; white-space: nowrap; }
+    .sl-android { background: #1e3d2f; color: #4ade80; border: 1px solid #16a34a33; }
+    .sl-ios     { background: #1e3a5f; color: #60a5fa; border: 1px solid #2563eb33; }
+    .sl-preview { background: #2d1e3d; color: #c084fc; border: 1px solid #7c3aed33; }
+
+    /* TWO COL */
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
     /* COLOR PICKER */
     .color-field label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 8px; }
     .color-row { display: flex; align-items: center; gap: 10px; }
     .color-swatch { width: 42px; height: 42px; border-radius: 10px; border: 2px solid #2a2d3e; cursor: pointer; overflow: hidden; position: relative; flex-shrink: 0; }
-    .color-swatch input[type="color"] { position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px); opacity: 0; cursor: pointer; }
+    .color-swatch input[type="color"] { position: absolute; inset: -4px; width: calc(100%+8px); height: calc(100%+8px); opacity: 0; cursor: pointer; }
     .color-hex { flex: 1; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 14px; font-weight: 600; color: #e2e8f0; outline: none; font-family: 'Courier New', monospace; transition: border-color 0.15s; }
     .color-hex:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.2); }
-
-    /* QUICK COLORS */
-    .quick-colors { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-    .qc { width: 26px; height: 26px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: border-color 0.15s, transform 0.1s; flex-shrink: 0; }
-    .qc:hover { transform: scale(1.15); border-color: #ffffff44; }
 
     /* UPLOAD */
     .upload-zone { border: 2px dashed #2a2d3e; border-radius: 12px; padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
     .upload-zone:hover, .upload-zone.drag-over { border-color: #7c3aed; background: #1e1528; }
     .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-    .upload-zone .uz-icon { font-size: 28px; margin-bottom: 8px; }
-    .upload-zone .uz-text { font-size: 13px; color: #64748b; }
-    .upload-zone .uz-text strong { color: #a78bfa; }
-    .upload-zone .uz-hint { font-size: 11px; color: #374151; margin-top: 4px; }
+    .uz-icon { font-size: 28px; margin-bottom: 8px; }
+    .uz-text { font-size: 13px; color: #64748b; }
+    .uz-text strong { color: #a78bfa; }
+    .uz-hint { font-size: 11px; color: #374151; margin-top: 4px; }
     .upload-preview { display: none; margin-top: 10px; align-items: center; gap: 10px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 8px 12px; }
-    .upload-preview img { height: 36px; width: auto; object-fit: contain; border-radius: 4px; }
-    .upload-preview .up-name { font-size: 12px; color: #94a3b8; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .upload-preview .up-remove { color: #ef4444; cursor: pointer; font-size: 14px; font-weight: 700; }
-
-    /* SECTION DIVIDER */
-    .section-divider { display: flex; align-items: center; gap: 14px; margin: 2rem 0 1.5rem; }
-    .section-divider-line { flex: 1; height: 1px; background: #2a2d3e; }
-    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; white-space: nowrap; }
-    .sl-android { background: #1e3d2f; color: #4ade80; border: 1px solid #16a34a33; }
-    .sl-ios     { background: #1e3a5f; color: #60a5fa; border: 1px solid #2563eb33; }
-
-    /* PHONE FRAME */
-    .preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-    .phone-label { font-size: 12px; color: #64748b; font-weight: 500; text-align: center; }
-
-    /* ANDROID PHONE */
-    .android-frame {
-      width: 160px; height: 310px;
-      background: #1a1d27;
-      border: 3px solid #374151;
-      border-radius: 28px;
-      overflow: hidden;
-      position: relative;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 #ffffff11;
-    }
-    .android-notch { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 28px; height: 6px; background: #0f1117; border-radius: 3px; z-index: 10; }
-    .android-splash { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-    .android-splash img { max-width: 60%; max-height: 40%; object-fit: contain; }
-    .android-splash .placeholder-logo { font-size: 11px; color: rgba(255,255,255,0.3); text-align: center; }
-    .android-home { position: absolute; bottom: 0; left: 0; right: 0; height: 28px; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; gap: 14px; }
-    .android-home span { width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.2); display: block; }
-    .android-home span.home-sq { border-radius: 3px; }
-    .android-home span.home-tri { clip-path: polygon(50% 0%,0% 100%,100% 100%); background: rgba(255,255,255,0.2); border-radius: 0; }
-
-    /* iOS PHONE */
-    .ios-frame {
-      width: 160px; height: 310px;
-      background: #1a1d27;
-      border: 3px solid #374151;
-      border-radius: 34px;
-      overflow: hidden;
-      position: relative;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 #ffffff11;
-    }
-    .ios-island { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 44px; height: 10px; background: #0f1117; border-radius: 5px; z-index: 10; }
-    .ios-splash { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-    .ios-splash img { max-width: 55%; max-height: 30%; object-fit: contain; }
-    .ios-splash .placeholder-logo { font-size: 11px; color: rgba(255,255,255,0.3); text-align: center; }
-    .ios-home-bar { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 44px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; }
-
-    /* STATUS BAR */
-    .status-bar { position: absolute; top: 0; left: 0; right: 0; height: 22px; display: flex; align-items: center; justify-content: space-between; padding: 4px 12px 0; z-index: 5; }
-    .status-time { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.7); }
-    .status-icons { display: flex; gap: 3px; align-items: center; }
-    .status-icons span { font-size: 7px; color: rgba(255,255,255,0.7); }
+    .upload-preview img { height: 36px; width: auto; object-fit: contain; border-radius: 4px; background: #fff; padding: 2px; }
+    .up-name { font-size: 12px; color: #94a3b8; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .up-remove { color: #ef4444; cursor: pointer; font-size: 14px; font-weight: 700; }
 
     /* INFO BOX */
     .info-box { background: #1e2d45; border: 1px solid #2563eb33; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #93c5fd; line-height: 1.6; margin-top: 12px; }
+    .info-box strong { color: #60a5fa; }
+
+    /* PHONE FRAMES */
+    .preview-wrap { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; padding: 1rem 0; }
+    .phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .phone-label { font-size: 12px; color: #64748b; font-weight: 500; text-align: center; line-height: 1.6; }
+
+    .android-frame { width: 165px; height: 320px; background: #1a1d27; border: 3px solid #374151; border-radius: 28px; overflow: hidden; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 #ffffff11; }
+    .android-notch { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 28px; height: 6px; background: #0f1117; border-radius: 3px; z-index: 10; }
+    .android-splash { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .android-splash img { max-width: 55%; max-height: 35%; object-fit: contain; }
+    .android-home { position: absolute; bottom: 0; left: 0; right: 0; height: 28px; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; gap: 16px; }
+    .home-circle { width: 13px; height: 13px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+    .home-sq     { width: 12px; height: 12px; border-radius: 3px; background: rgba(255,255,255,0.2); }
+    .home-tri    { width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 12px solid rgba(255,255,255,0.2); }
+
+    .ios-frame { width: 165px; height: 320px; background: #1a1d27; border: 3px solid #374151; border-radius: 34px; overflow: hidden; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 #ffffff11; }
+    .ios-island { position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 46px; height: 11px; background: #0f1117; border-radius: 6px; z-index: 10; }
+    .ios-splash { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .ios-splash img { max-width: 50%; max-height: 28%; object-fit: contain; }
+    .ios-home-bar { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 48px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; }
+
+    /* STATUS BAR */
+    .status-bar { position: absolute; top: 0; left: 0; right: 0; height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 4px 12px 0; z-index: 5; }
+    .status-time { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.7); }
+    .status-icons { font-size: 7px; color: rgba(255,255,255,0.6); }
+
+    .placeholder-logo { font-size: 10px; color: rgba(255,255,255,0.25); text-align: center; line-height: 1.5; }
+
+    /* COLOUR SUMMARY */
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 14px; }
+    .summary-tile { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 12px 14px; }
+    .summary-tile .st-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .summary-tile .st-row   { display: flex; align-items: center; gap: 8px; }
+    .summary-tile .st-dot   { width: 22px; height: 22px; border-radius: 5px; border: 1px solid #2a2d3e; flex-shrink: 0; }
+    .summary-tile .st-hex   { font-family: 'Courier New', monospace; font-size: 14px; font-weight: 600; color: #fff; }
+
+    .sep { border: none; border-top: 1px solid #2a2d3e; margin: 14px 0; }
 
     /* FOOTER */
     .footer { text-align: center; padding: 2rem 0 0.5rem; font-size: 12px; color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #2a2d3e; }
 
-    .sep { border: none; border-top: 1px solid #2a2d3e; margin: 14px 0; }
-
     @media (max-width: 540px) {
       .two-col { grid-template-columns: 1fr; }
-      .preview-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
-      .android-frame, .ios-frame { width: 130px; height: 255px; }
+      .android-frame, .ios-frame { width: 140px; height: 272px; }
     }
   </style>
 </head>
@@ -144,162 +133,236 @@
     <p>Upload your logo, pick a background colour and preview how the splash screen will look on <code>Android</code> and <code>iOS</code> before building.</p>
   </div>
 
-  <!-- ═══════════════════════════ ANDROID ═══════════════════════════ -->
-  <div class="section-divider">
-    <div class="section-divider-line"></div>
-    <div class="section-label sl-android">🤖 &nbsp;Android splash screen</div>
-    <div class="section-divider-line"></div>
+  <!-- PLATFORM TOGGLE -->
+  <div class="platform-tabs">
+    <div class="platform-tab active-android" id="tab-android" onclick="setTab('android')">🤖 &nbsp;Android</div>
+    <div class="platform-tab" id="tab-ios" onclick="setTab('ios')">🍎 &nbsp;iOS</div>
   </div>
 
-  <div class="card">
-    <div class="card-top">
-      <div class="step-badge s1">1</div>
-      <div><div class="card-title">Background colour</div><div class="card-sub">Pick the splash screen background colour for Android</div></div>
+  <!-- ═══════════════ ANDROID PANEL ═══════════════ -->
+  <div class="platform-panel active" id="panel-android">
+
+    <!-- SPLASH -->
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-label sl-android">Splash screen</div>
+      <div class="section-divider-line"></div>
     </div>
-    <div class="color-field">
-      <label>Background colour</label>
-      <div class="color-row">
-        <div class="color-swatch" id="a-swatch" style="background:#FFFFFF">
-          <input type="color" id="a-color-picker" value="#FFFFFF" oninput="syncColor('a',this.value)">
-        </div>
-        <input type="text" class="color-hex" id="a-hex" value="#FFFFFF" maxlength="7" oninput="syncHex('a',this.value)" placeholder="#FFFFFF">
+
+    <div class="card">
+      <div class="card-top"><div class="step-badge sa">1</div>
+        <div><div class="card-title">Background colour</div><div class="card-sub">Splash screen background colour for Android</div></div>
       </div>
-      <div class="quick-colors" id="a-quick"></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-top">
-      <div class="step-badge s2">2</div>
-      <div><div class="card-title">Upload logo</div><div class="card-sub">PNG — 1024px wide recommended</div></div>
-    </div>
-    <div class="upload-zone" id="a-upload-zone">
-      <input type="file" id="a-file" accept=".png" onchange="handleUpload('a',this)">
-      <div class="uz-icon">📱</div>
-      <div class="uz-text"><strong>Click to upload</strong> or drag & drop</div>
-      <div class="uz-hint">PNG — 1024px wide</div>
-    </div>
-    <div class="upload-preview" id="a-preview">
-      <img id="a-preview-img" src="" alt="preview">
-      <span class="up-name" id="a-preview-name"></span>
-      <span class="up-remove" onclick="removeUpload('a')">✕</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════ iOS ═══════════════════════════ -->
-  <div class="section-divider">
-    <div class="section-divider-line"></div>
-    <div class="section-label sl-ios">🍎 &nbsp;iOS splash screen</div>
-    <div class="section-divider-line"></div>
-  </div>
-
-  <div class="card">
-    <div class="card-top">
-      <div class="step-badge s1">1</div>
-      <div><div class="card-title">Background colour</div><div class="card-sub">Pick the splash screen background colour for iOS</div></div>
-    </div>
-    <div class="color-field">
-      <label>Background colour</label>
-      <div class="color-row">
-        <div class="color-swatch" id="i-swatch" style="background:#FFFFFF">
-          <input type="color" id="i-color-picker" value="#FFFFFF" oninput="syncColor('i',this.value)">
-        </div>
-        <input type="text" class="color-hex" id="i-hex" value="#FFFFFF" maxlength="7" oninput="syncHex('i',this.value)" placeholder="#FFFFFF">
-      </div>
-      <div class="quick-colors" id="i-quick"></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-top">
-      <div class="step-badge s2">2</div>
-      <div><div class="card-title">Upload logo</div><div class="card-sub">SVG — 256px width recommended</div></div>
-    </div>
-    <div class="upload-zone" id="i-upload-zone">
-      <input type="file" id="i-file" accept=".svg" onchange="handleUpload('i',this)">
-      <div class="uz-icon">🍎</div>
-      <div class="uz-text"><strong>Click to upload</strong> or drag & drop</div>
-      <div class="uz-hint">SVG — 256px width</div>
-    </div>
-    <div class="upload-preview" id="i-preview">
-      <img id="i-preview-img" src="" alt="preview">
-      <span class="up-name" id="i-preview-name"></span>
-      <span class="up-remove" onclick="removeUpload('i')">✕</span>
-    </div>
-    <div class="info-box">IPP Tooling requires the iOS logo to be an <strong>SVG file</strong>. PNG files will not work for <code>logo_dark</code> and <code>logo_light</code>.</div>
-  </div>
-
-  <!-- ═══════════════════════════ PREVIEW ═══════════════════════════ -->
-  <div class="section-divider">
-    <div class="section-divider-line"></div>
-    <div class="section-label" style="background:#2d1e3d;color:#c084fc;border:1px solid #7c3aed33">📱 &nbsp;Live preview</div>
-    <div class="section-divider-line"></div>
-  </div>
-
-  <div class="card">
-    <div class="card-top">
-      <div class="step-badge s3">3</div>
-      <div><div class="card-title">Splash screen preview</div><div class="card-sub">Live preview updates as you change colour or logo</div></div>
-    </div>
-
-    <div class="preview-grid">
-
-      <!-- ANDROID PREVIEW -->
-      <div class="phone-wrap">
-        <div class="android-frame">
-          <div class="status-bar">
-            <span class="status-time">9:41</span>
-            <div class="status-icons"><span>●●●</span><span>WiFi</span><span>▐</span></div>
+      <div class="color-field">
+        <label>Background colour</label>
+        <div class="color-row">
+          <div class="color-swatch" id="as-swatch" style="background:#FFFFFF">
+            <input type="color" id="as-picker" value="#FFFFFF" oninput="syncColor('as',this.value)">
           </div>
-          <div class="android-notch"></div>
-          <div class="android-splash" id="a-splash" style="background:#FFFFFF">
-            <div class="placeholder-logo" id="a-placeholder">Upload<br>Android logo</div>
-            <img id="a-logo" src="" alt="" style="display:none">
-          </div>
-          <div class="android-home">
-            <span class="home-tri"></span>
-            <span class="home-sq"></span>
-            <span></span>
-          </div>
-        </div>
-        <div class="phone-label">🤖 Android<br><span style="font-family:'Courier New',monospace;font-size:11px" id="a-color-label">#FFFFFF</span></div>
-      </div>
-
-      <!-- iOS PREVIEW -->
-      <div class="phone-wrap">
-        <div class="ios-frame">
-          <div class="status-bar">
-            <span class="status-time">9:41</span>
-            <div class="status-icons"><span>●●●</span><span>WiFi</span><span>▐</span></div>
-          </div>
-          <div class="ios-island"></div>
-          <div class="ios-splash" id="i-splash" style="background:#FFFFFF">
-            <div class="placeholder-logo" id="i-placeholder">Upload<br>iOS logo</div>
-            <img id="i-logo" src="" alt="" style="display:none">
-          </div>
-          <div class="ios-home-bar"></div>
-        </div>
-        <div class="phone-label">🍎 iOS<br><span style="font-family:'Courier New',monospace;font-size:11px" id="i-color-label">#FFFFFF</span></div>
-      </div>
-
-    </div>
-
-    <div class="sep"></div>
-
-    <!-- COLOUR SUMMARY -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px">
-      <div style="background:#0f1117;border:1px solid #2a2d3e;border-radius:10px;padding:12px 14px">
-        <div style="font-size:11px;color:#4ade80;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Android background</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div id="a-summary-swatch" style="width:22px;height:22px;border-radius:5px;border:1px solid #2a2d3e;background:#FFFFFF"></div>
-          <span style="font-family:'Courier New',monospace;font-size:14px;font-weight:600;color:#fff" id="a-summary-hex">#FFFFFF</span>
+          <input type="text" class="color-hex" id="as-hex" value="#FFFFFF" maxlength="7" oninput="syncHex('as',this.value)" placeholder="#FFFFFF">
         </div>
       </div>
-      <div style="background:#0f1117;border:1px solid #2a2d3e;border-radius:10px;padding:12px 14px">
-        <div style="font-size:11px;color:#60a5fa;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">iOS background</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div id="i-summary-swatch" style="width:22px;height:22px;border-radius:5px;border:1px solid #2a2d3e;background:#FFFFFF"></div>
-          <span style="font-family:'Courier New',monospace;font-size:14px;font-weight:600;color:#fff" id="i-summary-hex">#FFFFFF</span>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><div class="step-badge sa">2</div>
+        <div><div class="card-title">Splash logo</div><div class="card-sub">logo.png — PNG, 1024px wide</div></div>
+      </div>
+      <div class="upload-zone" id="as-zone">
+        <input type="file" id="as-file" accept=".png" onchange="handleUpload('as',this)">
+        <div class="uz-icon">📱</div>
+        <div class="uz-text"><strong>Click to upload</strong> or drag & drop</div>
+        <div class="uz-hint">PNG — 1024px wide</div>
+      </div>
+      <div class="upload-preview" id="as-preview">
+        <img id="as-preview-img" src="" alt="">
+        <span class="up-name" id="as-preview-name"></span>
+        <span class="up-remove" onclick="removeUpload('as')">✕</span>
+      </div>
+    </div>
+
+    <!-- APP ICON -->
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-label sl-android">App icon</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><div class="step-badge sa">3</div>
+        <div><div class="card-title">App icon background colour</div><div class="card-sub">Adaptive icon background colour for Android</div></div>
+      </div>
+      <div class="color-field">
+        <label>Background colour</label>
+        <div class="color-row">
+          <div class="color-swatch" id="ai-swatch" style="background:#FFFFFF">
+            <input type="color" id="ai-picker" value="#FFFFFF" oninput="syncColor('ai',this.value)">
+          </div>
+          <input type="text" class="color-hex" id="ai-hex" value="#FFFFFF" maxlength="7" oninput="syncHex('ai',this.value)" placeholder="#FFFFFF">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><div class="step-badge sa">4</div>
+        <div><div class="card-title">App icon logo</div><div class="card-sub">app_icon.png — PNG, 1024×1024px</div></div>
+      </div>
+      <div class="upload-zone" id="ai-zone">
+        <input type="file" id="ai-file" accept=".png" onchange="handleUpload('ai',this)">
+        <div class="uz-icon">🎨</div>
+        <div class="uz-text"><strong>Click to upload</strong> or drag & drop</div>
+        <div class="uz-hint">PNG — 1024×1024px</div>
+      </div>
+      <div class="upload-preview" id="ai-preview">
+        <img id="ai-preview-img" src="" alt="">
+        <span class="up-name" id="ai-preview-name"></span>
+        <span class="up-remove" onclick="removeUpload('ai')">✕</span>
+      </div>
+    </div>
+
+    <!-- ANDROID PREVIEW -->
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-label sl-preview">📱 Live preview</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><div class="step-badge sp">5</div>
+        <div><div class="card-title">Android preview</div><div class="card-sub">Updates live as you change colour or upload logos</div></div>
+      </div>
+
+      <div class="preview-wrap">
+
+        <!-- SPLASH PREVIEW -->
+        <div class="phone-wrap">
+          <div class="android-frame">
+            <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● ▐</span></div>
+            <div class="android-notch"></div>
+            <div class="android-splash" id="as-splash" style="background:#FFFFFF">
+              <div class="placeholder-logo" id="as-placeholder">Upload<br>splash logo</div>
+              <img id="as-logo" src="" alt="" style="display:none">
+            </div>
+            <div class="android-home">
+              <div class="home-tri"></div>
+              <div class="home-circle"></div>
+              <div class="home-sq"></div>
+            </div>
+          </div>
+          <div class="phone-label">Splash screen<br><span style="font-family:'Courier New',monospace;font-size:11px" id="as-color-label">#FFFFFF</span></div>
+        </div>
+
+        <!-- APP ICON PREVIEW -->
+        <div class="phone-wrap">
+          <div style="width:120px;height:120px;border-radius:26px;overflow:hidden;position:relative;box-shadow:0 8px 30px rgba(0,0,0,0.5);border:2px solid #374151" id="ai-icon-frame">
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:background 0.2s" id="ai-bg">
+              <div class="placeholder-logo" id="ai-placeholder" style="font-size:9px">Upload<br>app icon</div>
+              <img id="ai-logo" src="" alt="" style="display:none;max-width:60%;max-height:60%;object-fit:contain">
+            </div>
+          </div>
+          <div class="phone-label">App icon<br><span style="font-family:'Courier New',monospace;font-size:11px" id="ai-color-label">#FFFFFF</span></div>
+        </div>
+
+      </div>
+
+      <div class="sep"></div>
+      <div class="summary-grid">
+        <div class="summary-tile">
+          <div class="st-label" style="color:#4ade80">Splash background</div>
+          <div class="st-row">
+            <div class="st-dot" id="as-sum-dot" style="background:#FFFFFF"></div>
+            <span class="st-hex" id="as-sum-hex">#FFFFFF</span>
+          </div>
+        </div>
+        <div class="summary-tile">
+          <div class="st-label" style="color:#4ade80">Icon background</div>
+          <div class="st-row">
+            <div class="st-dot" id="ai-sum-dot" style="background:#FFFFFF"></div>
+            <span class="st-hex" id="ai-sum-hex">#FFFFFF</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ iOS PANEL ═══════════════ -->
+  <div class="platform-panel" id="panel-ios">
+
+    <!-- SPLASH -->
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-label sl-ios">Splash screen</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><div class="step-badge si">1</div>
+        <div><div class="card-title">Background colour</div><div class="card-sub">Splash screen background colour for iOS</div></div>
+      </div>
+      <div class="color-field">
+        <label>Background colour</label>
+        <div class="color-row">
+          <div class="color-swatch" id="is-swatch" style="background:#FFFFFF">
+            <input type="color" id="is-picker" value="#FFFFFF" oninput="syncColor('is',this.value)">
+          </div>
+          <input type="text" class="color-hex" id="is-hex" value="#FFFFFF" maxlength="7" oninput="syncHex('is',this.value)" placeholder="#FFFFFF">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><div class="step-badge si">2</div>
+        <div><div class="card-title">Splash logo</div><div class="card-sub">logo_dark / logo_light — SVG, 256px width</div></div>
+      </div>
+      <div class="upload-zone" id="is-zone">
+        <input type="file" id="is-file" accept=".svg" onchange="handleUpload('is',this)">
+        <div class="uz-icon">🍎</div>
+        <div class="uz-text"><strong>Click to upload</strong> or drag & drop</div>
+        <div class="uz-hint">SVG — 256px width</div>
+      </div>
+      <div class="upload-preview" id="is-preview">
+        <img id="is-preview-img" src="" alt="">
+        <span class="up-name" id="is-preview-name"></span>
+        <span class="up-remove" onclick="removeUpload('is')">✕</span>
+      </div>
+      <div class="info-box">IPP Tooling requires the iOS logo to be an <strong>SVG file</strong>. PNG files will not work for <code>logo_dark</code> and <code>logo_light</code>.</div>
+    </div>
+
+    <!-- iOS PREVIEW -->
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-label sl-preview">📱 Live preview</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><div class="step-badge sp">3</div>
+        <div><div class="card-title">iOS preview</div><div class="card-sub">Updates live as you change colour or upload logo</div></div>
+      </div>
+
+      <div class="preview-wrap">
+        <div class="phone-wrap">
+          <div class="ios-frame">
+            <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● ▐</span></div>
+            <div class="ios-island"></div>
+            <div class="ios-splash" id="is-splash" style="background:#FFFFFF">
+              <div class="placeholder-logo" id="is-placeholder">Upload<br>iOS logo</div>
+              <img id="is-logo" src="" alt="" style="display:none">
+            </div>
+            <div class="ios-home-bar"></div>
+          </div>
+          <div class="phone-label">Splash screen<br><span style="font-family:'Courier New',monospace;font-size:11px" id="is-color-label">#FFFFFF</span></div>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="summary-grid">
+        <div class="summary-tile">
+          <div class="st-label" style="color:#60a5fa">iOS splash background</div>
+          <div class="st-row">
+            <div class="st-dot" id="is-sum-dot" style="background:#FFFFFF"></div>
+            <span class="st-hex" id="is-sum-hex">#FFFFFF</span>
+          </div>
         </div>
       </div>
     </div>
@@ -313,30 +376,34 @@
 </div>
 
 <script>
-  var QUICK = ['#FFFFFF','#000000','#F5F5F5','#1A1A1A','#FF6B35','#2563EB','#16A34A','#DC2626','#7C3AED','#0F172A','#F8FAFC','#1E293B'];
-
-  function buildQuickColors(prefix) {
-    var el = document.getElementById(prefix+'-quick');
-    QUICK.forEach(function(c){
-      var d = document.createElement('div');
-      d.className = 'qc';
-      d.style.background = c;
-      d.style.border = c==='#FFFFFF' ? '2px solid #374151' : '2px solid transparent';
-      d.title = c;
-      d.onclick = function(){ syncColor(prefix, c); };
-      el.appendChild(d);
-    });
+  /* ── TAB TOGGLE ── */
+  function setTab(t) {
+    document.getElementById('tab-android').className = 'platform-tab' + (t==='android' ? ' active-android' : '');
+    document.getElementById('tab-ios').className     = 'platform-tab' + (t==='ios'     ? ' active-ios'     : '');
+    document.getElementById('panel-android').classList.toggle('active', t==='android');
+    document.getElementById('panel-ios').classList.toggle('active',     t==='ios');
   }
-  buildQuickColors('a');
-  buildQuickColors('i');
 
+  /* ── DRAG & DROP ── */
+  ['as','ai','is'].forEach(function(p){
+    var zone = document.getElementById(p+'-zone');
+    if (!zone) return;
+    zone.addEventListener('dragover',  function(e){ e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', function(){ zone.classList.remove('drag-over'); });
+    zone.addEventListener('drop', function(e){
+      e.preventDefault(); zone.classList.remove('drag-over');
+      var f = e.dataTransfer.files[0]; if (f) loadFile(p, f);
+    });
+  });
+
+  /* ── COLOR SYNC ── */
   function isValidHex(h) { return /^#[0-9A-Fa-f]{6}$/.test(h); }
 
   function syncColor(p, val) {
     if (!isValidHex(val)) return;
     val = val.toUpperCase();
-    document.getElementById(p+'-color-picker').value = val;
-    document.getElementById(p+'-hex').value = val;
+    document.getElementById(p+'-picker').value = val;
+    document.getElementById(p+'-hex').value    = val;
     document.getElementById(p+'-swatch').style.background = val;
     applyColor(p, val);
   }
@@ -345,67 +412,48 @@
     val = val.startsWith('#') ? val : '#'+val;
     document.getElementById(p+'-hex').value = val.toUpperCase();
     if (isValidHex(val)) {
-      document.getElementById(p+'-color-picker').value = val;
+      document.getElementById(p+'-picker').value = val;
       document.getElementById(p+'-swatch').style.background = val;
       applyColor(p, val);
     }
   }
 
   function applyColor(p, val) {
-    var splashId = p==='a' ? 'a-splash' : 'i-splash';
-    document.getElementById(splashId).style.background = val;
-    document.getElementById(p+'-color-label').textContent = val.toUpperCase();
-    document.getElementById(p+'-summary-swatch').style.background = val;
-    document.getElementById(p+'-summary-hex').textContent = val.toUpperCase();
+    var splashMap = { as: 'as-splash', ai: 'ai-bg', is: 'is-splash' };
+    var labelMap  = { as: 'as-color-label', ai: 'ai-color-label', is: 'is-color-label' };
+    var sumDotMap = { as: 'as-sum-dot', ai: 'ai-sum-dot', is: 'is-sum-dot' };
+    var sumHexMap = { as: 'as-sum-hex', ai: 'ai-sum-hex', is: 'is-sum-hex' };
+    document.getElementById(splashMap[p]).style.background   = val;
+    document.getElementById(labelMap[p]).textContent         = val;
+    document.getElementById(sumDotMap[p]).style.background   = val;
+    document.getElementById(sumHexMap[p]).textContent        = val;
   }
 
   /* ── FILE UPLOAD ── */
-  ['a','i'].forEach(function(p){
-    var zone = document.getElementById(p+'-upload-zone');
-    zone.addEventListener('dragover',  function(e){ e.preventDefault(); zone.classList.add('drag-over'); });
-    zone.addEventListener('dragleave', function(){ zone.classList.remove('drag-over'); });
-    zone.addEventListener('drop', function(e){
-      e.preventDefault(); zone.classList.remove('drag-over');
-      var f = e.dataTransfer.files[0];
-      if (f) loadFile(p, f);
-    });
-  });
-
-  function handleUpload(p, input) {
-    if (input.files[0]) loadFile(p, input.files[0]);
-  }
+  function handleUpload(p, input) { if (input.files[0]) loadFile(p, input.files[0]); }
 
   function loadFile(p, file) {
     var isSVG = /\.svg$/i.test(file.name);
     var isPNG = /\.png$/i.test(file.name);
-    if (p==='a' && !isPNG) { alert('Android logo must be a PNG file.'); return; }
-    if (p==='i' && !isSVG) { alert('iOS logo must be an SVG file.'); return; }
+    if ((p==='as'||p==='ai') && !isPNG) { alert('Please upload a PNG file.'); return; }
+    if (p==='is' && !isSVG) { alert('iOS logo must be an SVG file.'); return; }
 
     var reader = new FileReader();
     reader.onload = function(e){
       var src = e.target.result;
-      // Show preview bar
-      var prev = document.getElementById(p+'-preview');
-      prev.style.display = 'flex';
-      document.getElementById(p+'-preview-img').src = src;
+      document.getElementById(p+'-preview').style.display = 'flex';
+      document.getElementById(p+'-preview-img').src  = src;
       document.getElementById(p+'-preview-name').textContent = file.name;
-      // Show on phone
       var logo = document.getElementById(p+'-logo');
-      logo.src = src;
-      logo.style.display = 'block';
+      logo.src = src; logo.style.display = 'block';
       document.getElementById(p+'-placeholder').style.display = 'none';
     };
-    if (/\.svg$/i.test(file.name)) {
-      reader.readAsDataURL(file);
-    } else {
-      reader.readAsDataURL(file);
-    }
+    reader.readAsDataURL(file);
   }
 
   function removeUpload(p) {
     document.getElementById(p+'-preview').style.display = 'none';
     document.getElementById(p+'-preview-img').src = '';
-    document.getElementById(p+'-preview-name').textContent = '';
     document.getElementById(p+'-logo').style.display = 'none';
     document.getElementById(p+'-logo').src = '';
     document.getElementById(p+'-placeholder').style.display = 'block';
