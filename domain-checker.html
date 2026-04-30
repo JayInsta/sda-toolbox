@@ -213,24 +213,6 @@
       <div id="split-cards"></div>
     </div>
 
-    <!-- ACM CNAME -->
-    <div id="cname-results-section">
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">① AWS certificate validation</div><div class="section-divider-line"></div></div>
-      <div class="status-card" id="card-cname">
-        <div class="status-top">
-          <div><div class="status-title">ACM CNAME record on retailer DNS</div><div class="status-desc">Checking if retailer has added the ACM validation CNAME</div></div>
-          <div class="status-badge badge-checking" id="badge-cname"><div class="status-dot dot-checking"></div>Checking…</div>
-        </div>
-        <div class="dns-detail" id="detail-cname">Querying DNS…</div>
-        <div id="hint-cname"></div>
-      </div>
-      <div class="card" style="margin-top:2px;margin-bottom:14px">
-        <div style="font-size:12px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px">Send to retailer</div>
-        <div class="copy-row"><span style="font-size:11px;color:#64748b;min-width:90px">CNAME Name</span><span class="copy-val" id="copy-name">—</span><button class="btn-copy" onclick="copyEl('copy-name',this)">Copy</button></div>
-        <div class="copy-row"><span style="font-size:11px;color:#64748b;min-width:90px">CNAME Value</span><span class="copy-val" id="copy-value">—</span><button class="btn-copy" onclick="copyEl('copy-value',this)">Copy</button></div>
-      </div>
-    </div>
-
     <!-- DOMAIN POINTING -->
     <div id="point-results-section">
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">② Domain → whitelabel</div><div class="section-divider-line"></div></div>
@@ -402,8 +384,8 @@
     var cnameName  = pointingOn ? document.getElementById('cname-name').value.trim()         : '';
     var cnameValue = pointingOn ? document.getElementById('cname-value').value.trim()        : '';
 
-    if (pointingOn && (!retailer || !whitelabel || !cnameName || !cnameValue)) {
-      alert('Domain pointing check is enabled — please fill in all four fields (Retailer domain, Whitelabel target, CNAME name, CNAME value).');
+    if (pointingOn && (!retailer || !whitelabel)) {
+      alert('Domain pointing check is enabled — please fill in the Retailer domain and Whitelabel target.');
       isRunning = false; return;
     }
 
