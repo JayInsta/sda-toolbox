@@ -238,10 +238,10 @@
   <div class="card" id="v-current-section">
     <div class="card-top">
       <div class="step-badge sv3">3</div>
-      <div><div class="card-title">Current app's version code</div><div class="card-sub">From Play Console</div></div>
+      <div><div class="card-title">Current app version code offset</div><div class="card-sub">From Play Console or IPP</div></div>
     </div>
     <div class="full-field">
-      <label>Current version code</label>
+      <label>Current version code offset</label>
       <input type="number" id="current-offset" value="1496869728" min="0" oninput="calcVC()">
     </div>
   </div>
@@ -380,30 +380,30 @@
       ippEl.textContent    = 'Leave blank';
       badgeEl.innerHTML    = '<span class="badge b-blue">New app</span>';
       ippSub.textContent   = '';
-      finalEl.textContent  = fmt(ic);
+      finalEl.textContent  = ic;
       finalSub.textContent = 'IC offset used as default';
       return;
     }
 
     var offset = cur - ic + 1;
     var html =
-      '<div class="step-line"><span class="sl">Current app offset</span><span class="sv">' + fmt(cur) + '</span></div>' +
-      '<div class="step-line"><span class="sl">IC version code offset</span><span class="sv">' + fmt(ic) + '</span></div>' +
-      '<div class="step-line"><span class="sl">' + fmt(cur) + ' &minus; ' + fmt(ic) + ' + 1</span><span class="sv">' + fmt(offset) + '</span></div>';
+      '<div class="step-line"><span class="sl">Current app offset</span><span class="sv">' + cur + '</span></div>' +
+      '<div class="step-line"><span class="sl">IC version code offset</span><span class="sv">' + ic + '</span></div>' +
+      '<div class="step-line"><span class="sl">' + cur + ' &minus; ' + ic + ' + 1</span><span class="sv">' + offset + '</span></div>';
 
     if (offset <= 0) {
       html += '<div class="warn-box"><div class="warn-dot"></div><div>Result is negative &mdash; current offset is lower than IC version code offset. Leave the field blank in IPP. The platform will use the IC offset as default.</div></div>';
       ippEl.textContent    = 'Leave blank';
       badgeEl.innerHTML    = '<span class="badge b-amber">Case 1 &mdash; leave blank</span>';
       ippSub.textContent   = '';
-      finalEl.textContent  = fmt(ic);
+      finalEl.textContent  = ic;
       finalSub.textContent = 'IC offset used as default';
     } else {
-      ippEl.textContent    = fmt(offset);
+      ippEl.textContent    = offset;
       badgeEl.innerHTML    = '<span class="badge b-green">Case 2 &mdash; enter this value</span>';
-      ippSub.textContent   = fmt(cur) + ' \u2212 ' + fmt(ic) + ' + 1';
-      finalEl.textContent  = fmt(ic + offset);
-      finalSub.textContent = fmt(ic) + ' + ' + fmt(offset);
+      ippSub.textContent   = cur + ' \u2212 ' + ic + ' + 1';
+      finalEl.textContent  = ic + offset;
+      finalSub.textContent = ic + ' + ' + offset;
     }
 
     stepsEl.innerHTML = html;
