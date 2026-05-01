@@ -168,10 +168,9 @@
     <!-- LIVE DERIVED PREVIEWS -->
     <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-top:4px;margin-bottom:8px">Derived values preview</div>
     <div class="derived-box" id="derived-preview">
-      <span class="dkey">camelScheme (slug)       = </span><span class="dval" id="prev-camel-slug">—</span><br>
-      <span class="dkey">camelScheme (RetailerName) = </span><span class="dval-blue" id="prev-camel-scheme">—</span><br>
-      <span class="dkey">SNS certificate key       = </span><span class="dval-purple" id="prev-sns-cert">—</span><br>
-      <span class="dkey">SNS private key           = </span><span class="dval-orange" id="prev-sns-key">—</span>
+      <span class="dkey">camelScheme               = </span><span class="dval" id="prev-camel-scheme">—</span><br>
+      <span class="dkey">SNS certificate key        = </span><span class="dval-purple" id="prev-sns-cert">—</span><br>
+      <span class="dkey">SNS private key            = </span><span class="dval-orange" id="prev-sns-key">—</span>
     </div>
   </div>
 
@@ -426,15 +425,13 @@
     var slug        = gv('slug');
     var scheme      = gv('scheme');
     var devTeamId   = gv('dev-team-id');
-    var camelScheme = scheme ? toCamelFromPascal(scheme) : '——'; // BellasMarket → bellasMarket
-    var camelSlug   = slug   ? toCamelSlug(slug)         : '——'; // longs-picpac-sfp → longsPicpacSfp (for SNS)
-    var snsCert     = camelScheme !== '——' ? snsKeyName(camelScheme, 'cert') : '——';
-    var snsKey_     = camelScheme !== '——' ? snsKeyName(camelScheme, 'key')  : '——';
+    var camelScheme = scheme ? toCamelFromPascal(scheme) : '—';
+    var snsCert     = camelScheme !== '—' ? snsKeyName(camelScheme, 'cert') : '—';
+    var snsKey_     = camelScheme !== '—' ? snsKeyName(camelScheme, 'key')  : '—';
 
-    document.getElementById('prev-camel-slug').textContent   = camelScheme;
-    document.getElementById('prev-camel-scheme').textContent = scheme || '——';
-    document.getElementById('prev-sns-cert').textContent     = snsCert;
-    document.getElementById('prev-sns-key').textContent      = snsKey_;
+    document.getElementById('prev-camel-scheme').textContent  = camelScheme;
+    document.getElementById('prev-sns-cert').textContent      = snsCert;
+    document.getElementById('prev-sns-key').textContent       = snsKey_;
     document.getElementById('prev-sns-cert-full').textContent = snsCert;
     document.getElementById('prev-sns-key-full').textContent  = snsKey_;
 
