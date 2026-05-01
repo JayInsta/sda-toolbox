@@ -43,6 +43,7 @@
     .toggle-switch input:checked + .toggle-slider { background: #1e3a5f; }
     .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); background: #60a5fa; }
 
+    /* SECTION DIVIDERS */
     .section-divider { display: flex; align-items: center; gap: 14px; margin: 1.25rem 0 1rem; }
     .section-divider-line { flex: 1; height: 1px; background: #2a2d3e; }
     .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; white-space: nowrap; }
@@ -51,6 +52,7 @@
     .sl-green  { background: #1e3d2f; color: #4ade80; border: 1px solid #16a34a33; }
     .sl-orange { background: #3d2a1e; color: #fb923c; border: 1px solid #fb923c33; }
     .sl-red    { background: #3d1010; color: #f87171; border: 1px solid #f8717133; }
+    .sl-teal   { background: #1e3d3d; color: #2dd4bf; border: 1px solid #0d948833; }
 
     .btn-generate { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c3aed, #2563eb); border: none; border-radius: 12px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.02em; margin-top: 4px; }
     .btn-generate:hover { opacity: 0.9; }
@@ -87,6 +89,27 @@
     .country-btn.active { background: #2d1e3d; border-color: #7c3aed; color: #c084fc; }
     .locale-tag { font-family: 'Courier New', monospace; font-size: 11px; background: #1a1228; padding: 1px 6px; border-radius: 4px; margin-left: 2px; }
     .country-btn.active .locale-tag { background: #3d1e5f; color: #e2d4ff; }
+
+    /* ── OPTIONAL FIELD STYLES ── */
+    .opt-block { margin-bottom: 14px; }
+    .opt-block:last-child { margin-bottom: 0; }
+    .opt-header { display: flex; align-items: center; gap: 9px; cursor: pointer; user-select: none; margin-bottom: 0; }
+    .opt-cb { width: 15px; height: 15px; cursor: pointer; accent-color: #7c3aed; flex-shrink: 0; margin: 0; }
+    .opt-title { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; transition: color 0.15s; }
+    .opt-title.active { color: #c084fc; }
+    .new-badge { font-size: 9px; background: #2d1e3d; color: #c084fc; border: 1px solid #7c3aed33; padding: 1px 6px; border-radius: 4px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-left: 2px; }
+    .opt-desc { font-size: 10px; color: #374151; margin-left: auto; }
+    .opt-inputs { margin-top: 8px; padding-left: 24px; display: none; }
+    .opt-inputs.visible { display: block; }
+    .opt-inputs input, .opt-inputs textarea { width: 100%; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 13px; color: #e2e8f0; outline: none; font-family: 'Courier New', monospace; transition: border-color 0.15s; margin-top: 6px; }
+    .opt-inputs input:first-child, .opt-inputs textarea:first-child { margin-top: 0; }
+    .opt-inputs input:focus, .opt-inputs textarea:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
+    .opt-inputs input::placeholder, .opt-inputs textarea::placeholder { color: #374151; }
+    .opt-inputs textarea { resize: vertical; min-height: 70px; line-height: 1.6; }
+    .opt-inputs .sub-label { font-size: 10px; color: #475569; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 10px; margin-bottom: 4px; }
+    .opt-inputs .sub-label:first-child { margin-top: 0; }
+    .opt-inputs .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .opt-inputs .two-col input { margin-top: 0; }
 
     /* QA SECTION */
     .qa-wrap { margin-top: 2rem; }
@@ -134,11 +157,13 @@
     .mb-ok   { background: #1e2d1e; border: 1px solid #16a34a44; color: #4ade80; }
     .mb-diff { background: #2d1a1a; border: 1px solid #dc262644; color: #f87171; }
 
+    .info-box { background: #1e2d1e; border: 1px solid #16a34a33; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #4ade80; line-height: 1.6; margin-top: 10px; }
+
     .footer { text-align: center; padding: 2rem 0 0.5rem; font-size: 12px; color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #2a2d3e; }
 
     @media (max-width: 600px) {
-      .two-col, .derived-grid, .qa-cols { grid-template-columns: 1fr; }
+      .two-col, .derived-grid, .qa-cols, .opt-inputs .two-col { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -159,8 +184,6 @@
       <div class="step-badge s1">1</div>
       <div><div class="card-title">Core retailer details</div><div class="card-sub">Required — all outputs are derived from these values</div></div>
     </div>
-
-    <!-- COUNTRY SELECTOR -->
     <div class="field">
       <label>Country / Locale</label>
       <div style="display:flex;gap:8px;flex-wrap:wrap" id="country-group">
@@ -169,7 +192,6 @@
         <div class="country-btn" id="c-FR" onclick="setCountry('FR')">🇫🇷 &nbsp;France <span class="locale-tag">en_FR</span></div>
       </div>
     </div>
-
     <div class="two-col">
       <div class="field">
         <label>Slug <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">(e.g. longs-picpac-sfp)</span></label>
@@ -211,27 +233,185 @@
         <div class="toggle-row">
           <div>
             <div class="card-title">Custom message content &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
-            <div class="card-sub">Customise order descriptions, cancellation body, receipt and ratings</div>
+            <div class="card-sub">Blank fields use the default template. <span style="color:#c084fc">New</span> fields require the checkbox to be included in output.</div>
           </div>
           <label class="toggle-switch"><input type="checkbox" id="toggle-content" onchange="toggleSection('content-section',this)"><span class="toggle-slider"></span></label>
         </div>
       </div>
     </div>
+
     <div id="content-section" style="display:none;margin-top:1.25rem">
+
+      <!-- ORDER INFORMATION -->
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order information</div><div class="section-divider-line"></div></div>
-      <div class="field"><label>Order description</label><textarea id="order-desc" placeholder="Keep an eye out for order updates...&#10;&#10;Thanks,&#10;[Retailer Name] Team"></textarea></div>
-      <div class="field"><label>Family order description</label><textarea id="family-desc" placeholder="Keep an eye out for order updates... Remember, only %{owner_name} can add items...&#10;&#10;Thanks,&#10;[Retailer Name] Team"></textarea></div>
-      <div class="field"><label>Pickup instructions</label><textarea id="pickup" placeholder="Pull into the designated parking area..." style="min-height:60px"></textarea></div>
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">Order cancellation</div><div class="section-divider-line"></div></div>
-      <div class="field"><label>Cancellation body</label><textarea id="cancel-body" placeholder="This email is to confirm that you have canceled your order...&#10;&#10;Thank you,&#10;[Retailer Name] Team"></textarea></div>
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">Order receipt</div><div class="section-divider-line"></div></div>
-      <div class="field"><label>Receipt body</label><textarea id="receipt-body" placeholder="Thank you for shopping at [Retailer Name]..."></textarea></div>
+      <div class="field"><label>Order description <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><textarea id="order-desc" placeholder="Keep an eye out for order updates..."></textarea></div>
+      <div class="field"><label>Family order description <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><textarea id="family-desc" placeholder="Keep an eye out for order updates... Remember, only %{owner_name} can add items..."></textarea></div>
+      <div class="field"><label>Pickup instructions <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><textarea id="pickup" placeholder="Pull into the designated parking area..." style="min-height:60px"></textarea></div>
+
+      <!-- FINE PRINT -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-teal">Fine print <span style="font-size:9px;opacity:0.7">NEW</span></div><div class="section-divider-line"></div></div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-fine-print','opts-fine-print')">
+          <input type="checkbox" class="opt-cb" id="cb-fine-print" onchange="toggleOpt('cb-fine-print','opts-fine-print')">
+          <span class="opt-title" id="lbl-fine-print">Fine print content</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">unchecked = empty string in output</span>
+        </div>
+        <div class="opt-inputs" id="opts-fine-print">
+          <input type="text" id="inp-fine-print" placeholder='Maplebear Inc. (d/b/a Instacart) 50 Beale St. #600 San Francisco, CA 94105'>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">Footer app store links <span style="font-size:9px;opacity:0.7">NEW</span></div><div class="section-divider-line"></div></div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-app-links','opts-app-links')">
+          <input type="checkbox" class="opt-cb" id="cb-app-links" onchange="toggleOpt('cb-app-links','opts-app-links')">
+          <span class="opt-title" id="lbl-app-links">App store links</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">unchecked = not added to output</span>
+        </div>
+        <div class="opt-inputs" id="opts-app-links">
+          <div class="sub-label">iOS App Store URL</div>
+          <input type="text" id="inp-appstore-link" placeholder="https://apps.apple.com/us/app/instacart-grocery-deliveries/id545599256">
+          <div class="sub-label">Google Play Store URL</div>
+          <input type="text" id="inp-playstore-link" placeholder="https://play.google.com/store/apps/details?id=com.instacart.client&hl=en_US&gl=US">
+        </div>
+      </div>
+
+      <!-- ORDER CANCELLATION -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-orange">Order cancellation</div><div class="section-divider-line"></div></div>
+      <div class="field"><label>Cancellation body <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><textarea id="cancel-body" placeholder="This email is to confirm that you have canceled your order..."></textarea></div>
+      <div class="field">
+        <label>Cancellation image alt <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses retailer name</span></label>
+        <input type="text" id="inp-cancel-img-alt" placeholder="Retailer name (auto-filled if blank)">
+      </div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-cancel-subj','opts-cancel-subj')">
+          <input type="checkbox" class="opt-cb" id="cb-cancel-subj" onchange="toggleOpt('cb-cancel-subj','opts-cancel-subj')">
+          <span class="opt-title" id="lbl-cancel-subj">Email subject lines</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">unchecked = not added to output</span>
+        </div>
+        <div class="opt-inputs" id="opts-cancel-subj">
+          <div class="two-col">
+            <div>
+              <div class="sub-label">Delivery subject</div>
+              <input type="text" id="inp-cancel-subj-del" placeholder="%{warehouse_name} order canceled">
+            </div>
+            <div>
+              <div class="sub-label">Pickup subject</div>
+              <input type="text" id="inp-cancel-subj-pick" placeholder="%{warehouse_name} order canceled">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDER CONFIRMATION -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">Order confirmation <span style="font-size:9px;opacity:0.7">NEW</span></div><div class="section-divider-line"></div></div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-confirm-img','opts-confirm-img')">
+          <input type="checkbox" class="opt-cb" id="cb-confirm-img" onchange="toggleOpt('cb-confirm-img','opts-confirm-img')">
+          <span class="opt-title" id="lbl-confirm-img">Image alt text</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">unchecked = not added to output</span>
+        </div>
+        <div class="opt-inputs" id="opts-confirm-img">
+          <input type="text" id="inp-confirm-img-alt" placeholder="Retailer name (auto-filled if blank)">
+        </div>
+      </div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-confirm-subj','opts-confirm-subj')">
+          <input type="checkbox" class="opt-cb" id="cb-confirm-subj" onchange="toggleOpt('cb-confirm-subj','opts-confirm-subj')">
+          <span class="opt-title" id="lbl-confirm-subj">Email subject lines</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">unchecked = not added to output</span>
+        </div>
+        <div class="opt-inputs" id="opts-confirm-subj">
+          <div class="two-col">
+            <div>
+              <div class="sub-label">Delivery subject</div>
+              <input type="text" id="inp-confirm-subj-del" placeholder="%{warehouse_name} order confirmed!">
+            </div>
+            <div>
+              <div class="sub-label">Pickup subject</div>
+              <input type="text" id="inp-confirm-subj-pick" placeholder="%{warehouse_name} order confirmed!">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDER RECEIPT -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order receipt</div><div class="section-divider-line"></div></div>
+      <div class="field"><label>Receipt body <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><textarea id="receipt-body" placeholder="Thank you for shopping at [Retailer Name]..."></textarea></div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-receipt-img','opts-receipt-img')">
+          <input type="checkbox" class="opt-cb" id="cb-receipt-img" onchange="toggleOpt('cb-receipt-img','opts-receipt-img')">
+          <span class="opt-title" id="lbl-receipt-img">Image alt text</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">unchecked = not added to output</span>
+        </div>
+        <div class="opt-inputs" id="opts-receipt-img">
+          <input type="text" id="inp-receipt-img-alt" placeholder="Retailer name (auto-filled if blank)">
+        </div>
+      </div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-receipt-subj','opts-receipt-subj')">
+          <input type="checkbox" class="opt-cb" id="cb-receipt-subj" onchange="toggleOpt('cb-receipt-subj','opts-receipt-subj')">
+          <span class="opt-title" id="lbl-receipt-subj">Email subject lines</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">unchecked = not added to output</span>
+        </div>
+        <div class="opt-inputs" id="opts-receipt-subj">
+          <div class="two-col">
+            <div>
+              <div class="sub-label">Delivery subject</div>
+              <input type="text" id="inp-receipt-subj-del" placeholder="%{warehouse_name} order receipt">
+            </div>
+            <div>
+              <div class="sub-label">Pickup subject</div>
+              <input type="text" id="inp-receipt-subj-pick" placeholder="%{warehouse_name} order receipt">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDER RATING -->
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order rating</div><div class="section-divider-line"></div></div>
       <div class="two-col">
-        <div class="field"><label>Rate your order heading</label><input type="text" id="rate-heading" placeholder="We'd love to hear from you!"></div>
-        <div class="field" style="margin-bottom:0"><label>Delivery rating content</label><input type="text" id="rate-content" placeholder="Don't forget to rate and tip your shopper..."></div>
+        <div class="field"><label>Rate your order heading <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><input type="text" id="rate-heading" placeholder="We'd love to hear from you!"></div>
+        <div class="field"><label>Delivery rating content <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><input type="text" id="rate-content" placeholder="Don't forget to rate and tip your shopper..."></div>
       </div>
-    </div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-rating-pickup','opts-rating-pickup')">
+          <input type="checkbox" class="opt-cb" id="cb-rating-pickup" onchange="toggleOpt('cb-rating-pickup','opts-rating-pickup')">
+          <span class="opt-title" id="lbl-rating-pickup">Pickup rating content</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">unchecked = not added to output</span>
+        </div>
+        <div class="opt-inputs" id="opts-rating-pickup">
+          <input type="text" id="inp-rating-pickup" placeholder="Help us improve by rating your order experience and any replacement preferences.">
+        </div>
+      </div>
+
+      <!-- ORDER UPSELL -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-teal">Order upsell <span style="font-size:9px;opacity:0.7">NEW</span></div><div class="section-divider-line"></div></div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-upsell','opts-upsell')">
+          <input type="checkbox" class="opt-cb" id="cb-upsell" onchange="toggleOpt('cb-upsell','opts-upsell')">
+          <span class="opt-title" id="lbl-upsell">Order upsell section</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">unchecked = not added to output</span>
+        </div>
+        <div class="opt-inputs" id="opts-upsell">
+          <div class="sub-label">Forgot something label</div>
+          <input type="text" id="inp-upsell-forgot" placeholder="Forgot something?">
+          <div class="sub-label">Add items message</div>
+          <input type="text" id="inp-upsell-add" placeholder="You can add items until your shopper checks out.">
+        </div>
+      </div>
+
+    </div><!-- /content-section -->
   </div>
 
   <!-- STEP 3 — EMAIL HEADINGS -->
@@ -275,9 +455,7 @@
   <div class="output-wrap" id="output-wrap">
 
     <div class="section-divider" style="margin-top:2rem">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-purple">Output 1 — locale.rb variable</div>
-      <div class="section-divider-line"></div>
+      <div class="section-divider-line"></div><div class="section-label sl-purple">Output 1 — locale.rb variable</div><div class="section-divider-line"></div>
     </div>
     <div class="output-block">
       <div class="output-block-header">
@@ -291,9 +469,7 @@
     </div>
 
     <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-blue">Output 2 — Folder name</div>
-      <div class="section-divider-line"></div>
+      <div class="section-divider-line"></div><div class="section-label sl-blue">Output 2 — Folder name</div><div class="section-divider-line"></div>
     </div>
     <div class="output-block">
       <div class="output-block-header">
@@ -307,9 +483,7 @@
     </div>
 
     <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-green">Output 3 — Template 1 (one_order_mailer)</div>
-      <div class="section-divider-line"></div>
+      <div class="section-divider-line"></div><div class="section-label sl-green">Output 3 — Template 1 (one_order_mailer)</div><div class="section-divider-line"></div>
     </div>
     <div class="output-block">
       <div class="output-block-header">
@@ -323,9 +497,7 @@
     </div>
 
     <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-orange">Output 4 — Template 2 (class_scoped)</div>
-      <div class="section-divider-line"></div>
+      <div class="section-divider-line"></div><div class="section-label sl-orange">Output 4 — Template 2 (class_scoped)</div><div class="section-divider-line"></div>
     </div>
     <div class="output-block">
       <div class="output-block-header">
@@ -344,9 +516,7 @@
   <!-- QA VALIDATOR -->
   <div class="qa-wrap">
     <div class="section-divider" style="margin-top:2rem">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-red">🔍 QA validator — diff checker</div>
-      <div class="section-divider-line"></div>
+      <div class="section-divider-line"></div><div class="section-label sl-red">🔍 QA validator — diff checker</div><div class="section-divider-line"></div>
     </div>
     <div class="card">
       <div class="card-top">
@@ -367,7 +537,6 @@
         </div>
       </div>
       <button class="btn-validate" onclick="runDiff()">🔍 &nbsp;Validate &amp; highlight differences</button>
-
       <div class="diff-wrap" id="diff-wrap">
         <div style="margin-top:1.25rem"></div>
         <div class="match-banner" id="diff-banner"></div>
@@ -392,56 +561,90 @@
 
 <script>
   var selectedCountry = 'US';
-
   var COUNTRIES = {
     US: { code: 'US', locale: 'en_US', folderPrefix: 'en-US', flag: '🇺🇸' },
     CA: { code: 'CA', locale: 'en_CA', folderPrefix: 'en-CA', flag: '🇨🇦' },
     FR: { code: 'FR', locale: 'en_FR', folderPrefix: 'en-FR', flag: '🇫🇷' }
   };
 
+  /* ── DEFAULT VALUES ── */
+  var D = {
+    orderDesc:      'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. <br><br>Thanks,<br>The {{R}} Team',
+    familyDesc:     'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. Remember, only %{owner_name} can add items at this time, let them know if you forgot anything. <br><br>Thanks,<br>The {{R}} Team',
+    pickup:         "Pull into the designated parking area for pickup and let us know you arrived, and we'll bring your groceries right out!",
+    cancelBody:     "This email is to confirm that you've canceled your order. If there are changes on your account, you can expect them to disappear between 3-5 business days, depending on your bank.<br/><br/>We look forward to taking care of your next grocery delivery.<br/><br/>Thank you,<br/>The {{R}} Team",
+    receiptBody:    'Thank you for shopping at {{R}}. We hope you enjoyed the convenience of ordering online and will try our service again soon. <br/><br/>Your order details are below along with any adjustments made.',
+    rateHeading:    "We'd love to hear from you!",
+    rateContent:    "Don't forget to rate and tip your shopper if you want to recognize their efforts. 100% of tips goes to your driver.",
+    // NEW field defaults (from en_US default template)
+    finePrint:      'Maplebear Inc. (d/b/a Instacart) 50 Beale St. #600 San Francisco, CA 94105',
+    appstoreLink:   'https://apps.apple.com/us/app/instacart-grocery-deliveries/id545599256',
+    playstoreLink:  'https://play.google.com/store/apps/details?id=com.instacart.client&hl=en_US&gl=US',
+    cancelSubjDel:  '%{warehouse_name} order canceled',
+    cancelSubjPick: '%{warehouse_name} order canceled',
+    confirmSubjDel: '%{warehouse_name} order confirmed!',
+    confirmSubjPick:'%{warehouse_name} order confirmed!',
+    receiptSubjDel: '%{warehouse_name} order receipt',
+    receiptSubjPick:'%{warehouse_name} order receipt',
+    ratingPickup:   'Help us improve by rating your order experience and any replacement preferences.',
+    upsellForgot:   'Forgot something?',
+    upsellAdd:      'You can add items until your shopper checks out.'
+  };
+
+  function fillR(template, retailer) { return template.replace(/\{\{R\}\}/g, retailer); }
+  function gv(id) { return (document.getElementById(id) ? document.getElementById(id).value || '' : '').trim(); }
+  function toggleSection(id, cb) { document.getElementById(id).style.display = cb.checked ? 'block' : 'none'; }
+  function ensureHttps(url) { if (!url) return ''; return /^https?:\/\//i.test(url) ? url : 'https://' + url; }
+
+  /* Toggle optional field visibility and update label color */
+  function toggleOpt(cbId, sectionId) {
+    var cb = document.getElementById(cbId);
+    var section = document.getElementById(sectionId);
+    // Find label associated (lbl- prefix convention)
+    var lblId = 'lbl-' + cbId.replace('cb-', '');
+    var lbl = document.getElementById(lblId);
+    if (section) section.style.display = cb.checked ? 'block' : 'none';
+    if (lbl) lbl.classList.toggle('active', cb.checked);
+    // Stop click from double-firing when clicking checkbox directly
+    event && event.stopPropagation && event.stopPropagation();
+  }
+
+  /* Get value of optional (checkbox-gated) field.
+     Returns null  → checkbox unchecked, do NOT include in output
+     Returns string → checkbox checked; value = custom (if filled) or default (if blank) */
+  function optVal(cbId, inputId, defaultVal) {
+    var cb = document.getElementById(cbId);
+    if (!cb || !cb.checked) return null;
+    var val = gv(inputId);
+    return val || defaultVal;
+  }
+
+  /* Get value of regular (always-included) field. Blank = use default. */
+  function reqVal(inputId, defaultVal) {
+    return gv(inputId) || defaultVal;
+  }
+
+  function slugToLocale(slug) {
+    var c = COUNTRIES[selectedCountry];
+    return c.locale + '-' + slug.toUpperCase().replace(/-/g, '_');
+  }
+  function slugToFolder(slug) {
+    var c = COUNTRIES[selectedCountry];
+    return c.folderPrefix + '-' + slug.toLowerCase();
+  }
   function setCountry(code) {
     selectedCountry = code;
     document.querySelectorAll('.country-btn').forEach(function(b){ b.classList.remove('active'); });
     document.getElementById('c-' + code).classList.add('active');
     updatePreviews();
   }
-
-  function gv(id) { return (document.getElementById(id) ? document.getElementById(id).value || '' : '').trim(); }
-  function toggleSection(id, cb) { document.getElementById(id).style.display = cb.checked ? 'block' : 'none'; }
-  function ensureHttps(url) { if (!url) return ''; return /^https?:\/\//i.test(url) ? url : 'https://' + url; }
-
-  function slugToLocale(slug) {
-    var c = COUNTRIES[selectedCountry];
-    return c.locale + '-' + slug.toUpperCase().replace(/-/g, '_');
-  }
-
-  function slugToFolder(slug) {
-    var c = COUNTRIES[selectedCountry];
-    return c.folderPrefix + '-' + slug.toLowerCase();
-  }
-
   function updatePreviews() {
     var slug = gv('slug');
     document.getElementById('preview-locale').textContent = slug ? slugToLocale(slug) : '—';
     document.getElementById('preview-folder').textContent = slug ? slugToFolder(slug) : '—';
   }
-  function v(id, fallback) { var val = gv(id); return val || fallback; }
 
-  /* ── DEFAULTS — "Team" appended to all sign-offs ── */
-  var D = {
-    orderDesc:   'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. <br/><br/>Thanks, <br/>{{R}} Team',
-    familyDesc:  'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. Remember, only %{owner_name} can add items at this time, let them know if you forgot anything. <br/><br/>Thanks, <br/>{{R}} Team',
-    pickup:      "Pull into the designated parking area for pickup and let us know you have arrived, and we'll bring your groceries right out!",
-    cancelBody:  'This email is to confirm that you have canceled your order. If there are charges on your account, you can expect them to disappear between 3-5 business days, depending on your bank.<br/><br/>We look forward to taking care of your next grocery order.<br/><br/>Thank you,<br/>{{R}} Team',
-    receiptBody: 'Thank you for shopping at {{R}}. We hope you enjoyed the convenience of ordering online and will try our service again soon. <br/><br/>Your order details are below along with any adjustments made.',
-    rateHeading: "We'd love to hear from you!",
-    rateContent: "Don't forget to rate and tip your shopper if you want to recognize their efforts. 100% of tips goes to your shopper."
-  };
-
-  function fillDefaults(template, retailer) {
-    return template.replace(/\{\{R\}\}/g, retailer);
-  }
-
+  /* ── GENERATE ── */
   function generate() {
     var slug        = gv('slug');
     var retailer    = gv('retailer-name');
@@ -453,32 +656,49 @@
       return;
     }
 
-    var envKey     = slug.toUpperCase().replace(/-/g, '_');
-    var localeVar  = slugToLocale(slug);    // e.g. en_CA-LONGS_PICPAC_SFP
-    var folderName = slugToFolder(slug);    // e.g. en-CA-longs-picpac-sfp
-    var yamlKey    = COUNTRIES[selectedCountry].locale + '-' + envKey; // used in YAML top-level key
+    var localeVar  = slugToLocale(slug);
+    var folderName = slugToFolder(slug);
+    var yamlKey    = COUNTRIES[selectedCountry].locale + '-' + slug.toUpperCase().replace(/-/g, '_');
     var contentOn  = document.getElementById('toggle-content').checked;
     var headingsOn = document.getElementById('toggle-headings').checked;
 
-    /* T1 values — defaults always include " Team" after retailer in sign-offs */
-    var orderDesc   = contentOn ? v('order-desc',   fillDefaults(D.orderDesc,   retailer)) : fillDefaults(D.orderDesc,   retailer);
-    var familyDesc  = contentOn ? v('family-desc',  fillDefaults(D.familyDesc,  retailer)) : fillDefaults(D.familyDesc,  retailer);
-    var pickup      = contentOn ? v('pickup',        D.pickup)                               : D.pickup;
-    var cancelBody  = contentOn ? v('cancel-body',  fillDefaults(D.cancelBody,  retailer)) : fillDefaults(D.cancelBody,  retailer);
-    var receiptBody = contentOn ? v('receipt-body', fillDefaults(D.receiptBody, retailer)) : fillDefaults(D.receiptBody, retailer);
-    var rateHeading = contentOn ? v('rate-heading', D.rateHeading)                          : D.rateHeading;
-    var rateContent = contentOn ? v('rate-content', D.rateContent)                          : D.rateContent;
+    /* ── EXISTING FIELDS (blank = default) ── */
+    var orderDesc   = contentOn ? reqVal('order-desc',   fillR(D.orderDesc,   retailer)) : fillR(D.orderDesc,   retailer);
+    var familyDesc  = contentOn ? reqVal('family-desc',  fillR(D.familyDesc,  retailer)) : fillR(D.familyDesc,  retailer);
+    var pickup      = contentOn ? reqVal('pickup',        D.pickup)                        : D.pickup;
+    var cancelBody  = contentOn ? reqVal('cancel-body',  fillR(D.cancelBody,  retailer)) : fillR(D.cancelBody,  retailer);
+    var receiptBody = contentOn ? reqVal('receipt-body', fillR(D.receiptBody, retailer)) : fillR(D.receiptBody, retailer);
+    var rateHeading = contentOn ? reqVal('rate-heading', D.rateHeading)                   : D.rateHeading;
+    var rateContent = contentOn ? reqVal('rate-content', D.rateContent)                   : D.rateContent;
 
-    /* T2 values */
-    var chd = headingsOn ? v('cancel-heading-delivery',  'Your order has been canceled.')                              : 'Your order has been canceled.';
-    var chp = headingsOn ? v('cancel-heading-pickup',    'Your order has been canceled.')                              : 'Your order has been canceled.';
-    var cfd = headingsOn ? v('confirm-heading-delivery', 'Hi %{first_name}, your ' + retailer + ' order is all set.') : 'Hi %{first_name}, your ' + retailer + ' order is all set.';
-    var cfp = headingsOn ? v('confirm-heading-pickup',   'Hi %{first_name}, your ' + retailer + ' order is all set.') : 'Hi %{first_name}, your ' + retailer + ' order is all set.';
-    var rhd = headingsOn ? v('receipt-heading-delivery', "%{first_name}, here's your receipt")                        : "%{first_name}, here's your receipt";
-    var rhp = headingsOn ? v('receipt-heading-pickup',   "%{first_name}, here's your receipt")                        : "%{first_name}, here's your receipt";
-    var cih = headingsOn ? v('cancel-items-heading',     'Canceled Items')                                            : 'Canceled Items';
+    /* Cancellation image alt — always included, default = retailer name */
+    var cancelImgAlt = contentOn ? reqVal('inp-cancel-img-alt', retailer) : retailer;
 
-    /* Update file hints with actual folder name */
+    /* ── NEW OPTIONAL FIELDS (checkbox gated, null = not included) ── */
+    var finePrint      = contentOn ? optVal('cb-fine-print',    'inp-fine-print',       D.finePrint)      : null;
+    var appstoreLink   = contentOn ? optVal('cb-app-links',     'inp-appstore-link',    D.appstoreLink)   : null;
+    var playstoreLink  = contentOn ? optVal('cb-app-links',     'inp-playstore-link',   D.playstoreLink)  : null;
+    var cancelSubjDel  = contentOn ? optVal('cb-cancel-subj',   'inp-cancel-subj-del',  D.cancelSubjDel)  : null;
+    var cancelSubjPick = contentOn ? optVal('cb-cancel-subj',   'inp-cancel-subj-pick', D.cancelSubjPick) : null;
+    var confirmImgAlt  = contentOn ? optVal('cb-confirm-img',   'inp-confirm-img-alt',  retailer)         : null;
+    var confirmSubjDel = contentOn ? optVal('cb-confirm-subj',  'inp-confirm-subj-del', D.confirmSubjDel) : null;
+    var confirmSubjPick= contentOn ? optVal('cb-confirm-subj',  'inp-confirm-subj-pick',D.confirmSubjPick): null;
+    var receiptImgAlt  = contentOn ? optVal('cb-receipt-img',   'inp-receipt-img-alt',  retailer)         : null;
+    var receiptSubjDel = contentOn ? optVal('cb-receipt-subj',  'inp-receipt-subj-del', D.receiptSubjDel) : null;
+    var receiptSubjPick= contentOn ? optVal('cb-receipt-subj',  'inp-receipt-subj-pick',D.receiptSubjPick): null;
+    var ratingPickup   = contentOn ? optVal('cb-rating-pickup', 'inp-rating-pickup',    D.ratingPickup)   : null;
+    var upsellForgot   = contentOn ? optVal('cb-upsell',        'inp-upsell-forgot',    D.upsellForgot)   : null;
+    var upsellAdd      = contentOn ? optVal('cb-upsell',        'inp-upsell-add',       D.upsellAdd)      : null;
+
+    /* ── STEP 3 HEADINGS ── */
+    var chd = headingsOn ? reqVal('cancel-heading-delivery',  'Your order has been canceled.')                              : 'Your order has been canceled.';
+    var chp = headingsOn ? reqVal('cancel-heading-pickup',    'Your order has been canceled.')                              : 'Your order has been canceled.';
+    var cfd = headingsOn ? reqVal('confirm-heading-delivery', 'Hi %{first_name}, your ' + retailer + ' order is all set.') : 'Hi %{first_name}, your ' + retailer + ' order is all set.';
+    var cfp = headingsOn ? reqVal('confirm-heading-pickup',   'Hi %{first_name}, your ' + retailer + ' order is all set.') : 'Hi %{first_name}, your ' + retailer + ' order is all set.';
+    var rhd = headingsOn ? reqVal('receipt-heading-delivery', "%{first_name}, here's your receipt")                        : "%{first_name}, here's your receipt";
+    var rhp = headingsOn ? reqVal('receipt-heading-pickup',   "%{first_name}, here's your receipt")                        : "%{first_name}, here's your receipt";
+    var cih = headingsOn ? reqVal('cancel-items-heading',     'Canceled Items')                                            : 'Canceled Items';
+
     document.getElementById('hint-folder-t1').textContent = folderName;
     document.getElementById('hint-folder-t2').textContent = folderName;
 
@@ -486,41 +706,93 @@
     renderPlain('box1', localeVar);
     renderPlain('box2', folderName);
 
-    /* OUTPUT 3 */
-    var t1 = [
-      yamlKey + ':',
-      '  one_order_mailer:',
-      '    fine_print:',
-      '      content: ""',
-      '    footer:',
-      '      retailer_link: "' + retailerUrl + '"',
-      '      retailer_link_label: "' + retailer + '"',
-      '      help_link: "' + whitelabel + '/help"',
-      '      help_link_label: "Help"',
-      '      privacy_policy_link: "' + whitelabel + '/privacy"',
-      '      privacy_policy_link_label: "Privacy Policy"',
-      '      tos_link: "' + whitelabel + '/terms"',
-      '      tos_link_label: "Terms & Conditions"',
-      '    order_information:',
-      '      description: "' + orderDesc + '"',
-      '      family_description: "' + familyDesc + '"',
-      '      pickup:',
-      '        instructions_details: "' + pickup + '"',
-      '    order_cancellation:',
-      '      generic_image:',
-      '        image_alt: "' + retailer + '"',
-      '      generic_body:',
-      '        content: "' + cancelBody + '"',
-      '    order_receipt:',
-      '      generic_body:',
-      '        content: "' + receiptBody + '"',
-      '    order_rating:',
-      '      rate_your_order: "' + rateHeading + '"',
-      '      delivery_content: "' + rateContent + '"',
-    ].join('\n');
-    renderYAML('box3', t1);
+    /* ── OUTPUT 3: one_order_mailer.yml ── */
+    var t1 = [];
+    t1.push(yamlKey + ':');
+    t1.push('  one_order_mailer:');
 
-    /* OUTPUT 4 */
+    // Fine print
+    t1.push('    fine_print:');
+    t1.push('      content: "' + (finePrint !== null ? finePrint : '') + '"');
+
+    // Footer
+    t1.push('    footer:');
+    if (appstoreLink  !== null) t1.push('      appstore_link: "' + appstoreLink + '"');
+    if (playstoreLink !== null) t1.push('      playstore_link: "' + playstoreLink + '"');
+    t1.push('      retailer_link: "' + retailerUrl + '"');
+    t1.push('      retailer_link_label: "' + retailer + '"');
+    t1.push('      help_link: "' + whitelabel + '/help"');
+    t1.push('      help_link_label: "Help"');
+    t1.push('      privacy_policy_link: "' + whitelabel + '/privacy"');
+    t1.push('      privacy_policy_link_label: "Privacy Policy"');
+    t1.push('      tos_link: "' + whitelabel + '/terms"');
+    t1.push('      tos_link_label: "Terms & Conditions"');
+
+    // Order information
+    t1.push('    order_information:');
+    t1.push('      description: "' + orderDesc + '"');
+    t1.push('      family_description: "' + familyDesc + '"');
+    t1.push('      pickup:');
+    t1.push('        instructions_details: "' + pickup + '"');
+
+    // Order cancellation
+    t1.push('    order_cancellation:');
+    t1.push('      generic_image:');
+    t1.push('        image_alt: "' + cancelImgAlt + '"');
+    t1.push('      generic_body:');
+    t1.push('        content: "' + cancelBody + '"');
+    if (cancelSubjDel !== null) {
+      t1.push('      subject:');
+      t1.push('        delivery: "' + cancelSubjDel + '"');
+      t1.push('        pickup: "' + cancelSubjPick + '"');
+    }
+
+    // Order confirmation (only if any opt-in enabled)
+    if (confirmImgAlt !== null || confirmSubjDel !== null) {
+      t1.push('    order_confirmation:');
+      if (confirmImgAlt !== null) {
+        t1.push('      generic_image:');
+        t1.push('        image_alt: "' + confirmImgAlt + '"');
+      }
+      if (confirmSubjDel !== null) {
+        t1.push('      subject:');
+        t1.push('        delivery: "' + confirmSubjDel + '"');
+        t1.push('        pickup: "' + confirmSubjPick + '"');
+      }
+    }
+
+    // Order receipt
+    t1.push('    order_receipt:');
+    if (receiptImgAlt !== null) {
+      t1.push('      generic_image:');
+      t1.push('        image_alt: "' + receiptImgAlt + '"');
+    }
+    t1.push('      generic_body:');
+    t1.push('        content: "' + receiptBody + '"');
+    if (receiptSubjDel !== null) {
+      t1.push('      subject:');
+      t1.push('        delivery: "' + receiptSubjDel + '"');
+      t1.push('        pickup: "' + receiptSubjPick + '"');
+    }
+
+    // Order rating
+    t1.push('    order_rating:');
+    t1.push('      rate_your_order: "' + rateHeading + '"');
+    t1.push('      delivery_content: "' + rateContent + '"');
+    if (ratingPickup !== null) {
+      t1.push('      pickup_content: "' + ratingPickup + '"');
+    }
+
+    // Order upsell (only if opted in)
+    if (upsellForgot !== null) {
+      t1.push('    order_upsell:');
+      t1.push('      forgot_something: ' + upsellForgot);
+      t1.push('      you_can_add_until_shopper_checks_out: ' + upsellAdd);
+    }
+
+    renderYAML('box3', t1.join('\n'));
+
+    /* ── OUTPUT 4: orders.yml (class_scoped) ── */
     var t2 = [
       yamlKey + ':',
       '  class_scoped:',
@@ -549,6 +821,7 @@
     document.getElementById('output-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
   }
 
+  /* ── RENDER HELPERS ── */
   function renderPlain(id, text) {
     var el = document.getElementById(id);
     el.innerHTML = '<span class="out-plain">' + esc(text) + '</span>';
@@ -575,9 +848,7 @@
     el.dataset.raw = raw;
   }
 
-  function esc(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
   function copyBox(id, btn) {
     var raw = document.getElementById(id).dataset.raw || '';
@@ -592,100 +863,55 @@
   function runDiff() {
     var expText = document.getElementById('qa-expected').value;
     var actText = document.getElementById('qa-actual').value;
-
-    if (!expText.trim() && !actText.trim()) {
-      alert('Please paste content into both fields before validating.');
-      return;
-    }
-
+    if (!expText.trim() && !actText.trim()) { alert('Please paste content into both fields before validating.'); return; }
     var expLines = expText.split('\n');
     var actLines = actText.split('\n');
-
-    /* LCS-based diff */
     var diff = computeDiff(expLines, actLines);
-
     var matchCount = 0, addCount = 0, delCount = 0, chgCount = 0;
-    var html = '';
-    var lineNum = 0;
-
+    var html = ''; var lineNum = 0;
     diff.forEach(function(item) {
       lineNum++;
       var cls, prefix, content;
-      if (item.type === 'equal') {
-        matchCount++;
-        cls = 'dl-ok'; prefix = ' '; content = item.value;
-      } else if (item.type === 'add') {
-        addCount++;
-        cls = 'dl-add'; prefix = '+'; content = item.value;
-      } else if (item.type === 'remove') {
-        delCount++;
-        cls = 'dl-del'; prefix = '−'; content = item.value;
-      } else {
-        chgCount++;
-        cls = 'dl-chg'; prefix = '~'; content = item.value;
-      }
-      html +=
-        '<div class="diff-line ' + cls + '">' +
-          '<div class="diff-line-num">' + lineNum + '</div>' +
-          '<div class="diff-line-content">' + prefix + ' ' + esc(content) + '</div>' +
-        '</div>';
+      if (item.type === 'equal')  { matchCount++; cls = 'dl-ok';  prefix = ' '; content = item.value; }
+      else if (item.type === 'add')    { addCount++;   cls = 'dl-add'; prefix = '+'; content = item.value; }
+      else if (item.type === 'remove') { delCount++;   cls = 'dl-del'; prefix = '−'; content = item.value; }
+      else                             { chgCount++;   cls = 'dl-chg'; prefix = '~'; content = item.value; }
+      html += '<div class="diff-line ' + cls + '"><div class="diff-line-num">' + lineNum + '</div><div class="diff-line-content">' + prefix + ' ' + esc(content) + '</div></div>';
     });
-
     var total = matchCount + addCount + delCount + chgCount;
     var isMatch = (addCount === 0 && delCount === 0 && chgCount === 0);
-
     document.getElementById('diff-banner').className = 'match-banner ' + (isMatch ? 'mb-ok' : 'mb-diff');
-    document.getElementById('diff-banner').textContent = isMatch
-      ? '✅ Perfect match — no differences found!'
-      : '❌ Differences found — ' + (addCount + delCount + chgCount) + ' line(s) differ out of ' + total;
-
+    document.getElementById('diff-banner').textContent = isMatch ? '✅ Perfect match — no differences found!' : '❌ Differences found — ' + (addCount + delCount + chgCount) + ' line(s) differ out of ' + total;
     document.getElementById('diff-summary').innerHTML =
       '<div class="diff-stat ds-ok"><div class="diff-stat-num">' + matchCount + '</div><div class="diff-stat-label">Matching</div></div>' +
       '<div class="diff-stat ds-diff"><div class="diff-stat-num">' + addCount + '</div><div class="diff-stat-label">Missing in actual</div></div>' +
       '<div class="diff-stat ds-miss"><div class="diff-stat-num">' + delCount + '</div><div class="diff-stat-label">Extra in actual</div></div>' +
       '<div class="diff-stat ds-miss" style="border-color:#fbbf2433"><div class="diff-stat-num" style="color:#fbbf24">' + chgCount + '</div><div class="diff-stat-label">Changed</div></div>';
-
     document.getElementById('diff-box').innerHTML = html;
     document.getElementById('diff-wrap').style.display = 'block';
     document.getElementById('diff-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
   }
 
-  /* Simple LCS diff — compares line by line */
   function computeDiff(a, b) {
     var m = a.length, n = b.length;
-    /* Build LCS table */
     var dp = [];
     for (var i = 0; i <= m; i++) { dp[i] = []; for (var j = 0; j <= n; j++) dp[i][j] = 0; }
-    for (var i = 1; i <= m; i++) {
-      for (var j = 1; j <= n; j++) {
-        if (a[i-1].trim() === b[j-1].trim()) dp[i][j] = dp[i-1][j-1] + 1;
-        else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
-      }
+    for (var i = 1; i <= m; i++) for (var j = 1; j <= n; j++) {
+      if (a[i-1].trim() === b[j-1].trim()) dp[i][j] = dp[i-1][j-1] + 1;
+      else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
     }
-    /* Backtrack */
     var result = [], i = m, j = n;
     while (i > 0 || j > 0) {
-      if (i > 0 && j > 0 && a[i-1].trim() === b[j-1].trim()) {
-        result.unshift({ type: 'equal', value: a[i-1] });
-        i--; j--;
-      } else if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) {
-        result.unshift({ type: 'remove', value: b[j-1] });
-        j--;
-      } else {
-        result.unshift({ type: 'add', value: a[i-1] });
-        i--;
-      }
+      if (i > 0 && j > 0 && a[i-1].trim() === b[j-1].trim()) { result.unshift({ type: 'equal', value: a[i-1] }); i--; j--; }
+      else if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) { result.unshift({ type: 'remove', value: b[j-1] }); j--; }
+      else { result.unshift({ type: 'add', value: a[i-1] }); i--; }
     }
-    /* Mark adjacent add/remove pairs as changed */
     for (var k = 0; k < result.length - 1; k++) {
-      if (result[k].type === 'add' && result[k+1].type === 'remove') {
-        result[k].type   = 'chg';
-        result[k+1].type = 'chg';
-      }
+      if (result[k].type === 'add' && result[k+1].type === 'remove') { result[k].type = 'chg'; result[k+1].type = 'chg'; }
     }
     return result;
   }
 </script>
-  <script src="nav.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>
