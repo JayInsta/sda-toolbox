@@ -151,10 +151,10 @@
 
     <div class="field">
       <label>Bundle identifier
-        <span class="hint" id="bundle-hint">(unique — e.g. com.merchant.appname.ios)</span>
+        <span class="hint" id="bundle-hint">(auto-generated for new apps, or enter existing)</span>
       </label>
-      <input type="text" id="bundle-id" placeholder="com.longspicpac.app.ios" oninput="updatePreviews()">
-      <div class="info-box" id="bundle-info" style="display:none">For takeover apps, use the existing iOS App bundle identifier from App Store Connect.</div>
+      <input type="text" id="bundle-id" placeholder="com.retailername.app.ios" oninput="updatePreviews()">
+      <div class="info-box" id="bundle-info" style="display:none;margin-top:8px">For takeover apps, use the existing iOS App bundle identifier from App Store Connect.</div>
     </div>
 
     <div class="field">
@@ -208,14 +208,6 @@
       <div class="step-badge s4">4</div>
       <div><div class="card-title">SNS certificate & private key</div><div class="card-sub">Push notification certificates — paste values from the SNS file</div></div>
     </div>
-    <div class="field">
-      <label>SNS certificate value</label>
-      <textarea id="sns-cert-val" placeholder="Paste SNS app_prod_sns_certificate value here..."></textarea>
-    </div>
-    <div class="field">
-      <label>SNS private key value</label>
-      <textarea id="sns-key-val" placeholder="Paste SNS app_prod_sns_private_key value here..."></textarea>
-    </div>
     <div class="derived-box" style="margin-top:8px">
       <span class="dkey">Key names will be:</span><br>
       <span class="dval-purple" id="prev-sns-cert-full">——</span><br>
@@ -238,26 +230,12 @@
       </div>
     </div>
     <div id="airship-section" style="display:none;margin-top:1.25rem">
-      <div class="two-col">
-        <div class="field">
-          <label>Airship app key</label>
-          <input type="text" id="airship-key" placeholder="Airship app key">
-        </div>
-        <div class="field">
-          <label>Airship app secret</label>
-          <input type="text" id="airship-secret" placeholder="Airship app secret">
-        </div>
-      </div>
-      <div class="field">
-        <label>Airship master secret</label>
-        <input type="text" id="airship-master" placeholder="Airship master secret">
-      </div>
-      <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;margin-top:4px">Derived Airship key names</div>
+      <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Derived Airship key names</div>
       <div class="derived-box" id="airship-preview">
         <span class="dkey">IC_KEY_AIRSHIP_PRODUCTION_ENT_</span><span class="dval-purple" id="prev-airship-scheme">——</span><br>
         <span class="dkey">IC_KEY_AIRSHIP_PRODUCTION_SECRET_ENT_</span><span class="dval-orange" id="prev-airship-secret-scheme">——</span>
       </div>
-      <div class="info-box" style="margin-top:10px">The <strong>&lt;SCHEME&gt;</strong> suffix is the <strong>Scheme Name</strong> (PascalCase) entered in Step 2 above.</div>
+      <div class="info-box" style="margin-top:10px">The <strong>&lt;SCHEME&gt;</strong> suffix is the <strong>Scheme Name</strong> (PascalCase, uppercased) entered in Step 2 above.</div>
     </div>
   </div>
 
@@ -365,13 +343,30 @@
 <script>
   var appType = 'new';
 
+  function toBundleId(appName) {
+    // "Long's Pic Pac" → "com.longspicpac.app.ios"
+    return 'com.' + appName.toLowerCase().replace(/[^a-z0-9]/g, '') + '.app.ios';
+  }
+
   function setType(t) {
     appType = t;
     document.getElementById('btn-new').classList.toggle('active',      t === 'new');
     document.getElementById('btn-takeover').classList.toggle('active', t === 'takeover');
-    document.getElementById('bundle-hint').textContent =
-      t === 'new' ? '(unique — e.g. com.merchant.appname.ios)' : '(use existing iOS App bundle identifier)';
-    document.getElementById('bundle-info').style.display = t === 'takeover' ? 'block' : 'none';
+    var bundleField = document.getElementById('bundle-id');
+    if (t === 'new') {
+      document.getElementById('bundle-hint').textContent = '(auto-generated from app name)';
+      document.getElementById('bundle-info').style.display = 'none';
+      var appName = document.getElementById('app-name').value.trim();
+      if (appName) bundleField.value = toBundleId(appName);
+      bundleField.readOnly = true;
+      bundleField.style.opacity = '0.6';
+    } else {
+      document.getElementById('bundle-hint').textContent = '(use existing iOS App bundle identifier)';
+      document.getElementById('bundle-info').style.display = 'block';
+      bundleField.readOnly = false;
+      bundleField.style.opacity = '1';
+      bundleField.placeholder = 'com.existingapp.ios';
+    }
     updatePreviews();
   }
 
@@ -415,7 +410,7 @@
     document.getElementById('prev-sns-cert-full').textContent = snsCert;
     document.getElementById('prev-sns-key-full').textContent  = snsKey_;
 
-    var tid = devTeamId || '{TEAM-ID}';
+    var tid = devTeamId.toUpperCase();
     document.getElementById('prev-asc-id').textContent      = tid;
     document.getElementById('prev-asc-content').textContent = tid;
     document.getElementById('prev-asc-issuer').textContent  = tid;
@@ -478,7 +473,7 @@
     var camelSlug   = toCamelSlug(slug);          // longs-picpac-sfp → longsPicpacSfp
     var snsCertName = snsKeyName(camelScheme, 'cert');
     var snsKeyName_ = snsKeyName(camelScheme, 'key');
-    var tid         = devTeamId;
+    var tid         = devTeamId.toUpperCase();
 
     /* OUTPUT 1 — camelScheme */
     renderPlain('box1', [
@@ -495,8 +490,8 @@
 
     /* OUTPUT 3 — SNS keys */
     renderKV('box3', [
-      snsCertName + '=' + (snsCertVal || '<paste SNS certificate value>'),
-      snsKeyName_ + '=' + (snsKeyVal  || '<paste SNS private key value>'),
+      snsCertName,
+      snsKeyName_,
     ]);
 
     /* OUTPUT 4 — Full summary */
@@ -525,16 +520,15 @@
       'APP_STORE_CONNECT_API_KEY_ISSUER_ID_' + tid,
       '',
       '# ── SNS push notification keys ────────────────────────',
-      snsCertName + '=' + (snsCertVal ? '<provided>' : '<not provided>'),
-      snsKeyName_ + '=' + (snsKeyVal  ? '<provided>' : '<not provided>'),
+      snsCertName,
+      snsKeyName_,
     ];
 
     if (airshipOn) {
       summaryLines.push('');
       summaryLines.push('# ── Airship ───────────────────────────────────────────');
-      summaryLines.push('IC_KEY_AIRSHIP_PRODUCTION_ENT_' + scheme.toUpperCase() + '=' + (gv('airship-key') || '<not provided>'));
-      summaryLines.push('IC_KEY_AIRSHIP_PRODUCTION_SECRET_ENT_' + scheme.toUpperCase() + '=' + (gv('airship-secret') || '<not provided>'));
-      summaryLines.push('AIRSHIP_MASTER_SECRET_' + slug.toUpperCase().replace(/-/g,'_') + '=' + (gv('airship-master') || '<not provided>'));
+      summaryLines.push('IC_KEY_AIRSHIP_PRODUCTION_ENT_' + scheme.toUpperCase());
+      summaryLines.push('IC_KEY_AIRSHIP_PRODUCTION_SECRET_ENT_' + scheme.toUpperCase());
     }
 
     renderPlain('box4', summaryLines);
@@ -543,11 +537,8 @@
     document.getElementById('airship-output-section').style.display = airshipOn ? 'block' : 'none';
     if (airshipOn) {
       renderKV('box5', [
-        'IC_KEY_AIRSHIP_PRODUCTION_ENT_' + scheme.toUpperCase() + '=' + (gv('airship-key')    || '<paste Airship app key>'),
-        'IC_KEY_AIRSHIP_PRODUCTION_SECRET_ENT_' + scheme.toUpperCase() + '=' + (gv('airship-secret') || '<paste Airship app secret>'),
-        '',
-        '# Master secret (for server-side use)',
-        'AIRSHIP_MASTER_SECRET_' + slug.toUpperCase().replace(/-/g,'_') + '=' + (gv('airship-master') || '<paste Airship master secret>'),
+        'IC_KEY_AIRSHIP_PRODUCTION_ENT_' + scheme.toUpperCase() + '=<paste Airship production key>',
+        'IC_KEY_AIRSHIP_PRODUCTION_SECRET_ENT_' + scheme.toUpperCase() + '=<paste Airship production secret>',
       ]);
     }
 
