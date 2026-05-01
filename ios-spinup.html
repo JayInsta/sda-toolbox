@@ -145,7 +145,7 @@
       </div>
       <div class="field">
         <label>App name <span class="hint">(as in intake form)</span></label>
-        <input type="text" id="app-name" placeholder="Long's Pic Pac" oninput="updatePreviews()">
+        <input type="text" id="app-name" placeholder="Long's Pic Pac" oninput="updatePreviews(); autoFillBundle()">
       </div>
     </div>
 
@@ -344,8 +344,26 @@
   var appType = 'new';
 
   function toBundleId(appName) {
-    // "Long's Pic Pac" → "com.longspicpac.app.ios"
-    return 'com.' + appName.toLowerCase().replace(/[^a-z0-9]/g, '') + '.app.ios';
+    // "Foodstorm Store" → "com.foodstormstore.app.ios"
+    // "Foodstorm Warehouse Store" → truncate to first two meaningful words → "com.foodstormwarehouse.app.ios"
+    // Strip special chars, lowercase, join — cap at 20 chars for the middle segment
+    var clean = appName.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
+    var segment = clean.replace(/\s/g, '');
+    if (segment.length > 20) {
+      // Use only the first two words if name is too long
+      var words = clean.split(' ').slice(0, 2);
+      segment = words.join('');
+    }
+    return 'com.' + segment + '.app.ios';
+  }
+
+  function autoFillBundle() {
+    if (appType === 'new') {
+      var appName = gv('app-name');
+      var bundleField = document.getElementById('bundle-id');
+      bundleField.value = appName ? toBundleId(appName) : '';
+      bundleField.placeholder = 'com.retailername.app.ios';
+    }
   }
 
   function setType(t) {
@@ -356,19 +374,29 @@
     if (t === 'new') {
       document.getElementById('bundle-hint').textContent = '(auto-generated from app name)';
       document.getElementById('bundle-info').style.display = 'none';
-      var appName = document.getElementById('app-name').value.trim();
-      if (appName) bundleField.value = toBundleId(appName);
       bundleField.readOnly = true;
       bundleField.style.opacity = '0.6';
+      bundleField.style.cursor  = 'not-allowed';
+      autoFillBundle();
     } else {
       document.getElementById('bundle-hint').textContent = '(use existing iOS App bundle identifier)';
       document.getElementById('bundle-info').style.display = 'block';
       bundleField.readOnly = false;
       bundleField.style.opacity = '1';
+      bundleField.style.cursor  = 'text';
+      bundleField.value = '';
       bundleField.placeholder = 'com.existingapp.ios';
     }
     updatePreviews();
   }
+
+  /* Set initial state on page load — new app selected by default */
+  (function initBundleField() {
+    var bundleField = document.getElementById('bundle-id');
+    bundleField.readOnly = true;
+    bundleField.style.opacity = '0.6';
+    bundleField.style.cursor  = 'not-allowed';
+  })();
 
   function onAirshipToggle() {
     var on = document.getElementById('airship-toggle').checked;
