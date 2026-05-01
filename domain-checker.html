@@ -169,6 +169,35 @@
     All checks are <strong style="color:#e2e8f0">optional</strong> — enable only what you need and run any combination independently.
   </div>
 
+  <!-- DNS PROVIDER TOGGLE -->
+  <div style="background:#1a1d27;border:1px solid #2a2d3e;border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div>
+      <div style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:3px">DNS resolver</div>
+      <div style="font-size:12px;color:#64748b">Choose which public DNS-over-HTTPS provider to use for all checks</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-shrink:0" id="dns-provider-group">
+      <div class="dns-btn active" id="dns-google" onclick="setDNSProvider('google')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Google DNS
+        <span style="font-family:'Courier New',monospace;font-size:10px;background:#0f1117;padding:1px 5px;border-radius:4px;margin-left:4px">dns.google</span>
+      </div>
+      <div class="dns-btn" id="dns-cloudflare" onclick="setDNSProvider('cloudflare')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;flex-shrink:0"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Cloudflare DNS
+        <span style="font-family:'Courier New',monospace;font-size:10px;background:#0f1117;padding:1px 5px;border-radius:4px;margin-left:4px">1.1.1.1</span>
+      </div>
+    </div>
+    <div style="width:100%;font-size:11px;padding:8px 10px;border-radius:8px;background:#0f1117;border:1px solid #2a2d3e;" id="dns-privacy-note">
+      🔒 <span id="dns-privacy-text"><strong style="color:#60a5fa">Google DNS:</strong> Query logs kept 24–48 hours then anonymised. <a href="https://developers.google.com/speed/public-dns/privacy" target="_blank" style="color:#60a5fa">Privacy policy ↗</a></span>
+    </div>
+  </div>
+
+  <style>
+    .dns-btn { display:inline-flex; align-items:center; padding:8px 14px; border-radius:10px; border:1px solid #2a2d3e; background:#0f1117; color:#64748b; font-size:12px; font-weight:600; cursor:pointer; transition:all 0.15s; user-select:none; }
+    .dns-btn:hover { border-color:#3a3d4e; color:#94a3b8; }
+    .dns-btn.active { background:#1e3a5f; border-color:#2563eb; color:#60a5fa; }
+  </style>
+
   <!-- CHECK 1 — DOMAIN POINTING -->
   <div class="card">
     <div class="card-top" style="margin-bottom:0">
@@ -339,6 +368,21 @@
   var countdownSec   = 60;
   var splitCount     = 0;
   var isRunning      = false;
+  var dnsProvider    = 'google';
+
+  var DNS_PROVIDERS = {
+    google:     { url: 'https://dns.google/resolve',                name: 'Google DNS',     note: '<strong style="color:#60a5fa">Google DNS:</strong> Query logs kept 24–48 hours then anonymised. <a href="https://developers.google.com/speed/public-dns/privacy" target="_blank" style="color:#60a5fa">Privacy policy ↗</a>' },
+    cloudflare: { url: 'https://cloudflare-dns.com/dns-query',      name: 'Cloudflare DNS', note: '<strong style="color:#f97316">Cloudflare DNS:</strong> Queries not sold to advertisers. Logs purged within 24 hours. <a href="https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/" target="_blank" style="color:#f97316">Privacy policy ↗</a>' }
+  };
+
+  function setDNSProvider(p) {
+    dnsProvider = p;
+    document.getElementById('dns-google').classList.toggle('active',     p === 'google');
+    document.getElementById('dns-cloudflare').classList.toggle('active', p === 'cloudflare');
+    document.getElementById('dns-privacy-text').innerHTML = DNS_PROVIDERS[p].note;
+    document.getElementById('dns-privacy-note').style.borderColor = p === 'google' ? '#2563eb44' : '#f9731644';
+    document.querySelector('.footer span:last-child').textContent = 'DNS via ' + DNS_PROVIDERS[p].name;
+  }
   var recType        = 'CNAME';
 
   /* ── DNS LOCATIONS ── */
