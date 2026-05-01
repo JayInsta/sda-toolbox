@@ -285,8 +285,53 @@
       '[data-theme="light"] .next-step-item{border-color:#f0f0f0!important;color:#1d1c1d!important;}',
       '[data-theme="light"] .last-checked{color:#868686!important;}',
       '[data-theme="light"] .footer{color:#868686!important;}',
-      '[data-theme="light"] .card-title{color:#1d1c1d!important;}',
-      '[data-theme="light"] .card-sub{color:#868686!important;}',
+      '[data-theme="light"] .card-title{color:#1d1c1d!important;opacity:1!important;}',
+      '[data-theme="light"] .card-sub{color:#616061!important;opacity:1!important;}',
+      /* step badges — force readable text on dark badge bg */
+      '[data-theme="light"] .step-badge{opacity:1!important;}',
+      '[data-theme="light"] .sm1,.sm2,.sv1,.sv2,.sv3,.sv4,.s1,.s2,.s3,.s4{opacity:1!important;filter:none!important;}',
+      /* section labels — force high contrast text */
+      '[data-theme="light"] .sl-major{background:#f3ecfc!important;color:#4a1a8a!important;border-color:#c8a8f0!important;opacity:1!important;}',
+      '[data-theme="light"] .sl-vc{background:#ecf3fc!important;color:#0d4f8a!important;border-color:#a8c8f0!important;opacity:1!important;}',
+      '[data-theme="light"] .sl-purple{background:#f3ecfc!important;color:#4a1a8a!important;border-color:#c8a8f0!important;opacity:1!important;}',
+      '[data-theme="light"] .sl-blue{background:#ecf3fc!important;color:#0d4f8a!important;border-color:#a8c8f0!important;opacity:1!important;}',
+      '[data-theme="light"] .sl-green{background:#ecf7ef!important;color:#1a5c2a!important;border-color:#a0d0b0!important;opacity:1!important;}',
+      '[data-theme="light"] .sl-orange{background:#fef3e2!important;color:#8a5000!important;border-color:#e0c070!important;opacity:1!important;}',
+      '[data-theme="light"] .sl-red{background:#fde8e8!important;color:#8a1a1a!important;border-color:#e0a0a0!important;opacity:1!important;}',
+      '[data-theme="light"] .sl-teal{background:#e2f5f5!important;color:#0a5c5c!important;border-color:#80c8c8!important;opacity:1!important;}',
+      /* formula bar — dark text */
+      '[data-theme="light"] .formula-strip{color:#3a3630!important;}',
+      '[data-theme="light"] .formula-strip .fval{color:#1264a3!important;}',
+      '[data-theme="light"] .formula-strip .fval-purple{color:#4a1a8a!important;}',
+      /* toggle buttons — active state must be visible */
+      '[data-theme="light"] .toggle-btn{color:#1d1c1d!important;}',
+      '[data-theme="light"] .toggle-btn.active{background:#350d36!important;color:#ffffff!important;border-color:#350d36!important;}',
+      /* result tiles — text must be dark not washed out */
+      '[data-theme="light"] .rt-label{opacity:1!important;}',
+      '[data-theme="light"] .rt-ipp .rt-label{color:#0d4f8a!important;}',
+      '[data-theme="light"] .rt-final .rt-label{color:#1a5c2a!important;}',
+      '[data-theme="light"] .rt-major-ipp .rt-label{color:#4a1a8a!important;}',
+      '[data-theme="light"] .rt-major-final .rt-label{color:#1a5c2a!important;}',
+      '[data-theme="light"] .rt-val{color:#1d1c1d!important;opacity:1!important;}',
+      '[data-theme="light"] .rt-sub{opacity:1!important;}',
+      '[data-theme="light"] .rt-ipp .rt-sub{color:#0d4f8a!important;}',
+      '[data-theme="light"] .rt-final .rt-sub{color:#1a5c2a!important;}',
+      '[data-theme="light"] .badge{opacity:1!important;}',
+      '[data-theme="light"] .b-green{background:#d4edda!important;color:#1a5c2a!important;}',
+      '[data-theme="light"] .b-blue{background:#d0e8f8!important;color:#0d4f8a!important;}',
+      '[data-theme="light"] .b-purple{background:#ede0fa!important;color:#4a1a8a!important;}',
+      '[data-theme="light"] .b-amber{background:#fef0cc!important;color:#7a4a00!important;}',
+      /* hero code tags */
+      '[data-theme="light"] .hero code{background:#f0ecf8!important;color:#4a1a8a!important;border-color:#c8a8f0!important;}',
+      /* IC result badge text */
+      '[data-theme="light"] .ic-result-label{color:#0d4f8a!important;opacity:1!important;}',
+      '[data-theme="light"] .ic-result-val{color:#1d1c1d!important;opacity:1!important;}',
+      /* warn/info text */
+      '[data-theme="light"] .warn-box{color:#7a4000!important;}',
+      '[data-theme="light"] .info-box{color:#1a5c2a!important;}',
+      /* step line values */
+      '[data-theme="light"] .step-line .sv{color:#1d1c1d!important;opacity:1!important;}',
+      '[data-theme="light"] .step-line .sl{color:#616061!important;opacity:1!important;}',
     ].join('');
     document.head.appendChild(s);
   }
