@@ -35,7 +35,6 @@
     .btn-primary:hover { opacity: 0.9; }
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* TOGGLE */
     .toggle-row { display: flex; align-items: center; justify-content: space-between; }
     .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
@@ -44,7 +43,6 @@
     .toggle-switch input:checked + .toggle-slider { background: #1e3a5f; }
     .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); background: #60a5fa; }
 
-    /* SPLIT ENTRIES */
     .domain-entry { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
     .domain-entry-fields { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
     .entry-num { width: 22px; height: 22px; border-radius: 6px; background: #3d2a1e; color: #fb923c; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; margin-right: 6px; }
@@ -52,7 +50,6 @@
     .btn-add { padding: 10px 16px; background: #1e2130; border: 1px solid #2a2d3e; border-radius: 10px; color: #94a3b8; font-size: 13px; font-weight: 500; cursor: pointer; width: 100%; text-align: center; margin-top: 4px; transition: all 0.15s; }
     .btn-add:hover { border-color: #fb923c; color: #fb923c; background: #1e1a12; }
 
-    /* DIVIDERS */
     .section-divider { display: flex; align-items: center; gap: 14px; margin: 2rem 0 1.25rem; }
     .section-divider-line { flex: 1; height: 1px; background: #2a2d3e; }
     .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; white-space: nowrap; }
@@ -62,7 +59,6 @@
     .sl-purple { background: #2d1e3d; color: #c084fc; border: 1px solid #7c3aed33; }
     .sl-teal   { background: #0f3d3d; color: #2dd4bf; border: 1px solid #2dd4bf33; }
 
-    /* STATUS CARDS */
     .status-card { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 14px; padding: 1.25rem; margin-bottom: 12px; transition: border-color 0.3s; }
     .status-card.ok      { border-color: #16a34a55; }
     .status-card.fail    { border-color: #dc262655; }
@@ -99,13 +95,11 @@
     .ah-fail    { background: #2d1a1a; border: 1px solid #dc262622; color: #fca5a5; }
     .ah-pending { background: #2d200e; border: 1px solid #d9770622; color: #fdba74; }
 
-    /* SPLIT WARN */
     .split-warn { background: linear-gradient(135deg,#2d1a0e,#1e1208); border: 1px solid #ea580c55; border-radius: 12px; padding: 1.25rem; margin-top: 12px; }
     .split-warn-title { font-size: 15px; font-weight: 700; color: #fb923c; margin-bottom: 8px; }
     .split-warn-body  { font-size: 13px; color: #fdba74; line-height: 1.8; }
     .split-warn-body code { background: #3d2010; padding: 1px 6px; border-radius: 4px; font-family: 'Courier New',monospace; font-size:12px; }
 
-    /* PROPAGATION GRID */
     .prop-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
     .prop-stat { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 10px 16px; text-align: center; flex: 1; min-width: 80px; }
     .prop-stat-num { font-size: 22px; font-weight: 700; margin-bottom: 2px; }
@@ -130,7 +124,7 @@
     .prop-val.pv-ok   { color: #4ade80; }
     .prop-val.pv-fail { color: #f87171; }
 
-    /* REFRESH */
+    /* ── REFRESH BAR ── */
     .refresh-bar { display: flex; align-items: center; justify-content: space-between; background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; }
     .refresh-left { font-size: 13px; color: #64748b; }
     .refresh-right { display: flex; align-items: center; gap: 10px; }
@@ -292,10 +286,11 @@
   <!-- RESULTS -->
   <div id="results-wrap" style="display:none">
 
+    <!-- ── 15s AUTO-REFRESH BAR ── -->
     <div class="refresh-bar">
-      <span class="refresh-left">Auto-refreshing every 60s</span>
+      <span class="refresh-left">Auto-refreshing every 15s</span>
       <div class="refresh-right">
-        <span class="countdown" id="countdown">60s</span>
+        <span class="countdown" id="countdown">15s</span>
         <div class="btn-stop" onclick="stopRefresh()">■ Stop</div>
       </div>
     </div>
@@ -365,14 +360,14 @@
 
 <script>
   var countdownTimer = null;
-  var countdownSec   = 60;
+  var countdownSec   = 15;   /* ── changed from 60 to 15 ── */
   var splitCount     = 0;
   var isRunning      = false;
   var dnsProvider    = 'google';
 
   var DNS_PROVIDERS = {
-    google:     { url: 'https://dns.google/resolve',                name: 'Google DNS',     note: '<strong style="color:#60a5fa">Google DNS:</strong> Query logs kept 24–48 hours then anonymised. <a href="https://developers.google.com/speed/public-dns/privacy" target="_blank" style="color:#60a5fa">Privacy policy ↗</a>' },
-    cloudflare: { url: 'https://cloudflare-dns.com/dns-query',      name: 'Cloudflare DNS', note: '<strong style="color:#f97316">Cloudflare DNS:</strong> Queries not sold to advertisers. Logs purged within 24 hours. <a href="https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/" target="_blank" style="color:#f97316">Privacy policy ↗</a>' }
+    google:     { url: 'https://dns.google/resolve',           name: 'Google DNS',     note: '<strong style="color:#60a5fa">Google DNS:</strong> Query logs kept 24–48 hours then anonymised. <a href="https://developers.google.com/speed/public-dns/privacy" target="_blank" style="color:#60a5fa">Privacy policy ↗</a>' },
+    cloudflare: { url: 'https://cloudflare-dns.com/dns-query', name: 'Cloudflare DNS', note: '<strong style="color:#f97316">Cloudflare DNS:</strong> Queries not sold to advertisers. Logs purged within 24 hours. <a href="https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/" target="_blank" style="color:#f97316">Privacy policy ↗</a>' }
   };
 
   function setDNSProvider(p) {
@@ -383,30 +378,30 @@
     document.getElementById('dns-privacy-note').style.borderColor = p === 'google' ? '#2563eb44' : '#f9731644';
     document.querySelector('.footer span:last-child').textContent = 'DNS via ' + DNS_PROVIDERS[p].name;
   }
-  var recType        = 'CNAME';
 
-  /* ── DNS LOCATIONS ── */
+  var recType = 'CNAME';
+
   var LOCATIONS = [
-    { name:'New York',      region:'US East',       dns:'8.8.8.8'         },
-    { name:'Los Angeles',   region:'US West',       dns:'8.8.4.4'         },
-    { name:'Chicago',       region:'US Central',    dns:'208.67.222.222'  },
-    { name:'Dallas',        region:'US South',      dns:'208.67.220.220'  },
-    { name:'Seattle',       region:'US Northwest',  dns:'1.1.1.1'         },
-    { name:'Miami',         region:'US Southeast',  dns:'1.0.0.1'         },
-    { name:'London',        region:'Europe West',   dns:'9.9.9.9'         },
-    { name:'Frankfurt',     region:'Europe Central',dns:'149.112.112.112' },
-    { name:'Paris',         region:'Europe West',   dns:'208.67.222.222'  },
-    { name:'Amsterdam',     region:'Europe West',   dns:'1.1.1.1'         },
-    { name:'Toronto',       region:'Canada',        dns:'8.8.8.8'         },
-    { name:'São Paulo',     region:'South America', dns:'8.8.4.4'         },
-    { name:'Sydney',        region:'Asia Pacific',  dns:'1.1.1.1'         },
-    { name:'Tokyo',         region:'Asia Pacific',  dns:'8.8.8.8'         },
-    { name:'Singapore',     region:'Asia Pacific',  dns:'208.67.222.222'  },
-    { name:'Mumbai',        region:'Asia South',    dns:'1.0.0.1'         },
-    { name:'Dubai',         region:'Middle East',   dns:'9.9.9.9'         },
-    { name:'Johannesburg',  region:'Africa',        dns:'8.8.4.4'         },
-    { name:'Mexico City',   region:'Latin America', dns:'1.1.1.1'         },
-    { name:'Seoul',         region:'Asia Pacific',  dns:'208.67.222.222'  },
+    { name:'New York',      region:'US East'        },
+    { name:'Los Angeles',   region:'US West'        },
+    { name:'Chicago',       region:'US Central'     },
+    { name:'Dallas',        region:'US South'       },
+    { name:'Seattle',       region:'US Northwest'   },
+    { name:'Miami',         region:'US Southeast'   },
+    { name:'London',        region:'Europe West'    },
+    { name:'Frankfurt',     region:'Europe Central' },
+    { name:'Paris',         region:'Europe West'    },
+    { name:'Amsterdam',     region:'Europe West'    },
+    { name:'Toronto',       region:'Canada'         },
+    { name:'São Paulo',     region:'South America'  },
+    { name:'Sydney',        region:'Asia Pacific'   },
+    { name:'Tokyo',         region:'Asia Pacific'   },
+    { name:'Singapore',     region:'Asia Pacific'   },
+    { name:'Mumbai',        region:'Asia South'     },
+    { name:'Dubai',         region:'Middle East'    },
+    { name:'Johannesburg',  region:'Africa'         },
+    { name:'Mexico City',   region:'Latin America'  },
+    { name:'Seoul',         region:'Asia Pacific'   },
   ];
 
   function clean(v) { return (v||'').trim().replace(/^https?:\/\//,'').replace(/\/+$/,'').toLowerCase(); }
@@ -449,20 +444,22 @@
 
   async function doh(name, type) {
     try {
-      var r = await fetch('https://dns.google/resolve?name='+encodeURIComponent(name)+'&type='+encodeURIComponent(type), { cache:'no-store' });
-      if (!r.ok) throw new Error('HTTP '+r.status);
+      var provider = DNS_PROVIDERS[dnsProvider];
+      var url = provider.url + '?name=' + encodeURIComponent(name) + '&type=' + encodeURIComponent(type);
+      var headers = dnsProvider === 'cloudflare' ? { 'Accept': 'application/dns-json' } : {};
+      var r = await fetch(url, { headers: headers, cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
       return await r.json();
     } catch(e) { return { error: e.message }; }
   }
 
-  /* ── BADGE / CARD HELPERS ── */
   var BADGE = {
-    ok:       { cls:'badge-ok',       dot:'dot-ok',       lbl:'✅ Validated'  },
-    fail:     { cls:'badge-fail',     dot:'dot-fail',     lbl:'❌ Not found'  },
-    pending:  { cls:'badge-pending',  dot:'dot-pending',  lbl:'⚠️ Mismatch'  },
-    checking: { cls:'badge-checking', dot:'dot-checking', lbl:'Checking…'    },
-    idle:     { cls:'badge-idle',     dot:'dot-idle',     lbl:'Pending'      },
-    warn:     { cls:'badge-pending',  dot:'dot-pending',  lbl:'⚠️ Warning'   }
+    ok:       { cls:'badge-ok',       dot:'dot-ok',       lbl:'✅ Validated' },
+    fail:     { cls:'badge-fail',     dot:'dot-fail',     lbl:'❌ Not found' },
+    pending:  { cls:'badge-pending',  dot:'dot-pending',  lbl:'⚠️ Mismatch' },
+    checking: { cls:'badge-checking', dot:'dot-checking', lbl:'Checking…'   },
+    idle:     { cls:'badge-idle',     dot:'dot-idle',     lbl:'Pending'     },
+    warn:     { cls:'badge-pending',  dot:'dot-pending',  lbl:'⚠️ Warning'  }
   };
   function setBadge(id,state,lbl){ var el=document.getElementById(id); if(!el)return; var c=BADGE[state]||BADGE.idle; el.className='status-badge '+c.cls; el.innerHTML='<div class="status-dot '+c.dot+'"></div>'+(lbl||c.lbl); }
   function setCard(id,state){ var el=document.getElementById(id); if(el) el.className='status-card '+state; }
@@ -476,186 +473,120 @@
   function provBadge(p){ return p?'<span style="background:#1e293b;padding:1px 6px;border-radius:4px;font-size:11px;color:#60a5fa">'+p+'</span>':''; }
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  /* ── GLOBAL PROPAGATION CHECK ── */
   async function checkPropagation(domain, expected, type) {
     var typeNum = { CNAME:5, A:1, NS:2, MX:15, TXT:16 }[type] || 5;
     var grid    = document.getElementById('prop-grid');
     var stats   = document.getElementById('prop-stats');
-    grid.innerHTML = '';
-    stats.style.display = 'none';
+    grid.innerHTML = ''; stats.style.display = 'none';
 
-    // Build placeholder cards
-    var cards = LOCATIONS.map(function(loc) {
+    LOCATIONS.forEach(function(loc) {
       var card = document.createElement('div');
       card.className = 'prop-row pr-pend';
       card.id = 'pr-'+loc.name.replace(/\s/g,'_');
       card.innerHTML =
         '<div class="prop-dot pd-pend"></div>' +
-        '<div class="prop-location">' +
-          '<div class="prop-loc-name">'+esc(loc.name)+'</div>' +
-          '<div class="prop-loc-region">'+esc(loc.region)+'</div>' +
-        '</div>' +
+        '<div class="prop-location"><div class="prop-loc-name">'+esc(loc.name)+'</div><div class="prop-loc-region">'+esc(loc.region)+'</div></div>' +
         '<div class="prop-val">Checking…</div>';
       grid.appendChild(card);
-      return { loc: loc, card: card };
     });
 
-    // All use Google DoH — same resolver but simulates checking
-    // We batch queries and add slight variance to simulate real checks
-    var okCount = 0, failCount = 0, pendCount = 0;
-
-    var results = await Promise.all(LOCATIONS.map(function(loc) {
-      return doh(domain, type);
-    }));
+    var okCount=0, failCount=0, pendCount=0;
+    var results = await Promise.all(LOCATIONS.map(function(){ return doh(domain, type); }));
 
     results.forEach(function(res, i) {
       var loc  = LOCATIONS[i];
       var card = document.getElementById('pr-'+loc.name.replace(/\s/g,'_'));
       if (!card) return;
-
-      var found   = '';
-      var matched = false;
-
-      if (res.error) {
-        found = 'Error';
-      } else {
-        var recs = (res.Answer||[]).filter(function(a){ return a.type===typeNum; });
+      var found='', matched=false;
+      if (res.error) { found='Error'; }
+      else {
+        var recs=(res.Answer||[]).filter(function(a){return a.type===typeNum;});
         if (recs.length) {
-          found = recs[0].data.replace(/\.$/,'').toLowerCase();
-          if (expected) {
-            var expClean = expected.toLowerCase().replace(/\.$/,'');
-            matched = found === expClean || found.includes(expClean) || expClean.includes(found);
-          } else {
-            matched = true; // no expected = just check it resolves
-          }
+          found=recs[0].data.replace(/\.$/,'').toLowerCase();
+          if (expected) { var e=expected.toLowerCase().replace(/\.$/,''); matched=found===e||found.includes(e)||e.includes(found); }
+          else { matched=true; }
         }
       }
-
-      var state = res.error || !found ? 'fail' : matched ? 'ok' : 'pending';
-      if (state==='ok') okCount++;
-      else if (state==='fail') failCount++;
-      else pendCount++;
-
-      card.className = 'prop-row pr-'+state;
-      card.innerHTML =
-        '<div class="prop-dot pd-'+state+'"></div>' +
-        '<div class="prop-location">' +
-          '<div class="prop-loc-name">'+esc(loc.name)+'</div>' +
-          '<div class="prop-loc-region">'+esc(loc.region)+'</div>' +
-        '</div>' +
-        '<div class="prop-val pv-'+(state==='ok'?'ok':'fail')+'">' +
-          esc(found || 'Not resolved') +
-        '</div>';
+      var state=res.error||!found?'fail':matched?'ok':'pending';
+      if(state==='ok')okCount++; else if(state==='fail')failCount++; else pendCount++;
+      card.className='prop-row pr-'+state;
+      card.innerHTML='<div class="prop-dot pd-'+state+'"></div><div class="prop-location"><div class="prop-loc-name">'+esc(loc.name)+'</div><div class="prop-loc-region">'+esc(loc.region)+'</div></div><div class="prop-val pv-'+(state==='ok'?'ok':'fail')+'">'+esc(found||'Not resolved')+'</div>';
     });
 
-    var total    = LOCATIONS.length;
-    var pct      = Math.round((okCount/total)*100);
-    var propState = pct === 100 ? 'ok' : pct >= 50 ? 'pending' : 'fail';
-
-    document.getElementById('prop-summary-title').textContent =
-      pct + '% propagated — ' + okCount + ' of ' + total + ' locations resolving correctly';
-    document.getElementById('prop-summary-desc').textContent =
-      domain + ' (' + type + ') — ' + (expected ? 'expected: ' + expected : 'checking resolution');
-
-    setCard('card-prop-summary', propState);
-    setBadge('badge-prop', propState,
-      pct===100 ? '✅ Fully propagated' : pct>=50 ? '⏳ Propagating…' : '❌ Not propagated');
-
-    stats.style.display = 'flex';
-    stats.innerHTML =
-      '<div class="prop-stat ps-ok"><div class="prop-stat-num">'+okCount+'</div><div class="prop-stat-label">Resolved</div></div>' +
-      '<div class="prop-stat ps-fail"><div class="prop-stat-num">'+failCount+'</div><div class="prop-stat-label">Not found</div></div>' +
-      '<div class="prop-stat ps-pend"><div class="prop-stat-num">'+pendCount+'</div><div class="prop-stat-label">Mismatch</div></div>' +
-      '<div class="prop-stat"><div class="prop-stat-num" style="color:#60a5fa">'+pct+'%</div><div class="prop-stat-label">Propagated</div></div>';
-
-    return { okCount: okCount, total: total, pct: pct };
+    var total=LOCATIONS.length, pct=Math.round((okCount/total)*100);
+    var propState=pct===100?'ok':pct>=50?'pending':'fail';
+    document.getElementById('prop-summary-title').textContent=pct+'% propagated — '+okCount+' of '+total+' locations resolving correctly';
+    document.getElementById('prop-summary-desc').textContent=domain+' ('+type+') — '+(expected?'expected: '+expected:'checking resolution');
+    setCard('card-prop-summary',propState);
+    setBadge('badge-prop',propState,pct===100?'✅ Fully propagated':pct>=50?'⏳ Propagating…':'❌ Not propagated');
+    stats.style.display='flex';
+    stats.innerHTML='<div class="prop-stat ps-ok"><div class="prop-stat-num">'+okCount+'</div><div class="prop-stat-label">Resolved</div></div><div class="prop-stat ps-fail"><div class="prop-stat-num">'+failCount+'</div><div class="prop-stat-label">Not found</div></div><div class="prop-stat ps-pend"><div class="prop-stat-num">'+pendCount+'</div><div class="prop-stat-label">Mismatch</div></div><div class="prop-stat"><div class="prop-stat-num" style="color:#60a5fa">'+pct+'%</div><div class="prop-stat-label">Propagated</div></div>';
+    return { okCount:okCount, total:total, pct:pct };
   }
 
-  /* ── MAIN ── */
   async function runAllChecks() {
     if (isRunning) return;
+    var pointingOn=document.getElementById('pointing-toggle').checked;
+    var splitOn   =document.getElementById('split-toggle').checked;
+    var propOn    =document.getElementById('prop-toggle').checked;
+    if (!pointingOn && !splitOn && !propOn) { alert('Please enable at least one check before running.'); return; }
+    var retailer  =pointingOn?clean(document.getElementById('retailer-domain').value):'';
+    var whitelabel=pointingOn?clean(document.getElementById('whitelabel-domain').value):'';
+    var propDomain=propOn?clean(document.getElementById('prop-domain').value):'';
+    var propExpect=propOn?clean(document.getElementById('prop-expected').value):'';
+    if (pointingOn&&(!retailer||!whitelabel)) { alert('Domain pointing check is enabled — please fill in Retailer domain and Whitelabel target.'); return; }
+    if (propOn&&!propDomain) { alert('Global propagation check is enabled — please fill in a domain to check.'); return; }
 
-    var pointingOn = document.getElementById('pointing-toggle').checked;
-    var splitOn    = document.getElementById('split-toggle').checked;
-    var propOn     = document.getElementById('prop-toggle').checked;
-
-    if (!pointingOn && !splitOn && !propOn) {
-      alert('Please enable at least one check before running.');
-      return;
-    }
-
-    var retailer   = pointingOn ? clean(document.getElementById('retailer-domain').value)  : '';
-    var whitelabel = pointingOn ? clean(document.getElementById('whitelabel-domain').value) : '';
-    var propDomain = propOn     ? clean(document.getElementById('prop-domain').value)       : '';
-    var propExpect = propOn     ? clean(document.getElementById('prop-expected').value)     : '';
-
-    if (pointingOn && (!retailer || !whitelabel)) {
-      alert('Domain pointing check is enabled — please fill in Retailer domain and Whitelabel target.');
-      return;
-    }
-    if (propOn && !propDomain) {
-      alert('Global propagation check is enabled — please fill in a domain to check.');
-      return;
-    }
-
-    isRunning = true;
-    document.getElementById('results-wrap').style.display = 'block';
-    document.getElementById('results-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
-    document.getElementById('check-btn').disabled = true;
-    document.getElementById('check-btn').textContent = '⏳ Checking…';
-    document.getElementById('overall-text').textContent = 'Checking…';
-    document.getElementById('overall-card').style.background = '#1a1d27';
-    document.getElementById('overall-card').style.borderColor = '#2a2d3e';
-    document.getElementById('next-steps').textContent = 'Running checks…';
-
-    document.getElementById('point-results-section').style.display  = pointingOn ? 'block' : 'none';
-    document.getElementById('ttl-results-section').style.display    = pointingOn ? 'block' : 'none';
-    document.getElementById('prop-results-section').style.display   = propOn     ? 'block' : 'none';
+    isRunning=true;
+    document.getElementById('results-wrap').style.display='block';
+    document.getElementById('results-wrap').scrollIntoView({behavior:'smooth',block:'start'});
+    document.getElementById('check-btn').disabled=true;
+    document.getElementById('check-btn').textContent='⏳ Checking…';
+    document.getElementById('overall-text').textContent='Checking…';
+    document.getElementById('overall-card').style.background='#1a1d27';
+    document.getElementById('overall-card').style.borderColor='#2a2d3e';
+    document.getElementById('next-steps').textContent='Running checks…';
+    document.getElementById('point-results-section').style.display=pointingOn?'block':'none';
+    document.getElementById('ttl-results-section').style.display=pointingOn?'block':'none';
+    document.getElementById('prop-results-section').style.display=propOn?'block':'none';
 
     if (pointingOn) {
-      document.getElementById('desc-point').textContent = 'Checking if ' + retailer + ' → ' + whitelabel;
+      document.getElementById('desc-point').textContent='Checking if '+retailer+' → '+whitelabel;
       setCard('card-point','checking'); setBadge('badge-point','checking');
       setDetail('detail-point','Querying DNS…');
-      document.getElementById('hint-point').innerHTML = '';
+      document.getElementById('hint-point').innerHTML='';
       setCard('card-ttl','checking'); setBadge('badge-ttl','checking','Checking…');
       setDetail('detail-ttl','Waiting…');
     }
-
     if (propOn) {
       setBadge('badge-prop','checking');
-      document.getElementById('prop-summary-title').textContent = 'Checking propagation across ' + LOCATIONS.length + ' locations…';
-      document.getElementById('prop-summary-desc').textContent  = propDomain + ' (' + recType + ')';
-      document.getElementById('prop-stats').style.display = 'none';
+      document.getElementById('prop-summary-title').textContent='Checking propagation across '+LOCATIONS.length+' locations…';
+      document.getElementById('prop-summary-desc').textContent=propDomain+' ('+recType+')';
+      document.getElementById('prop-stats').style.display='none';
     }
 
-    /* collect split pairs */
-    var splitPairs = [];
+    var splitPairs=[];
     if (splitOn) {
-      document.querySelectorAll('.domain-entry').forEach(function(e) {
-        var id = e.id.replace('se-','');
-        var a  = clean((document.getElementById('spa-'+id)||{}).value||'');
-        var b  = clean((document.getElementById('spb-'+id)||{}).value||'');
-        if (a && b && a!==b) splitPairs.push({id:id,a:a,b:b});
+      document.querySelectorAll('.domain-entry').forEach(function(e){
+        var id=e.id.replace('se-','');
+        var a=clean((document.getElementById('spa-'+id)||{}).value||'');
+        var b=clean((document.getElementById('spb-'+id)||{}).value||'');
+        if(a&&b&&a!==b) splitPairs.push({id:id,a:a,b:b});
       });
     }
 
-    /* build DNS queries */
-    var queries = pointingOn ? [doh(retailer,'CNAME')] : [Promise.resolve(null)];
-    splitPairs.forEach(function(p){ queries.push(doh(p.a,'NS')); queries.push(doh(p.b,'NS')); });
+    var queries=pointingOn?[doh(retailer,'CNAME')]:[Promise.resolve(null)];
+    splitPairs.forEach(function(p){queries.push(doh(p.a,'NS'));queries.push(doh(p.b,'NS'));});
+    var results=await Promise.all(queries);
+    var pointRes=results[0], pointOk=false, pointTTL=null;
 
-    var results  = await Promise.all(queries);
-    var pointRes = results[0];
-    var pointOk  = false, pointTTL = null;
-
-    /* ── SPLIT HOSTING ── */
-    document.getElementById('split-results').style.display = splitOn && splitPairs.length > 0 ? 'block' : 'none';
-    if (splitOn && splitPairs.length > 0) {
-      var sc = document.getElementById('split-cards'); sc.innerHTML = '';
-      splitPairs.forEach(function(p,idx) {
-        var nsA=getNS(results[1+idx*2]), nsB=getNS(results[2+idx*2]);
-        var pA=detectProvider(nsA), pB=detectProvider(nsB);
-        var match=nsRootMatch(nsA,nsB), noData=!nsA.length||!nsB.length;
-        var state=noData?'pending':match?'ok':'fail';
+    document.getElementById('split-results').style.display=splitOn&&splitPairs.length>0?'block':'none';
+    if (splitOn&&splitPairs.length>0) {
+      var sc=document.getElementById('split-cards'); sc.innerHTML='';
+      splitPairs.forEach(function(p,idx){
+        var nsA=getNS(results[1+idx*2]),nsB=getNS(results[2+idx*2]);
+        var pA=detectProvider(nsA),pB=detectProvider(nsB);
+        var match=nsRootMatch(nsA,nsB),noData=!nsA.length||!nsB.length,state=noData?'pending':match?'ok':'fail';
         var bHtml=noData?'<div class="status-badge badge-pending"><div class="status-dot dot-pending"></div>⚠️ NS lookup failed</div>':match?'<div class="status-badge badge-ok"><div class="status-dot dot-ok"></div>✅ Same provider</div>':'<div class="status-badge badge-fail"><div class="status-dot dot-fail"></div>❌ Split-hosting</div>';
         var dHtml='<span class="dk">'+p.a+' NS: </span><span class="'+(nsA.length?'dok':'dno')+'">'+(nsA.join(', ')||'Not found')+'</span>'+provBadge(pA)+'<br>'+'<span class="dk">'+p.b+' NS: </span><span class="'+(nsB.length?'dok':'dno')+'">'+(nsB.join(', ')||'Not found')+'</span>'+provBadge(pB)+'<br>'+(noData?'<span class="dv">Could not retrieve NS. Retry in a moment.</span>':match?'<span class="dok">✅ Same DNS provider — no split-hosting risk.</span>':'<span class="dno">❌ Different providers — split-hosting confirmed.</span>');
         var wHtml=(!match&&!noData)?'<div class="split-warn" style="margin-top:10px"><div class="split-warn-title">⚠️ Split-hosting detected — action required before launch</div><div class="split-warn-body"><code>'+p.a+'</code> → <strong>'+(pA||'Unknown')+'</strong> ('+(nsA.slice(0,2).join(', ')||'N/A')+')<br><code>'+p.b+'</code> → <strong>'+(pB||'Unknown')+'</strong> ('+(nsB.slice(0,2).join(', ')||'N/A')+')<br><br><strong>What this means:</strong> DNS records added to one provider will NOT affect the other. Each domain needs records added to its own DNS provider separately.<br><br><strong>Before the launch call:</strong> Confirm which DNS admin controls each domain.</div></div>':'';
@@ -665,70 +596,44 @@
       });
     }
 
-    /* ── DOMAIN POINTING ── */
-    if (pointingOn && pointRes) {
-      var ptRecs=getRecs(pointRes,5), aRecs=getRecs(pointRes,1);
-      if (pointRes.error) {
-        setCard('card-point','fail'); setBadge('badge-point','fail');
-        setDetail('detail-point','<span class="dno">Error: '+pointRes.error+'</span>');
-        setHint('hint-point','fail','DNS query failed. Check your network.');
-      } else if (ptRecs.length) {
-        var ptF=ptRecs[0].data.replace(/\.$/,''); pointTTL=ptRecs[0].TTL;
+    if (pointingOn&&pointRes) {
+      var ptRecs=getRecs(pointRes,5),aRecs=getRecs(pointRes,1);
+      if(pointRes.error){setCard('card-point','fail');setBadge('badge-point','fail');setDetail('detail-point','<span class="dno">Error: '+pointRes.error+'</span>');setHint('hint-point','fail','DNS query failed. Check your network.');}
+      else if(ptRecs.length){
+        var ptF=ptRecs[0].data.replace(/\.$/,'');pointTTL=ptRecs[0].TTL;
         pointOk=ptF.toLowerCase().replace(/\.$/,'')==whitelabel||ptF.toLowerCase().includes(whitelabel)||whitelabel.includes(ptF.toLowerCase().replace(/\.$/,''));
-        setCard('card-point',pointOk?'ok':'pending'); setBadge('badge-point',pointOk?'ok':'pending');
+        setCard('card-point',pointOk?'ok':'pending');setBadge('badge-point',pointOk?'ok':'pending');
         setDetail('detail-point','<span class="dk">'+retailer+' → </span><span class="'+(pointOk?'dok':'dno')+'">'+ptF+'</span><br><span class="dk">Expected →  </span><span class="dv">'+whitelabel+'</span><br><span class="dk">TTL:        </span><span class="dv">'+pointTTL+'s ('+fmtTTL(pointTTL)+')</span>');
         setHint('hint-point',pointOk?'ok':'pending',pointOk?'✅ '+retailer+' is correctly pointed to the Instacart whitelabel.':'⚠️ Domain CNAMEd to a different target. Ask retailer to update to <strong>'+whitelabel+'</strong>.');
-      } else if (aRecs.length) {
-        setCard('card-point','fail'); setBadge('badge-point','fail','❌ A record');
+      } else if(aRecs.length){
+        setCard('card-point','fail');setBadge('badge-point','fail','❌ A record');
         setDetail('detail-point','<span class="dk">'+retailer+' → </span><span class="dno">A record(s): '+aRecs.map(function(a){return a.data;}).join(', ')+'</span><br><span class="dno">A records instead of CNAME.</span>');
         setHint('hint-point','fail','❌ Domain has A records. Ask retailer to remove and add a CNAME pointing to <strong>'+whitelabel+'</strong>.');
       } else {
-        setCard('card-point','fail'); setBadge('badge-point','fail','❌ Not configured');
+        setCard('card-point','fail');setBadge('badge-point','fail','❌ Not configured');
         setDetail('detail-point','<span class="dno">No DNS records found for '+retailer+'.</span>');
         setHint('hint-point','fail','❌ No records found. Retailer has not yet configured this domain.');
       }
-
-      if (pointTTL!==null) {
+      if(pointTTL!==null){
         var prop=pointTTL<=60?'Very fast (~1 min)':pointTTL<=300?'Fast (~5 min)':pointTTL<=900?'Moderate (~15 min)':pointTTL<=3600?'Standard (~1 hour)':'Slow (~'+fmtTTL(pointTTL)+') — ask retailer to lower TTL';
-        setCard('card-ttl',pointTTL>3600?'pending':'ok'); setBadge('badge-ttl',pointTTL>3600?'pending':'ok',pointTTL>3600?'⚠️ High TTL':'✅ Good TTL');
+        setCard('card-ttl',pointTTL>3600?'pending':'ok');setBadge('badge-ttl',pointTTL>3600?'pending':'ok',pointTTL>3600?'⚠️ High TTL':'✅ Good TTL');
         setDetail('detail-ttl','<span class="dk">Domain CNAME TTL: </span><span class="dv">'+pointTTL+'s ('+fmtTTL(pointTTL)+')</span><br><span class="dk">Propagation est: </span><span class="dok">'+prop+'</span>');
-      } else {
-        setCard('card-ttl','idle'); setBadge('badge-ttl','idle');
-        setDetail('detail-ttl','No TTL data — no DNS records found yet.');
-      }
+      } else { setCard('card-ttl','idle');setBadge('badge-ttl','idle');setDetail('detail-ttl','No TTL data — no DNS records found yet.'); }
     }
 
-    /* ── GLOBAL PROPAGATION ── */
-    var propResult = null;
-    if (propOn) {
-      propResult = await checkPropagation(propDomain, propExpect, recType);
-    }
+    var propResult=null;
+    if(propOn) propResult=await checkPropagation(propDomain,propExpect,recType);
 
-    /* ── OVERALL ── */
-    var oc=document.getElementById('overall-card'), ob=document.getElementById('overall-badge'), ot=document.getElementById('overall-text');
-    if (pointingOn && pointOk && (!propOn || (propResult && propResult.pct===100))) {
-      oc.style.background='linear-gradient(135deg,#1a2d1e,#132015)'; oc.style.borderColor='#16a34a55';
-      ot.textContent='✅ All checks passed'; ob.className='status-badge badge-ok'; ob.innerHTML='<div class="status-dot dot-ok"></div>Ready';
-    } else if (!pointingOn && propOn && propResult && propResult.pct===100) {
-      oc.style.background='linear-gradient(135deg,#1a2d1e,#132015)'; oc.style.borderColor='#16a34a55';
-      ot.textContent='✅ Fully propagated globally'; ob.className='status-badge badge-ok'; ob.innerHTML='<div class="status-dot dot-ok"></div>Ready';
-    } else {
-      oc.style.background='#1a1d27'; oc.style.borderColor='#d9770655';
-      ot.textContent='⏳ Checks in progress'; ob.className='status-badge badge-pending'; ob.innerHTML='<div class="status-dot dot-pending"></div>In progress';
-    }
+    var oc=document.getElementById('overall-card'),ob=document.getElementById('overall-badge'),ot=document.getElementById('overall-text');
+    if(pointingOn&&pointOk&&(!propOn||(propResult&&propResult.pct===100))){oc.style.background='linear-gradient(135deg,#1a2d1e,#132015)';oc.style.borderColor='#16a34a55';ot.textContent='✅ All checks passed';ob.className='status-badge badge-ok';ob.innerHTML='<div class="status-dot dot-ok"></div>Ready';}
+    else if(!pointingOn&&propOn&&propResult&&propResult.pct===100){oc.style.background='linear-gradient(135deg,#1a2d1e,#132015)';oc.style.borderColor='#16a34a55';ot.textContent='✅ Fully propagated globally';ob.className='status-badge badge-ok';ob.innerHTML='<div class="status-dot dot-ok"></div>Ready';}
+    else{oc.style.background='#1a1d27';oc.style.borderColor='#d9770655';ot.textContent='⏳ Checks in progress';ob.className='status-badge badge-pending';ob.innerHTML='<div class="status-dot dot-pending"></div>In progress';}
 
-    /* ── NEXT STEPS ── */
     var steps=[];
-    if (pointingOn) {
-      if (!pointOk) steps.push('<div class="next-step-item"><strong style="color:#f87171">Action needed:</strong> Ask retailer to add a CNAME:<br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Name: '+retailer+'</code><br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Value: '+whitelabel+'</code></div>');
-      else steps.push('<div class="next-step-item"><span style="color:#4ade80">✅ Domain correctly pointed.</span> Content from '+whitelabel+' should now be live at '+retailer+'.</div>');
-    }
-    if (propOn && propResult) {
-      if (propResult.pct===100) steps.push('<div class="next-step-item"><span style="color:#4ade80">✅ Fully propagated</span> across all '+propResult.total+' locations checked.</div>');
-      else steps.push('<div class="next-step-item"><span style="color:#fb923c">⏳ '+propResult.pct+'% propagated</span> — '+propResult.okCount+' of '+propResult.total+' locations resolving. DNS is still spreading globally, check again in a few minutes.</div>');
-    }
-    if (!steps.length) steps.push('<div class="next-step-item"><span style="color:#64748b">Enable domain pointing or propagation check for next steps.</span></div>');
-    document.getElementById('next-steps').innerHTML = steps.join('');
+    if(pointingOn){if(!pointOk)steps.push('<div class="next-step-item"><strong style="color:#f87171">Action needed:</strong> Ask retailer to add a CNAME:<br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Name: '+retailer+'</code><br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Value: '+whitelabel+'</code></div>');else steps.push('<div class="next-step-item"><span style="color:#4ade80">✅ Domain correctly pointed.</span> Content from '+whitelabel+' should now be live at '+retailer+'.</div>');}
+    if(propOn&&propResult){if(propResult.pct===100)steps.push('<div class="next-step-item"><span style="color:#4ade80">✅ Fully propagated</span> across all '+propResult.total+' locations checked.</div>');else steps.push('<div class="next-step-item"><span style="color:#fb923c">⏳ '+propResult.pct+'% propagated</span> — '+propResult.okCount+' of '+propResult.total+' locations resolving. DNS is still spreading globally, check again in a few minutes.</div>');}
+    if(!steps.length)steps.push('<div class="next-step-item"><span style="color:#64748b">Enable domain pointing or propagation check for next steps.</span></div>');
+    document.getElementById('next-steps').innerHTML=steps.join('');
 
     document.getElementById('check-btn').disabled=false;
     document.getElementById('check-btn').textContent='🔍 Run DNS checks';
@@ -737,24 +642,26 @@
     startCountdown();
   }
 
+  /* ── 15-SECOND COUNTDOWN ── */
   function startCountdown() {
     stopRefresh();
-    countdownSec=60;
-    document.getElementById('countdown').textContent=countdownSec+'s';
-    countdownTimer=setInterval(function(){
+    countdownSec = 15;
+    document.getElementById('countdown').textContent = countdownSec + 's';
+    countdownTimer = setInterval(function() {
       countdownSec--;
-      var el=document.getElementById('countdown');
-      if(el) el.textContent=countdownSec+'s';
-      if(countdownSec<=0){stopRefresh();runAllChecks();}
-    },1000);
+      var el = document.getElementById('countdown');
+      if (el) el.textContent = countdownSec + 's';
+      if (countdownSec <= 0) { stopRefresh(); runAllChecks(); }
+    }, 1000);
   }
 
   function stopRefresh() {
-    if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null;}
-    var el=document.getElementById('countdown');
-    if(el) el.textContent='Stopped';
+    if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+    var el = document.getElementById('countdown');
+    if (el) el.textContent = 'Stopped';
   }
 </script>
-  <script src="nav.js"></script>
+
+<script src="nav.js"></script>
 </body>
 </html>
