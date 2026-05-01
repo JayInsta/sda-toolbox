@@ -383,8 +383,14 @@
   function gv(id) { return (document.getElementById(id) ? document.getElementById(id).value || '' : '').trim(); }
 
   /* ── DERIVED VALUE HELPERS ── */
+  function toCamelFromPascal(pascal) {
+    // BellasMarket → bellasMarket (lowercase first char only)
+    if (!pascal) return '';
+    return pascal.charAt(0).toLowerCase() + pascal.slice(1);
+  }
+
   function toCamelSlug(slug) {
-    // longs-picpac-sfp → longsPicpacSfp
+    // longs-picpac-sfp → longsPicpacSfp (kept for SNS key derivation)
     return slug.toLowerCase().replace(/-([a-z0-9])/g, function(m, c) { return c.toUpperCase(); });
   }
 
@@ -394,19 +400,20 @@
   }
 
   function updatePreviews() {
-    var slug      = gv('slug');
-    var scheme    = gv('scheme');
-    var devTeamId = gv('dev-team-id');
-    var camelSlug = slug ? toCamelSlug(slug) : '——';
-    var snsCert   = camelSlug !== '——' ? snsKeyName(camelSlug, 'cert') : '——';
-    var snsKey    = camelSlug !== '——' ? snsKeyName(camelSlug, 'key')  : '——';
+    var slug        = gv('slug');
+    var scheme      = gv('scheme');
+    var devTeamId   = gv('dev-team-id');
+    var camelScheme = scheme ? toCamelFromPascal(scheme) : '——'; // BellasMarket → bellasMarket
+    var camelSlug   = slug   ? toCamelSlug(slug)         : '——'; // longs-picpac-sfp → longsPicpacSfp (for SNS)
+    var snsCert     = camelScheme !== '——' ? snsKeyName(camelScheme, 'cert') : '——';
+    var snsKey_     = camelScheme !== '——' ? snsKeyName(camelScheme, 'key')  : '——';
 
-    document.getElementById('prev-camel-slug').textContent   = camelSlug;
+    document.getElementById('prev-camel-slug').textContent   = camelScheme;
     document.getElementById('prev-camel-scheme').textContent = scheme || '——';
     document.getElementById('prev-sns-cert').textContent     = snsCert;
-    document.getElementById('prev-sns-key').textContent      = snsKey;
+    document.getElementById('prev-sns-key').textContent      = snsKey_;
     document.getElementById('prev-sns-cert-full').textContent = snsCert;
-    document.getElementById('prev-sns-key-full').textContent  = snsKey;
+    document.getElementById('prev-sns-key-full').textContent  = snsKey_;
 
     var tid = devTeamId || '{TEAM-ID}';
     document.getElementById('prev-asc-id').textContent      = tid;
@@ -467,14 +474,15 @@
       return;
     }
 
-    var camelSlug   = toCamelSlug(slug);
-    var snsCertName = snsKeyName(camelSlug, 'cert');
-    var snsKeyName_ = snsKeyName(camelSlug, 'key');
+    var camelScheme = toCamelFromPascal(scheme); // BellasMarket → bellasMarket
+    var camelSlug   = toCamelSlug(slug);          // longs-picpac-sfp → longsPicpacSfp
+    var snsCertName = snsKeyName(camelScheme, 'cert');
+    var snsKeyName_ = snsKeyName(camelScheme, 'key');
     var tid         = devTeamId;
 
     /* OUTPUT 1 — camelScheme */
     renderPlain('box1', [
-      'camelScheme                 = "' + camelSlug + '"',
+      'camelScheme                 = "' + camelScheme + '"',
       'camelScheme                 = "' + scheme + '"',
     ]);
 
@@ -504,7 +512,7 @@
       'scheme_name                 = "' + scheme + '"',
       '',
       '# ── camelScheme ───────────────────────────────────────',
-      'camelScheme                 = "' + camelSlug + '"',
+      'camelScheme                 = "' + camelScheme + '"',
       'camelScheme                 = "' + scheme + '"',
       '',
       '# ── Apple team IDs ────────────────────────────────────',
