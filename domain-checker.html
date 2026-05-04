@@ -124,7 +124,6 @@
     .prop-val.pv-ok   { color: #4ade80; }
     .prop-val.pv-fail { color: #f87171; }
 
-    /* ── REFRESH BAR ── */
     .refresh-bar { display: flex; align-items: center; justify-content: space-between; background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; }
     .refresh-left { font-size: 13px; color: #64748b; }
     .refresh-right { display: flex; align-items: center; gap: 10px; }
@@ -141,6 +140,14 @@
     .sep { border: none; border-top: 1px solid #2a2d3e; margin: 14px 0; }
     .footer { text-align: center; padding: 2rem 0 0.5rem; font-size: 12px; color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #2a2d3e; }
+
+    /* SAME-AS CHECKBOX */
+    .same-as-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; cursor: pointer; user-select: none; transition: border-color 0.15s; }
+    .same-as-row:hover { border-color: #3a3d4e; }
+    .same-as-row.active { border-color: #2563eb; background: #1e2d45; }
+    .same-as-cb { width: 15px; height: 15px; accent-color: #2563eb; cursor: pointer; flex-shrink: 0; }
+    .same-as-label { font-size: 13px; color: #64748b; transition: color 0.15s; }
+    .same-as-row.active .same-as-label { color: #60a5fa; }
 
     @media (max-width: 500px) {
       .two-col { grid-template-columns: 1fr; }
@@ -208,8 +215,8 @@
     </div>
     <div id="pointing-section" style="display:none;margin-top:1.25rem">
       <div class="two-col">
-        <div class="field"><label>Retailer domain</label><input type="text" id="retailer-domain" placeholder="www.abc.com"></div>
-        <div class="field" style="margin-bottom:0"><label>Whitelabel target</label><input type="text" id="whitelabel-domain" placeholder="abc-whitelabel.instacart.com"></div>
+        <div class="field"><label>Retailer domain</label><input type="text" id="retailer-domain" placeholder="www.abc.com" oninput="syncSameAs()"></div>
+        <div class="field" style="margin-bottom:0"><label>Whitelabel target</label><input type="text" id="whitelabel-domain" placeholder="abc-whitelabel.instacart.com" oninput="syncSameAs()"></div>
       </div>
     </div>
   </div>
@@ -252,17 +259,26 @@
       </div>
     </div>
     <div id="prop-section" style="display:none;margin-top:1.25rem">
-      <div class="two-col">
-        <div class="field">
-          <label>Domain to check</label>
-          <input type="text" id="prop-domain" placeholder="www.abc.com">
-        </div>
-        <div class="field" style="margin-bottom:0">
-          <label>Expected value (CNAME or IP)</label>
-          <input type="text" id="prop-expected" placeholder="abc-whitelabel.instacart.com">
+
+      <!-- SAME AS CHECKBOX -->
+      <div class="same-as-row" id="same-as-row" onclick="toggleSameAs()">
+        <input type="checkbox" class="same-as-cb" id="same-as-cb">
+        <span class="same-as-label">Same as Domain pointing check (use retailer domain & whitelabel target from Check 1)</span>
+      </div>
+
+      <div id="prop-fields">
+        <div class="two-col">
+          <div class="field">
+            <label>Domain to check</label>
+            <input type="text" id="prop-domain" placeholder="www.abc.com">
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>Expected value (CNAME or IP)</label>
+            <input type="text" id="prop-expected" placeholder="abc-whitelabel.instacart.com">
+          </div>
         </div>
       </div>
-      <div class="field" style="margin-bottom:0">
+      <div class="field" style="margin-bottom:0;margin-top:12px">
         <label>Record type</label>
         <div style="display:flex;gap:8px;margin-top:2px">
           <div class="rec-btn active" id="rt-CNAME" onclick="setRecType('CNAME')">CNAME</div>
@@ -286,7 +302,6 @@
   <!-- RESULTS -->
   <div id="results-wrap" style="display:none">
 
-    <!-- ── 15s AUTO-REFRESH BAR ── -->
     <div class="refresh-bar">
       <span class="refresh-left">Auto-refreshing every 15s</span>
       <div class="refresh-right">
@@ -300,13 +315,11 @@
       <div class="status-badge badge-checking" id="overall-badge"><div class="status-dot dot-checking"></div>…</div>
     </div>
 
-    <!-- SPLIT HOSTING RESULTS -->
     <div id="split-results" style="display:none">
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-orange">⚠️ Split-hosting detection</div><div class="section-divider-line"></div></div>
       <div id="split-cards"></div>
     </div>
 
-    <!-- DOMAIN POINTING RESULTS -->
     <div id="point-results-section" style="display:none">
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">① Domain → whitelabel</div><div class="section-divider-line"></div></div>
       <div class="status-card" id="card-point">
@@ -319,7 +332,6 @@
       </div>
     </div>
 
-    <!-- TTL RESULTS -->
     <div id="ttl-results-section" style="display:none">
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">② TTL & propagation</div><div class="section-divider-line"></div></div>
       <div class="status-card" id="card-ttl">
@@ -331,7 +343,6 @@
       </div>
     </div>
 
-    <!-- GLOBAL PROPAGATION RESULTS -->
     <div id="prop-results-section" style="display:none">
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-teal">🌍 Global DNS propagation</div><div class="section-divider-line"></div></div>
       <div class="status-card" id="card-prop-summary" style="margin-bottom:12px">
@@ -344,7 +355,6 @@
       <div class="prop-grid" id="prop-grid"></div>
     </div>
 
-    <!-- NEXT STEPS -->
     <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">📋 Next steps</div><div class="section-divider-line"></div></div>
     <div class="card"><div id="next-steps" style="font-size:13px;color:#64748b">Running checks…</div></div>
 
@@ -360,7 +370,7 @@
 
 <script>
   var countdownTimer = null;
-  var countdownSec   = 15;   /* ── changed from 60 to 15 ── */
+  var countdownSec   = 15;
   var splitCount     = 0;
   var isRunning      = false;
   var dnsProvider    = 'google';
@@ -409,6 +419,7 @@
   function onPointingToggle() {
     document.getElementById('pointing-section').style.display =
       document.getElementById('pointing-toggle').checked ? 'block' : 'none';
+    syncSameAs();
   }
   function onSplitToggle() {
     var on = document.getElementById('split-toggle').checked;
@@ -423,6 +434,51 @@
     recType = t;
     document.querySelectorAll('.rec-btn').forEach(function(b){ b.classList.remove('active'); });
     document.getElementById('rt-'+t).classList.add('active');
+  }
+
+  /* ── SAME-AS CHECKBOX ── */
+  function toggleSameAs() {
+    var cb = document.getElementById('same-as-cb');
+    cb.checked = !cb.checked;
+    applySameAs();
+  }
+
+  function applySameAs() {
+    var cb = document.getElementById('same-as-cb');
+    var row = document.getElementById('same-as-row');
+    var domainField = document.getElementById('prop-domain');
+    var expectedField = document.getElementById('prop-expected');
+
+    if (cb.checked) {
+      row.classList.add('active');
+      // Copy values from section 1
+      domainField.value = document.getElementById('retailer-domain').value;
+      expectedField.value = document.getElementById('whitelabel-domain').value;
+      // Make read-only with visual feedback
+      domainField.readOnly = true;
+      expectedField.readOnly = true;
+      domainField.style.opacity = '0.6';
+      domainField.style.cursor = 'not-allowed';
+      expectedField.style.opacity = '0.6';
+      expectedField.style.cursor = 'not-allowed';
+    } else {
+      row.classList.remove('active');
+      // Make editable again
+      domainField.readOnly = false;
+      expectedField.readOnly = false;
+      domainField.style.opacity = '1';
+      domainField.style.cursor = 'text';
+      expectedField.style.opacity = '1';
+      expectedField.style.cursor = 'text';
+    }
+  }
+
+  // Sync propagation fields when section 1 inputs change (if same-as is checked)
+  function syncSameAs() {
+    if (document.getElementById('same-as-cb').checked) {
+      document.getElementById('prop-domain').value = document.getElementById('retailer-domain').value;
+      document.getElementById('prop-expected').value = document.getElementById('whitelabel-domain').value;
+    }
   }
 
   function addSplitEntry() {
@@ -642,7 +698,6 @@
     startCountdown();
   }
 
-  /* ── 15-SECOND COUNTDOWN ── */
   function startCountdown() {
     stopRefresh();
     countdownSec = 15;
