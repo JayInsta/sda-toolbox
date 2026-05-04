@@ -119,6 +119,25 @@
     .footer { text-align: center; padding: 2rem 0 0.5rem; font-size: 12px; color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #2a2d3e; }
 
+    /* PASSWORD MODAL */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-overlay.visible { display: flex; }
+    .modal-box { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 16px; padding: 2rem; width: 90%; max-width: 380px; text-align: center; animation: modalIn 0.2s ease-out; }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .modal-icon { font-size: 36px; margin-bottom: 12px; }
+    .modal-title { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .modal-sub { font-size: 12px; color: #475569; margin-bottom: 20px; line-height: 1.5; }
+    .modal-input { width: 100%; padding: 11px 14px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 14px; color: #e2e8f0; outline: none; font-family: 'Courier New', monospace; text-align: center; letter-spacing: 1px; transition: border-color 0.15s; }
+    .modal-input:focus { border-color: #e11d48; box-shadow: 0 0 0 3px rgba(225,29,72,0.2); }
+    .modal-input.shake { animation: shake 0.4s ease-in-out; border-color: #ef4444; }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-8px); } 40%,80% { transform: translateX(8px); } }
+    .modal-error { font-size: 12px; color: #ef4444; margin-top: 8px; min-height: 18px; }
+    .modal-btns { display: flex; gap: 8px; margin-top: 16px; }
+    .modal-btn { flex: 1; padding: 11px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; border: none; }
+    .modal-btn:hover { opacity: 0.85; }
+    .modal-btn-cancel { background: #0f1117; border: 1px solid #2a2d3e; color: #64748b; }
+    .modal-btn-submit { background: linear-gradient(135deg, #e11d48, #be123c); color: #fff; }
+
     @media (max-width: 500px) {
       .preset-grid { grid-template-columns: 1fr 1fr; }
       .results-grid { grid-template-columns: 1fr 1fr; }
@@ -247,6 +266,21 @@
     <div class="results-grid" id="results-grid"></div>
   </div>
 
+  <!-- PASSWORD MODAL -->
+  <div class="modal-overlay" id="pw-modal">
+    <div class="modal-box">
+      <div class="modal-icon">🔒</div>
+      <div class="modal-title">iPad Screenshots</div>
+      <div class="modal-sub">This section is password-protected.<br>Enter the access code to continue.</div>
+      <input type="password" class="modal-input" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPassword()">
+      <div class="modal-error" id="pw-error"></div>
+      <div class="modal-btns">
+        <div class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</div>
+        <div class="modal-btn modal-btn-submit" onclick="checkPassword()">Unlock</div>
+      </div>
+    </div>
+  </div>
+
   <div class="footer">
     <span>Image Resizer</span>
     <div class="footer-dot"></div>
@@ -289,6 +323,37 @@
   var activeTab  = 'web';
   var activePreset = null;
   var outputFmt  = 'png';
+  var ipadUnlocked = false;
+
+  /* ── PASSWORD MODAL ── */
+  function showModal() {
+    document.getElementById('pw-modal').classList.add('visible');
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-error').textContent = '';
+    document.getElementById('pw-input').classList.remove('shake');
+    setTimeout(function(){ document.getElementById('pw-input').focus(); }, 100);
+  }
+  function closeModal() {
+    document.getElementById('pw-modal').classList.remove('visible');
+  }
+  function checkPassword() {
+    var inp = document.getElementById('pw-input');
+    var err = document.getElementById('pw-error');
+    if (inp.value === 'ICTest123456!') {
+      ipadUnlocked = true;
+      closeModal();
+      setTab('ipad');
+    } else {
+      err.textContent = 'Incorrect password — try again';
+      inp.classList.add('shake');
+      inp.value = '';
+      setTimeout(function(){ inp.classList.remove('shake'); inp.focus(); }, 400);
+    }
+  }
+  // Close modal on overlay click (outside the box)
+  document.getElementById('pw-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
 
   /* ── FILE HANDLING ── */
   var dz = document.getElementById('dropzone');
@@ -345,6 +410,11 @@
   buildPresets();
 
   function setTab(tab) {
+    // Password gate for iPad tab
+    if (tab === 'ipad' && !ipadUnlocked) {
+      showModal();
+      return;
+    }
     activeTab = tab;
     activePreset = null;
     ['web','android','ios','ipad','custom'].forEach(function(t){
