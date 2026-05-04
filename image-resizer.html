@@ -169,6 +169,18 @@
       <div class="dropzone-hint">SVG • PNG • JPG — multiple files supported</div>
     </div>
     <div class="preview-grid" id="preview-grid"></div>
+    <div id="clear-all-wrap" style="display:none;margin-top:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:12px;color:#64748b" id="file-count"></span>
+        <div style="margin-left:auto;padding:7px 14px;border-radius:8px;background:#200d0d;border:1px solid #ef444444;color:#f87171;font-size:12px;font-weight:600;cursor:pointer;transition:opacity 0.15s" onclick="clearAllFiles()" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">✕ Clear all</div>
+      </div>
+    </div>
+    <div style="margin-top:14px">
+      <div class="field" style="margin-bottom:0">
+        <label>Item name <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— optional, prefixes all output filenames (e.g. "ABC" → ABC_logo.png)</span></label>
+        <input type="text" id="item-name" placeholder="e.g. Kroger, ALDI, BellasMarket" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f1117;border:1px solid #2a2d3e;border-radius:10px;padding:10px 12px;font-size:14px;color:#e2e8f0;outline:none;width:100%;transition:border-color 0.15s" onfocus="this.style.borderColor='#7c3aed';this.style.boxShadow='0 0 0 3px rgba(124,58,237,0.2)'" onblur="this.style.borderColor='#2a2d3e';this.style.boxShadow='none'">
+      </div>
+    </div>
   </div>
 
   <!-- STEP 2: MODE -->
@@ -375,8 +387,23 @@
       d.innerHTML='<img src="'+url+'"><div class="p-name">'+f.name+'</div><div class="p-remove" onclick="removeFile('+i+')">✕</div>';
       g.appendChild(d);
     });
+    var wrap = document.getElementById('clear-all-wrap');
+    var count = document.getElementById('file-count');
+    if (files.length > 0) {
+      wrap.style.display = 'block';
+      count.textContent = files.length + ' file' + (files.length > 1 ? 's' : '') + ' uploaded';
+    } else {
+      wrap.style.display = 'none';
+    }
   }
   function removeFile(i){ files.splice(i,1); renderPreviews(); updateBtn(); }
+  function clearAllFiles(){ files=[]; renderPreviews(); updateBtn(); }
+
+  /* ── OUTPUT NAME HELPER ── */
+  function getItemPrefix() {
+    var name = (document.getElementById('item-name').value || '').trim();
+    return name ? name.replace(/[^a-z0-9_\-]/gi, '_') + '_' : '';
+  }
 
   /* ── MODE ── */
   function setMode(m) {
@@ -509,9 +536,9 @@
         var mime = outputFmt==='jpeg' ? 'image/jpeg' : 'image/png';
         var q = outputFmt==='jpeg' ? quality : undefined;
         var dataUrl = canvas.toDataURL(mime, q);
-        var base = task.file.name.replace(/\.[^.]+$/, '');
+        var prefix = getItemPrefix();
         var ext = outputFmt==='jpeg' ? 'jpg' : 'png';
-        var outName = base + '_' + task.preset.w + 'x' + task.preset.h + '.' + ext;
+        var outName = prefix + 'ipad_screenshot_' + (taskIdx + 1) + '_' + task.preset.w + 'x' + task.preset.h + '.' + ext;
         results[taskIdx] = { dataUrl: dataUrl, name: outName, w: task.preset.w, h: task.preset.h };
         done++;
         if (done === total) renderResults();
@@ -591,9 +618,10 @@
             var mime = outputFmt==='jpeg' ? 'image/jpeg' : 'image/png';
             var q = outputFmt==='jpeg' ? quality : undefined;
             var dataUrl = canvas.toDataURL(mime, q);
-            var base = f.name.replace(/\.[^.]+$/, '');
+            var prefix = getItemPrefix();
             var ext = outputFmt==='jpeg' ? 'jpg' : 'png';
-            var outName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase()+'.'+ext : base+'_'+p.w+'x'+p.h+'.'+ext;
+            var labelName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase() : f.name.replace(/\.[^.]+$/,'')+'_'+p.w+'x'+p.h;
+            var outName = prefix + labelName + '.' + ext;
             results[idx] = { dataUrl: dataUrl, name: outName, w: p.w, h: p.h };
             done++;
             if (done===files.length) renderResults();
@@ -639,8 +667,9 @@
               }
               var serialized = new XMLSerializer().serializeToString(doc);
               var dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(serialized);
-              var base = f.name.replace(/\.[^.]+$/, '');
-              var outName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase()+'.svg' : base+'_'+tw+'x'+th+'.svg';
+              var prefix = getItemPrefix();
+              var labelName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase() : f.name.replace(/\.[^.]+$/,'')+'_'+tw+'x'+th;
+              var outName = prefix + labelName + '.svg';
               results[idx] = { dataUrl: dataUrl, name: outName, w: tw, h: th };
               done++; if (done===files.length) renderResults();
             };
@@ -650,8 +679,9 @@
             var pngData = canvas.toDataURL('image/png');
             var svgStr = '<svg xmlns="http://www.w3.org/2000/svg" width="'+tw+'" height="'+th+'" viewBox="0 0 '+tw+' '+th+'"><image href="'+pngData+'" width="'+tw+'" height="'+th+'"/></svg>';
             var dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
-            var base = f.name.replace(/\.[^.]+$/, '');
-            var outName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase()+'.svg' : base+'_'+tw+'x'+th+'.svg';
+            var prefix = getItemPrefix();
+            var labelName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase() : f.name.replace(/\.[^.]+$/,'')+'_'+tw+'x'+th;
+            var outName = prefix + labelName + '.svg';
             results[idx] = { dataUrl: dataUrl, name: outName, w: tw, h: th };
             done++; if (done===files.length) renderResults();
             return;
@@ -659,9 +689,10 @@
         }
 
         var dataUrl = canvas.toDataURL(mime, q);
-        var base    = f.name.replace(/\.[^.]+$/,'');
+        var prefix  = getItemPrefix();
         var ext     = outputFmt==='jpeg' ? 'jpg' : 'png';
-        var outName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase()+'.'+ext : base+'_'+tw+'x'+th+'.'+ext;
+        var labelName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase() : f.name.replace(/\.[^.]+$/,'')+'_'+tw+'x'+th;
+        var outName = prefix + labelName + '.' + ext;
         results[idx] = { dataUrl:dataUrl, name:outName, w:tw, h:th };
         done++;
         if (done===files.length) renderResults();
@@ -713,8 +744,9 @@
           ctx.clearRect(0,0,w,h);
           ctx.drawImage(img,0,0,w,h);
           var dataUrl=canvas.toDataURL('image/png');
+          var prefix=getItemPrefix();
           var base=f.name.replace(/\.svg$/i,'');
-          results[idx]={dataUrl:dataUrl,name:base+'_'+w+'x'+h+'.png',w:w,h:h};
+          results[idx]={dataUrl:dataUrl,name:prefix+base+'_'+w+'x'+h+'.png',w:w,h:h};
           done++; if(done===svgFiles.length) renderResults();
           URL.revokeObjectURL(url);
         };
