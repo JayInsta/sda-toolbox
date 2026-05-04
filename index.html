@@ -1,1 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Android Version Code Offset Calculator</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; padding: 2rem 1rem 4rem; }
+    .page { max-width: 720px; margin: 0 auto; }
 
+    .hero { text-align: center; padding: 3rem 1rem 2.5rem; }
+    .hero-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #2563eb, #0f6e56); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
+    .hero-icon svg { width: 28px; height: 28px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .hero h1 { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: -0.4px; margin-bottom: 8px; }
+    .hero p { font-size: 14px; color: #64748b; line-height: 1.6; }
+    .hero code { background: #1a1d27; border: 1px solid #2a2d3e; padding: 2px 7px; border-radius: 5px; color: #60a5fa; font-size: 13px; font-family: 'Courier New', monospace; }
+
+    .toggle-group { display: flex; gap: 8px; }
+    .toggle-btn { flex: 1; padding: 11px; border-radius: 10px; border: 1px solid #2a2d3e; background: #0f1117; color: #64748b; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.15s; user-select: none; }
+    .toggle-btn:hover { border-color: #3a3d4e; color: #94a3b8; }
+    .toggle-btn.active { background: #1e3a5f; border-color: #2563eb; color: #60a5fa; }
+
+    .section-divider { display: flex; align-items: center; gap: 14px; margin: 2rem 0 1.25rem; }
+    .section-divider-line { flex: 1; height: 1px; background: #2a2d3e; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; white-space: nowrap; }
+    .sl-major { background: #2d1e3d; color: #c084fc; border: 1px solid #6d28d933; }
+    .sl-vc    { background: #1e3a5f; color: #60a5fa; border: 1px solid #2563eb33; }
+    .sl-type  { background: #1e3d2f; color: #4ade80; border: 1px solid #16a34a33; }
+
+    .card { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 16px; padding: 1.5rem; margin-bottom: 14px; transition: border-color 0.2s; }
+    .card:focus-within { border-color: #2563eb44; }
+    .card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
+    .step-badge { width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+    .sm1 { background: #2d1e3d; color: #c084fc; }
+    .sm2 { background: #2d261e; color: #fb923c; }
+    .sv1 { background: #1e3a5f; color: #60a5fa; }
+    .sv2 { background: #1e3d2f; color: #4ade80; }
+    .sv3 { background: #3d2a1e; color: #fb923c; }
+    .sv4 { background: #2d1e3d; color: #c084fc; }
+    .s-type { background: #1e3d2f; color: #4ade80; }
+    .card-title { font-size: 15px; font-weight: 600; color: #e2e8f0; }
+    .card-sub   { font-size: 12px; color: #475569; margin-top: 2px; }
+
+    .input-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .field label, .full-field label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
+    input[type="number"] { width: 100%; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 16px; font-weight: 600; color: #e2e8f0; outline: none; transition: border-color 0.15s, box-shadow 0.15s; -moz-appearance: textfield; }
+    input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    input[type="number"]:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.2); }
+
+    .formula-strip { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 10px 14px; font-family: 'Courier New', monospace; font-size: 12px; color: #64748b; margin-bottom: 14px; line-height: 1.7; }
+    .formula-strip .fval { color: #60a5fa; font-weight: 700; }
+    .formula-strip .fval-purple { color: #c084fc; font-weight: 700; }
+
+    .ic-result { background: linear-gradient(135deg, #1e3a5f, #162038); border: 1px solid #2563eb33; border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .ic-result-label { font-size: 12px; color: #60a5fa; font-weight: 500; }
+    .ic-result-val   { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+
+    .step-line { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid #1e2130; font-size: 13px; }
+    .step-line:last-child { border-bottom: none; }
+    .step-line .sl { color: #64748b; }
+    .step-line .sv { color: #e2e8f0; font-weight: 600; font-family: 'Courier New', monospace; }
+
+    .warn-box { background: #2d1a0e; border: 1px solid #7c3a1e55; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #fb923c; margin-top: 12px; display: flex; gap: 10px; align-items: flex-start; line-height: 1.5; }
+    .warn-dot { width: 7px; height: 7px; border-radius: 50%; background: #fb923c; margin-top: 4px; flex-shrink: 0; }
+    .info-box { background: #1e2d1e; border: 1px solid #16a34a33; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #4ade80; margin-top: 12px; display: flex; gap: 10px; align-items: flex-start; line-height: 1.5; }
+    .info-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; margin-top: 4px; flex-shrink: 0; }
+
+    .sep { border: none; border-top: 1px solid #2a2d3e; margin: 16px 0; }
+
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .result-tile { border-radius: 12px; padding: 18px; border: 1px solid transparent; }
+    .rt-ipp         { background: linear-gradient(135deg, #1e2d45, #162038); border-color: #2563eb33; }
+    .rt-final       { background: linear-gradient(135deg, #1a2d1e, #132015); border-color: #16a34a33; }
+    .rt-major-ipp   { background: linear-gradient(135deg, #2d1e3d, #1e1528); border-color: #7c3aed33; }
+    .rt-major-final { background: linear-gradient(135deg, #1a2d1e, #132015); border-color: #16a34a33; }
+    .rt-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+    .rt-ipp .rt-label         { color: #60a5fa; }
+    .rt-final .rt-label       { color: #4ade80; }
+    .rt-major-ipp .rt-label   { color: #c084fc; }
+    .rt-major-final .rt-label { color: #4ade80; }
+    .rt-val { font-size: 24px; font-weight: 700; color: #fff; letter-spacing: -0.3px; line-height: 1.2; }
+    .rt-sub { font-size: 11px; margin-top: 6px; font-family: 'Courier New', monospace; }
+    .rt-ipp .rt-sub         { color: #3b82f6; }
+    .rt-final .rt-sub       { color: #22c55e; }
+    .rt-major-ipp .rt-sub   { color: #a855f7; }
+    .rt-major-final .rt-sub { color: #22c55e; }
+
+    .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 99px; margin-top: 10px; }
+    .b-green  { background: #14532d; color: #4ade80; }
+    .b-amber  { background: #431407; color: #fb923c; }
+    .b-blue   { background: #1e3a5f; color: #60a5fa; }
+    .b-purple { background: #2d1e3d; color: #c084fc; }
+
+    /* TYPE INDICATOR */
+    .type-indicator { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; margin-bottom: 14px; }
+    .ti-new      { background: #1e3a5f; border: 1px solid #2563eb33; color: #60a5fa; }
+    .ti-takeover { background: #2d1e3d; border: 1px solid #7c3aed33; color: #c084fc; }
+
+    .footer { text-align: center; padding: 2rem 0 0.5rem; font-size: 12px; color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #2a2d3e; }
+
+    @media (max-width: 500px) {
+      .input-grid { grid-template-columns: 1fr; }
+      .result-grid { grid-template-columns: 1fr; }
+      .toggle-group { flex-direction: column; }
+      .hero h1 { font-size: 21px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-icon">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h2M11 8h6M7 12h4M15 12h2"/></svg>
+    </div>
+    <h1>Android offset calculator</h1>
+    <p>Calculate <code>major_version_offset</code> and <code>version_code_offset</code> to set in IPP before triggering a build.</p>
+  </div>
+
+  <!-- SHARED APP TYPE SELECTION -->
+  <div class="card">
+    <div class="card-top">
+      <div class="step-badge s-type">▸</div>
+      <div><div class="card-title">App setup type</div><div class="card-sub">This applies to both major version and version code offset calculations below</div></div>
+    </div>
+    <div class="toggle-group">
+      <div class="toggle-btn" id="btn-new" onclick="setAppType('new')">🆕 &nbsp;New app</div>
+      <div class="toggle-btn active" id="btn-takeover" onclick="setAppType('takeover')">🔄 &nbsp;Takeover — existing app</div>
+    </div>
+  </div>
+
+  <!-- MAJOR VERSION OFFSET -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-label sl-major">① &nbsp;Major version offset</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="card" id="m-current-section">
+    <div class="card-top">
+      <div class="step-badge sm1">1</div>
+      <div><div class="card-title">Current app major version</div><div class="card-sub">The major version of the existing app (e.g. 10 for v10.x.x)</div></div>
+    </div>
+    <div class="full-field">
+      <label>App current major version</label>
+      <input type="number" id="m-app-version" value="10" min="0" oninput="calcMajor()">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="step-badge sm2" id="m-result-badge">2</div>
+      <div><div class="card-title">Major version offset result</div><div class="card-sub">IC current major version is <strong style="color:#c084fc">9</strong></div></div>
+    </div>
+    <div id="m-type-tag"></div>
+    <div class="formula-strip" id="m-formula"></div>
+    <div id="m-steps"></div>
+    <div class="sep"></div>
+    <div class="result-grid">
+      <div class="result-tile rt-major-ipp">
+        <div class="rt-label">Set in IPP</div>
+        <div class="rt-val" id="m-ipp-value"></div>
+        <div id="m-ipp-badge"></div>
+        <div class="rt-sub" id="m-ipp-sub"></div>
+      </div>
+      <div class="result-tile rt-major-final">
+        <div class="rt-label">Resulting major version</div>
+        <div class="rt-val" id="m-final-val"></div>
+        <div class="rt-sub" id="m-final-sub"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERSION CODE OFFSET -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-label sl-vc">② &nbsp;Version code offset</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="step-badge sv1">1</div>
+      <div><div class="card-title">IC branch version</div><div class="card-sub">Enter the branch you are building from (e.g. 9.14.0)</div></div>
+    </div>
+    <div class="input-grid">
+      <div class="field"><label>Major</label><input type="number" id="major" value="9" min="0" oninput="calcVC()"></div>
+      <div class="field"><label>Minor</label><input type="number" id="minor" value="14" min="0" oninput="calcVC()"></div>
+      <div class="field"><label>Patch</label><input type="number" id="patch" value="0" min="0" oninput="calcVC()"></div>
+    </div>
+    <div class="formula-strip" id="ic-formula"></div>
+    <div class="ic-result">
+      <div class="ic-result-label">IC version code offset</div>
+      <div class="ic-result-val" id="ic-offset"></div>
+    </div>
+  </div>
+
+  <div class="card" id="v-current-section">
+    <div class="card-top">
+      <div class="step-badge sv3">2</div>
+      <div>
+        <div class="card-title">Current app version code</div>
+        <div class="card-sub">Play Console → Latest releases and bundles → Latest app bundles</div>
+      </div>
+    </div>
+    <div class="full-field">
+      <label>Current version code</label>
+      <input type="number" id="current-offset" value="1496869728" min="0" oninput="calcVC()">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="step-badge sv4" id="v-result-badge">3</div>
+      <div><div class="card-title">Version code offset result</div><div class="card-sub">What to enter in IPP</div></div>
+    </div>
+    <div id="v-type-tag"></div>
+    <div id="v-steps"></div>
+    <div class="sep"></div>
+    <div class="result-grid">
+      <div class="result-tile rt-ipp">
+        <div class="rt-label">Set in IPP</div>
+        <div class="rt-val" id="ipp-value"></div>
+        <div id="ipp-badge"></div>
+        <div class="rt-sub" id="ipp-sub"></div>
+      </div>
+      <div class="result-tile rt-final">
+        <div class="rt-label">Final version code</div>
+        <div class="rt-val" id="final-vc"></div>
+        <div class="rt-sub" id="final-sub"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Instacart Enterprise Mobile</span>
+    <div class="footer-dot"></div>
+    <span>IPP Build Tooling</span>
+  </div>
+</div>
+
+<script>
+  var IC_MAJOR = 9;
+  var appType  = 'takeover';
+
+  /* ── SHARED APP TYPE TOGGLE ── */
+  function setAppType(t) {
+    appType = t;
+    document.getElementById('btn-new').classList.toggle('active', t === 'new');
+    document.getElementById('btn-takeover').classList.toggle('active', t === 'takeover');
+    calcMajor();
+    calcVC();
+  }
+
+  /* ── MAJOR VERSION OFFSET ── */
+  function calcMajor() {
+    var isNew  = appType === 'new';
+    var appVer = isNew ? 0 : (parseInt(document.getElementById('m-app-version').value) || 0);
+    var offset = appVer - IC_MAJOR + 1;
+
+    document.getElementById('m-current-section').style.display = isNew ? 'none' : 'block';
+    document.getElementById('m-result-badge').textContent = isNew ? '1' : '2';
+
+    // Type indicator tag
+    document.getElementById('m-type-tag').innerHTML = isNew
+      ? '<div class="type-indicator ti-new">🆕 New app</div>'
+      : '<div class="type-indicator ti-takeover">🔄 Takeover</div>';
+
+    var formulaEl = document.getElementById('m-formula');
+    var stepsEl   = document.getElementById('m-steps');
+    var ippEl     = document.getElementById('m-ipp-value');
+    var badgeEl   = document.getElementById('m-ipp-badge');
+    var ippSub    = document.getElementById('m-ipp-sub');
+    var finalEl   = document.getElementById('m-final-val');
+    var finalSub  = document.getElementById('m-final-sub');
+
+    formulaEl.innerHTML =
+      'major_version_offset = App current version &minus; IC current version + 1<br>' +
+      '= <span class="fval-purple">' + appVer + '</span> &minus; ' + IC_MAJOR + ' + 1 = <span class="fval-purple">' + offset + '</span>';
+
+    var html =
+      '<div class="step-line"><span class="sl">App current major version</span><span class="sv">' + appVer + (isNew ? ' (new app)' : '') + '</span></div>' +
+      '<div class="step-line"><span class="sl">IC current major version</span><span class="sv">' + IC_MAJOR + '</span></div>' +
+      '<div class="step-line"><span class="sl">' + appVer + ' &minus; ' + IC_MAJOR + ' + 1</span><span class="sv">' + offset + '</span></div>';
+
+    if (isNew) {
+      html += '<div class="info-box"><div class="info-dot"></div><div>New app — app current version is 0. Set <strong>major_version_offset</strong> to <strong style="color:#c084fc">-8</strong> in IPP so the build starts with major version <strong>1</strong> &nbsp;(9 + (&minus;8) = 1).</div></div>';
+      ippEl.textContent    = '-8';
+      badgeEl.innerHTML    = '<span class="badge b-purple">New app — enter -8</span>';
+      ippSub.textContent   = '0 - 9 + 1 = -8';
+      finalEl.textContent  = '1';
+      finalSub.textContent = '9 + (-8) = 1';
+    } else if (offset <= 0) {
+      html += '<div class="info-box"><div class="info-dot"></div><div>Result is negative — this is valid. Enter <strong style="color:#c084fc">' + offset + '</strong> as the <strong>major_version_offset</strong> in IPP. The platform will add it to the IC major version (' + IC_MAJOR + ' + (' + offset + ') = ' + (IC_MAJOR + offset) + ').</div></div>';
+      ippEl.textContent    = String(offset);
+      badgeEl.innerHTML    = '<span class="badge b-purple">Enter this value (negative)</span>';
+      ippSub.textContent   = appVer + ' - ' + IC_MAJOR + ' + 1 = ' + offset;
+      finalEl.textContent  = String(IC_MAJOR + offset);
+      finalSub.textContent = IC_MAJOR + ' + (' + offset + ') = ' + (IC_MAJOR + offset);
+    } else {
+      ippEl.textContent    = String(offset);
+      badgeEl.innerHTML    = '<span class="badge b-purple">Enter this value</span>';
+      ippSub.textContent   = appVer + ' - ' + IC_MAJOR + ' + 1';
+      finalEl.textContent  = String(IC_MAJOR + offset);
+      finalSub.textContent = IC_MAJOR + ' + ' + offset + ' = ' + (IC_MAJOR + offset);
+    }
+
+    stepsEl.innerHTML = html;
+  }
+
+  /* ── VERSION CODE OFFSET ── */
+  function calcVC() {
+    var major = parseInt(document.getElementById('major').value) || 0;
+    var minor = parseInt(document.getElementById('minor').value) || 0;
+    var patch = parseInt(document.getElementById('patch').value) || 0;
+    var isNew = appType === 'new';
+    var cur   = parseInt(document.getElementById('current-offset').value) || 0;
+
+    document.getElementById('v-current-section').style.display = isNew ? 'none' : 'block';
+    document.getElementById('v-result-badge').textContent = isNew ? '2' : '3';
+
+    // Type indicator tag
+    document.getElementById('v-type-tag').innerHTML = isNew
+      ? '<div class="type-indicator ti-new">🆕 New app</div>'
+      : '<div class="type-indicator ti-takeover">🔄 Takeover</div>';
+
+    var ic = (major * 10000000) + (minor * 100000) + (patch * 1000);
+
+    document.getElementById('ic-offset').textContent = String(ic);
+    document.getElementById('ic-formula').innerHTML  =
+      '(' + major + ' x 10000000) + (' + minor + ' x 100000) + (' + patch + ' x 1000) = <span class="fval">' + ic + '</span>';
+
+    var stepsEl  = document.getElementById('v-steps');
+    var ippEl    = document.getElementById('ipp-value');
+    var badgeEl  = document.getElementById('ipp-badge');
+    var ippSub   = document.getElementById('ipp-sub');
+    var finalEl  = document.getElementById('final-vc');
+    var finalSub = document.getElementById('final-sub');
+
+    if (isNew) {
+      stepsEl.innerHTML    = '<div class="step-line"><span class="sl">New app — no existing offset to account for</span><span class="sv">—</span></div>';
+      ippEl.textContent    = 'Leave blank';
+      badgeEl.innerHTML    = '<span class="badge b-blue">New app</span>';
+      ippSub.textContent   = '';
+      finalEl.textContent  = String(ic);
+      finalSub.textContent = 'IC offset used as default';
+      return;
+    }
+
+    var offset = cur - ic + 1;
+    var html =
+      '<div class="step-line"><span class="sl">Current app offset</span><span class="sv">'     + String(cur)    + '</span></div>' +
+      '<div class="step-line"><span class="sl">IC version code offset</span><span class="sv">' + String(ic)     + '</span></div>' +
+      '<div class="step-line"><span class="sl">' + cur + ' &minus; ' + ic + ' + 1</span><span class="sv">' + String(offset) + '</span></div>';
+
+    if (offset <= 0) {
+      html += '<div class="warn-box"><div class="warn-dot"></div><div>Result is negative — current offset is lower than IC version code offset. Leave the field blank in IPP. The platform will use the IC offset as default.</div></div>';
+      ippEl.textContent    = 'Leave blank';
+      badgeEl.innerHTML    = '<span class="badge b-amber">Case 1 — leave blank</span>';
+      ippSub.textContent   = '';
+      finalEl.textContent  = String(ic);
+      finalSub.textContent = 'IC offset used as default';
+    } else {
+      ippEl.textContent    = String(offset);
+      badgeEl.innerHTML    = '<span class="badge b-green">Case 2 — enter this value</span>';
+      ippSub.textContent   = cur + ' - ' + ic + ' + 1';
+      finalEl.textContent  = String(ic + offset);
+      finalSub.textContent = ic + ' + ' + offset;
+    }
+
+    stepsEl.innerHTML = html;
+  }
+
+  calcMajor();
+  calcVC();
+</script>
+<script src="nav.js"></script>
+</body>
+</html>
