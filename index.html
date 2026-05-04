@@ -26,6 +26,7 @@
     .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; white-space: nowrap; }
     .sl-major { background: #2d1e3d; color: #c084fc; border: 1px solid #6d28d933; }
     .sl-vc    { background: #1e3a5f; color: #60a5fa; border: 1px solid #2563eb33; }
+    .sl-type  { background: #1e3d2f; color: #4ade80; border: 1px solid #16a34a33; }
 
     .card { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 16px; padding: 1.5rem; margin-bottom: 14px; transition: border-color 0.2s; }
     .card:focus-within { border-color: #2563eb44; }
@@ -37,6 +38,7 @@
     .sv2 { background: #1e3d2f; color: #4ade80; }
     .sv3 { background: #3d2a1e; color: #fb923c; }
     .sv4 { background: #2d1e3d; color: #c084fc; }
+    .s-type { background: #1e3d2f; color: #4ade80; }
     .card-title { font-size: 15px; font-weight: 600; color: #e2e8f0; }
     .card-sub   { font-size: 12px; color: #475569; margin-top: 2px; }
 
@@ -53,10 +55,6 @@
     .ic-result { background: linear-gradient(135deg, #1e3a5f, #162038); border: 1px solid #2563eb33; border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
     .ic-result-label { font-size: 12px; color: #60a5fa; font-weight: 500; }
     .ic-result-val   { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
-
-    .major-result { background: linear-gradient(135deg, #2d1e3d, #1e1528); border: 1px solid #7c3aed33; border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .major-result-label { font-size: 12px; color: #c084fc; font-weight: 500; }
-    .major-result-val   { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
 
     .step-line { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid #1e2130; font-size: 13px; }
     .step-line:last-child { border-bottom: none; }
@@ -94,6 +92,11 @@
     .b-blue   { background: #1e3a5f; color: #60a5fa; }
     .b-purple { background: #2d1e3d; color: #c084fc; }
 
+    /* TYPE INDICATOR */
+    .type-indicator { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; margin-bottom: 14px; }
+    .ti-new      { background: #1e3a5f; border: 1px solid #2563eb33; color: #60a5fa; }
+    .ti-takeover { background: #2d1e3d; border: 1px solid #7c3aed33; color: #c084fc; }
+
     .footer { text-align: center; padding: 2rem 0 0.5rem; font-size: 12px; color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #2a2d3e; }
 
@@ -116,6 +119,18 @@
     <p>Calculate <code>major_version_offset</code> and <code>version_code_offset</code> to set in IPP before triggering a build.</p>
   </div>
 
+  <!-- SHARED APP TYPE SELECTION -->
+  <div class="card">
+    <div class="card-top">
+      <div class="step-badge s-type">▸</div>
+      <div><div class="card-title">App setup type</div><div class="card-sub">This applies to both major version and version code offset calculations below</div></div>
+    </div>
+    <div class="toggle-group">
+      <div class="toggle-btn" id="btn-new" onclick="setAppType('new')">🆕 &nbsp;New app</div>
+      <div class="toggle-btn active" id="btn-takeover" onclick="setAppType('takeover')">🔄 &nbsp;Takeover — existing app</div>
+    </div>
+  </div>
+
   <!-- MAJOR VERSION OFFSET -->
   <div class="section-divider">
     <div class="section-divider-line"></div>
@@ -123,20 +138,9 @@
     <div class="section-divider-line"></div>
   </div>
 
-  <div class="card">
-    <div class="card-top">
-      <div class="step-badge sm1">1</div>
-      <div><div class="card-title">App setup type</div><div class="card-sub">Is this a new app or a takeover of an existing app?</div></div>
-    </div>
-    <div class="toggle-group">
-      <div class="toggle-btn" id="m-btn-new" onclick="setMajorType('new')">New app</div>
-      <div class="toggle-btn active" id="m-btn-takeover" onclick="setMajorType('takeover')">Takeover — existing app</div>
-    </div>
-  </div>
-
   <div class="card" id="m-current-section">
     <div class="card-top">
-      <div class="step-badge sm2">2</div>
+      <div class="step-badge sm1">1</div>
       <div><div class="card-title">Current app major version</div><div class="card-sub">The major version of the existing app (e.g. 10 for v10.x.x)</div></div>
     </div>
     <div class="full-field">
@@ -147,9 +151,10 @@
 
   <div class="card">
     <div class="card-top">
-      <div class="step-badge sm1" id="m-result-badge">3</div>
+      <div class="step-badge sm2" id="m-result-badge">2</div>
       <div><div class="card-title">Major version offset result</div><div class="card-sub">IC current major version is <strong style="color:#c084fc">9</strong></div></div>
     </div>
+    <div id="m-type-tag"></div>
     <div class="formula-strip" id="m-formula"></div>
     <div id="m-steps"></div>
     <div class="sep"></div>
@@ -192,20 +197,9 @@
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-top">
-      <div class="step-badge sv2">2</div>
-      <div><div class="card-title">App setup type</div><div class="card-sub">Is this a new app or a takeover of an existing app?</div></div>
-    </div>
-    <div class="toggle-group">
-      <div class="toggle-btn" id="v-btn-new" onclick="setVCType('new')">New app</div>
-      <div class="toggle-btn active" id="v-btn-takeover" onclick="setVCType('takeover')">Takeover — existing app</div>
-    </div>
-  </div>
-
   <div class="card" id="v-current-section">
     <div class="card-top">
-      <div class="step-badge sv3">3</div>
+      <div class="step-badge sv3">2</div>
       <div>
         <div class="card-title">Current app version code</div>
         <div class="card-sub">Play Console → Latest releases and bundles → Latest app bundles</div>
@@ -219,9 +213,10 @@
 
   <div class="card">
     <div class="card-top">
-      <div class="step-badge sv4" id="v-result-badge">4</div>
+      <div class="step-badge sv4" id="v-result-badge">3</div>
       <div><div class="card-title">Version code offset result</div><div class="card-sub">What to enter in IPP</div></div>
     </div>
+    <div id="v-type-tag"></div>
     <div id="v-steps"></div>
     <div class="sep"></div>
     <div class="result-grid">
@@ -247,25 +242,31 @@
 </div>
 
 <script>
-  var IC_MAJOR  = 9;
-  var majorType = 'takeover';
-  var vcType    = 'takeover';
+  var IC_MAJOR = 9;
+  var appType  = 'takeover';
 
-  /* ── MAJOR VERSION OFFSET ── */
-  function setMajorType(t) {
-    majorType = t;
-    document.getElementById('m-btn-new').classList.toggle('active', t === 'new');
-    document.getElementById('m-btn-takeover').classList.toggle('active', t === 'takeover');
+  /* ── SHARED APP TYPE TOGGLE ── */
+  function setAppType(t) {
+    appType = t;
+    document.getElementById('btn-new').classList.toggle('active', t === 'new');
+    document.getElementById('btn-takeover').classList.toggle('active', t === 'takeover');
     calcMajor();
+    calcVC();
   }
 
+  /* ── MAJOR VERSION OFFSET ── */
   function calcMajor() {
-    var isNew  = majorType === 'new';
+    var isNew  = appType === 'new';
     var appVer = isNew ? 0 : (parseInt(document.getElementById('m-app-version').value) || 0);
     var offset = appVer - IC_MAJOR + 1;
 
     document.getElementById('m-current-section').style.display = isNew ? 'none' : 'block';
-    document.getElementById('m-result-badge').textContent = isNew ? '2' : '3';
+    document.getElementById('m-result-badge').textContent = isNew ? '1' : '2';
+
+    // Type indicator tag
+    document.getElementById('m-type-tag').innerHTML = isNew
+      ? '<div class="type-indicator ti-new">🆕 New app</div>'
+      : '<div class="type-indicator ti-takeover">🔄 Takeover</div>';
 
     var formulaEl = document.getElementById('m-formula');
     var stepsEl   = document.getElementById('m-steps');
@@ -310,26 +311,23 @@
   }
 
   /* ── VERSION CODE OFFSET ── */
-  function setVCType(t) {
-    vcType = t;
-    document.getElementById('v-btn-new').classList.toggle('active', t === 'new');
-    document.getElementById('v-btn-takeover').classList.toggle('active', t === 'takeover');
-    calcVC();
-  }
-
   function calcVC() {
     var major = parseInt(document.getElementById('major').value) || 0;
     var minor = parseInt(document.getElementById('minor').value) || 0;
     var patch = parseInt(document.getElementById('patch').value) || 0;
-    var isNew = vcType === 'new';
+    var isNew = appType === 'new';
     var cur   = parseInt(document.getElementById('current-offset').value) || 0;
 
     document.getElementById('v-current-section').style.display = isNew ? 'none' : 'block';
-    document.getElementById('v-result-badge').textContent = isNew ? '3' : '4';
+    document.getElementById('v-result-badge').textContent = isNew ? '2' : '3';
+
+    // Type indicator tag
+    document.getElementById('v-type-tag').innerHTML = isNew
+      ? '<div class="type-indicator ti-new">🆕 New app</div>'
+      : '<div class="type-indicator ti-takeover">🔄 Takeover</div>';
 
     var ic = (major * 10000000) + (minor * 100000) + (patch * 1000);
 
-    /* No commas anywhere — plain integers throughout */
     document.getElementById('ic-offset').textContent = String(ic);
     document.getElementById('ic-formula').innerHTML  =
       '(' + major + ' x 10000000) + (' + minor + ' x 100000) + (' + patch + ' x 1000) = <span class="fval">' + ic + '</span>';
@@ -342,7 +340,7 @@
     var finalSub = document.getElementById('final-sub');
 
     if (isNew) {
-      stepsEl.innerHTML    = '<div class="step-line"><span class="sl">New app &mdash; no existing offset to account for</span><span class="sv">&mdash;</span></div>';
+      stepsEl.innerHTML    = '<div class="step-line"><span class="sl">New app — no existing offset to account for</span><span class="sv">—</span></div>';
       ippEl.textContent    = 'Leave blank';
       badgeEl.innerHTML    = '<span class="badge b-blue">New app</span>';
       ippSub.textContent   = '';
@@ -358,15 +356,15 @@
       '<div class="step-line"><span class="sl">' + cur + ' &minus; ' + ic + ' + 1</span><span class="sv">' + String(offset) + '</span></div>';
 
     if (offset <= 0) {
-      html += '<div class="warn-box"><div class="warn-dot"></div><div>Result is negative &mdash; current offset is lower than IC version code offset. Leave the field blank in IPP. The platform will use the IC offset as default.</div></div>';
+      html += '<div class="warn-box"><div class="warn-dot"></div><div>Result is negative — current offset is lower than IC version code offset. Leave the field blank in IPP. The platform will use the IC offset as default.</div></div>';
       ippEl.textContent    = 'Leave blank';
-      badgeEl.innerHTML    = '<span class="badge b-amber">Case 1 &mdash; leave blank</span>';
+      badgeEl.innerHTML    = '<span class="badge b-amber">Case 1 — leave blank</span>';
       ippSub.textContent   = '';
       finalEl.textContent  = String(ic);
       finalSub.textContent = 'IC offset used as default';
     } else {
       ippEl.textContent    = String(offset);
-      badgeEl.innerHTML    = '<span class="badge b-green">Case 2 &mdash; enter this value</span>';
+      badgeEl.innerHTML    = '<span class="badge b-green">Case 2 — enter this value</span>';
       ippSub.textContent   = cur + ' - ' + ic + ' + 1';
       finalEl.textContent  = String(ic + offset);
       finalSub.textContent = ic + ' + ' + offset;
@@ -378,6 +376,6 @@
   calcMajor();
   calcVC();
 </script>
-  <script src="nav.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>
