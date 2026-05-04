@@ -296,7 +296,59 @@
     .rec-btn { padding: 7px 14px; border-radius: 8px; border: 1px solid #2a2d3e; background: #0f1117; color: #64748b; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; user-select: none; font-family: 'Courier New', monospace; }
     .rec-btn:hover { border-color: #3a3d4e; color: #94a3b8; }
     .rec-btn.active { background: #1e3d2f; border-color: #16a34a; color: #4ade80; }
+
+    /* CHAIN VISUALIZATION */
+    .chain-wrap { margin-top: 10px; }
+    .chain-hop { display: flex; align-items: stretch; gap: 0; margin-bottom: 0; }
+    .chain-connector { width: 24px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+    .chain-dot-top { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .chain-line { width: 2px; flex: 1; min-height: 16px; }
+    .cd-cname { background: #60a5fa; box-shadow: 0 0 5px #60a5fa; }
+    .cl-cname { background: #2563eb44; }
+    .cd-a { background: #4ade80; box-shadow: 0 0 5px #4ade80; }
+    .cl-a { background: #16a34a44; }
+    .cd-redirect { background: #fb923c; box-shadow: 0 0 5px #fb923c; }
+    .cl-redirect { background: #ea580c44; }
+    .cd-final { background: #c084fc; box-shadow: 0 0 5px #c084fc; }
+    .chain-detail { flex: 1; padding: 8px 12px; background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 8px; margin-bottom: 8px; margin-left: 8px; }
+    .chain-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+    .ct-cname { color: #60a5fa; }
+    .ct-a { color: #4ade80; }
+    .ct-redirect { color: #fb923c; }
+    .ct-start { color: #94a3b8; }
+    .chain-value { font-family: 'Courier New', monospace; font-size: 13px; color: #e2e8f0; word-break: break-all; }
+    .chain-ttl { font-size: 11px; color: #475569; margin-top: 2px; }
+    .s4 { background: #3d2a1e; color: #fb923c; }
   </style>
+
+  <!-- CHECK 4 — REDIRECT / REROUTE DETECTION -->
+  <div class="card">
+    <div class="card-top" style="margin-bottom:0">
+      <div class="step-badge s4">4</div>
+      <div style="flex:1">
+        <div class="toggle-row">
+          <div>
+            <div class="card-title">Redirect / reroute detection &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
+            <div class="card-sub">Trace full DNS chain + detect HTTP redirects to see where a domain ends up</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" id="reroute-toggle" onchange="onRerouteToggle()"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+    </div>
+    <div id="reroute-section" style="display:none;margin-top:1.25rem">
+      <div class="same-as-row" id="reroute-same-as-row" onclick="toggleRerouteSameAs(event)">
+        <input type="checkbox" class="same-as-cb" id="reroute-same-as-cb" onclick="event.stopPropagation(); applyRerouteSameAs()">
+        <span class="same-as-label">Same as Domain pointing check (use retailer domain from Check 1)</span>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>Domain to trace</label>
+        <input type="text" id="reroute-domain" placeholder="www.abc.com" oninput="">
+      </div>
+      <div style="font-size:12px;color:#475569;margin-top:10px;line-height:1.6">
+        Traces the full CNAME chain via DNS, resolves final A record, and attempts HTTP redirect detection (best-effort — may be blocked by CORS on some domains).
+      </div>
+    </div>
+  </div>
 
   <button class="btn-primary" id="check-btn" onclick="runAllChecks()">🔍 &nbsp;Run DNS checks</button>
 
@@ -354,6 +406,26 @@
         <div class="prop-summary" id="prop-stats" style="display:none"></div>
       </div>
       <div class="prop-grid" id="prop-grid"></div>
+    </div>
+
+    <!-- REROUTE RESULTS -->
+    <div id="reroute-results-section" style="display:none">
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-orange">🔀 Redirect / reroute trace</div><div class="section-divider-line"></div></div>
+      <div class="status-card" id="card-reroute">
+        <div class="status-top">
+          <div>
+            <div class="status-title" id="reroute-title">Tracing route…</div>
+            <div class="status-desc" id="reroute-desc">Following DNS chain and checking HTTP redirects</div>
+          </div>
+          <div class="status-badge badge-checking" id="badge-reroute"><div class="status-dot dot-checking"></div>Tracing…</div>
+        </div>
+        <div class="chain-wrap" id="chain-wrap"></div>
+        <div id="reroute-http-section" style="display:none;margin-top:12px">
+          <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">HTTP redirect check</div>
+          <div class="dns-detail" id="reroute-http-detail"></div>
+        </div>
+        <div id="reroute-summary" style="margin-top:12px"></div>
+      </div>
     </div>
 
     <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">📋 Next steps</div><div class="section-divider-line"></div></div>
@@ -482,6 +554,40 @@
       document.getElementById('prop-domain').value = document.getElementById('retailer-domain').value;
       document.getElementById('prop-expected').value = document.getElementById('whitelabel-domain').value;
     }
+    if (document.getElementById('reroute-same-as-cb').checked) {
+      document.getElementById('reroute-domain').value = document.getElementById('retailer-domain').value;
+    }
+  }
+
+  /* ── REROUTE TOGGLE & SAME-AS ── */
+  function onRerouteToggle() {
+    document.getElementById('reroute-section').style.display =
+      document.getElementById('reroute-toggle').checked ? 'block' : 'none';
+  }
+
+  function toggleRerouteSameAs(e) {
+    if (e && e.target && e.target.id === 'reroute-same-as-cb') return;
+    var cb = document.getElementById('reroute-same-as-cb');
+    cb.checked = !cb.checked;
+    applyRerouteSameAs();
+  }
+
+  function applyRerouteSameAs() {
+    var cb = document.getElementById('reroute-same-as-cb');
+    var row = document.getElementById('reroute-same-as-row');
+    var field = document.getElementById('reroute-domain');
+    if (cb.checked) {
+      row.classList.add('active');
+      field.value = document.getElementById('retailer-domain').value;
+      field.readOnly = true;
+      field.style.opacity = '0.6';
+      field.style.cursor = 'not-allowed';
+    } else {
+      row.classList.remove('active');
+      field.readOnly = false;
+      field.style.opacity = '1';
+      field.style.cursor = 'text';
+    }
   }
 
   function addSplitEntry() {
@@ -583,6 +689,97 @@
     return { okCount:okCount, total:total, pct:pct };
   }
 
+  /* ── CNAME CHAIN TRACER ── */
+  async function traceCnameChain(domain, maxHops) {
+    maxHops = maxHops || 10;
+    var chain = [{ type: 'start', value: domain }];
+    var current = domain;
+
+    for (var i = 0; i < maxHops; i++) {
+      var res = await doh(current, 'CNAME');
+      if (res && res.error) {
+        chain.push({ type: 'error', value: 'DNS query failed: ' + res.error, from: current });
+        break;
+      }
+      var cnames = (res && res.Answer || []).filter(function(a) { return a.type === 5; });
+      if (cnames.length) {
+        var target = cnames[0].data.replace(/\.$/, '').toLowerCase();
+        chain.push({ type: 'cname', value: target, ttl: cnames[0].TTL, from: current });
+        current = target;
+        continue;
+      }
+      // No more CNAMEs — resolve A record
+      var aRes = await doh(current, 'A');
+      if (aRes && aRes.error) {
+        chain.push({ type: 'error', value: 'A record query failed: ' + aRes.error, from: current });
+        break;
+      }
+      var aRecs = (aRes && aRes.Answer || []).filter(function(a) { return a.type === 1; });
+      if (aRecs.length) {
+        aRecs.forEach(function(a) {
+          chain.push({ type: 'a', value: a.data, ttl: a.TTL, from: current });
+        });
+      } else {
+        // Try AAAA (IPv6) as last resort
+        var aaaaRes = await doh(current, 'AAAA');
+        var aaaaRecs = (aaaaRes && aaaaRes.Answer || []).filter(function(a) { return a.type === 28; });
+        if (aaaaRecs.length) {
+          aaaaRecs.forEach(function(a) {
+            chain.push({ type: 'a', value: a.data + ' (IPv6)', ttl: a.TTL, from: current });
+          });
+        } else {
+          chain.push({ type: 'norecord', value: 'No A/AAAA records found for ' + current, from: current });
+        }
+      }
+      break;
+    }
+    return chain;
+  }
+
+  async function checkHttpRedirect(domain) {
+    var results = [];
+    var protocols = ['https://', 'http://'];
+    for (var p = 0; p < protocols.length; p++) {
+      var url = protocols[p] + domain;
+      try {
+        var res = await fetch(url, { method: 'HEAD', mode: 'cors', redirect: 'follow', signal: AbortSignal.timeout(5000) });
+        if (res.redirected && res.url && res.url !== url) {
+          results.push({ from: url, to: res.url, status: 'redirected' });
+        } else {
+          results.push({ from: url, to: res.url || url, status: 'ok', code: res.status });
+        }
+      } catch (e) {
+        results.push({ from: url, status: 'blocked', error: e.message || 'CORS or network error' });
+      }
+    }
+    return results;
+  }
+
+  function renderChain(chain) {
+    var html = '';
+    chain.forEach(function(hop, i) {
+      var isLast = i === chain.length - 1;
+      var dotClass, lineClass, typeClass, typeLabel;
+      if (hop.type === 'start') { dotClass = 'cd-cname'; lineClass = 'cl-cname'; typeClass = 'ct-start'; typeLabel = 'Start'; }
+      else if (hop.type === 'cname') { dotClass = 'cd-cname'; lineClass = 'cl-cname'; typeClass = 'ct-cname'; typeLabel = 'CNAME →'; }
+      else if (hop.type === 'a') { dotClass = 'cd-a'; lineClass = 'cl-a'; typeClass = 'ct-a'; typeLabel = 'A Record (Final IP)'; }
+      else if (hop.type === 'error') { dotClass = 'cd-redirect'; lineClass = 'cl-redirect'; typeClass = 'ct-redirect'; typeLabel = '⚠️ Error'; }
+      else if (hop.type === 'norecord') { dotClass = 'cd-redirect'; lineClass = 'cl-redirect'; typeClass = 'ct-redirect'; typeLabel = '⚠️ No Record'; }
+      else { dotClass = 'cd-redirect'; lineClass = 'cl-redirect'; typeClass = 'ct-redirect'; typeLabel = 'Redirect'; }
+
+      html += '<div class="chain-hop">';
+      html += '<div class="chain-connector"><div class="chain-dot-top ' + dotClass + '"></div>';
+      if (!isLast) html += '<div class="chain-line ' + lineClass + '"></div>';
+      html += '</div>';
+      html += '<div class="chain-detail"><div class="chain-type ' + typeClass + '">' + typeLabel + '</div>';
+      html += '<div class="chain-value">' + esc(hop.value) + '</div>';
+      if (hop.ttl !== undefined) html += '<div class="chain-ttl">TTL: ' + hop.ttl + 's (' + fmtTTL(hop.ttl) + ')</div>';
+      if (hop.from && hop.type !== 'start') html += '<div class="chain-ttl">from: ' + esc(hop.from) + '</div>';
+      html += '</div></div>';
+    });
+    return html;
+  }
+
   function showValidationError(msg) {
     // Remove any existing error
     var existing = document.getElementById('validation-error');
@@ -606,11 +803,13 @@
     var pointingOn=document.getElementById('pointing-toggle').checked;
     var splitOn   =document.getElementById('split-toggle').checked;
     var propOn    =document.getElementById('prop-toggle').checked;
-    if (!pointingOn && !splitOn && !propOn) { showValidationError('Please enable at least one check before running.'); return; }
+    var rerouteOn =document.getElementById('reroute-toggle').checked;
+    if (!pointingOn && !splitOn && !propOn && !rerouteOn) { showValidationError('Please enable at least one check before running.'); return; }
     var retailer  =pointingOn?clean(document.getElementById('retailer-domain').value):'';
     var whitelabel=pointingOn?clean(document.getElementById('whitelabel-domain').value):'';
     var propDomain=propOn?clean(document.getElementById('prop-domain').value):'';
     var propExpect=propOn?clean(document.getElementById('prop-expected').value):'';
+    var rerouteDomain=rerouteOn?clean(document.getElementById('reroute-domain').value):'';
     if (pointingOn&&(!retailer||!whitelabel)) { showValidationError('Domain pointing check is enabled — please fill in Retailer domain and Whitelabel target.'); return; }
     if (splitOn) {
       var hasValidPair = false;
@@ -623,6 +822,7 @@
       if (!hasValidPair) { showValidationError('Split-hosting detection is enabled — please fill in at least one domain pair (both Domain A and Domain B).'); return; }
     }
     if (propOn&&!propDomain) { showValidationError('Global propagation check is enabled — please fill in a domain to check.'); return; }
+    if (rerouteOn&&!rerouteDomain) { showValidationError('Redirect/reroute detection is enabled — please fill in a domain to trace.'); return; }
 
     isRunning=true;
     document.getElementById('results-wrap').style.display='block';
@@ -636,6 +836,7 @@
     document.getElementById('point-results-section').style.display=pointingOn?'block':'none';
     document.getElementById('ttl-results-section').style.display=pointingOn?'block':'none';
     document.getElementById('prop-results-section').style.display=propOn?'block':'none';
+    document.getElementById('reroute-results-section').style.display=rerouteOn?'block':'none';
 
     if (pointingOn) {
       document.getElementById('desc-point').textContent='Checking if '+retailer+' → '+whitelabel;
@@ -650,6 +851,14 @@
       document.getElementById('prop-summary-title').textContent='Checking propagation across '+LOCATIONS.length+' locations…';
       document.getElementById('prop-summary-desc').textContent=propDomain+' ('+recType+')';
       document.getElementById('prop-stats').style.display='none';
+    }
+    if (rerouteOn) {
+      setBadge('badge-reroute','checking','Tracing…');
+      setCard('card-reroute','checking');
+      document.getElementById('reroute-title').textContent='Tracing route for ' + rerouteDomain + '…';
+      document.getElementById('chain-wrap').innerHTML='<div style="color:#64748b;font-size:13px">Tracing DNS chain…</div>';
+      document.getElementById('reroute-http-section').style.display='none';
+      document.getElementById('reroute-summary').innerHTML='';
     }
 
     var splitPairs=[];
@@ -711,6 +920,73 @@
     var propResult=null;
     if(propOn) propResult=await checkPropagation(propDomain,propExpect,recType);
 
+    /* ── REROUTE CHECK ── */
+    var rerouteResult = null;
+    if (rerouteOn) {
+      // 1. DNS chain trace
+      var chain = await traceCnameChain(rerouteDomain);
+      document.getElementById('chain-wrap').innerHTML = renderChain(chain);
+
+      var hasChain = chain.length > 1;
+      var hasError = chain.some(function(h) { return h.type === 'error'; });
+      var hasNoRecord = chain.some(function(h) { return h.type === 'norecord'; });
+      var finalHop = chain[chain.length - 1];
+      var finalDest = finalHop ? finalHop.value : rerouteDomain;
+
+      // 2. HTTP redirect check (best-effort)
+      document.getElementById('reroute-http-section').style.display = 'block';
+      document.getElementById('reroute-http-detail').innerHTML = '<span class="dv">Checking HTTP redirects…</span>';
+      var httpResults = await checkHttpRedirect(rerouteDomain);
+
+      var httpHtml = '';
+      var httpRedirected = false;
+      var httpDest = '';
+      httpResults.forEach(function(r) {
+        if (r.status === 'redirected') {
+          httpRedirected = true;
+          httpDest = r.to;
+          httpHtml += '<span class="dk">' + esc(r.from) + ' → </span><span class="dno">' + esc(r.to) + '</span> <span style="color:#fb923c;font-size:11px">(HTTP redirect)</span><br>';
+        } else if (r.status === 'ok') {
+          httpHtml += '<span class="dk">' + esc(r.from) + ' → </span><span class="dok">' + esc(r.to) + '</span> <span style="color:#4ade80;font-size:11px">(Status ' + r.code + ' — no redirect)</span><br>';
+        } else {
+          httpHtml += '<span class="dk">' + esc(r.from) + ' → </span><span style="color:#475569">' + esc(r.error) + '</span> <span style="color:#475569;font-size:11px">(CORS blocked — check manually)</span><br>';
+        }
+      });
+      document.getElementById('reroute-http-detail').innerHTML = httpHtml;
+
+      // 3. Summary
+      document.getElementById('reroute-title').textContent = rerouteDomain + ' — route trace complete';
+
+      var summaryHtml = '';
+      if (hasError) {
+        setCard('card-reroute', 'fail');
+        setBadge('badge-reroute', 'fail', '⚠️ DNS query failed');
+        summaryHtml += '<div class="action-hint ah-fail">⚠️ DNS query failed for <strong>' + esc(rerouteDomain) + '</strong>. This may be a network issue or CORS restriction in the preview. Try deploying the page or check the domain in your browser DevTools.</div>';
+      } else if (hasNoRecord && !hasChain) {
+        setCard('card-reroute', 'fail');
+        setBadge('badge-reroute', 'fail', '❌ No records');
+        summaryHtml += '<div class="action-hint ah-fail">❌ No DNS records found for <strong>' + esc(rerouteDomain) + '</strong>. The domain may not exist or has no A/AAAA/CNAME records configured.</div>';
+      } else if (hasChain && chain.filter(function(h){return h.type==='cname';}).length > 0) {
+        var cnameCount = chain.filter(function(h){return h.type==='cname';}).length;
+        setCard('card-reroute', 'pending');
+        setBadge('badge-reroute', 'pending', '🔀 Rerouted (' + cnameCount + ' CNAME hop' + (cnameCount > 1 ? 's' : '') + ')');
+        summaryHtml += '<div class="action-hint ah-pending">🔀 <strong>' + esc(rerouteDomain) + '</strong> is rerouted through <strong>' + cnameCount + ' CNAME hop(s)</strong> before reaching <strong>' + esc(finalDest) + '</strong>.</div>';
+      } else if (hasChain) {
+        setCard('card-reroute', 'ok');
+        setBadge('badge-reroute', 'ok', '✅ Direct');
+        summaryHtml += '<div class="action-hint ah-ok">✅ <strong>' + esc(rerouteDomain) + '</strong> resolves directly to <strong>' + esc(finalDest) + '</strong> — no DNS rerouting.</div>';
+      } else {
+        setCard('card-reroute', 'fail');
+        setBadge('badge-reroute', 'fail', '❌ No records');
+        summaryHtml += '<div class="action-hint ah-fail">❌ No DNS records found for <strong>' + esc(rerouteDomain) + '</strong>.</div>';
+      }
+      if (httpRedirected) {
+        summaryHtml += '<div class="action-hint ah-pending" style="margin-top:8px">⚠️ <strong>HTTP redirect detected:</strong> ' + esc(rerouteDomain) + ' redirects to <strong>' + esc(httpDest) + '</strong> at the HTTP layer.</div>';
+      }
+      document.getElementById('reroute-summary').innerHTML = summaryHtml;
+      rerouteResult = { chain: chain, httpRedirected: httpRedirected, httpDest: httpDest, hops: chain.length - 1 };
+    }
+
     var oc=document.getElementById('overall-card'),ob=document.getElementById('overall-badge'),ot=document.getElementById('overall-text');
     if(pointingOn&&pointOk&&(!propOn||(propResult&&propResult.pct===100))){oc.style.background='linear-gradient(135deg,#1a2d1e,#132015)';oc.style.borderColor='#16a34a55';ot.textContent='✅ All checks passed';ob.className='status-badge badge-ok';ob.innerHTML='<div class="status-dot dot-ok"></div>Ready';}
     else if(!pointingOn&&propOn&&propResult&&propResult.pct===100){oc.style.background='linear-gradient(135deg,#1a2d1e,#132015)';oc.style.borderColor='#16a34a55';ot.textContent='✅ Fully propagated globally';ob.className='status-badge badge-ok';ob.innerHTML='<div class="status-dot dot-ok"></div>Ready';}
@@ -719,7 +995,8 @@
     var steps=[];
     if(pointingOn){if(!pointOk)steps.push('<div class="next-step-item"><strong style="color:#f87171">Action needed:</strong> Ask retailer to add a CNAME:<br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Name: '+retailer+'</code><br><code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#93c5fd">Value: '+whitelabel+'</code></div>');else steps.push('<div class="next-step-item"><span style="color:#4ade80">✅ Domain correctly pointed.</span> Content from '+whitelabel+' should now be live at '+retailer+'.</div>');}
     if(propOn&&propResult){if(propResult.pct===100)steps.push('<div class="next-step-item"><span style="color:#4ade80">✅ Fully propagated</span> across all '+propResult.total+' locations checked.</div>');else steps.push('<div class="next-step-item"><span style="color:#fb923c">⏳ '+propResult.pct+'% propagated</span> — '+propResult.okCount+' of '+propResult.total+' locations resolving. DNS is still spreading globally, check again in a few minutes.</div>');}
-    if(!steps.length)steps.push('<div class="next-step-item"><span style="color:#64748b">Enable domain pointing or propagation check for next steps.</span></div>');
+    if(rerouteOn&&rerouteResult){if(rerouteResult.httpRedirected)steps.push('<div class="next-step-item"><span style="color:#fb923c">⚠️ HTTP redirect detected:</span> <strong>'+esc(rerouteDomain)+'</strong> redirects to <strong>'+esc(rerouteResult.httpDest)+'</strong>. Verify this is the intended destination.</div>');else if(rerouteResult.hops>1)steps.push('<div class="next-step-item"><span style="color:#fb923c">🔀 DNS rerouting:</span> <strong>'+esc(rerouteDomain)+'</strong> goes through '+rerouteResult.hops+' hop(s) in the DNS chain.</div>');else if(rerouteResult.hops>=1)steps.push('<div class="next-step-item"><span style="color:#4ade80">✅ Route trace:</span> <strong>'+esc(rerouteDomain)+'</strong> resolves directly — no unexpected rerouting.</div>');else steps.push('<div class="next-step-item"><span style="color:#f87171">❌ No DNS records found for '+esc(rerouteDomain)+'.</span></div>');}
+    if(!steps.length)steps.push('<div class="next-step-item"><span style="color:#64748b">Enable a check above for next steps.</span></div>');
     document.getElementById('next-steps').innerHTML=steps.join('');
 
     document.getElementById('check-btn').disabled=false;
