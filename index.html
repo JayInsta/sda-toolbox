@@ -42,6 +42,16 @@
     .card-title { font-size: 15px; font-weight: 600; color: #e2e8f0; }
     .card-sub   { font-size: 12px; color: #475569; margin-top: 2px; }
 
+    .branch-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 99px; margin-bottom: 10px; }
+    .bs-loading { background: #1e2d45; border: 1px solid #2563eb33; color: #60a5fa; }
+    .bs-ok      { background: #1e2d1e; border: 1px solid #16a34a33; color: #4ade80; }
+    .bs-fail    { background: #2d1a0e; border: 1px solid #ea580c44; color: #fb923c; }
+    .bs-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .bs-loading .bs-dot { background: #60a5fa; animation: bspulse 1s infinite; }
+    .bs-ok .bs-dot { background: #4ade80; }
+    .bs-fail .bs-dot { background: #fb923c; }
+    @keyframes bspulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
     .input-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
     .field label, .full-field label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
     input[type="number"] { width: 100%; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 16px; font-weight: 600; color: #e2e8f0; outline: none; transition: border-color 0.15s, box-shadow 0.15s; -moz-appearance: textfield; }
@@ -185,6 +195,7 @@
       <div class="step-badge sv1">1</div>
       <div><div class="card-title">IC branch version</div><div class="card-sub">Enter the branch you are building from (e.g. 9.14.0)</div></div>
     </div>
+    <div id="branch-status" class="branch-status bs-loading"><div class="bs-dot"></div> Loading from branches.json…</div>
     <div class="input-grid">
       <div class="field"><label>Major</label><input type="number" id="major" value="9" min="0" oninput="calcVC()"></div>
       <div class="field"><label>Minor</label><input type="number" id="minor" value="14" min="0" oninput="calcVC()"></div>
@@ -235,9 +246,9 @@
   </div>
 
   <div class="footer">
-    <span>SDA Toolbox</span>
+    <span>Instacart Enterprise Mobile</span>
     <div class="footer-dot"></div>
-    <span>Android Offset Calculator</span>
+    <span>IPP Build Tooling</span>
   </div>
 </div>
 
@@ -375,6 +386,36 @@
 
   calcMajor();
   calcVC();
+
+  /* ── AUTO-FETCH BRANCH FROM branches.json ── */
+  (function fetchBranch() {
+    var statusEl = document.getElementById('branch-status');
+    fetch('branches.json?t=' + Date.now())
+      .then(function(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function(data) {
+        var branch = data.android || '';
+        if (!branch) throw new Error('No android branch in JSON');
+        // Parse version: "9.14" → [9, 14, 0] or "9.14.1" → [9, 14, 1]
+        var parts = branch.split('.');
+        var major = parseInt(parts[0]) || 0;
+        var minor = parseInt(parts[1]) || 0;
+        var patch = parseInt(parts[2]) || 0;
+        document.getElementById('major').value = major;
+        document.getElementById('minor').value = minor;
+        document.getElementById('patch').value = patch;
+        statusEl.className = 'branch-status bs-ok';
+        statusEl.innerHTML = '<div class="bs-dot"></div> Loaded: Android ' + branch;
+        calcVC();
+      })
+      .catch(function(err) {
+        console.warn('Branch fetch failed:', err);
+        statusEl.className = 'branch-status bs-fail';
+        statusEl.innerHTML = '<div class="bs-dot"></div> Auto-fetch failed — enter manually';
+      });
+  })();
 </script>
 <script src="nav.js"></script>
 </body>
