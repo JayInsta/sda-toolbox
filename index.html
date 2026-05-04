@@ -162,7 +162,7 @@
   <div class="card">
     <div class="card-top">
       <div class="step-badge sm2" id="m-result-badge">2</div>
-      <div><div class="card-title">Major version offset result</div><div class="card-sub">IC current major version is <strong style="color:#c084fc">9</strong></div></div>
+      <div><div class="card-title">Major version offset result</div><div class="card-sub">IC current major version is <strong style="color:#c084fc" id="ic-major-display">9</strong></div></div>
     </div>
     <div id="m-type-tag"></div>
     <div class="formula-strip" id="m-formula"></div>
@@ -197,7 +197,7 @@
     </div>
     <div id="branch-status" class="branch-status bs-loading"><div class="bs-dot"></div> Loading from branches.json…</div>
     <div class="input-grid">
-      <div class="field"><label>Major</label><input type="number" id="major" value="9" min="0" oninput="calcVC()"></div>
+      <div class="field"><label>Major</label><input type="number" id="major" value="9" min="0" oninput="onMajorChange()"></div>
       <div class="field"><label>Minor</label><input type="number" id="minor" value="14" min="0" oninput="calcVC()"></div>
       <div class="field"><label>Patch</label><input type="number" id="patch" value="0" min="0" oninput="calcVC()"></div>
     </div>
@@ -257,6 +257,13 @@
   var appType  = 'takeover';
 
   /* ── SHARED APP TYPE TOGGLE ── */
+  function onMajorChange() {
+    IC_MAJOR = parseInt(document.getElementById('major').value) || 0;
+    document.getElementById('ic-major-display').textContent = String(IC_MAJOR);
+    calcMajor();
+    calcVC();
+  }
+
   function setAppType(t) {
     appType = t;
     document.getElementById('btn-new').classList.toggle('active', t === 'new');
@@ -406,8 +413,12 @@
         document.getElementById('major').value = major;
         document.getElementById('minor').value = minor;
         document.getElementById('patch').value = patch;
+        // Update IC_MAJOR from fetched branch
+        IC_MAJOR = major;
+        document.getElementById('ic-major-display').textContent = String(major);
         statusEl.className = 'branch-status bs-ok';
         statusEl.innerHTML = '<div class="bs-dot"></div> Loaded: Android ' + branch;
+        calcMajor();
         calcVC();
       })
       .catch(function(err) {
