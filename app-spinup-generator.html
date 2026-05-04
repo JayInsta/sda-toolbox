@@ -351,7 +351,7 @@
         <div class="step-badge s4">⚡</div>
         <div>
           <div class="card-title">Release branch & build command generator</div>
-          <div class="card-sub">Branch versions auto-fetched from the release tracking sheet on page load</div>
+          <div class="card-sub">Branch versions auto-loaded from <code style="background:#0f1117;padding:1px 5px;border-radius:4px;font-size:11px;color:#fb923c">branches.json</code> on page load</div>
         </div>
       </div>
 
@@ -693,36 +693,31 @@
   /* ════════════════════════════════════════════════════
      BUILD COMMANDS
      ════════════════════════════════════════════════════ */
-  var SHEET_ID = '1EfexflYfP89posqT72dG0xv_uhvtep1C8_X_gNlLpZ8';
+  var BRANCHES_URL = 'branches.json';
 
   function fetchReleaseBranches() {
     var statusEl = document.getElementById('branch-status');
-    var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&range=A3:B3';
 
-    fetch(url)
+    fetch(BRANCHES_URL + '?t=' + Date.now())
       .then(function(res) {
         if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.text();
+        return res.json();
       })
-      .then(function(csv) {
-        // Parse CSV — format: "9.14.0","9.14"
-        var cleaned = csv.trim().replace(/^"|"$/g, '');
-        var parts = cleaned.split(/","|\t|,/);
-        var iosBranch = (parts[0] || '').replace(/"/g, '').trim();
-        var androidBranch = (parts[1] || '').replace(/"/g, '').trim();
+      .then(function(data) {
+        var iosBranch = data.ios || '';
+        var androidBranch = data.android || '';
 
         if (iosBranch) document.getElementById('build-ios-branch').value = iosBranch;
         if (androidBranch) document.getElementById('build-android-branch').value = androidBranch;
 
         statusEl.className = 'branch-status bs-ok';
-        statusEl.innerHTML = '<div class="bs-dot"></div> Branches fetched: iOS ' + iosBranch + ' · Android ' + androidBranch;
+        statusEl.innerHTML = '<div class="bs-dot"></div> Branches loaded: iOS ' + iosBranch + ' · Android ' + androidBranch;
         buildUpdatePreview();
       })
       .catch(function(err) {
-        console.warn('Sheet fetch failed:', err);
+        console.warn('Branch fetch failed:', err);
         statusEl.className = 'branch-status bs-fail';
         statusEl.innerHTML = '<div class="bs-dot"></div> Auto-fetch failed — enter branches manually';
-        // Set defaults as fallback
         if (!gv('build-ios-branch')) document.getElementById('build-ios-branch').value = '9.14.0';
         if (!gv('build-android-branch')) document.getElementById('build-android-branch').value = '9.14';
         buildUpdatePreview();
