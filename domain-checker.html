@@ -318,6 +318,13 @@
     .ct-start { color: #94a3b8; }
     .chain-value { font-family: 'Courier New', monospace; font-size: 13px; color: #e2e8f0; word-break: break-all; }
     .chain-ttl { font-size: 11px; color: #475569; margin-top: 2px; }
+    .chain-info-btn { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #2a2d3e; color: #64748b; font-size: 10px; font-weight: 700; cursor: pointer; margin-left: 6px; transition: all 0.15s; vertical-align: middle; border: none; line-height: 1; }
+    .chain-info-btn:hover { background: #3a3d4e; color: #e2e8f0; }
+    .chain-info-btn.open { background: #1e3a5f; color: #60a5fa; }
+    .chain-explain { display: none; margin-top: 6px; padding: 8px 10px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 6px; font-size: 12px; color: #94a3b8; line-height: 1.6; }
+    .chain-explain.visible { display: block; }
+    .chain-explain strong { color: #e2e8f0; }
+    .chain-explain code { background: #1a1d27; padding: 1px 5px; border-radius: 3px; font-size: 11px; color: #60a5fa; }
     .s4 { background: #3d2a1e; color: #fb923c; }
   </style>
 
@@ -421,7 +428,14 @@
         </div>
         <div class="chain-wrap" id="chain-wrap"></div>
         <div id="reroute-http-section" style="display:none;margin-top:12px">
-          <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">HTTP redirect check</div>
+          <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">
+            HTTP redirect check
+            <button class="chain-info-btn" id="chain-btn-http" onclick="toggleChainInfo('http')" style="margin-left:4px">?</button>
+          </div>
+          <div class="chain-explain" id="chain-ex-http">
+            <strong>HTTP redirect detection</strong><br>
+            After DNS resolves the domain to an IP, the web server at that IP may send an HTTP redirect response (301 Moved Permanently, 302 Found, etc.) telling the browser to load a different URL instead. Common examples: <code>http://</code> → <code>https://</code>, <code>abc.com</code> → <code>www.abc.com</code>, or old domain → new domain. This check attempts to follow HTTP redirects — if CORS blocks the request, the server doesn't allow cross-origin checks from this page, but the redirect may still exist when accessed directly in a browser.
+          </div>
           <div class="dns-detail" id="reroute-http-detail"></div>
         </div>
         <div id="reroute-summary" style="margin-top:12px"></div>
@@ -755,23 +769,55 @@
     return results;
   }
 
+  var CHAIN_EXPLAIN = {
+    start: '<strong>Start — query origin</strong><br>This is the domain you entered. The trace begins here and follows all DNS records hop-by-hop to discover where the domain ultimately resolves to. Think of it as asking "where does this address actually lead?"',
+    cname: '<strong>CNAME — canonical name redirect</strong><br>A CNAME record says "this domain is an alias for another domain." Instead of resolving to an IP directly, the DNS resolver follows the chain to the target domain. This is how whitelabel domains work — e.g. <code>shop.retailer.com</code> → <code>retailer-whitelabel.instacart.com</code>. The browser keeps following until it reaches a final IP address.',
+    a: '<strong>A Record — final IPv4 address</strong><br>This is the destination IP address where web traffic for this domain is ultimately sent. When your browser reaches an A record, the DNS chain ends and the browser connects to this IP to load the website. Multiple A records mean the domain uses load balancing across servers.',
+    aaaa: '<strong>AAAA Record — final IPv6 address</strong><br>Same as an A record but for IPv6 addresses (the newer, longer format). The domain resolves to this IPv6 address for browsers and networks that support it.',
+    error: '<strong>DNS query error</strong><br>The DNS lookup failed at this point in the chain. Common causes: network connectivity issues, the DNS resolver is unreachable, CORS restrictions in the browser preview, or the domain\'s DNS server is not responding. Try again or test on the deployed page.',
+    norecord: '<strong>No DNS record found</strong><br>The domain exists in DNS but has no A, AAAA, or CNAME records configured at this point. This could mean: the domain hasn\'t been fully set up yet, records were recently deleted, or the domain is parked without being pointed anywhere.',
+    redirect: '<strong>HTTP redirect</strong><br>The web server responded with a redirect (301 or 302 status code), telling the browser to go to a different URL. This happens at the application layer, after DNS has already resolved. Common for: non-www → www redirects, HTTP → HTTPS upgrades, or domain migrations.'
+  };
+
+  var chainInfoCounter = 0;
+
+  function toggleChainInfo(id) {
+    var el = document.getElementById('chain-ex-' + id);
+    var btn = document.getElementById('chain-btn-' + id);
+    if (!el) return;
+    var isOpen = el.classList.contains('visible');
+    el.classList.toggle('visible');
+    if (btn) btn.classList.toggle('open');
+  }
+
   function renderChain(chain) {
+    chainInfoCounter = 0;
     var html = '';
     chain.forEach(function(hop, i) {
       var isLast = i === chain.length - 1;
-      var dotClass, lineClass, typeClass, typeLabel;
-      if (hop.type === 'start') { dotClass = 'cd-cname'; lineClass = 'cl-cname'; typeClass = 'ct-start'; typeLabel = 'Start'; }
-      else if (hop.type === 'cname') { dotClass = 'cd-cname'; lineClass = 'cl-cname'; typeClass = 'ct-cname'; typeLabel = 'CNAME →'; }
-      else if (hop.type === 'a') { dotClass = 'cd-a'; lineClass = 'cl-a'; typeClass = 'ct-a'; typeLabel = 'A Record (Final IP)'; }
-      else if (hop.type === 'error') { dotClass = 'cd-redirect'; lineClass = 'cl-redirect'; typeClass = 'ct-redirect'; typeLabel = '⚠️ Error'; }
-      else if (hop.type === 'norecord') { dotClass = 'cd-redirect'; lineClass = 'cl-redirect'; typeClass = 'ct-redirect'; typeLabel = '⚠️ No Record'; }
-      else { dotClass = 'cd-redirect'; lineClass = 'cl-redirect'; typeClass = 'ct-redirect'; typeLabel = 'Redirect'; }
+      var dotClass, lineClass, typeClass, typeLabel, explainKey;
+      if (hop.type === 'start') { dotClass = 'cd-cname'; lineClass = 'cl-cname'; typeClass = 'ct-start'; typeLabel = 'Start'; explainKey = 'start'; }
+      else if (hop.type === 'cname') { dotClass = 'cd-cname'; lineClass = 'cl-cname'; typeClass = 'ct-cname'; typeLabel = 'CNAME →'; explainKey = 'cname'; }
+      else if (hop.type === 'a') {
+        var isIPv6 = hop.value.indexOf('(IPv6)') > -1;
+        dotClass = 'cd-a'; lineClass = 'cl-a'; typeClass = 'ct-a';
+        typeLabel = isIPv6 ? 'AAAA Record (Final IPv6)' : 'A Record (Final IP)';
+        explainKey = isIPv6 ? 'aaaa' : 'a';
+      }
+      else if (hop.type === 'error') { dotClass = 'cd-redirect'; lineClass = 'cl-redirect'; typeClass = 'ct-redirect'; typeLabel = '⚠️ Error'; explainKey = 'error'; }
+      else if (hop.type === 'norecord') { dotClass = 'cd-redirect'; lineClass = 'cl-redirect'; typeClass = 'ct-redirect'; typeLabel = '⚠️ No Record'; explainKey = 'norecord'; }
+      else { dotClass = 'cd-redirect'; lineClass = 'cl-redirect'; typeClass = 'ct-redirect'; typeLabel = 'Redirect'; explainKey = 'redirect'; }
+
+      chainInfoCounter++;
+      var cid = chainInfoCounter;
 
       html += '<div class="chain-hop">';
       html += '<div class="chain-connector"><div class="chain-dot-top ' + dotClass + '"></div>';
       if (!isLast) html += '<div class="chain-line ' + lineClass + '"></div>';
       html += '</div>';
-      html += '<div class="chain-detail"><div class="chain-type ' + typeClass + '">' + typeLabel + '</div>';
+      html += '<div class="chain-detail">';
+      html += '<div class="chain-type ' + typeClass + '">' + typeLabel + ' <button class="chain-info-btn" id="chain-btn-' + cid + '" onclick="toggleChainInfo(' + cid + ')">?</button></div>';
+      html += '<div class="chain-explain" id="chain-ex-' + cid + '">' + (CHAIN_EXPLAIN[explainKey] || '') + '</div>';
       html += '<div class="chain-value">' + esc(hop.value) + '</div>';
       if (hop.ttl !== undefined) html += '<div class="chain-ttl">TTL: ' + hop.ttl + 's (' + fmtTTL(hop.ttl) + ')</div>';
       if (hop.from && hop.type !== 'start') html += '<div class="chain-ttl">from: ' + esc(hop.from) + '</div>';
