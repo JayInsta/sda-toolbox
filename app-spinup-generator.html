@@ -393,6 +393,32 @@
         <div class="build-cmd-box" id="build-android-cmd">Enter slug(s) and branch above</div>
       </div>
     </div>
+
+    <!-- REPROVISIONING PROFILE -->
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-label sl-purple">iOS reprovisioning — Apple Pay</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <div class="step-badge s2">🔑</div>
+        <div>
+          <div class="card-title">Reprovisioning profile setup</div>
+          <div class="card-sub">Run after Apple Pay enablement — replaces only the retailer slug</div>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:14px">
+        <label>Retailer slug</label>
+        <input type="text" id="repro-slug" placeholder="e.g. andys-liquor-sfp" oninput="reproUpdate()">
+      </div>
+      <div class="build-cmd-header">
+        <div><span class="build-cmd-label">🍎 Reprovisioning commands</span></div>
+        <button class="btn-copy bc-purple" onclick="copyBuildCmd('repro-cmd',this)" style="padding:5px 10px;font-size:11px">Copy</button>
+      </div>
+      <div class="build-cmd-sub" id="repro-sub"></div>
+      <div class="build-cmd-box" id="repro-cmd" style="color:#c084fc">Enter retailer slug above</div>
+    </div>
   </div>
 
   <div class="footer">
@@ -639,6 +665,29 @@
     renderPlain('an-box1', lines);
     document.getElementById('an-output-wrap').style.display = 'block';
     document.getElementById('an-output-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ── REPROVISIONING COMMANDS ── */
+  function reproUpdate() {
+    var slug = gv('repro-slug');
+    var cmdEl = document.getElementById('repro-cmd');
+    var subEl = document.getElementById('repro-sub');
+    if (!slug) {
+      cmdEl.textContent = 'Enter retailer slug above';
+      cmdEl.style.color = '#475569';
+      subEl.textContent = '';
+      return;
+    }
+    var lines = [
+      'ISC_CRON_NAME=sfx_app_register',
+      'IC_APP=' + slug,
+      'SKIP_CREATING_APP_RECORD=true',
+      'SKIP_UPDATE_APP_CAPABILITIES=true',
+      'SKIP_CREATING_PUSH_CERT=true'
+    ];
+    cmdEl.textContent = lines.join('\n');
+    cmdEl.style.color = '#c084fc';
+    subEl.textContent = 'Slug: ' + slug;
   }
 
   /* ════════════════════════════════════════════════════
