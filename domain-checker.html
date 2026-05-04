@@ -83,6 +83,7 @@
     .dot-checking{ background: #60a5fa; animation: pulse 1s infinite; }
     .dot-idle    { background: #374151; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
 
     .dns-detail { margin-top: 10px; background: #1a1d27; border-radius: 8px; padding: 10px 12px; font-size: 12px; font-family: 'Courier New', monospace; color: #94a3b8; line-height: 1.8; border: 1px solid #2a2d3e; word-break: break-all; }
     .dk  { color: #475569; }
@@ -582,18 +583,46 @@
     return { okCount:okCount, total:total, pct:pct };
   }
 
+  function showValidationError(msg) {
+    // Remove any existing error
+    var existing = document.getElementById('validation-error');
+    if (existing) existing.remove();
+    // Create inline error above the button
+    var el = document.createElement('div');
+    el.id = 'validation-error';
+    el.style.cssText = 'background:#2d1a1a;border:1px solid #dc262644;border-radius:10px;padding:12px 14px;font-size:13px;color:#f87171;line-height:1.6;margin-bottom:10px;animation:shake 0.3s ease-in-out';
+    el.innerHTML = '⚠️ ' + msg;
+    document.getElementById('check-btn').insertAdjacentElement('beforebegin', el);
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(function(){ if (el.parentNode) el.style.opacity = '0.7'; }, 5000);
+  }
+
   async function runAllChecks() {
     if (isRunning) return;
+    // Clear previous validation error
+    var prevErr = document.getElementById('validation-error');
+    if (prevErr) prevErr.remove();
+
     var pointingOn=document.getElementById('pointing-toggle').checked;
     var splitOn   =document.getElementById('split-toggle').checked;
     var propOn    =document.getElementById('prop-toggle').checked;
-    if (!pointingOn && !splitOn && !propOn) { alert('Please enable at least one check before running.'); return; }
+    if (!pointingOn && !splitOn && !propOn) { showValidationError('Please enable at least one check before running.'); return; }
     var retailer  =pointingOn?clean(document.getElementById('retailer-domain').value):'';
     var whitelabel=pointingOn?clean(document.getElementById('whitelabel-domain').value):'';
     var propDomain=propOn?clean(document.getElementById('prop-domain').value):'';
     var propExpect=propOn?clean(document.getElementById('prop-expected').value):'';
-    if (pointingOn&&(!retailer||!whitelabel)) { alert('Domain pointing check is enabled — please fill in Retailer domain and Whitelabel target.'); return; }
-    if (propOn&&!propDomain) { alert('Global propagation check is enabled — please fill in a domain to check.'); return; }
+    if (pointingOn&&(!retailer||!whitelabel)) { showValidationError('Domain pointing check is enabled — please fill in Retailer domain and Whitelabel target.'); return; }
+    if (splitOn) {
+      var hasValidPair = false;
+      document.querySelectorAll('.domain-entry').forEach(function(e){
+        var id = e.id.replace('se-','');
+        var a = clean((document.getElementById('spa-'+id)||{}).value||'');
+        var b = clean((document.getElementById('spb-'+id)||{}).value||'');
+        if (a && b) hasValidPair = true;
+      });
+      if (!hasValidPair) { showValidationError('Split-hosting detection is enabled — please fill in at least one domain pair (both Domain A and Domain B).'); return; }
+    }
+    if (propOn&&!propDomain) { showValidationError('Global propagation check is enabled — please fill in a domain to check.'); return; }
 
     isRunning=true;
     document.getElementById('results-wrap').style.display='block';
