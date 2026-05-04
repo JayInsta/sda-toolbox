@@ -52,6 +52,9 @@
     .section-tab.active-android { background: #1e3d2f; border-color: #16a34a; color: #4ade80; }
     .section-tab.active-ios     { background: #2d1e3d; border-color: #7c3aed; color: #c084fc; }
     .section-tab.active-ipad    { background: #3d1e2d; border-color: #e11d48; color: #fb7185; }
+    .section-tab.active-iphone  { background: #3d1e2d; border-color: #e11d48; color: #fb7185; }
+    .section-tab.active-anphone { background: #1e3d2f; border-color: #16a34a; color: #4ade80; }
+    .section-tab.active-antablet{ background: #1e3d2f; border-color: #16a34a; color: #4ade80; }
     .section-tab.active-custom  { background: #3d2a1e; border-color: #ea580c; color: #fb923c; }
 
     .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
@@ -213,7 +216,10 @@
       <div class="section-tab active-web"     id="tab-web"     onclick="setTab('web')">🌐 Web spinup</div>
       <div class="section-tab"                id="tab-android" onclick="setTab('android')">🤖 Android app</div>
       <div class="section-tab"                id="tab-ios"     onclick="setTab('ios')">🍎 iOS app</div>
+      <div class="section-tab"                id="tab-iphone"  onclick="setTab('iphone')">📱 iPhone screenshots</div>
       <div class="section-tab"                id="tab-ipad"    onclick="setTab('ipad')">📱 iPad screenshots</div>
+      <div class="section-tab"                id="tab-anphone" onclick="setTab('anphone')">🤖 Android phone screenshots</div>
+      <div class="section-tab"                id="tab-antablet" onclick="setTab('antablet')">🤖 Android tablet screenshots</div>
       <div class="section-tab"                id="tab-custom"  onclick="setTab('custom')">⚙️ Custom</div>
     </div>
 
@@ -223,9 +229,16 @@
     <div id="presets-android" class="preset-grid" style="display:none"></div>
     <!-- IOS PRESETS -->
     <div id="presets-ios" class="preset-grid" style="display:none"></div>
+    <!-- IPHONE SCREENSHOT PRESETS -->
+    <div id="presets-iphone" class="preset-grid" style="display:none"></div>
     <!-- IPAD SCREENSHOT PRESETS -->
     <div id="presets-ipad" class="preset-grid" style="display:none"></div>
-    <div id="ipad-info-box" style="display:none">
+    <!-- ANDROID PHONE SCREENSHOT PRESETS -->
+    <div id="presets-anphone" class="preset-grid" style="display:none"></div>
+    <!-- ANDROID TABLET SCREENSHOT PRESETS -->
+    <div id="presets-antablet" class="preset-grid" style="display:none"></div>
+    <!-- SCREENSHOT INFO BOX (shared by all screenshot tabs) -->
+    <div id="screenshot-info-box" style="display:none">
       <div class="ipad-info">
         <strong>Letterbox / pillarbox mode:</strong> Image aspect ratio is preserved — white (or custom color) borders are added to fill the exact target dimensions. No stretching.
       </div>
@@ -285,8 +298,8 @@
   <div class="modal-overlay" id="pw-modal">
     <div class="modal-box">
       <div class="modal-icon">🔒</div>
-      <div class="modal-title">iPad Screenshots</div>
-      <div class="modal-sub">This section is password-protected.<br>Enter the access code to continue.</div>
+      <div class="modal-title">Screenshot Tools</div>
+      <div class="modal-sub">Screenshot tabs are password-protected.<br>Enter the access code to continue.</div>
       <input type="password" class="modal-input" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPassword()">
       <div class="modal-error" id="pw-error"></div>
       <div class="modal-btns">
@@ -330,6 +343,26 @@
       { label: 'iPad Landscape 12.9"',   w: 2732, h: 2048, note: 'Pillarboxed — white/custom BG fill', fmt: 'png', fit: 'letterbox' },
       { label: 'iPad Portrait 12.9" v2', w: 2064, h: 2752, note: 'Letterboxed — white/custom BG fill', fmt: 'png', fit: 'letterbox' },
       { label: 'iPad Landscape 12.9" v2',w: 2752, h: 2064, note: 'Pillarboxed — white/custom BG fill', fmt: 'png', fit: 'letterbox' },
+    ],
+    iphone: [
+      { label: 'iPhone 6.7" Portrait',  w: 1290, h: 2796, note: '6.7" (iPhone 15/16 Pro Max) — letterboxed', fmt: 'png', fit: 'letterbox' },
+      { label: 'iPhone 6.7" Landscape', w: 2796, h: 1290, note: '6.7" landscape — pillarboxed',              fmt: 'png', fit: 'letterbox' },
+      { label: 'iPhone 6.5" Portrait',  w: 1284, h: 2778, note: '6.5" (iPhone 11/XS Max) — letterboxed',     fmt: 'png', fit: 'letterbox' },
+      { label: 'iPhone 6.5" Landscape', w: 2778, h: 1284, note: '6.5" landscape — pillarboxed',              fmt: 'png', fit: 'letterbox' },
+      { label: 'iPhone 5.5" Portrait',  w: 1242, h: 2208, note: '5.5" (iPhone 8/7/6s Plus) — letterboxed',   fmt: 'png', fit: 'letterbox' },
+      { label: 'iPhone 5.5" Landscape', w: 2208, h: 1242, note: '5.5" landscape — pillarboxed',              fmt: 'png', fit: 'letterbox' },
+    ],
+    anphone: [
+      { label: 'Android Phone Portrait',       w: 1080, h: 1920, note: '1080×1920 — letterboxed', fmt: 'png', fit: 'letterbox' },
+      { label: 'Android Phone Landscape',      w: 1920, h: 1080, note: '1920×1080 — pillarboxed', fmt: 'png', fit: 'letterbox' },
+      { label: 'Android Phone Portrait (QHD)', w: 1440, h: 2560, note: '1440×2560 — letterboxed', fmt: 'png', fit: 'letterbox' },
+      { label: 'Android Phone Landscape (QHD)',w: 2560, h: 1440, note: '2560×1440 — pillarboxed', fmt: 'png', fit: 'letterbox' },
+    ],
+    antablet: [
+      { label: 'Android 7" Tablet Portrait',   w: 1200, h: 1920, note: '7" tablet — letterboxed',  fmt: 'png', fit: 'letterbox' },
+      { label: 'Android 7" Tablet Landscape',  w: 1920, h: 1200, note: '7" tablet — pillarboxed',  fmt: 'png', fit: 'letterbox' },
+      { label: 'Android 10" Tablet Portrait',  w: 1600, h: 2560, note: '10" tablet — letterboxed', fmt: 'png', fit: 'letterbox' },
+      { label: 'Android 10" Tablet Landscape', w: 2560, h: 1600, note: '10" tablet — pillarboxed', fmt: 'png', fit: 'letterbox' },
     ]
   };
 
@@ -349,16 +382,19 @@
     document.getElementById('pw-input').classList.remove('shake');
     setTimeout(function(){ document.getElementById('pw-input').focus(); }, 100);
   }
+  var pendingTab = null;
   function closeModal() {
     document.getElementById('pw-modal').classList.remove('visible');
+    pendingTab = null;
   }
   function checkPassword() {
     var inp = document.getElementById('pw-input');
     var err = document.getElementById('pw-error');
     if (inp.value === 'ICTest123456!') {
       ipadUnlocked = true;
+      var goToTab = pendingTab;
       closeModal();
-      setTab('ipad');
+      if (goToTab) setTab(goToTab);
     } else {
       err.textContent = 'Incorrect password — try again';
       inp.classList.add('shake');
@@ -426,7 +462,7 @@
 
   /* ── TABS ── */
   function buildPresets() {
-    ['web','android','ios','ipad'].forEach(function(cat){
+    ['web','android','ios','iphone','ipad','anphone','antablet'].forEach(function(cat){
       var g = document.getElementById('presets-'+cat); g.innerHTML='';
       PRESETS[cat].forEach(function(p, idx){
         var dim = p.h ? p.w+'×'+p.h+' px' : p.w+'px wide';
@@ -440,24 +476,36 @@
   }
   buildPresets();
 
+  var SCREENSHOT_TABS = ['ipad','iphone','anphone','antablet'];
+  var ALL_TABS = ['web','android','ios','iphone','ipad','anphone','antablet','custom'];
+
   function setTab(tab) {
-    // Password gate for iPad tab
-    if (tab === 'ipad' && !ipadUnlocked) {
+    // Password gate for all screenshot tabs
+    var isScreenshot = SCREENSHOT_TABS.indexOf(tab) > -1;
+    if (isScreenshot && !ipadUnlocked) {
+      pendingTab = tab;
       showModal();
       return;
     }
     activeTab = tab;
     activePreset = null;
-    ['web','android','ios','ipad','custom'].forEach(function(t){
+
+    ALL_TABS.forEach(function(t){
       var el = document.getElementById('tab-'+t);
       el.className = 'section-tab' + (t===tab ? ' active-'+tab : '');
     });
-    document.getElementById('presets-web').style.display     = tab==='web'     ? 'grid' : 'none';
-    document.getElementById('presets-android').style.display = tab==='android' ? 'grid' : 'none';
-    document.getElementById('presets-ios').style.display     = tab==='ios'     ? 'grid' : 'none';
-    document.getElementById('presets-ipad').style.display    = tab==='ipad'    ? 'grid' : 'none';
-    document.getElementById('ipad-info-box').style.display   = tab==='ipad'    ? 'block': 'none';
-    document.getElementById('custom-size').style.display     = tab==='custom'  ? 'block': 'none';
+
+    // Show/hide preset grids
+    ['web','android','ios','iphone','ipad','anphone','antablet'].forEach(function(t){
+      var el = document.getElementById('presets-'+t);
+      if (el) el.style.display = t===tab ? 'grid' : 'none';
+    });
+
+    // Show screenshot info box for any screenshot tab
+    var isScreenshot = SCREENSHOT_TABS.indexOf(tab) > -1;
+    document.getElementById('screenshot-info-box').style.display = isScreenshot ? 'block' : 'none';
+    document.getElementById('custom-size').style.display = tab==='custom' ? 'block' : 'none';
+
     document.querySelectorAll('.preset-btn').forEach(function(b){ b.classList.remove('active'); });
     updateBtn();
   }
@@ -492,41 +540,50 @@
       btn.textContent = hasSVG ? 'Convert SVG → PNG' : 'Upload SVG files to convert';
       return;
     }
+    var isScreenshot = SCREENSHOT_TABS.indexOf(activeTab) > -1;
     var ready = false;
     if (activeTab==='custom') {
       var w=parseInt(document.getElementById('custom-w').value);
       var h=parseInt(document.getElementById('custom-h').value);
       ready = files.length>0 && !!w && !!h;
-    } else if (activeTab==='ipad') {
-      // iPad mode: all 4 presets are generated at once — just need files
+    } else if (isScreenshot) {
       ready = files.length>0;
-      // But if a specific preset is selected, also fine
       if (!ready) ready = files.length>0 && !!activePreset;
     } else {
       ready = files.length>0 && !!activePreset;
     }
     btn.disabled = !ready;
-    btn.textContent = activeTab==='ipad' && !activePreset ? 'Generate all 4 iPad sizes' : 'Convert & download';
+    var LABELS = { ipad: 'iPad', iphone: 'iPhone', anphone: 'Android phone', antablet: 'Android tablet' };
+    if (isScreenshot && !activePreset) {
+      btn.textContent = 'Generate all ' + LABELS[activeTab] + ' sizes';
+    } else {
+      btn.textContent = 'Convert & download';
+    }
   }
 
   /* ── CONVERT ── */
   function runConvert() {
     if (appMode==='svg2png') { convertSVGtoPNG(); return; }
-    if (activeTab==='ipad' && !activePreset) { resizeIPadAll(); return; }
+    var isScreenshot = SCREENSHOT_TABS.indexOf(activeTab) > -1;
+    if (isScreenshot && !activePreset) { resizeScreenshotsAll(); return; }
     resizeImages();
   }
 
-  /* ── IPAD: GENERATE ALL 4 SIZES PER IMAGE ── */
-  function resizeIPadAll() {
+  /* ── SCREENSHOTS: GENERATE ALL SIZES PER IMAGE ── */
+  var SCREENSHOT_NAMES = { ipad: 'ipad_screenshot', iphone: 'iphone_screenshot', anphone: 'android_phone_screenshot', antablet: 'android_tablet_screenshot' };
+
+  function resizeScreenshotsAll() {
     var quality = parseInt(document.getElementById('quality-slider').value)/100;
     var bgColor = document.getElementById('ipad-bg-color').value;
+    var presetList = PRESETS[activeTab];
+    var screenshotName = SCREENSHOT_NAMES[activeTab] || 'screenshot';
     results = [];
     var btn = document.getElementById('convert-btn');
     btn.disabled=true; btn.textContent='Converting…';
 
     var tasks = [];
     files.forEach(function(f) {
-      PRESETS.ipad.forEach(function(p) {
+      presetList.forEach(function(p) {
         tasks.push({ file: f, preset: p });
       });
     });
@@ -542,7 +599,7 @@
         var dataUrl = canvas.toDataURL(mime, q);
         var prefix = getItemPrefix();
         var ext = outputFmt==='jpeg' ? 'jpg' : 'png';
-        var outName = prefix + 'ipad_screenshot_' + (taskIdx + 1) + '_' + task.preset.w + 'x' + task.preset.h + '.' + ext;
+        var outName = prefix + screenshotName + '_' + (taskIdx + 1) + '_' + task.preset.w + 'x' + task.preset.h + '.' + ext;
         results[taskIdx] = { dataUrl: dataUrl, name: outName, w: task.preset.w, h: task.preset.h };
         done++;
         if (done === total) renderResults();
@@ -778,7 +835,10 @@
     document.getElementById('results-section').style.display='block';
     document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
     var btn=document.getElementById('convert-btn');
-    btn.disabled=false; btn.textContent = activeTab==='ipad' && !activePreset ? 'Generate all 4 iPad sizes' : 'Convert & download';
+    btn.disabled=false;
+    var isScreenshot = SCREENSHOT_TABS.indexOf(activeTab) > -1;
+    var LABELS = { ipad: 'iPad', iphone: 'iPhone', anphone: 'Android phone', antablet: 'Android tablet' };
+    btn.textContent = isScreenshot && !activePreset ? 'Generate all ' + LABELS[activeTab] + ' sizes' : 'Convert & download';
   }
 
   function dlOne(dataUrl,name){ var a=document.createElement('a'); a.href=dataUrl; a.download=name; a.click(); }
