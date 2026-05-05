@@ -8,41 +8,25 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; padding: 2rem 1rem 4rem; }
     .page { max-width: 820px; margin: 0 auto; }
-
     .hero { text-align: center; padding: 3rem 1rem 2.5rem; }
     .hero-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #2563eb, #7c3aed); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
     .hero-icon svg { width: 28px; height: 28px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .hero h1 { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: -0.4px; margin-bottom: 8px; }
     .hero p { font-size: 14px; color: #64748b; line-height: 1.6; }
-
     .card { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 16px; padding: 1.5rem; margin-bottom: 14px; }
     .card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
     .step-badge { width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-    .s1 { background: #1e3a5f; color: #60a5fa; }
-    .s2 { background: #2d1e3d; color: #c084fc; }
-    .s3 { background: #1e3d2f; color: #4ade80; }
-    .s4 { background: #3d2a1e; color: #fb923c; }
-    .s5 { background: #3d1e3d; color: #f472b6; }
+    .s1 { background: #1e3a5f; color: #60a5fa; } .s2 { background: #2d1e3d; color: #c084fc; } .s3 { background: #1e3d2f; color: #4ade80; } .s4 { background: #3d2a1e; color: #fb923c; } .s5 { background: #3d1e3d; color: #f472b6; }
     .card-title { font-size: 15px; font-weight: 600; color: #e2e8f0; }
     .card-sub { font-size: 12px; color: #475569; margin-top: 2px; }
-
     .field { margin-bottom: 14px; }
     .field:last-child { margin-bottom: 0; }
     .field label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
     .field label .hint { font-weight: 400; text-transform: none; color: #374151; font-size: 10px; }
-    .field input, .field textarea { width: 100%; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 14px; color: #e2e8f0; outline: none; font-family: 'Courier New', monospace; transition: border-color 0.15s; }
-    .field input:focus, .field textarea:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.2); }
-    .field input::placeholder, .field textarea::placeholder { color: #374151; }
-    .field textarea { resize: vertical; min-height: 70px; line-height: 1.6; font-size: 13px; }
+    .field input { width: 100%; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 14px; color: #e2e8f0; outline: none; font-family: 'Courier New', monospace; transition: border-color 0.15s; }
+    .field input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.2); }
+    .field input::placeholder { color: #374151; }
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-    .derived-box { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 10px 14px; font-family: 'Courier New', monospace; font-size: 12px; color: #64748b; line-height: 1.8; margin-top: 8px; }
-    .derived-box .dkey { color: #475569; }
-    .derived-box .dval { color: #4ade80; }
-    .derived-box .dval-blue { color: #60a5fa; }
-    .derived-box .dval-purple { color: #c084fc; }
-    .derived-box .dval-orange { color: #fb923c; }
-
     .toggle-row { display: flex; align-items: center; justify-content: space-between; }
     .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
@@ -50,907 +34,407 @@
     .toggle-slider:before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #64748b; border-radius: 50%; transition: transform 0.2s, background 0.2s; }
     .toggle-switch input:checked + .toggle-slider { background: #1e3a5f; }
     .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); background: #60a5fa; }
-
     .type-toggle { display: flex; gap: 8px; }
     .type-btn { flex: 1; padding: 11px; border-radius: 10px; border: 1px solid #2a2d3e; background: #0f1117; color: #64748b; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.15s; user-select: none; }
     .type-btn:hover { border-color: #3a3d4e; color: #94a3b8; }
     .type-btn.active { background: #1e3a5f; border-color: #2563eb; color: #60a5fa; }
-
-    /* PLATFORM TOGGLE */
     .platform-toggle { display: flex; gap: 0; border-radius: 12px; overflow: hidden; border: 1px solid #2a2d3e; margin-bottom: 14px; }
     .platform-btn { flex: 1; padding: 14px; background: #0f1117; color: #64748b; font-size: 14px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.2s; user-select: none; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .platform-btn:not(:last-child) { border-right: 1px solid #2a2d3e; }
     .platform-btn:hover { color: #94a3b8; background: #151820; }
-    .platform-btn.active-ios { background: linear-gradient(135deg, #1e2d45, #1e1e3d); color: #c084fc; border-color: #7c3aed; }
-    .platform-btn.active-android { background: linear-gradient(135deg, #1e3d2f, #1a2d1e); color: #4ade80; border-color: #16a34a; }
-    .platform-btn.active-build { background: linear-gradient(135deg, #3d2a1e, #2d1a0e); color: #fb923c; border-color: #ea580c; }
+    .platform-btn.active-ios { background: linear-gradient(135deg, #1e2d45, #1e1e3d); color: #c084fc; }
+    .platform-btn.active-android { background: linear-gradient(135deg, #1e3d2f, #1a2d1e); color: #4ade80; }
+    .platform-btn.active-build { background: linear-gradient(135deg, #3d2a1e, #2d1a0e); color: #fb923c; }
     .platform-icon { font-size: 18px; }
-
     .section-divider { display: flex; align-items: center; gap: 14px; margin: 2rem 0 1.25rem; }
     .section-divider-line { flex: 1; height: 1px; background: #2a2d3e; }
     .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; white-space: nowrap; }
-    .sl-blue   { background: #1e3a5f; color: #60a5fa; border: 1px solid #2563eb33; }
+    .sl-blue { background: #1e3a5f; color: #60a5fa; border: 1px solid #2563eb33; }
     .sl-purple { background: #2d1e3d; color: #c084fc; border: 1px solid #7c3aed33; }
-    .sl-green  { background: #1e3d2f; color: #4ade80; border: 1px solid #16a34a33; }
+    .sl-green { background: #1e3d2f; color: #4ade80; border: 1px solid #16a34a33; }
     .sl-orange { background: #3d2a1e; color: #fb923c; border: 1px solid #fb923c33; }
-    .sl-pink   { background: #3d1e3d; color: #f472b6; border: 1px solid #f472b633; }
-    .sl-teal   { background: #1e3d3d; color: #2dd4bf; border: 1px solid #0d948833; }
-
+    .sl-pink { background: #3d1e3d; color: #f472b6; border: 1px solid #f472b633; }
+    .sl-teal { background: #1e3d3d; color: #2dd4bf; border: 1px solid #0d948833; }
+    .sl-red { background: #3d1010; color: #f87171; border: 1px solid #f8717133; }
+    .sl-cyan { background: #0f2d3d; color: #22d3ee; border: 1px solid #22d3ee33; }
+    .sl-lime { background: #1a2d0e; color: #a3e635; border: 1px solid #a3e63533; }
     .output-wrap { display: none; margin-top: 14px; }
     .output-block { margin-bottom: 20px; }
     .output-block-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
     .output-block-meta .obt { font-size: 13px; font-weight: 700; color: #e2e8f0; margin-bottom: 2px; }
     .output-block-meta .obs { font-size: 12px; color: #64748b; }
     .output-box { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 12px; padding: 1.25rem; font-family: 'Courier New', monospace; font-size: 12px; color: #94a3b8; line-height: 2; white-space: pre; overflow-x: auto; max-height: 400px; overflow-y: auto; }
-    .ok  { color: #60a5fa; }
-    .ov  { color: #4ade80; }
-    .oi1 { color: #c084fc; }
-    .oi2 { color: #fb923c; }
-
+    .ok { color: #60a5fa; } .ov { color: #4ade80; } .oi1 { color: #c084fc; } .oi2 { color: #fb923c; }
     .btn-copy { padding: 7px 14px; border: 1px solid; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; flex-shrink: 0; }
     .btn-copy:hover { opacity: 0.8; }
-    .bc-blue   { background: #1e3a5f; border-color: #2563eb44; color: #60a5fa; }
+    .bc-blue { background: #1e3a5f; border-color: #2563eb44; color: #60a5fa; }
     .bc-purple { background: #2d1e3d; border-color: #7c3aed44; color: #c084fc; }
-    .bc-green  { background: #1e3d2f; border-color: #16a34a44; color: #4ade80; }
+    .bc-green { background: #1e3d2f; border-color: #16a34a44; color: #4ade80; }
     .bc-orange { background: #3d2a1e; border-color: #fb923c44; color: #fb923c; }
-    .bc-pink   { background: #3d1e3d; border-color: #f472b644; color: #f472b6; }
-    .bc-teal   { background: #1e3d3d; border-color: #0d948844; color: #2dd4bf; }
-
+    .bc-pink { background: #3d1e3d; border-color: #f472b644; color: #f472b6; }
+    .bc-teal { background: #1e3d3d; border-color: #0d948844; color: #2dd4bf; }
+    .bc-red { background: #3d1010; border-color: #f8717144; color: #f87171; }
+    .bc-cyan { background: #0f2d3d; border-color: #22d3ee44; color: #22d3ee; }
+    .bc-lime { background: #1a2d0e; border-color: #a3e63544; color: #a3e635; }
     .btn-generate { width: 100%; padding: 14px; background: linear-gradient(135deg, #2563eb, #7c3aed); border: none; border-radius: 12px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.02em; margin-top: 4px; }
     .btn-generate:hover { opacity: 0.9; }
     .btn-generate-android { background: linear-gradient(135deg, #16a34a, #0f766e); }
-
-    .sl-red    { background: #3d1010; color: #f87171; border: 1px solid #f8717133; }
-    .sl-cyan   { background: #0f2d3d; color: #22d3ee; border: 1px solid #22d3ee33; }
-    .sl-lime   { background: #1a2d0e; color: #a3e635; border: 1px solid #a3e63533; }
-    .bc-red    { background: #3d1010; border-color: #f8717144; color: #f87171; }
-    .bc-cyan   { background: #0f2d3d; border-color: #22d3ee44; color: #22d3ee; }
-    .bc-lime   { background: #1a2d0e; border-color: #a3e63544; color: #a3e635; }
-
-    .flag-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
-    .flag-cb { width: 14px; height: 14px; accent-color: #fb923c; cursor: pointer; }
-    .flag-label { font-family: 'Courier New', monospace; font-size: 12px; color: #64748b; }
-    .flag-label.active { color: #fb923c; }
-    .flag-desc { font-size: 11px; color: #374151; margin-left: auto; }
+    .info-box { background: #1e2d1e; border: 1px solid #16a34a33; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #4ade80; line-height: 1.6; margin-top: 10px; }
     .warn-banner { background: #2d1a0e; border: 1px solid #ea580c44; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #fb923c; line-height: 1.5; margin-top: 8px; }
-    .check-banner { background: #1e2d45; border: 1px solid #2563eb33; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #93c5fd; line-height: 1.5; margin-top: 8px; }
-
-    /* BUILD COMMANDS */
-    .build-section { margin-top: 2rem; }
-    .branch-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 99px; margin-bottom: 12px; }
-    .bs-loading { background: #1e2d45; border: 1px solid #2563eb33; color: #60a5fa; }
-    .bs-ok      { background: #1e2d1e; border: 1px solid #16a34a33; color: #4ade80; }
-    .bs-fail    { background: #2d1a0e; border: 1px solid #ea580c44; color: #fb923c; }
-    .bs-dot { width: 6px; height: 6px; border-radius: 50%; }
-    .bs-loading .bs-dot { background: #60a5fa; animation: pulse 1s infinite; }
-    .bs-ok .bs-dot { background: #4ade80; }
-    .bs-fail .bs-dot { background: #fb923c; }
-    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .step-banner { background: #1e2d45; border: 1px solid #2563eb33; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #93c5fd; line-height: 1.5; margin-top: 8px; }
     .build-cmd-box { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 12px; padding: 1rem 1.25rem; font-family: 'Courier New', monospace; font-size: 12px; color: #4ade80; line-height: 1.8; white-space: pre-wrap; word-break: break-all; margin-bottom: 10px; min-height: 44px; }
     .build-cmd-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
     .build-cmd-label { font-size: 12px; font-weight: 700; color: #e2e8f0; }
     .build-cmd-sub { font-size: 11px; color: #475569; }
-
-    .info-box { background: #1e2d1e; border: 1px solid #16a34a33; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #4ade80; line-height: 1.6; margin-top: 10px; }
-
+    .branch-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 99px; margin-bottom: 12px; }
+    .bs-loading { background: #1e2d45; border: 1px solid #2563eb33; color: #60a5fa; }
+    .bs-ok { background: #1e2d1e; border: 1px solid #16a34a33; color: #4ade80; }
+    .bs-fail { background: #2d1a0e; border: 1px solid #ea580c44; color: #fb923c; }
+    .bs-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .bs-loading .bs-dot { background: #60a5fa; animation: bspulse 1s infinite; }
+    .bs-ok .bs-dot { background: #4ade80; }
+    .bs-fail .bs-dot { background: #fb923c; }
+    @keyframes bspulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .footer { text-align: center; padding: 2rem 0 0.5rem; font-size: 12px; color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #2a2d3e; }
-
     @media (max-width: 500px) { .two-col { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 <div class="page">
-
   <div class="hero">
-    <div class="hero-icon">
-      <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8m0 1a7 7 0 0 1 7 7 7 7 0 0 1-7 7A7 7 0 0 1 5 12 7 7 0 0 1 12 5"/></svg>
-    </div>
+    <div class="hero-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8m0 1a7 7 0 0 1 7 7 7 7 0 0 1-7 7A7 7 0 0 1 5 12 7 7 0 0 1 12 5"/></svg></div>
     <h1>App spinup generator</h1>
     <p>Generate all required configuration values, environment variables, and keys for iOS and Android app spinups.</p>
   </div>
 
-  <!-- PLATFORM SELECTOR -->
   <div class="platform-toggle">
-    <div class="platform-btn active-ios" id="plat-ios" onclick="setPlatform('ios')">
-      <span class="platform-icon">🍎</span> iOS
-    </div>
-    <div class="platform-btn" id="plat-android" onclick="setPlatform('android')">
-      <span class="platform-icon">🤖</span> Android
-    </div>
-    <div class="platform-btn" id="plat-build" onclick="setPlatform('build')">
-      <span class="platform-icon">⚡</span> Build Commands
-    </div>
+    <div class="platform-btn active-ios" id="plat-ios" onclick="setPlatform('ios')"><span class="platform-icon">🍎</span> iOS</div>
+    <div class="platform-btn" id="plat-android" onclick="setPlatform('android')"><span class="platform-icon">🤖</span> Android</div>
+    <div class="platform-btn" id="plat-build" onclick="setPlatform('build')"><span class="platform-icon">⚡</span> Build Commands</div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════ -->
-  <!-- iOS SECTION -->
-  <!-- ═══════════════════════════════════════════════ -->
+  <!-- ═══════════════════════ iOS SECTION ═══════════════════════ -->
   <div id="ios-section">
-
     <div class="card">
-      <div class="card-top">
-        <div class="step-badge s1">1</div>
-        <div><div class="card-title">App setup type</div><div class="card-sub">Is this a new app or a takeover of an existing app?</div></div>
-      </div>
+      <div class="card-top"><div class="step-badge s1">1</div><div><div class="card-title">App setup type</div><div class="card-sub">Is this a new app or a takeover of an existing app?</div></div></div>
       <div class="type-toggle">
         <div class="type-btn active" id="ios-btn-new" onclick="iosSetType('new')">🆕 &nbsp;New app</div>
         <div class="type-btn" id="ios-btn-takeover" onclick="iosSetType('takeover')">🔄 &nbsp;Takeover — existing app</div>
       </div>
     </div>
-
     <div class="card">
-      <div class="card-top">
-        <div class="step-badge s2">2</div>
-        <div><div class="card-title">Core app details</div><div class="card-sub">Basic identifiers — all outputs are derived from these</div></div>
-      </div>
+      <div class="card-top"><div class="step-badge s2">2</div><div><div class="card-title">Core app details</div><div class="card-sub">All outputs are derived from these values</div></div></div>
       <div class="two-col">
-        <div class="field">
-          <label>Slug <span class="hint">(e.g. longs-picpac-sfp)</span></label>
-          <input type="text" id="ios-slug" placeholder="longs-picpac-sfp" oninput="iosUpdatePreviews()">
-        </div>
-        <div class="field">
-          <label>App name <span class="hint">(as in intake form)</span></label>
-          <input type="text" id="ios-app-name" placeholder="Long's Pic Pac" oninput="iosUpdatePreviews(); iosAutoFillBundle()">
-        </div>
+        <div class="field"><label>Slug <span class="hint">(e.g. foodstorm-sfp)</span></label><input type="text" id="ios-slug" placeholder="foodstorm-sfp"></div>
+        <div class="field"><label>App name <span class="hint">(as in intake form)</span></label><input type="text" id="ios-app-name" placeholder="FoodStorm"></div>
       </div>
-      <div class="field">
-        <label>Bundle identifier <span class="hint" id="ios-bundle-hint">(auto-generated for new apps, or enter existing)</span></label>
-        <input type="text" id="ios-bundle-id" placeholder="com.retailername.app.ios" oninput="iosUpdatePreviews()">
-        <div class="info-box" id="ios-bundle-info" style="display:none;margin-top:8px">For takeover apps, use the existing iOS App bundle identifier from App Store Connect.</div>
-      </div>
-      <div class="field">
-        <label>Scheme name <span class="hint">(SSO file name — IC SSO retailer name in PascalCase)</span></label>
-        <input type="text" id="ios-scheme" placeholder="LongsPicPac" oninput="iosUpdatePreviews()">
-        <div class="info-box" style="margin-top:8px">Single word PascalCase — e.g. if retailer is "Long's Pic Pac" → <strong>LongsPicPac</strong>. This should match the IC SSO retailer name.</div>
+      <div class="field"><label>Scheme name <span class="hint">(IC SSO retailer name in PascalCase)</span></label><input type="text" id="ios-scheme" placeholder="FoodStorm"></div>
+      <div class="two-col">
+        <div class="field"><label>Apple developer team ID <span class="hint">(letters + numbers)</span></label><input type="text" id="ios-dev-team-id" placeholder="ABC123DEF4"></div>
+        <div class="field"><label>App Store Connect team ID <span class="hint">(numbers only)</span></label><input type="text" id="ios-asc-team-id" placeholder="123456789"></div>
       </div>
       <div id="ios-version-field" style="display:none">
-        <div class="field">
-          <label>Current app version <span class="hint">(takeover only — the current production app version number)</span></label>
-          <input type="number" id="ios-current-version" placeholder="e.g. 10" min="1" value="">
-          <div class="info-box" style="margin-top:8px">For takeover apps, enter the current production version. The new build will be version <strong>current + 1</strong>. For new apps, the version is always <strong>1</strong>.</div>
-        </div>
-      </div>
-      <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-top:4px;margin-bottom:8px">Derived values preview</div>
-      <div class="derived-box">
-        <span class="dkey">camelScheme               = </span><span class="dval" id="ios-prev-camel-scheme">—</span><br>
-        <span class="dkey">SNS certificate key        = </span><span class="dval-purple" id="ios-prev-sns-cert">—</span><br>
-        <span class="dkey">SNS private key            = </span><span class="dval-orange" id="ios-prev-sns-key">—</span>
+        <div class="field"><label>Current app version <span class="hint">(takeover only — current production version number)</span></label><input type="number" id="ios-current-version" placeholder="e.g. 10" min="1"></div>
       </div>
     </div>
-
     <div class="card">
-      <div class="card-top">
-        <div class="step-badge s3">3</div>
-        <div><div class="card-title">Apple team identifiers</div><div class="card-sub">From App Store Connect and Apple Developer account</div></div>
-      </div>
-      <div class="two-col">
-        <div class="field">
-          <label>Apple developer team ID <span class="hint">(letters + numbers)</span></label>
-          <input type="text" id="ios-dev-team-id" placeholder="ABC123DEF4" oninput="iosUpdatePreviews()">
-        </div>
-        <div class="field">
-          <label>App Store Connect team ID <span class="hint">(numbers only)</span></label>
-          <input type="text" id="ios-asc-team-id" placeholder="123456789" oninput="iosUpdatePreviews()">
-        </div>
-      </div>
-      <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">ASC API key variable names</div>
-      <div class="derived-box">
-        <span class="dkey">APP_STORE_CONNECT_API_KEY_ID_</span><span class="dval" id="ios-prev-asc-id">——</span><br>
-        <span class="dkey">APP_STORE_CONNECT_API_KEY_CONTENT_</span><span class="dval" id="ios-prev-asc-content">——</span><br>
-        <span class="dkey">APP_STORE_CONNECT_API_KEY_ISSUER_ID_</span><span class="dval" id="ios-prev-asc-issuer">——</span>
-      </div>
-      <div class="info-box" style="margin-top:10px">The <strong>{TEAM-ID}</strong> suffix in all three variable names is the <strong>Apple Developer Team ID</strong> entered above.</div>
-    </div>
-
-    <div class="card">
-      <div class="card-top">
-        <div class="step-badge s4">4</div>
-        <div><div class="card-title">SNS certificate & private key</div><div class="card-sub">Push notification certificates — paste values from the SNS file</div></div>
-      </div>
-      <div class="derived-box" style="margin-top:8px">
-        <span class="dkey">Key names will be:</span><br>
-        <span class="dval-purple" id="ios-prev-sns-cert-full">——</span><br>
-        <span class="dval-orange" id="ios-prev-sns-key-full">——</span>
-      </div>
-      <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-top:14px;margin-bottom:8px">PR values for terraform.prod.tfvars</div>
-      <div class="derived-box">
-        <span class="dval-blue" id="ios-prev-pr-line1">——</span><br>
-        <span class="dval" id="ios-prev-pr-line2">——</span>
+      <div class="card-top" style="margin-bottom:0"><div class="step-badge s5">3</div>
+        <div style="flex:1"><div class="toggle-row"><div><div class="card-title">Airship enabled? <span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div><div class="card-sub">Enable if this app uses Airship for push notifications</div></div><label class="toggle-switch"><input type="checkbox" id="ios-airship-toggle"><span class="toggle-slider"></span></label></div></div>
       </div>
     </div>
-
-    <div class="card">
-      <div class="card-top" style="margin-bottom:0">
-        <div class="step-badge s5">5</div>
-        <div style="flex:1">
-          <div class="toggle-row">
-            <div>
-              <div class="card-title">Airship enabled? <span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
-              <div class="card-sub">Enable if this app uses Airship for push notifications</div>
-            </div>
-            <label class="toggle-switch"><input type="checkbox" id="ios-airship-toggle" onchange="iosOnAirshipToggle()"><span class="toggle-slider"></span></label>
-          </div>
-        </div>
-      </div>
-      <div id="ios-airship-section" style="display:none;margin-top:1.25rem">
-        <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Derived Airship key names</div>
-        <div class="derived-box">
-          <span class="dkey">IC_KEY_AIRSHIP_PRODUCTION_ENT_</span><span class="dval-purple" id="ios-prev-airship-scheme">——</span><br>
-          <span class="dkey">IC_KEY_AIRSHIP_PRODUCTION_SECRET_ENT_</span><span class="dval-orange" id="ios-prev-airship-secret-scheme">——</span>
-        </div>
-        <div class="info-box" style="margin-top:10px">The <strong>&lt;SCHEME&gt;</strong> suffix is the <strong>Scheme Name</strong> (PascalCase, uppercased) entered in Step 2 above.</div>
-      </div>
-    </div>
-
     <button class="btn-generate" onclick="iosGenerate()">⚡ &nbsp;Generate iOS outputs</button>
 
+    <!-- OUTPUTS -->
     <div class="output-wrap" id="ios-output-wrap">
-      <div class="section-divider" style="margin-top:2rem"><div class="section-divider-line"></div><div class="section-label sl-blue">Output 1 — camelScheme assignments</div><div class="section-divider-line"></div></div>
-      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">camelScheme config</div><div class="obs">Add both lines to the app config file</div></div><button class="btn-copy bc-blue" onclick="copyBox('ios-box1',this)">Copy</button></div><div class="output-box" id="ios-box1"></div></div>
 
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Output 2 — ASC API key variables</div><div class="section-divider-line"></div></div>
-      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">App Store Connect API key variable names</div><div class="obs">Add these environment variable names with their respective values</div></div><button class="btn-copy bc-purple" onclick="copyBox('ios-box2',this)">Copy</button></div><div class="output-box" id="ios-box2"></div></div>
+      <div class="section-divider" style="margin-top:2rem"><div class="section-divider-line"></div><div class="section-label sl-blue">Output 1 — Bundle Identifier</div><div class="section-divider-line"></div></div>
+      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Bundle Identifier</div><div class="obs">Use in IPP Application Details and App Store Connect</div></div><button class="btn-copy bc-blue" onclick="copyBox('ios-o1',this)">Copy</button></div><div class="output-box" id="ios-o1"></div></div>
 
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">Output 3 — SNS certificate & private key</div><div class="section-divider-line"></div></div>
-      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">SNS push notification keys</div><div class="obs">Add to the SNS app file with these key names</div></div><button class="btn-copy bc-green" onclick="copyBox('ios-box3',this)">Copy</button></div><div class="output-box" id="ios-box3"></div></div>
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-cyan">Output 2 — Apple App Site Association ID</div><div class="section-divider-line"></div></div>
+      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Apple App Site Association ID</div><div class="obs">Add to Store Configuration → "Apple app site association ids"</div></div><button class="btn-copy bc-cyan" onclick="copyBox('ios-o2',this)">Copy</button></div><div class="output-box" id="ios-o2"></div></div>
 
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-orange">Output 4 — Full config summary</div><div class="section-divider-line"></div></div>
-      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Complete iOS app configuration</div><div class="obs">Full reference summary of all values for this app</div></div><button class="btn-copy bc-orange" onclick="copyBox('ios-box4',this)">Copy</button></div><div class="output-box" id="ios-box4"></div></div>
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Output 3 — App version for IPP</div><div class="section-divider-line"></div></div>
+      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">App version</div><div class="obs">Set this as the app version in IPP Application Details</div></div><button class="btn-copy bc-purple" onclick="copyBox('ios-o3',this)">Copy</button></div><div class="output-box" id="ios-o3"></div></div>
 
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-teal">Output 5 — PR values for terraform.prod.tfvars</div><div class="section-divider-line"></div></div>
-      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">PR values for <code style="background:#0f1117;padding:2px 6px;border-radius:4px;font-size:11px;color:#2dd4bf">terraform.prod.tfvars</code></div><div class="obs">Add these entries to the SNS app PR</div></div><button class="btn-copy bc-teal" onclick="copyBox('ios-box5',this)">Copy</button></div><div class="output-box" id="ios-box5"></div></div>
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-red">Output 4 — ISC conf pre-check ⚠️ Complete before next steps</div><div class="section-divider-line"></div></div>
+      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Check existing ISC confs</div><div class="obs">Search ISC — if they exist, skip ASC API key setup. Must be verified before Step 5.</div></div></div><div class="output-box" id="ios-o4"></div></div>
+
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-orange">Output 5 — SFX App Registration (Buildkite)</div><div class="section-divider-line"></div></div>
+      <div class="output-block">
+        <div class="output-block-header"><div class="output-block-meta"><div class="obt">SFX App Registration</div><div class="obs">Creates App Store listing, code signing, and push notification certificates</div></div></div>
+        <div class="step-banner">📋 <strong>Output 4 (ISC conf check)</strong> must be completed before running this command.</div>
+        <div style="margin-top:12px">
+          <div class="build-cmd-header"><div><span class="build-cmd-label">New app & existing app</span></div><button class="btn-copy bc-orange" onclick="copyBuildCmd('ios-o5a',this)" style="padding:5px 10px;font-size:11px">Copy</button></div>
+          <div class="build-cmd-box" id="ios-o5a" style="color:#fb923c"></div>
+        </div>
+        <div style="margin-top:10px">
+          <div class="build-cmd-header"><div><span class="build-cmd-label">Existing app — when build fails (force push cert)</span></div><button class="btn-copy bc-orange" onclick="copyBuildCmd('ios-o5b',this)" style="padding:5px 10px;font-size:11px">Copy</button></div>
+          <div class="warn-banner">⚠️ <strong>Takeover note:</strong> For existing apps, the identifier and app registration profile may already exist, causing the command to fail. Use this command to force-create a new push certificate.</div>
+          <div class="build-cmd-box" id="ios-o5b" style="color:#fb923c;margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-lime">Output 6 — Push notification setup (.p12 extraction)</div><div class="section-divider-line"></div></div>
+      <div class="output-block">
+        <div class="output-block-header"><div class="output-block-meta"><div class="obt">Extract certificate & private key from .p12</div><div class="obs">After Step 5 completes, download the .p12 artifact from Buildkite, then run this</div></div><button class="btn-copy bc-lime" onclick="copyBox('ios-o6',this)">Copy</button></div>
+        <div class="step-banner">📋 <strong>Step 5 (SFX Registration)</strong> must complete successfully first. Download .p12 from Buildkite → Artifacts tab.</div>
+        <div class="output-box" id="ios-o6" style="margin-top:8px"></div>
+      </div>
+
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">Output 7 — SNS certificate & private key</div><div class="section-divider-line"></div></div>
+      <div class="output-block">
+        <div class="output-block-header"><div class="output-block-meta"><div class="obt">SNS push notification keys & Terraform PR</div><div class="obs">Create ISC SecretRefs with keys from Step 6, then open Terraform PR</div></div><button class="btn-copy bc-green" onclick="copyBox('ios-o7',this)">Copy</button></div>
+        <div class="output-box" id="ios-o7"></div>
+      </div>
+
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Output 8 — Recaptcha key whitelisting</div><div class="section-divider-line"></div></div>
+      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Recaptcha whitelist value</div><div class="obs">Add this bundle ID to GCP Recaptcha key configuration</div></div><button class="btn-copy bc-purple" onclick="copyBox('ios-o8',this)">Copy</button></div><div class="output-box" id="ios-o8"></div></div>
 
       <div id="ios-airship-output" style="display:none">
-        <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-pink">Output 6 — Airship config</div><div class="section-divider-line"></div></div>
-        <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Airship configuration</div><div class="obs">Add Airship credentials to the app config</div></div><button class="btn-copy bc-pink" onclick="copyBox('ios-box6',this)">Copy</button></div><div class="output-box" id="ios-box6"></div></div>
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-pink">Output 9 — Airship config</div><div class="section-divider-line"></div></div>
+        <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Airship configuration</div><div class="obs">Add Airship credentials to ISC</div></div><button class="btn-copy bc-pink" onclick="copyBox('ios-o9',this)">Copy</button></div><div class="output-box" id="ios-o9"></div></div>
       </div>
 
-      <!-- OUTPUT 7 — Universal Links -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-cyan">Output 7 — Universal Links association ID</div><div class="section-divider-line"></div></div>
-      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Apple App Site Association ID</div><div class="obs">Add to Store Configuration → "Apple app site association ids"</div></div><button class="btn-copy bc-cyan" onclick="copyBox('ios-box7',this)">Copy</button></div><div class="output-box" id="ios-box7"></div></div>
-
-      <!-- OUTPUT 8 — App version -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">Output 8 — App version</div><div class="section-divider-line"></div></div>
-      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">App version for IPP</div><div class="obs">Set this as the app version in IPP Application Details</div></div><button class="btn-copy bc-blue" onclick="copyBox('ios-box8',this)">Copy</button></div><div class="output-box" id="ios-box8"></div></div>
-
-      <!-- OUTPUT 9 — SFX Registration command -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-orange">Output 9 — SFX registration command</div><div class="section-divider-line"></div></div>
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-teal">Output 10 — iOS build command</div><div class="section-divider-line"></div></div>
       <div class="output-block">
-        <div class="output-block-header"><div class="output-block-meta"><div class="obt">SFX App Registration (Buildkite)</div><div class="obs">Creates App Store listing, code signing, and push notification certificates</div></div><button class="btn-copy bc-orange" onclick="copyBox('ios-box9',this)">Copy</button></div>
-        <div style="margin-bottom:10px;padding:10px 12px;background:#0f1117;border:1px solid #2a2d3e;border-radius:10px">
-          <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Optional SKIP / FORCE flags <span style="color:#374151;font-weight:400;text-transform:none">— check to include</span></div>
-          <div class="flag-row"><input type="checkbox" class="flag-cb" id="flag-skip-record" onchange="iosUpdateRegCmd()"><label class="flag-label" for="flag-skip-record">SKIP_CREATING_APP_RECORD=true</label><span class="flag-desc">Skip new app listing</span></div>
-          <div class="flag-row"><input type="checkbox" class="flag-cb" id="flag-skip-caps" onchange="iosUpdateRegCmd()"><label class="flag-label" for="flag-skip-caps">SKIP_UPDATE_APP_CAPABILITIES=true</label><span class="flag-desc">Skip capability updates</span></div>
-          <div class="flag-row"><input type="checkbox" class="flag-cb" id="flag-skip-dist" onchange="iosUpdateRegCmd()"><label class="flag-label" for="flag-skip-dist">SKIP_CREATING_DISTRIBUTION_CERT=true</label><span class="flag-desc">Skip distribution cert</span></div>
-          <div class="flag-row"><input type="checkbox" class="flag-cb" id="flag-skip-push" onchange="iosUpdateRegCmd()"><label class="flag-label" for="flag-skip-push">SKIP_CREATING_PUSH_CERT=true</label><span class="flag-desc">Skip push cert</span></div>
-          <div class="flag-row"><input type="checkbox" class="flag-cb" id="flag-force-push" onchange="iosUpdateRegCmd()"><label class="flag-label" for="flag-force-push">FORCE_CREATE_PUSH_CERT=true</label><span class="flag-desc">Force new push cert (takeovers)</span></div>
-        </div>
-        <div class="warn-banner" id="ios-reg-warn" style="display:none">⚠️ <strong>Takeover note:</strong> For existing apps, the identifier and app registration profile may already exist, causing the command to fail. In that case, use <code style="background:#3d2010;padding:1px 5px;border-radius:3px;font-size:11px">FORCE_CREATE_PUSH_CERT=true</code> to force-create a new push certificate.</div>
-        <div class="output-box" id="ios-box9"></div>
+        <div class="output-block-header"><div class="output-block-meta"><div class="obt">iOS build command</div><div class="obs">Trigger a new build in Buildkite</div></div><button class="btn-copy bc-teal" onclick="copyBuildCmd('ios-o10',this)">Copy</button></div>
+        <div id="ios-build-branch-status" class="branch-status bs-loading"><div class="bs-dot"></div> Loading branch…</div>
+        <div class="build-cmd-box" id="ios-o10" style="color:#2dd4bf"></div>
       </div>
-
-      <!-- OUTPUT 10 — SNS ARN variable -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">Output 10 — SNS ARN ISC variable</div><div class="section-divider-line"></div></div>
-      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">SNS Platform Application ARN variable</div><div class="obs">Add to ISC after Terraform SNS PR is merged — used by customers backend for device endpoint registration</div></div><button class="btn-copy bc-green" onclick="copyBox('ios-box10',this)">Copy</button></div><div class="output-box" id="ios-box10"></div></div>
-
-      <!-- OUTPUT 11 — Recaptcha bundle ID -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Output 11 — Recaptcha bundle ID</div><div class="section-divider-line"></div></div>
-      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Recaptcha whitelist value</div><div class="obs">Add this bundle ID to the GCP Recaptcha key configuration</div></div><button class="btn-copy bc-purple" onclick="copyBox('ios-box11',this)">Copy</button></div><div class="output-box" id="ios-box11"></div></div>
-
-      <!-- OUTPUT 12 — ISC conf check reminder -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-red">Output 12 — ISC conf pre-check</div><div class="section-divider-line"></div></div>
-      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Check existing ISC confs before creating</div><div class="obs">Search ISC for these variable names — if they already exist, skip ASC API key setup</div></div></div><div class="output-box" id="ios-box12"></div></div>
-
-      <!-- OUTPUT 13 — OpenSSL command -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-lime">Output 13 — OpenSSL .p12 extraction</div><div class="section-divider-line"></div></div>
-      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Extract certificate & private key from .p12</div><div class="obs">Run after downloading the .p12 artifact from Buildkite — extracts the public and private keys for ISC SecretRefs</div></div><button class="btn-copy bc-lime" onclick="copyBox('ios-box13',this)">Copy</button></div><div class="output-box" id="ios-box13"></div></div>
-
     </div>
-  </div><!-- /ios-section -->
+  </div>
 
-  <!-- ═══════════════════════════════════════════════ -->
-  <!-- ANDROID SECTION -->
-  <!-- ═══════════════════════════════════════════════ -->
+  <!-- ═══════════════════════ ANDROID SECTION ═══════════════════════ -->
   <div id="android-section" style="display:none">
-
     <div class="card">
-      <div class="card-top">
-        <div class="step-badge s3">1</div>
-        <div><div class="card-title">App setup type</div><div class="card-sub">Is this a new app or a takeover of an existing app?</div></div>
-      </div>
+      <div class="card-top"><div class="step-badge s3">1</div><div><div class="card-title">App setup type</div><div class="card-sub">Is this a new app or a takeover of an existing app?</div></div></div>
       <div class="type-toggle">
         <div class="type-btn active" id="an-btn-new" onclick="anSetType('new')">🆕 &nbsp;New app</div>
         <div class="type-btn" id="an-btn-takeover" onclick="anSetType('takeover')">🔄 &nbsp;Takeover — existing app</div>
       </div>
     </div>
-
     <div class="card">
-      <div class="card-top">
-        <div class="step-badge s3">2</div>
-        <div><div class="card-title">Core app details</div><div class="card-sub">Basic identifiers for the Android app</div></div>
-      </div>
+      <div class="card-top"><div class="step-badge s3">2</div><div><div class="card-title">Core app details</div><div class="card-sub">Basic identifiers for the Android app</div></div></div>
       <div class="two-col">
-        <div class="field">
-          <label>Slug <span class="hint">(e.g. longs-picpac-sfp)</span></label>
-          <input type="text" id="an-slug" placeholder="longs-picpac-sfp" oninput="anUpdatePreviews()">
-        </div>
-        <div class="field">
-          <label>App name <span class="hint">(as in intake form)</span></label>
-          <input type="text" id="an-app-name" placeholder="Long's Pic Pac" oninput="anUpdatePreviews(); anAutoFillPackage()">
-        </div>
+        <div class="field"><label>Slug <span class="hint">(e.g. foodstorm-sfp)</span></label><input type="text" id="an-slug" placeholder="foodstorm-sfp"></div>
+        <div class="field"><label>App name <span class="hint">(as in intake form)</span></label><input type="text" id="an-app-name" placeholder="FoodStorm" oninput="anAutoFillPackage()"></div>
       </div>
-      <div class="field" style="margin-bottom:0">
-        <label>Android package name <span class="hint" id="an-pkg-hint">(auto-generated for new apps, or enter existing)</span></label>
-        <input type="text" id="an-package" placeholder="com.appname.app.android" oninput="anUpdatePreviews()">
-        <div class="info-box" id="an-pkg-info" style="display:none;margin-top:8px">For takeover apps, use the existing Android package name from Google Play Console.</div>
-      </div>
+      <div class="field" style="margin-bottom:0"><label>Android package name <span class="hint" id="an-pkg-hint">(auto-generated for new apps)</span></label><input type="text" id="an-package" placeholder="com.appname.app.android"><div class="info-box" id="an-pkg-info" style="display:none;margin-top:8px">For takeover apps, use the existing package name from Google Play Console.</div></div>
     </div>
-
     <button class="btn-generate btn-generate-android" onclick="anGenerate()">⚡ &nbsp;Generate Android outputs</button>
-
     <div class="output-wrap" id="an-output-wrap">
       <div class="section-divider" style="margin-top:2rem"><div class="section-divider-line"></div><div class="section-label sl-green">Output 1 — Android app configuration</div><div class="section-divider-line"></div></div>
-      <div class="output-block">
-        <div class="output-block-header">
-          <div class="output-block-meta">
-            <div class="obt">Complete Android app configuration</div>
-            <div class="obs">Full reference summary of all values for this app</div>
-          </div>
-          <button class="btn-copy bc-green" onclick="copyBox('an-box1',this)">Copy</button>
-        </div>
-        <div class="output-box" id="an-box1"></div>
-      </div>
+      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Complete Android app configuration</div><div class="obs">Full reference summary</div></div><button class="btn-copy bc-green" onclick="copyBox('an-box1',this)">Copy</button></div><div class="output-box" id="an-box1"></div></div>
     </div>
-  </div><!-- /android-section -->
+  </div>
 
-  <!-- ═══════════════════════════════════════════════ -->
-  <!-- BUILD COMMANDS -->
-  <!-- ═══════════════════════════════════════════════ -->
+  <!-- ═══════════════════════ BUILD COMMANDS ═══════════════════════ -->
   <div id="build-section" style="display:none">
-
     <div class="card">
-      <div class="card-top">
-        <div class="step-badge s4">⚡</div>
-        <div>
-          <div class="card-title">Release branch & build command generator</div>
-          <div class="card-sub">Branch versions auto-loaded from <code style="background:#0f1117;padding:1px 5px;border-radius:4px;font-size:11px;color:#fb923c">branches.json</code> on page load</div>
-        </div>
-      </div>
-
+      <div class="card-top"><div class="step-badge s4">⚡</div><div><div class="card-title">Release branch & build command generator</div><div class="card-sub">Branch versions auto-loaded from <code style="background:#0f1117;padding:1px 5px;border-radius:4px;font-size:11px;color:#fb923c">branches.json</code></div></div></div>
       <div id="branch-status" class="branch-status bs-loading"><div class="bs-dot"></div> Fetching release branches…</div>
-
       <div class="two-col" style="margin-bottom:14px">
-        <div class="field">
-          <label>iOS release branch</label>
-          <input type="text" id="build-ios-branch" placeholder="e.g. 9.14.0" oninput="buildUpdatePreview()">
-        </div>
-        <div class="field">
-          <label>Android release branch</label>
-          <input type="text" id="build-android-branch" placeholder="e.g. 9.14" oninput="buildUpdatePreview()">
-        </div>
+        <div class="field"><label>iOS release branch</label><input type="text" id="build-ios-branch" placeholder="e.g. 9.14.0" oninput="buildUpdatePreview()"></div>
+        <div class="field"><label>Android release branch</label><input type="text" id="build-android-branch" placeholder="e.g. 9.14" oninput="buildUpdatePreview()"></div>
       </div>
-
-      <div class="field" style="margin-bottom:14px">
-        <label>Slug(s) <span class="hint">— comma-separated for multiple apps (e.g. andys-liquor-sfp,pathmark-sfp)</span></label>
-        <input type="text" id="build-slugs" placeholder="andys-liquor-sfp" oninput="buildUpdatePreview()">
-      </div>
-
-      <!-- iOS command -->
-      <div style="margin-bottom:18px">
-        <div class="build-cmd-header">
-          <div><span class="build-cmd-label">🍎 iOS build command</span></div>
-          <button class="btn-copy bc-purple" onclick="copyBuildCmd('build-ios-cmd',this)" style="padding:5px 10px;font-size:11px">Copy</button>
-        </div>
-        <div class="build-cmd-sub" id="build-ios-type"></div>
-        <div class="build-cmd-box" id="build-ios-cmd" style="color:#c084fc">Enter slug(s) and branch above</div>
-      </div>
-
-      <!-- Android command -->
-      <div>
-        <div class="build-cmd-header">
-          <div><span class="build-cmd-label">🤖 Android build command</span></div>
-          <button class="btn-copy bc-green" onclick="copyBuildCmd('build-android-cmd',this)" style="padding:5px 10px;font-size:11px">Copy</button>
-        </div>
-        <div class="build-cmd-sub" id="build-android-type"></div>
-        <div class="build-cmd-box" id="build-android-cmd">Enter slug(s) and branch above</div>
-      </div>
+      <div class="field" style="margin-bottom:14px"><label>Slug(s) <span class="hint">— comma-separated for multiple apps</span></label><input type="text" id="build-slugs" placeholder="andys-liquor-sfp" oninput="buildUpdatePreview()"></div>
+      <div style="margin-bottom:18px"><div class="build-cmd-header"><div><span class="build-cmd-label">🍎 iOS build command</span></div><button class="btn-copy bc-purple" onclick="copyBuildCmd('build-ios-cmd',this)" style="padding:5px 10px;font-size:11px">Copy</button></div><div class="build-cmd-sub" id="build-ios-type"></div><div class="build-cmd-box" id="build-ios-cmd" style="color:#c084fc">Enter slug(s) and branch above</div></div>
+      <div><div class="build-cmd-header"><div><span class="build-cmd-label">🤖 Android build command</span></div><button class="btn-copy bc-green" onclick="copyBuildCmd('build-android-cmd',this)" style="padding:5px 10px;font-size:11px">Copy</button></div><div class="build-cmd-sub" id="build-android-type"></div><div class="build-cmd-box" id="build-android-cmd">Enter slug(s) and branch above</div></div>
     </div>
-
-    <!-- REPROVISIONING PROFILE -->
-    <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <div class="section-label sl-purple">iOS reprovisioning — Apple Pay</div>
-      <div class="section-divider-line"></div>
-    </div>
+    <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">iOS reprovisioning — Apple Pay</div><div class="section-divider-line"></div></div>
     <div class="card">
-      <div class="card-top">
-        <div class="step-badge s2">🔑</div>
-        <div>
-          <div class="card-title">Reprovisioning profile setup</div>
-          <div class="card-sub">Run after Apple Pay enablement — replaces only the retailer slug</div>
-        </div>
-      </div>
-      <div class="field" style="margin-bottom:14px">
-        <label>Retailer slug</label>
-        <input type="text" id="repro-slug" placeholder="e.g. andys-liquor-sfp" oninput="reproUpdate()">
-      </div>
-      <div class="build-cmd-header">
-        <div><span class="build-cmd-label">🍎 Reprovisioning commands</span></div>
-        <button class="btn-copy bc-purple" onclick="copyBuildCmd('repro-cmd',this)" style="padding:5px 10px;font-size:11px">Copy</button>
-      </div>
+      <div class="card-top"><div class="step-badge s2">🔑</div><div><div class="card-title">Reprovisioning profile setup</div><div class="card-sub">Run after Apple Pay enablement</div></div></div>
+      <div class="field" style="margin-bottom:14px"><label>Retailer slug</label><input type="text" id="repro-slug" placeholder="e.g. andys-liquor-sfp" oninput="reproUpdate()"></div>
+      <div class="build-cmd-header"><div><span class="build-cmd-label">🍎 Reprovisioning commands</span></div><button class="btn-copy bc-purple" onclick="copyBuildCmd('repro-cmd',this)" style="padding:5px 10px;font-size:11px">Copy</button></div>
       <div class="build-cmd-sub" id="repro-sub"></div>
       <div class="build-cmd-box" id="repro-cmd" style="color:#c084fc">Enter retailer slug above</div>
     </div>
   </div>
 
-  <div class="footer">
-    <span>Instacart Enterprise Mobile</span>
-    <div class="footer-dot"></div>
-    <span>App Spinup Generator</span>
-  </div>
+  <div class="footer"><span>Instacart Enterprise Mobile</span><div class="footer-dot"></div><span>App Spinup Generator</span></div>
 </div>
 
 <script>
-  var platform = 'ios';
+  var platform = 'ios', iosAppType = 'new', iosBranch = '';
 
-  /* ── PLATFORM TOGGLE ── */
   function setPlatform(p) {
     platform = p;
-    document.getElementById('plat-ios').className     = 'platform-btn' + (p === 'ios' ? ' active-ios' : '');
-    document.getElementById('plat-android').className  = 'platform-btn' + (p === 'android' ? ' active-android' : '');
-    document.getElementById('plat-build').className    = 'platform-btn' + (p === 'build' ? ' active-build' : '');
-    document.getElementById('ios-section').style.display     = p === 'ios' ? 'block' : 'none';
-    document.getElementById('android-section').style.display  = p === 'android' ? 'block' : 'none';
-    document.getElementById('build-section').style.display    = p === 'build' ? 'block' : 'none';
+    document.getElementById('plat-ios').className = 'platform-btn' + (p==='ios'?' active-ios':'');
+    document.getElementById('plat-android').className = 'platform-btn' + (p==='android'?' active-android':'');
+    document.getElementById('plat-build').className = 'platform-btn' + (p==='build'?' active-build':'');
+    document.getElementById('ios-section').style.display = p==='ios'?'block':'none';
+    document.getElementById('android-section').style.display = p==='android'?'block':'none';
+    document.getElementById('build-section').style.display = p==='build'?'block':'none';
   }
-
-  /* ════════════════════════════════════════════════════
-     iOS LOGIC (all existing, prefixed with ios-)
-     ════════════════════════════════════════════════════ */
-  var iosAppType = 'new';
-
-  function iosToBundleId(appName) {
-    var clean = appName.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
-    var segment = clean.replace(/\s/g, '');
-    if (segment.length > 20) { var words = clean.split(' ').slice(0, 2); segment = words.join(''); }
-    return 'com.' + segment + '.app.ios';
-  }
-
-  function iosAutoFillBundle() {
-    if (iosAppType === 'new') {
-      var appName = gv('ios-app-name');
-      document.getElementById('ios-bundle-id').value = appName ? iosToBundleId(appName) : '';
-    }
-  }
-
-  function iosSetType(t) {
-    iosAppType = t;
-    document.getElementById('ios-btn-new').classList.toggle('active', t === 'new');
-    document.getElementById('ios-btn-takeover').classList.toggle('active', t === 'takeover');
-    document.getElementById('ios-version-field').style.display = t === 'takeover' ? 'block' : 'none';
-    var f = document.getElementById('ios-bundle-id');
-    if (t === 'new') {
-      document.getElementById('ios-bundle-hint').textContent = '(auto-generated from app name)';
-      document.getElementById('ios-bundle-info').style.display = 'none';
-      f.readOnly = true; f.style.opacity = '0.6'; f.style.cursor = 'not-allowed';
-      iosAutoFillBundle();
-    } else {
-      document.getElementById('ios-bundle-hint').textContent = '(use existing iOS App bundle identifier)';
-      document.getElementById('ios-bundle-info').style.display = 'block';
-      f.readOnly = false; f.style.opacity = '1'; f.style.cursor = 'text';
-      f.value = ''; f.placeholder = 'com.existingapp.ios';
-    }
-    iosUpdatePreviews();
-  }
-
-  (function() {
-    var f = document.getElementById('ios-bundle-id');
-    f.readOnly = true; f.style.opacity = '0.6'; f.style.cursor = 'not-allowed';
-  })();
-
-  function iosOnAirshipToggle() {
-    document.getElementById('ios-airship-section').style.display =
-      document.getElementById('ios-airship-toggle').checked ? 'block' : 'none';
-  }
-
-  function toCamelFromPascal(p) { return p ? p.charAt(0).toLowerCase() + p.slice(1) : ''; }
-  function snsKey(cs, type) { return cs + (type === 'cert' ? '_app_prod_sns_certificate' : '_app_prod_sns_private_key'); }
-  function gv(id) { return (document.getElementById(id) ? document.getElementById(id).value || '' : '').trim(); }
-
-  function iosUpdatePreviews() {
-    var slug = gv('ios-slug'), scheme = gv('ios-scheme'), devTid = gv('ios-dev-team-id');
-    var cs = scheme ? toCamelFromPascal(scheme) : '—';
-    var cert = cs !== '—' ? snsKey(cs, 'cert') : '—';
-    var key  = cs !== '—' ? snsKey(cs, 'key')  : '—';
-    document.getElementById('ios-prev-camel-scheme').textContent = cs;
-    document.getElementById('ios-prev-sns-cert').textContent     = cert;
-    document.getElementById('ios-prev-sns-key').textContent      = key;
-    document.getElementById('ios-prev-sns-cert-full').textContent = cert;
-    document.getElementById('ios-prev-sns-key-full').textContent  = key;
-    var tid = devTid.toUpperCase();
-    document.getElementById('ios-prev-asc-id').textContent      = tid || '——';
-    document.getElementById('ios-prev-asc-content').textContent = tid || '——';
-    document.getElementById('ios-prev-asc-issuer').textContent  = tid || '——';
-    var su = scheme ? scheme.toUpperCase() : '——';
-    document.getElementById('ios-prev-airship-scheme').textContent        = su;
-    document.getElementById('ios-prev-airship-secret-scheme').textContent = su;
-    var prKey = cs !== '—' ? cs : '——', prSlug = slug || '——';
-    document.getElementById('ios-prev-pr-line1').textContent = prKey + '                 = "' + prSlug + '"';
-    document.getElementById('ios-prev-pr-line2').textContent = prKey + '                 = "' + (scheme || '——') + '"';
-  }
-
+  function gv(id) { return (document.getElementById(id)?document.getElementById(id).value||'':'').trim(); }
   function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
+  function toCamelFromPascal(p) { return p?p.charAt(0).toLowerCase()+p.slice(1):''; }
+  function snsKey(cs,t) { return cs+(t==='cert'?'_app_prod_sns_certificate':'_app_prod_sns_private_key'); }
   function renderPlain(id, lines) {
-    var el = document.getElementById(id);
-    var html = lines.map(function(l) {
-      if (!l.trim()) return '';
-      var m = l.match(/^(\s*)([\w_{}]+)\s*=\s*(.*)$/);
-      if (m) return m[1] + '<span class="ok">' + esc(m[2]) + '</span> = <span class="ov">' + esc(m[3]) + '</span>';
-      var m2 = l.match(/^(\s*)(#.*)$/);
-      if (m2) return '<span style="color:#374151">' + esc(l) + '</span>';
-      return '<span class="oi1">' + esc(l) + '</span>';
-    }).join('\n');
-    el.innerHTML = html; el.dataset.raw = lines.join('\n');
+    var el=document.getElementById(id), html=lines.map(function(l){
+      if(!l.trim())return''; var m=l.match(/^(\s*)([\w_{}]+)\s*=\s*(.*)$/);
+      if(m)return m[1]+'<span class="ok">'+esc(m[2])+'</span> = <span class="ov">'+esc(m[3])+'</span>';
+      var m2=l.match(/^(\s*)(#.*)$/); if(m2)return'<span style="color:#374151">'+esc(l)+'</span>';
+      return'<span class="oi1">'+esc(l)+'</span>';
+    }).join('\n'); el.innerHTML=html; el.dataset.raw=lines.join('\n');
   }
 
-  function renderKV(id, lines) {
-    var el = document.getElementById(id);
-    var html = lines.map(function(l) {
-      if (!l.trim()) return '';
-      var idx = l.indexOf('=');
-      if (idx > -1) return '<span class="ok">' + esc(l.slice(0,idx)) + '</span>= <span class="ov">' + esc(l.slice(idx+1)) + '</span>';
-      return '<span class="oi2">' + esc(l) + '</span>';
-    }).join('\n');
-    el.innerHTML = html; el.dataset.raw = lines.join('\n');
+  /* ═══ iOS ═══ */
+  function iosToBundleId(n) { var c=n.toLowerCase().replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,' ').trim().replace(/\s/g,''); if(c.length>20)c=n.toLowerCase().replace(/[^a-z0-9\s]/g,'').trim().split(' ').slice(0,2).join(''); return'com.'+c+'.app.ios'; }
+  function iosSetType(t) {
+    iosAppType=t;
+    document.getElementById('ios-btn-new').classList.toggle('active',t==='new');
+    document.getElementById('ios-btn-takeover').classList.toggle('active',t==='takeover');
+    document.getElementById('ios-version-field').style.display=t==='takeover'?'block':'none';
   }
 
   function iosGenerate() {
-    var slug = gv('ios-slug'), appName = gv('ios-app-name'), bundleId = gv('ios-bundle-id');
-    var scheme = gv('ios-scheme'), devTeamId = gv('ios-dev-team-id'), ascTeamId = gv('ios-asc-team-id');
-    var airshipOn = document.getElementById('ios-airship-toggle').checked;
-    if (!slug || !appName || !bundleId || !scheme || !devTeamId) {
-      alert('Please fill in Slug, App Name, Bundle Identifier, Scheme Name, and Apple Developer Team ID before generating.');
-      return;
-    }
-    var cs = toCamelFromPascal(scheme), cert = snsKey(cs, 'cert'), key = snsKey(cs, 'key'), tid = devTeamId.toUpperCase();
-    var isNew = iosAppType === 'new';
-    var currentVer = isNew ? 0 : (parseInt(gv('ios-current-version')) || 0);
-    var newVer = isNew ? 1 : currentVer + 1;
-    var slugUpper = slug.toUpperCase().replace(/-/g, '_');
+    var slug=gv('ios-slug'), appName=gv('ios-app-name'), scheme=gv('ios-scheme');
+    var devTeamId=gv('ios-dev-team-id'), ascTeamId=gv('ios-asc-team-id');
+    var airshipOn=document.getElementById('ios-airship-toggle').checked;
+    var isNew=iosAppType==='new';
+    if(!slug||!appName||!scheme||!devTeamId){alert('Please fill in Slug, App Name, Scheme, and Apple Developer Team ID.');return;}
 
-    renderPlain('ios-box1', ['camelScheme                 = "' + cs + '"', 'camelScheme                 = "' + scheme + '"']);
-    renderKV('ios-box2', ['APP_STORE_CONNECT_API_KEY_ID_' + tid + '=<paste key ID here>', 'APP_STORE_CONNECT_API_KEY_CONTENT_' + tid + '=<paste key content here>', 'APP_STORE_CONNECT_API_KEY_ISSUER_ID_' + tid + '=<paste issuer ID here>']);
-    renderKV('ios-box3', [cert, key]);
+    var bundleId=iosToBundleId(appName);
+    var cs=toCamelFromPascal(scheme), cert=snsKey(cs,'cert'), key=snsKey(cs,'key');
+    var tid=devTeamId.toUpperCase(), slugUpper=slug.toUpperCase().replace(/-/g,'_');
+    var currentVer=isNew?0:(parseInt(gv('ios-current-version'))||0);
+    var newVer=isNew?1:currentVer+1;
 
-    var summary = [
-      '# ── iOS App Configuration ────────────────────────────',
-      '# App type       : ' + (isNew ? 'New app' : 'Takeover'),
-      '# Generated      : ' + new Date().toLocaleString(), '',
-      '# ── Core identifiers ─────────────────────────────────',
-      'slug                        = "' + slug + '"',
-      'app_name                    = "' + appName + '"',
-      'bundle_identifier           = "' + bundleId + '"',
-      'scheme_name                 = "' + scheme + '"',
-      'app_version                 = "' + newVer + '"' + (isNew ? ' (new app)' : ' (current: ' + currentVer + ' → next: ' + newVer + ')'), '',
-      '# ── camelScheme ───────────────────────────────────────',
-      'camelScheme                 = "' + cs + '"',
-      'camelScheme                 = "' + scheme + '"', '',
-      '# ── Apple team IDs ────────────────────────────────────',
-      'apple_developer_team_id     = "' + devTeamId + '"',
-      'app_store_connect_team_id   = "' + (ascTeamId || '<not provided>') + '"', '',
-      '# ── ASC API key variable names ────────────────────────',
-      'APP_STORE_CONNECT_API_KEY_ID_' + tid,
-      'APP_STORE_CONNECT_API_KEY_CONTENT_' + tid,
-      'APP_STORE_CONNECT_API_KEY_ISSUER_ID_' + tid, '',
-      '# ── SNS push notification keys ────────────────────────',
-      cert, key, '',
-      '# ── SNS ARN variable ──────────────────────────────────',
-      'SNS_PLATFORM_APP_' + slugUpper + '_IOS', '',
-      '# ── Universal Links ───────────────────────────────────',
-      tid + '.' + bundleId, '',
-      '# ── PR values for terraform.prod.tfvars ──────────────',
-      cs + '                 = "' + slug + '"',
-      cs + '                 = "' + scheme + '"',
-    ];
-    if (airshipOn) {
-      summary.push('', '# ── Airship ───────────────────────────────────────────');
-      summary.push('IC_KEY_AIRSHIP_PRODUCTION_ENT_' + scheme.toUpperCase());
-      summary.push('IC_KEY_AIRSHIP_PRODUCTION_SECRET_ENT_' + scheme.toUpperCase());
-    }
-    renderPlain('ios-box4', summary);
-    renderPlain('ios-box5', [cs + '                 = "' + slug + '"', cs + '                 = "' + scheme + '"']);
+    /* 1 — Bundle Identifier */
+    renderPlain('ios-o1',[bundleId]);
 
-    document.getElementById('ios-airship-output').style.display = airshipOn ? 'block' : 'none';
-    if (airshipOn) {
-      renderKV('ios-box6', [
-        'IC_KEY_AIRSHIP_PRODUCTION_ENT_' + scheme.toUpperCase() + '=<paste Airship production key>',
-        'IC_KEY_AIRSHIP_PRODUCTION_SECRET_ENT_' + scheme.toUpperCase() + '=<paste Airship production secret>',
+    /* 2 — Universal Links */
+    renderPlain('ios-o2',[tid+'.'+bundleId]);
+
+    /* 3 — App Version */
+    if(isNew){renderPlain('ios-o3',['1','','# New app — version starts at 1']);}
+    else{renderPlain('ios-o3',[String(newVer),'','# Current production version: '+currentVer,'# New build version: '+currentVer+' + 1 = '+newVer]);}
+
+    /* 4 — ISC Conf Pre-check */
+    var c4=document.getElementById('ios-o4');
+    c4.innerHTML='<span style="color:#f87171;font-weight:700">⚠️ REQUIRED — Verify these exist in ISC BEFORE proceeding to Step 5:</span>\n\n'+
+      '<span class="ok">APP_STORE_CONNECT_API_KEY_ID_'+esc(tid)+'</span>\n'+
+      '<span class="ok">APP_STORE_CONNECT_API_KEY_CONTENT_'+esc(tid)+'</span>\n'+
+      '<span class="ok">APP_STORE_CONNECT_API_KEY_ISSUER_ID_'+esc(tid)+'</span>\n\n'+
+      '<span style="color:#4ade80">✅ If they exist → skip ASC API key setup</span>\n'+
+      '<span style="color:#fb923c">⚠️ If they don\'t exist → create them in ISC first</span>\n\n'+
+      '<span style="color:#475569">Search: https://isc.fernet.io/confs</span>\n'+
+      '<span style="color:#475569">Pattern: instacart-ios.buildkite | Environment: shared-services</span>';
+    c4.dataset.raw='APP_STORE_CONNECT_API_KEY_ID_'+tid+'\nAPP_STORE_CONNECT_API_KEY_CONTENT_'+tid+'\nAPP_STORE_CONNECT_API_KEY_ISSUER_ID_'+tid;
+
+    /* 5 — SFX Registration */
+    var regBase='isc build instacart-ios@master --env ISC_CRON_NAME=sfx_app_register --env IC_APP='+slug;
+    var o5a=document.getElementById('ios-o5a'); o5a.textContent=regBase; o5a.dataset.raw=regBase;
+    var regForce=regBase+' --env FORCE_CREATE_PUSH_CERT=true';
+    var o5b=document.getElementById('ios-o5b'); o5b.textContent=regForce; o5b.dataset.raw=regForce;
+
+    /* 6 — OpenSSL .p12 */
+    var p12=cs+'.p12';
+    renderPlain('ios-o6',[
+      'openssl pkcs12 -info -in '+p12+' -nodes','',
+      '# If password is requested, try: delivery',
+      '# If legacy error, add -legacy flag:',
+      'openssl pkcs12 -info -in '+p12+' -nodes -legacy','',
+      '# Public key  → starts with -----BEGIN CERTIFICATE-----',
+      '# Private key → starts with -----BEGIN PRIVATE KEY-----','',
+      'ISC SecretRef — Certificate:',
+      '  Name:        '+cert,
+      '  Description: '+appName+' APNS public key','',
+      'ISC SecretRef — Private Key:',
+      '  Name:        '+key,
+      '  Description: '+appName+' APNS private key',
+    ]);
+
+    /* 7 — SNS keys + terraform PR */
+    renderPlain('ios-o7',[
+      '# ISC SecretRef names (from Step 6):',
+      cert, key,'',
+      '# SNS ARN variable (add to ISC after Terraform PR merges):',
+      'SNS_PLATFORM_APP_'+slugUpper+'_IOS','',
+      '# PR values for terraform.prod.tfvars:',
+      cs+'                 = "'+slug+'"',
+      cs+'                 = "'+scheme+'"',
+    ]);
+
+    /* 8 — Recaptcha */
+    renderPlain('ios-o8',[bundleId,'','# Add to GCP Recaptcha key → iOS package whitelist']);
+
+    /* 9 — Airship */
+    document.getElementById('ios-airship-output').style.display=airshipOn?'block':'none';
+    if(airshipOn){
+      renderPlain('ios-o9',[
+        'IC_KEY_AIRSHIP_PRODUCTION_ENT_'+scheme.toUpperCase()+'=<paste Airship production key>',
+        'IC_KEY_AIRSHIP_PRODUCTION_SECRET_ENT_'+scheme.toUpperCase()+'=<paste Airship production secret>',
       ]);
     }
 
-    /* OUTPUT 7 — Universal Links */
-    renderPlain('ios-box7', [tid + '.' + bundleId]);
+    /* 10 — iOS Build command */
+    var branch=iosBranch||gv('build-ios-branch')||'9.14.0';
+    var buildCmd='isc build instacart-ios@releases/sfx/'+branch+' --env BUILD_SFX_APPS='+slug;
+    var o10=document.getElementById('ios-o10'); o10.textContent=buildCmd; o10.dataset.raw=buildCmd;
 
-    /* OUTPUT 8 — App version */
-    var versionLines = [];
-    if (isNew) {
-      versionLines.push('app_version = 1');
-      versionLines.push('');
-      versionLines.push('# New app — version starts at 1');
-    } else {
-      versionLines.push('app_version = ' + newVer);
-      versionLines.push('');
-      versionLines.push('# Takeover — current production version: ' + currentVer);
-      versionLines.push('# New build version: ' + currentVer + ' + 1 = ' + newVer);
-      if (!currentVer) versionLines.push('# ⚠️ No current version entered — defaulting to 1');
-    }
-    renderPlain('ios-box8', versionLines);
-
-    /* OUTPUT 9 — SFX Registration command */
-    // Store slug for live flag updates
-    window._iosRegSlug = slug;
-    document.getElementById('ios-reg-warn').style.display = isNew ? 'none' : 'block';
-    iosUpdateRegCmd();
-
-    /* OUTPUT 10 — SNS ARN */
-    renderPlain('ios-box10', [
-      'SNS_PLATFORM_APP_' + slugUpper + '_IOS',
-      '',
-      '# Pattern: SNS_PLATFORM_APP_<SLUG_UPPERCASE>_IOS',
-      '# Add to ISC after Terraform SNS PR is merged',
-      '# Value: paste the ARN from the Instacart-Atlantis PR comment',
-    ]);
-
-    /* OUTPUT 11 — Recaptcha bundle ID */
-    renderPlain('ios-box11', [
-      bundleId,
-      '',
-      '# Add this bundle ID to the GCP Recaptcha key whitelist',
-      '# GCP Console → Recaptcha → Select key → Add iOS package',
-    ]);
-
-    /* OUTPUT 12 — ISC conf check */
-    var checkEl = document.getElementById('ios-box12');
-    checkEl.innerHTML =
-      '<span style="color:#f87171;font-weight:700">⚠️ Before creating ASC API key confs, check if these already exist in ISC:</span>\n\n' +
-      '<span class="ok">APP_STORE_CONNECT_API_KEY_ID_' + esc(tid) + '</span>\n' +
-      '<span class="ok">APP_STORE_CONNECT_API_KEY_CONTENT_' + esc(tid) + '</span>\n' +
-      '<span class="ok">APP_STORE_CONNECT_API_KEY_ISSUER_ID_' + esc(tid) + '</span>\n\n' +
-      '<span style="color:#4ade80">✅ If they exist → skip ASC API key setup entirely</span>\n' +
-      '<span style="color:#fb923c">⚠️ If they don\'t exist → proceed with generating and adding them</span>\n\n' +
-      '<span style="color:#475569">Search ISC at: https://isc.fernet.io/confs</span>\n' +
-      '<span style="color:#475569">Pattern: instacart-ios.buildkite | Environment: shared-services</span>';
-    checkEl.dataset.raw = 'Check ISC for: APP_STORE_CONNECT_API_KEY_ID_' + tid + ', APP_STORE_CONNECT_API_KEY_CONTENT_' + tid + ', APP_STORE_CONNECT_API_KEY_ISSUER_ID_' + tid;
-
-    /* OUTPUT 13 — OpenSSL command */
-    var p12Name = cs + '.p12';
-    renderPlain('ios-box13', [
-      '# Extract certificate and private key from .p12 file',
-      '# Run after downloading artifact from Buildkite',
-      '',
-      'openssl pkcs12 -info -in ' + p12Name + ' -nodes',
-      '',
-      '# If password is requested, try: delivery',
-      '# If you get a legacy error, add the -legacy flag:',
-      'openssl pkcs12 -info -in ' + p12Name + ' -nodes -legacy',
-      '',
-      '# Public key  → starts with -----BEGIN CERTIFICATE-----',
-      '# Private key → starts with -----BEGIN PRIVATE KEY-----',
-      '',
-      '# ISC SecretRef names:',
-      '# Certificate: ' + cert,
-      '# Private key: ' + key,
-      '',
-      '# ISC SecretRef descriptions:',
-      '# Certificate: ' + appName + ' APNS public key',
-      '# Private key: ' + appName + ' APNS private key',
-    ]);
-
-    document.getElementById('ios-output-wrap').style.display = 'block';
-    document.getElementById('ios-output-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('ios-output-wrap').style.display='block';
+    document.getElementById('ios-output-wrap').scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  /* ── SFX Registration command builder (live update) ── */
-  function iosUpdateRegCmd() {
-    var slug = window._iosRegSlug || gv('ios-slug');
-    if (!slug) return;
-    var parts = ['isc build instacart-ios@master --env ISC_CRON_NAME=sfx_app_register --env IC_APP=' + slug];
-    if (document.getElementById('flag-skip-record').checked) parts.push('--env SKIP_CREATING_APP_RECORD=true');
-    if (document.getElementById('flag-skip-caps').checked)   parts.push('--env SKIP_UPDATE_APP_CAPABILITIES=true');
-    if (document.getElementById('flag-skip-dist').checked)   parts.push('--env SKIP_CREATING_DISTRIBUTION_CERT=true');
-    if (document.getElementById('flag-skip-push').checked)   parts.push('--env SKIP_CREATING_PUSH_CERT=true');
-    if (document.getElementById('flag-force-push').checked)  parts.push('--env FORCE_CREATE_PUSH_CERT=true');
-    var cmd = parts.join(' \\\n  ');
-    var el = document.getElementById('ios-box9');
-    el.innerHTML = '<span class="ov">' + esc(cmd) + '</span>';
-    el.dataset.raw = parts.join(' ');
+  /* ═══ Android ═══ */
+  var anAppType='new';
+  function anToPackage(n){var c=n.toLowerCase().replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,' ').trim().replace(/\s/g,'');if(c.length>20)c=n.toLowerCase().replace(/[^a-z0-9\s]/g,'').trim().split(' ').slice(0,2).join('');return'com.'+c+'.app.android';}
+  function anAutoFillPackage(){if(anAppType==='new'){var n=gv('an-app-name');document.getElementById('an-package').value=n?anToPackage(n):'';}}
+  function anSetType(t){
+    anAppType=t;document.getElementById('an-btn-new').classList.toggle('active',t==='new');document.getElementById('an-btn-takeover').classList.toggle('active',t==='takeover');
+    var f=document.getElementById('an-package');
+    if(t==='new'){document.getElementById('an-pkg-hint').textContent='(auto-generated from app name)';document.getElementById('an-pkg-info').style.display='none';f.readOnly=true;f.style.opacity='0.6';f.style.cursor='not-allowed';anAutoFillPackage();}
+    else{document.getElementById('an-pkg-hint').textContent='(use existing package name)';document.getElementById('an-pkg-info').style.display='block';f.readOnly=false;f.style.opacity='1';f.style.cursor='text';f.value='';}
+  }
+  (function(){var f=document.getElementById('an-package');f.readOnly=true;f.style.opacity='0.6';f.style.cursor='not-allowed';})();
+  function anGenerate(){
+    var slug=gv('an-slug'),appName=gv('an-app-name'),pkg=gv('an-package');
+    if(!slug||!appName||!pkg){alert('Please fill in Slug, App Name, and Package Name.');return;}
+    renderPlain('an-box1',['# ── Android App Configuration ────────────────────────','# App type: '+(anAppType==='new'?'New app':'Takeover'),'# Generated: '+new Date().toLocaleString(),'','slug                        = "'+slug+'"','app_name                    = "'+appName+'"','package_name                = "'+pkg+'"']);
+    document.getElementById('an-output-wrap').style.display='block';
+    document.getElementById('an-output-wrap').scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  /* ════════════════════════════════════════════════════
-     ANDROID LOGIC
-     ════════════════════════════════════════════════════ */
-  var anAppType = 'new';
-
-  function anToPackage(appName) {
-    var clean = appName.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
-    var segment = clean.replace(/\s/g, '');
-    if (segment.length > 20) { var words = clean.split(' ').slice(0, 2); segment = words.join(''); }
-    return 'com.' + segment + '.app.android';
+  /* ═══ Build Commands ═══ */
+  function buildUpdatePreview(){
+    var ib=gv('build-ios-branch'),ab=gv('build-android-branch'),sr=gv('build-slugs');
+    var ic=document.getElementById('build-ios-cmd'),ac=document.getElementById('build-android-cmd');
+    var it=document.getElementById('build-ios-type'),at=document.getElementById('build-android-type');
+    if(!sr||!ib){ic.textContent='Enter slug(s) and branch above';ic.style.color='#475569';it.textContent='';}
+    else{var s=sr.split(',').map(function(x){return x.trim();}).filter(Boolean);ic.textContent='isc build instacart-ios@releases/sfx/'+ib+' --env BUILD_SFX_APPS='+s.join(',');ic.style.color='#c084fc';it.textContent=s.length>1?'Multiple apps ('+s.length+')':'Single app';}
+    if(!sr||!ab){ac.textContent='Enter slug(s) and branch above';ac.style.color='#475569';at.textContent='';}
+    else{var s=sr.split(',').map(function(x){return x.trim();}).filter(Boolean);var ss=s.length>1?'"'+s.join(',')+'"':s[0];ac.textContent='isc build instacart-android@releases/sfx/'+ab+' --env app_type=pbi --env pbi='+ss;ac.style.color='#4ade80';at.textContent=s.length>1?'Multiple apps ('+s.length+')':'Single app';}
   }
-
-  function anAutoFillPackage() {
-    if (anAppType === 'new') {
-      var appName = gv('an-app-name');
-      document.getElementById('an-package').value = appName ? anToPackage(appName) : '';
-    }
+  function reproUpdate(){
+    var slug=gv('repro-slug'),el=document.getElementById('repro-cmd'),sub=document.getElementById('repro-sub');
+    if(!slug){el.textContent='Enter retailer slug above';el.style.color='#475569';sub.textContent='';return;}
+    el.textContent='ISC_CRON_NAME=sfx_app_register\nIC_APP='+slug+'\nSKIP_CREATING_APP_RECORD=true\nSKIP_UPDATE_APP_CAPABILITIES=true\nSKIP_CREATING_PUSH_CERT=true';
+    el.style.color='#c084fc';sub.textContent='Slug: '+slug;
   }
+  function copyBuildCmd(id,btn){var t=document.getElementById(id).textContent||'';if(t.indexOf('Enter')===0)return;navigator.clipboard.writeText(t).then(function(){var o=btn.textContent;btn.textContent='✅';btn.style.color='#4ade80';setTimeout(function(){btn.textContent=o;btn.style.color='';},2000);});}
+  function copyBox(id,btn){var r=document.getElementById(id).dataset.raw||'';navigator.clipboard.writeText(r).then(function(){var o=btn.textContent;btn.textContent='✅ Copied!';btn.style.color='#4ade80';setTimeout(function(){btn.textContent=o;btn.style.color='';},2000);});}
 
-  function anSetType(t) {
-    anAppType = t;
-    document.getElementById('an-btn-new').classList.toggle('active', t === 'new');
-    document.getElementById('an-btn-takeover').classList.toggle('active', t === 'takeover');
-    var f = document.getElementById('an-package');
-    if (t === 'new') {
-      document.getElementById('an-pkg-hint').textContent = '(auto-generated from app name)';
-      document.getElementById('an-pkg-info').style.display = 'none';
-      f.readOnly = true; f.style.opacity = '0.6'; f.style.cursor = 'not-allowed';
-      anAutoFillPackage();
-    } else {
-      document.getElementById('an-pkg-hint').textContent = '(use existing Android package name)';
-      document.getElementById('an-pkg-info').style.display = 'block';
-      f.readOnly = false; f.style.opacity = '1'; f.style.cursor = 'text';
-      f.value = ''; f.placeholder = 'com.existing.package.android';
-    }
-    anUpdatePreviews();
-  }
-
-  (function() {
-    var f = document.getElementById('an-package');
-    f.readOnly = true; f.style.opacity = '0.6'; f.style.cursor = 'not-allowed';
+  /* ═══ Branch fetch ═══ */
+  (function(){
+    fetch('branches.json?t='+Date.now()).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){
+      var ib=d.ios||'',ab=d.android||'';
+      if(ib)document.getElementById('build-ios-branch').value=ib;
+      if(ab)document.getElementById('build-android-branch').value=ab;
+      iosBranch=ib;
+      var s1=document.getElementById('branch-status'),s2=document.getElementById('ios-build-branch-status');
+      if(s1){s1.className='branch-status bs-ok';s1.innerHTML='<div class="bs-dot"></div> Branches loaded: iOS '+ib+' · Android '+ab;}
+      if(s2){s2.className='branch-status bs-ok';s2.innerHTML='<div class="bs-dot"></div> Branch: iOS '+ib;}
+      buildUpdatePreview();
+    }).catch(function(e){
+      console.warn('Branch fetch:',e);
+      var s1=document.getElementById('branch-status'),s2=document.getElementById('ios-build-branch-status');
+      if(s1){s1.className='branch-status bs-fail';s1.innerHTML='<div class="bs-dot"></div> Auto-fetch failed — enter manually';}
+      if(s2){s2.className='branch-status bs-fail';s2.innerHTML='<div class="bs-dot"></div> Enter branch in Build Commands tab';}
+    });
   })();
-
-  function anUpdatePreviews() {
-    // no preview section — placeholder for future use
-  }
-
-  function anGenerate() {
-    var slug = gv('an-slug'), appName = gv('an-app-name'), pkg = gv('an-package');
-    if (!slug || !appName || !pkg) {
-      alert('Please fill in Slug, App Name, and Android Package Name before generating.');
-      return;
-    }
-    var lines = [
-      '# ── Android App Configuration ────────────────────────',
-      '# App type       : ' + (anAppType === 'new' ? 'New app' : 'Takeover'),
-      '# Generated      : ' + new Date().toLocaleString(), '',
-      '# ── Core identifiers ─────────────────────────────────',
-      'slug                        = "' + slug + '"',
-      'app_name                    = "' + appName + '"',
-      'package_name                = "' + pkg + '"',
-    ];
-    renderPlain('an-box1', lines);
-    document.getElementById('an-output-wrap').style.display = 'block';
-    document.getElementById('an-output-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  /* ── REPROVISIONING COMMANDS ── */
-  function reproUpdate() {
-    var slug = gv('repro-slug');
-    var cmdEl = document.getElementById('repro-cmd');
-    var subEl = document.getElementById('repro-sub');
-    if (!slug) {
-      cmdEl.textContent = 'Enter retailer slug above';
-      cmdEl.style.color = '#475569';
-      subEl.textContent = '';
-      return;
-    }
-    var lines = [
-      'ISC_CRON_NAME=sfx_app_register',
-      'IC_APP=' + slug,
-      'SKIP_CREATING_APP_RECORD=true',
-      'SKIP_UPDATE_APP_CAPABILITIES=true',
-      'SKIP_CREATING_PUSH_CERT=true'
-    ];
-    cmdEl.textContent = lines.join('\n');
-    cmdEl.style.color = '#c084fc';
-    subEl.textContent = 'Slug: ' + slug;
-  }
-
-  /* ════════════════════════════════════════════════════
-     BUILD COMMANDS
-     ════════════════════════════════════════════════════ */
-  var BRANCHES_URL = 'branches.json';
-
-  function fetchReleaseBranches() {
-    var statusEl = document.getElementById('branch-status');
-
-    fetch(BRANCHES_URL + '?t=' + Date.now())
-      .then(function(res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      })
-      .then(function(data) {
-        var iosBranch = data.ios || '';
-        var androidBranch = data.android || '';
-
-        if (iosBranch) document.getElementById('build-ios-branch').value = iosBranch;
-        if (androidBranch) document.getElementById('build-android-branch').value = androidBranch;
-
-        statusEl.className = 'branch-status bs-ok';
-        statusEl.innerHTML = '<div class="bs-dot"></div> Branches loaded: iOS ' + iosBranch + ' · Android ' + androidBranch;
-        buildUpdatePreview();
-      })
-      .catch(function(err) {
-        console.warn('Branch fetch failed:', err);
-        statusEl.className = 'branch-status bs-fail';
-        statusEl.innerHTML = '<div class="bs-dot"></div> Auto-fetch failed — enter branches manually';
-        if (!gv('build-ios-branch')) document.getElementById('build-ios-branch').value = '9.14.0';
-        if (!gv('build-android-branch')) document.getElementById('build-android-branch').value = '9.14';
-        buildUpdatePreview();
-      });
-  }
-
-  function buildUpdatePreview() {
-    var iosBranch = gv('build-ios-branch');
-    var androidBranch = gv('build-android-branch');
-    var slugsRaw = gv('build-slugs');
-    var iosCmd = document.getElementById('build-ios-cmd');
-    var androidCmd = document.getElementById('build-android-cmd');
-    var iosType = document.getElementById('build-ios-type');
-    var androidType = document.getElementById('build-android-type');
-
-    if (!slugsRaw || !iosBranch) {
-      iosCmd.textContent = 'Enter slug(s) and branch above';
-      iosCmd.style.color = '#475569';
-      iosType.textContent = '';
-    } else {
-      var slugs = slugsRaw.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
-      var isMulti = slugs.length > 1;
-      var cmd = 'isc build instacart-ios@releases/sfx/' + iosBranch + ' --env BUILD_SFX_APPS=' + slugs.join(',');
-      iosCmd.textContent = cmd;
-      iosCmd.style.color = '#c084fc';
-      iosType.textContent = isMulti ? 'Multiple apps (' + slugs.length + ')' : 'Single app';
-    }
-
-    if (!slugsRaw || !androidBranch) {
-      androidCmd.textContent = 'Enter slug(s) and branch above';
-      androidCmd.style.color = '#475569';
-      androidType.textContent = '';
-    } else {
-      var slugs = slugsRaw.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
-      var isMulti = slugs.length > 1;
-      var slugStr = isMulti ? '"' + slugs.join(',') + '"' : slugs[0];
-      var cmd = 'isc build instacart-android@releases/sfx/' + androidBranch + ' --env app_type=pbi --env pbi=' + slugStr;
-      androidCmd.textContent = cmd;
-      androidCmd.style.color = '#4ade80';
-      androidType.textContent = isMulti ? 'Multiple apps (' + slugs.length + ')' : 'Single app';
-    }
-  }
-
-  function copyBuildCmd(id, btn) {
-    var text = document.getElementById(id).textContent || '';
-    if (text.indexOf('Enter slug') === 0) return;
-    navigator.clipboard.writeText(text).then(function() {
-      var orig = btn.textContent;
-      btn.textContent = '✅'; btn.style.color = '#4ade80';
-      setTimeout(function(){ btn.textContent = orig; btn.style.color = ''; }, 2000);
-    });
-  }
-
-  // Fetch on page load
-  fetchReleaseBranches();
-
-  /* ── SHARED ── */
-  function copyBox(id, btn) {
-    var raw = document.getElementById(id).dataset.raw || '';
-    navigator.clipboard.writeText(raw).then(function() {
-      var orig = btn.textContent;
-      btn.textContent = '✅ Copied!'; btn.style.color = '#4ade80';
-      setTimeout(function(){ btn.textContent = orig; btn.style.color = ''; }, 2000);
-    });
-  }
 </script>
 </body>
 </html>
