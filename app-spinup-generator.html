@@ -100,6 +100,21 @@
     .btn-generate:hover { opacity: 0.9; }
     .btn-generate-android { background: linear-gradient(135deg, #16a34a, #0f766e); }
 
+    .sl-red    { background: #3d1010; color: #f87171; border: 1px solid #f8717133; }
+    .sl-cyan   { background: #0f2d3d; color: #22d3ee; border: 1px solid #22d3ee33; }
+    .sl-lime   { background: #1a2d0e; color: #a3e635; border: 1px solid #a3e63533; }
+    .bc-red    { background: #3d1010; border-color: #f8717144; color: #f87171; }
+    .bc-cyan   { background: #0f2d3d; border-color: #22d3ee44; color: #22d3ee; }
+    .bc-lime   { background: #1a2d0e; border-color: #a3e63544; color: #a3e635; }
+
+    .flag-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+    .flag-cb { width: 14px; height: 14px; accent-color: #fb923c; cursor: pointer; }
+    .flag-label { font-family: 'Courier New', monospace; font-size: 12px; color: #64748b; }
+    .flag-label.active { color: #fb923c; }
+    .flag-desc { font-size: 11px; color: #374151; margin-left: auto; }
+    .warn-banner { background: #2d1a0e; border: 1px solid #ea580c44; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #fb923c; line-height: 1.5; margin-top: 8px; }
+    .check-banner { background: #1e2d45; border: 1px solid #2563eb33; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #93c5fd; line-height: 1.5; margin-top: 8px; }
+
     /* BUILD COMMANDS */
     .build-section { margin-top: 2rem; }
     .branch-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 99px; margin-bottom: 12px; }
@@ -188,6 +203,13 @@
         <label>Scheme name <span class="hint">(SSO file name — IC SSO retailer name in PascalCase)</span></label>
         <input type="text" id="ios-scheme" placeholder="LongsPicPac" oninput="iosUpdatePreviews()">
         <div class="info-box" style="margin-top:8px">Single word PascalCase — e.g. if retailer is "Long's Pic Pac" → <strong>LongsPicPac</strong>. This should match the IC SSO retailer name.</div>
+      </div>
+      <div id="ios-version-field" style="display:none">
+        <div class="field">
+          <label>Current app version <span class="hint">(takeover only — the current production app version number)</span></label>
+          <input type="number" id="ios-current-version" placeholder="e.g. 10" min="1" value="">
+          <div class="info-box" style="margin-top:8px">For takeover apps, enter the current production version. The new build will be version <strong>current + 1</strong>. For new apps, the version is always <strong>1</strong>.</div>
+        </div>
       </div>
       <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-top:4px;margin-bottom:8px">Derived values preview</div>
       <div class="derived-box">
@@ -283,6 +305,47 @@
         <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-pink">Output 6 — Airship config</div><div class="section-divider-line"></div></div>
         <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Airship configuration</div><div class="obs">Add Airship credentials to the app config</div></div><button class="btn-copy bc-pink" onclick="copyBox('ios-box6',this)">Copy</button></div><div class="output-box" id="ios-box6"></div></div>
       </div>
+
+      <!-- OUTPUT 7 — Universal Links -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-cyan">Output 7 — Universal Links association ID</div><div class="section-divider-line"></div></div>
+      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Apple App Site Association ID</div><div class="obs">Add to Store Configuration → "Apple app site association ids"</div></div><button class="btn-copy bc-cyan" onclick="copyBox('ios-box7',this)">Copy</button></div><div class="output-box" id="ios-box7"></div></div>
+
+      <!-- OUTPUT 8 — App version -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">Output 8 — App version</div><div class="section-divider-line"></div></div>
+      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">App version for IPP</div><div class="obs">Set this as the app version in IPP Application Details</div></div><button class="btn-copy bc-blue" onclick="copyBox('ios-box8',this)">Copy</button></div><div class="output-box" id="ios-box8"></div></div>
+
+      <!-- OUTPUT 9 — SFX Registration command -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-orange">Output 9 — SFX registration command</div><div class="section-divider-line"></div></div>
+      <div class="output-block">
+        <div class="output-block-header"><div class="output-block-meta"><div class="obt">SFX App Registration (Buildkite)</div><div class="obs">Creates App Store listing, code signing, and push notification certificates</div></div><button class="btn-copy bc-orange" onclick="copyBox('ios-box9',this)">Copy</button></div>
+        <div style="margin-bottom:10px;padding:10px 12px;background:#0f1117;border:1px solid #2a2d3e;border-radius:10px">
+          <div style="font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Optional SKIP / FORCE flags <span style="color:#374151;font-weight:400;text-transform:none">— check to include</span></div>
+          <div class="flag-row"><input type="checkbox" class="flag-cb" id="flag-skip-record" onchange="iosUpdateRegCmd()"><label class="flag-label" for="flag-skip-record">SKIP_CREATING_APP_RECORD=true</label><span class="flag-desc">Skip new app listing</span></div>
+          <div class="flag-row"><input type="checkbox" class="flag-cb" id="flag-skip-caps" onchange="iosUpdateRegCmd()"><label class="flag-label" for="flag-skip-caps">SKIP_UPDATE_APP_CAPABILITIES=true</label><span class="flag-desc">Skip capability updates</span></div>
+          <div class="flag-row"><input type="checkbox" class="flag-cb" id="flag-skip-dist" onchange="iosUpdateRegCmd()"><label class="flag-label" for="flag-skip-dist">SKIP_CREATING_DISTRIBUTION_CERT=true</label><span class="flag-desc">Skip distribution cert</span></div>
+          <div class="flag-row"><input type="checkbox" class="flag-cb" id="flag-skip-push" onchange="iosUpdateRegCmd()"><label class="flag-label" for="flag-skip-push">SKIP_CREATING_PUSH_CERT=true</label><span class="flag-desc">Skip push cert</span></div>
+          <div class="flag-row"><input type="checkbox" class="flag-cb" id="flag-force-push" onchange="iosUpdateRegCmd()"><label class="flag-label" for="flag-force-push">FORCE_CREATE_PUSH_CERT=true</label><span class="flag-desc">Force new push cert (takeovers)</span></div>
+        </div>
+        <div class="warn-banner" id="ios-reg-warn" style="display:none">⚠️ <strong>Takeover note:</strong> For existing apps, the identifier and app registration profile may already exist, causing the command to fail. In that case, use <code style="background:#3d2010;padding:1px 5px;border-radius:3px;font-size:11px">FORCE_CREATE_PUSH_CERT=true</code> to force-create a new push certificate.</div>
+        <div class="output-box" id="ios-box9"></div>
+      </div>
+
+      <!-- OUTPUT 10 — SNS ARN variable -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">Output 10 — SNS ARN ISC variable</div><div class="section-divider-line"></div></div>
+      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">SNS Platform Application ARN variable</div><div class="obs">Add to ISC after Terraform SNS PR is merged — used by customers backend for device endpoint registration</div></div><button class="btn-copy bc-green" onclick="copyBox('ios-box10',this)">Copy</button></div><div class="output-box" id="ios-box10"></div></div>
+
+      <!-- OUTPUT 11 — Recaptcha bundle ID -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Output 11 — Recaptcha bundle ID</div><div class="section-divider-line"></div></div>
+      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Recaptcha whitelist value</div><div class="obs">Add this bundle ID to the GCP Recaptcha key configuration</div></div><button class="btn-copy bc-purple" onclick="copyBox('ios-box11',this)">Copy</button></div><div class="output-box" id="ios-box11"></div></div>
+
+      <!-- OUTPUT 12 — ISC conf check reminder -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-red">Output 12 — ISC conf pre-check</div><div class="section-divider-line"></div></div>
+      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Check existing ISC confs before creating</div><div class="obs">Search ISC for these variable names — if they already exist, skip ASC API key setup</div></div></div><div class="output-box" id="ios-box12"></div></div>
+
+      <!-- OUTPUT 13 — OpenSSL command -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-lime">Output 13 — OpenSSL .p12 extraction</div><div class="section-divider-line"></div></div>
+      <div class="output-block"><div class="output-block-header"><div class="output-block-meta"><div class="obt">Extract certificate & private key from .p12</div><div class="obs">Run after downloading the .p12 artifact from Buildkite — extracts the public and private keys for ISC SecretRefs</div></div><button class="btn-copy bc-lime" onclick="copyBox('ios-box13',this)">Copy</button></div><div class="output-box" id="ios-box13"></div></div>
+
     </div>
   </div><!-- /ios-section -->
 
@@ -465,6 +528,7 @@
     iosAppType = t;
     document.getElementById('ios-btn-new').classList.toggle('active', t === 'new');
     document.getElementById('ios-btn-takeover').classList.toggle('active', t === 'takeover');
+    document.getElementById('ios-version-field').style.display = t === 'takeover' ? 'block' : 'none';
     var f = document.getElementById('ios-bundle-id');
     if (t === 'new') {
       document.getElementById('ios-bundle-hint').textContent = '(auto-generated from app name)';
@@ -551,6 +615,10 @@
       return;
     }
     var cs = toCamelFromPascal(scheme), cert = snsKey(cs, 'cert'), key = snsKey(cs, 'key'), tid = devTeamId.toUpperCase();
+    var isNew = iosAppType === 'new';
+    var currentVer = isNew ? 0 : (parseInt(gv('ios-current-version')) || 0);
+    var newVer = isNew ? 1 : currentVer + 1;
+    var slugUpper = slug.toUpperCase().replace(/-/g, '_');
 
     renderPlain('ios-box1', ['camelScheme                 = "' + cs + '"', 'camelScheme                 = "' + scheme + '"']);
     renderKV('ios-box2', ['APP_STORE_CONNECT_API_KEY_ID_' + tid + '=<paste key ID here>', 'APP_STORE_CONNECT_API_KEY_CONTENT_' + tid + '=<paste key content here>', 'APP_STORE_CONNECT_API_KEY_ISSUER_ID_' + tid + '=<paste issuer ID here>']);
@@ -558,13 +626,14 @@
 
     var summary = [
       '# ── iOS App Configuration ────────────────────────────',
-      '# App type       : ' + (iosAppType === 'new' ? 'New app' : 'Takeover'),
+      '# App type       : ' + (isNew ? 'New app' : 'Takeover'),
       '# Generated      : ' + new Date().toLocaleString(), '',
       '# ── Core identifiers ─────────────────────────────────',
       'slug                        = "' + slug + '"',
       'app_name                    = "' + appName + '"',
       'bundle_identifier           = "' + bundleId + '"',
-      'scheme_name                 = "' + scheme + '"', '',
+      'scheme_name                 = "' + scheme + '"',
+      'app_version                 = "' + newVer + '"' + (isNew ? ' (new app)' : ' (current: ' + currentVer + ' → next: ' + newVer + ')'), '',
       '# ── camelScheme ───────────────────────────────────────',
       'camelScheme                 = "' + cs + '"',
       'camelScheme                 = "' + scheme + '"', '',
@@ -577,6 +646,10 @@
       'APP_STORE_CONNECT_API_KEY_ISSUER_ID_' + tid, '',
       '# ── SNS push notification keys ────────────────────────',
       cert, key, '',
+      '# ── SNS ARN variable ──────────────────────────────────',
+      'SNS_PLATFORM_APP_' + slugUpper + '_IOS', '',
+      '# ── Universal Links ───────────────────────────────────',
+      tid + '.' + bundleId, '',
       '# ── PR values for terraform.prod.tfvars ──────────────',
       cs + '                 = "' + slug + '"',
       cs + '                 = "' + scheme + '"',
@@ -596,8 +669,103 @@
         'IC_KEY_AIRSHIP_PRODUCTION_SECRET_ENT_' + scheme.toUpperCase() + '=<paste Airship production secret>',
       ]);
     }
+
+    /* OUTPUT 7 — Universal Links */
+    renderPlain('ios-box7', [tid + '.' + bundleId]);
+
+    /* OUTPUT 8 — App version */
+    var versionLines = [];
+    if (isNew) {
+      versionLines.push('app_version = 1');
+      versionLines.push('');
+      versionLines.push('# New app — version starts at 1');
+    } else {
+      versionLines.push('app_version = ' + newVer);
+      versionLines.push('');
+      versionLines.push('# Takeover — current production version: ' + currentVer);
+      versionLines.push('# New build version: ' + currentVer + ' + 1 = ' + newVer);
+      if (!currentVer) versionLines.push('# ⚠️ No current version entered — defaulting to 1');
+    }
+    renderPlain('ios-box8', versionLines);
+
+    /* OUTPUT 9 — SFX Registration command */
+    // Store slug for live flag updates
+    window._iosRegSlug = slug;
+    document.getElementById('ios-reg-warn').style.display = isNew ? 'none' : 'block';
+    iosUpdateRegCmd();
+
+    /* OUTPUT 10 — SNS ARN */
+    renderPlain('ios-box10', [
+      'SNS_PLATFORM_APP_' + slugUpper + '_IOS',
+      '',
+      '# Pattern: SNS_PLATFORM_APP_<SLUG_UPPERCASE>_IOS',
+      '# Add to ISC after Terraform SNS PR is merged',
+      '# Value: paste the ARN from the Instacart-Atlantis PR comment',
+    ]);
+
+    /* OUTPUT 11 — Recaptcha bundle ID */
+    renderPlain('ios-box11', [
+      bundleId,
+      '',
+      '# Add this bundle ID to the GCP Recaptcha key whitelist',
+      '# GCP Console → Recaptcha → Select key → Add iOS package',
+    ]);
+
+    /* OUTPUT 12 — ISC conf check */
+    var checkEl = document.getElementById('ios-box12');
+    checkEl.innerHTML =
+      '<span style="color:#f87171;font-weight:700">⚠️ Before creating ASC API key confs, check if these already exist in ISC:</span>\n\n' +
+      '<span class="ok">APP_STORE_CONNECT_API_KEY_ID_' + esc(tid) + '</span>\n' +
+      '<span class="ok">APP_STORE_CONNECT_API_KEY_CONTENT_' + esc(tid) + '</span>\n' +
+      '<span class="ok">APP_STORE_CONNECT_API_KEY_ISSUER_ID_' + esc(tid) + '</span>\n\n' +
+      '<span style="color:#4ade80">✅ If they exist → skip ASC API key setup entirely</span>\n' +
+      '<span style="color:#fb923c">⚠️ If they don\'t exist → proceed with generating and adding them</span>\n\n' +
+      '<span style="color:#475569">Search ISC at: https://isc.fernet.io/confs</span>\n' +
+      '<span style="color:#475569">Pattern: instacart-ios.buildkite | Environment: shared-services</span>';
+    checkEl.dataset.raw = 'Check ISC for: APP_STORE_CONNECT_API_KEY_ID_' + tid + ', APP_STORE_CONNECT_API_KEY_CONTENT_' + tid + ', APP_STORE_CONNECT_API_KEY_ISSUER_ID_' + tid;
+
+    /* OUTPUT 13 — OpenSSL command */
+    var p12Name = cs + '.p12';
+    renderPlain('ios-box13', [
+      '# Extract certificate and private key from .p12 file',
+      '# Run after downloading artifact from Buildkite',
+      '',
+      'openssl pkcs12 -info -in ' + p12Name + ' -nodes',
+      '',
+      '# If password is requested, try: delivery',
+      '# If you get a legacy error, add the -legacy flag:',
+      'openssl pkcs12 -info -in ' + p12Name + ' -nodes -legacy',
+      '',
+      '# Public key  → starts with -----BEGIN CERTIFICATE-----',
+      '# Private key → starts with -----BEGIN PRIVATE KEY-----',
+      '',
+      '# ISC SecretRef names:',
+      '# Certificate: ' + cert,
+      '# Private key: ' + key,
+      '',
+      '# ISC SecretRef descriptions:',
+      '# Certificate: ' + appName + ' APNS public key',
+      '# Private key: ' + appName + ' APNS private key',
+    ]);
+
     document.getElementById('ios-output-wrap').style.display = 'block';
     document.getElementById('ios-output-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ── SFX Registration command builder (live update) ── */
+  function iosUpdateRegCmd() {
+    var slug = window._iosRegSlug || gv('ios-slug');
+    if (!slug) return;
+    var parts = ['isc build instacart-ios@master --env ISC_CRON_NAME=sfx_app_register --env IC_APP=' + slug];
+    if (document.getElementById('flag-skip-record').checked) parts.push('--env SKIP_CREATING_APP_RECORD=true');
+    if (document.getElementById('flag-skip-caps').checked)   parts.push('--env SKIP_UPDATE_APP_CAPABILITIES=true');
+    if (document.getElementById('flag-skip-dist').checked)   parts.push('--env SKIP_CREATING_DISTRIBUTION_CERT=true');
+    if (document.getElementById('flag-skip-push').checked)   parts.push('--env SKIP_CREATING_PUSH_CERT=true');
+    if (document.getElementById('flag-force-push').checked)  parts.push('--env FORCE_CREATE_PUSH_CERT=true');
+    var cmd = parts.join(' \\\n  ');
+    var el = document.getElementById('ios-box9');
+    el.innerHTML = '<span class="ov">' + esc(cmd) + '</span>';
+    el.dataset.raw = parts.join(' ');
   }
 
   /* ════════════════════════════════════════════════════
