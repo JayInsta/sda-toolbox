@@ -245,7 +245,7 @@
         <input type="text" id="whitelabel" placeholder="https://longspicpac-whitelabel.instacart.com">
       </div>
       <div class="field" style="margin-bottom:0">
-        <label>Retailer website</label>
+        <label>Retailer website <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">Optional — only used when custom content is enabled</span></label>
         <input type="text" id="retailer-url" placeholder="https://www.longspicpac.com/">
       </div>
     </div>
@@ -635,15 +635,14 @@
 
   /* ── DEFAULT VALUES ── */
   var D = {
-    orderDesc:      'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. <br><br>Thanks,<br>The {{R}} Team',
-    familyDesc:     'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. Remember, only %{owner_name} can add items at this time, let them know if you forgot anything. <br><br>Thanks,<br>The {{R}} Team',
-    pickup:         "Pull into the designated parking area for pickup and let us know you arrived, and we'll bring your groceries right out!",
-    cancelBody:     "This email is to confirm that you've canceled your order. If there are changes on your account, you can expect them to disappear between 3-5 business days, depending on your bank.<br/><br/>We look forward to taking care of your next grocery delivery.<br/><br/>Thank you,<br/>The {{R}} Team",
+    orderDesc:      'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. <br/><br/>Thanks, <br/>The {{R}} Team',
+    familyDesc:     'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. Remember, only %{owner_name} can add items at this time, let them know if you forgot anything. <br/><br/>Thanks, <br/>The {{R}} Team',
+    pickup:         "Pull into the designated parking area for pickup and let us know you have arrived, and we'll bring your groceries right out!",
+    cancelBody:     "This email is to confirm that you have canceled your order. If there are charges on your account, you can expect them to disappear between 3-5 business days, depending on your bank.<br/><br/>We look forward to taking care of your next grocery order.<br/><br/>Thank you,<br/>The {{R}} Team",
     receiptBody:    'Thank you for shopping at {{R}}. We hope you enjoyed the convenience of ordering online and will try our service again soon. <br/><br/>Your order details are below along with any adjustments made.',
     rateHeading:    "We'd love to hear from you!",
     rateContent:    "Don't forget to rate and tip your shopper if you want to recognize their efforts. 100% of tips goes to your driver.",
-    // NEW field defaults (from en_US default template)
-    finePrint:      'Maplebear Inc. (d/b/a Instacart) 50 Beale St. #600 San Francisco, CA 94105',
+    finePrint:      '',
     appstoreLink:   'https://apps.apple.com/us/app/instacart-grocery-deliveries/id545599256',
     playstoreLink:  'https://play.google.com/store/apps/details?id=com.instacart.client&hl=en_US&gl=US',
     cancelSubjDel:  '%{warehouse_name} order canceled',
@@ -785,7 +784,8 @@
     t1.push('    footer:');
     if (appstoreLink  !== null) t1.push('      appstore_link: "' + appstoreLink + '"');
     if (playstoreLink !== null) t1.push('      playstore_link: "' + playstoreLink + '"');
-    t1.push('      retailer_link: "' + retailerUrl + '"');
+    var footerRetailerLink = (contentOn && retailerUrl) ? retailerUrl : whitelabel;
+    t1.push('      retailer_link: "' + footerRetailerLink + '"');
     t1.push('      retailer_link_label: "' + retailer + '"');
     t1.push('      help_link: "' + whitelabel + '/help"');
     t1.push('      help_link_label: "Help"');
@@ -827,26 +827,30 @@
       }
     }
 
-    // Order receipt
-    t1.push('    order_receipt:');
-    if (receiptImgAlt !== null) {
-      t1.push('      generic_image:');
-      t1.push('        image_alt: "' + receiptImgAlt + '"');
-    }
-    t1.push('      generic_body:');
-    t1.push('        content: "' + receiptBody + '"');
-    if (receiptSubjDel !== null) {
-      t1.push('      subject:');
-      t1.push('        delivery: "' + receiptSubjDel + '"');
-      t1.push('        pickup: "' + receiptSubjPick + '"');
+    // Order receipt (only when custom content is enabled)
+    if (contentOn) {
+      t1.push('    order_receipt:');
+      if (receiptImgAlt !== null) {
+        t1.push('      generic_image:');
+        t1.push('        image_alt: "' + receiptImgAlt + '"');
+      }
+      t1.push('      generic_body:');
+      t1.push('        content: "' + receiptBody + '"');
+      if (receiptSubjDel !== null) {
+        t1.push('      subject:');
+        t1.push('        delivery: "' + receiptSubjDel + '"');
+        t1.push('        pickup: "' + receiptSubjPick + '"');
+      }
     }
 
-    // Order rating
-    t1.push('    order_rating:');
-    t1.push('      rate_your_order: "' + rateHeading + '"');
-    t1.push('      delivery_content: "' + rateContent + '"');
-    if (ratingPickup !== null) {
-      t1.push('      pickup_content: "' + ratingPickup + '"');
+    // Order rating (only when custom content is enabled)
+    if (contentOn) {
+      t1.push('    order_rating:');
+      t1.push('      rate_your_order: "' + rateHeading + '"');
+      t1.push('      delivery_content: "' + rateContent + '"');
+      if (ratingPickup !== null) {
+        t1.push('      pickup_content: "' + ratingPickup + '"');
+      }
     }
 
     // Order upsell (only if opted in)
