@@ -136,33 +136,62 @@
     .ds-ok   .diff-stat-num { color: #4ade80; }
     .ds-diff .diff-stat-num { color: #f87171; }
     .ds-miss .diff-stat-num { color: #fb923c; }
-
-    .diff-box { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 12px; overflow: hidden; }
-    .diff-line { display: flex; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.8; border-bottom: 1px solid #1a1d27; }
-    .diff-line:last-child { border-bottom: none; }
-    .diff-line-num { width: 36px; text-align: right; padding: 4px 8px; color: #374151; font-size: 11px; flex-shrink: 0; border-right: 1px solid #1a1d27; background: #0a0c12; user-select: none; }
-    .diff-line-content { flex: 1; padding: 4px 12px; word-break: break-all; white-space: pre-wrap; }
-    .diff-line.dl-ok   .diff-line-content { color: #64748b; }
-    .diff-line.dl-add  { background: #0d2010; }
-    .diff-line.dl-add  .diff-line-content { color: #4ade80; }
-    .diff-line.dl-add  .diff-line-num { background: #0a1a0c; color: #16a34a; }
-    .diff-line.dl-del  { background: #200d0d; }
-    .diff-line.dl-del  .diff-line-content { color: #f87171; }
-    .diff-line.dl-del  .diff-line-num { background: #1a0a0a; color: #dc2626; }
-    .diff-line.dl-chg  { background: #1e1a0a; }
-    .diff-line.dl-chg  .diff-line-content { color: #fbbf24; }
-    .diff-line.dl-chg  .diff-line-num { background: #18150a; color: #d97706; }
-
-    .diff-legend { display: flex; gap: 16px; font-size: 12px; margin-bottom: 10px; flex-wrap: wrap; }
-    .dl-badge { padding: 2px 10px; border-radius: 4px; font-family: 'Courier New', monospace; }
-    .dlb-ok   { background: #1e2130; color: #64748b; }
-    .dlb-add  { background: #0d2010; color: #4ade80; }
-    .dlb-del  { background: #200d0d; color: #f87171; }
-    .dlb-chg  { background: #1e1a0a; color: #fbbf24; }
-
+    .ds-chg  .diff-stat-num { color: #fbbf24; }
     .match-banner { padding: 14px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; margin-bottom: 10px; }
     .mb-ok   { background: #1e2d1e; border: 1px solid #16a34a44; color: #4ade80; }
     .mb-diff { background: #2d1a1a; border: 1px solid #dc262644; color: #f87171; }
+
+    .diff-mode-toggle { display: flex; gap: 8px; margin-bottom: 14px; }
+    .diff-mode-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid #2a2d3e; background: #0f1117; color: #64748b; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+    .diff-mode-btn:hover { border-color: #3a3d4e; color: #94a3b8; }
+    .diff-mode-btn.active { background: #1e3a5f; border-color: #2563eb; color: #60a5fa; }
+
+    .diff-legend { display: flex; gap: 12px; font-size: 11px; margin-bottom: 12px; flex-wrap: wrap; }
+    .dl-swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; vertical-align: middle; margin-right: 4px; }
+
+    /* SIDE-BY-SIDE */
+    .sbs-box { border: 1px solid #2a2d3e; border-radius: 12px; overflow: hidden; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.9; }
+    .sbs-header { display: grid; grid-template-columns: 36px 1fr 36px 1fr; background: #0f1117; border-bottom: 1px solid #2a2d3e; }
+    .sbs-header-cell { padding: 8px 10px; font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; }
+    .sbs-row { display: grid; grid-template-columns: 36px 1fr 36px 1fr; border-bottom: 1px solid #1a1d27; }
+    .sbs-row:last-child { border-bottom: none; }
+    .sbs-num { padding: 3px 6px; text-align: right; font-size: 10px; color: #374151; background: #0a0c12; user-select: none; border-right: 1px solid #1a1d27; }
+    .sbs-cell { padding: 3px 10px; word-break: break-all; white-space: pre-wrap; min-height: 24px; }
+    .sbs-mid-border { border-right: 2px solid #2a2d3e; }
+    .sbs-ok .sbs-cell { color: #64748b; }
+    .sbs-miss-l .sbs-cell:nth-child(2) { background: #0d2010; color: #4ade80; }
+    .sbs-miss-l .sbs-cell:nth-child(4) { background: #1a0a0a; color: #4a2020; font-style: italic; }
+    .sbs-miss-l .sbs-num:nth-child(1) { background: #0a1a0c; color: #16a34a; }
+    .sbs-miss-l .sbs-num:nth-child(3) { background: #1a0a0a; color: #4a2020; }
+    .sbs-extra-r .sbs-cell:nth-child(2) { background: #1a0a0a; color: #4a2020; font-style: italic; }
+    .sbs-extra-r .sbs-cell:nth-child(4) { background: #200d0d; color: #f87171; }
+    .sbs-extra-r .sbs-num:nth-child(1) { background: #1a0a0a; color: #4a2020; }
+    .sbs-extra-r .sbs-num:nth-child(3) { background: #1a0a0a; color: #dc2626; }
+    .sbs-chg .sbs-cell:nth-child(2) { background: #1e1a0a; color: #fbbf24; }
+    .sbs-chg .sbs-cell:nth-child(4) { background: #1e1a0a; color: #fbbf24; }
+    .sbs-chg .sbs-num { background: #18150a; color: #d97706; }
+    .word-hi { background: #b45309; color: #fff; padding: 0 3px; border-radius: 3px; }
+
+    /* UNIFIED INLINE */
+    .uni-box { border: 1px solid #2a2d3e; border-radius: 12px; overflow: hidden; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.9; }
+    .uni-row { display: flex; border-bottom: 1px solid #1a1d27; }
+    .uni-row:last-child { border-bottom: none; }
+    .uni-num { width: 32px; padding: 3px 6px; text-align: right; font-size: 10px; color: #374151; border-right: 1px solid #1a1d27; background: #0a0c12; user-select: none; flex-shrink: 0; }
+    .uni-content { flex: 1; padding: 3px 10px; word-break: break-all; white-space: pre-wrap; }
+    .uni-tag { font-size: 9px; padding: 1px 6px; border-radius: 3px; margin-left: 8px; font-weight: 700; letter-spacing: 0.04em; }
+    .uni-ok .uni-content { color: #64748b; }
+    .uni-add { background: #0d2010; }
+    .uni-add .uni-content { color: #4ade80; }
+    .uni-add .uni-num { background: #0a1a0c; color: #16a34a; }
+    .uni-add .uni-tag { background: #16a34a33; color: #4ade80; }
+    .uni-del { background: #200d0d; }
+    .uni-del .uni-content { color: #f87171; }
+    .uni-del .uni-num { background: #1a0a0a; color: #dc2626; }
+    .uni-del .uni-tag { background: #dc262633; color: #f87171; }
+    .uni-chg { background: #1e1a0a; }
+    .uni-chg .uni-content { color: #fbbf24; }
+    .uni-chg .uni-num { background: #18150a; color: #d97706; }
+    .uni-chg .uni-tag { background: #d9770633; color: #fbbf24; }
 
     .info-box { background: #1e2d1e; border: 1px solid #16a34a33; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #4ade80; line-height: 1.6; margin-top: 10px; }
 
@@ -573,13 +602,18 @@
         <div style="margin-top:1.25rem"></div>
         <div class="match-banner" id="diff-banner"></div>
         <div class="diff-summary" id="diff-summary"></div>
-        <div class="diff-legend">
-          <span class="dl-badge dlb-ok">Matching line</span>
-          <span class="dl-badge dlb-add">+ Expected only (missing in actual)</span>
-          <span class="dl-badge dlb-del">− Actual only (not in expected)</span>
-          <span class="dl-badge dlb-chg">~ Changed line</span>
+        <div class="diff-mode-toggle">
+          <div class="diff-mode-btn active" id="dm-side" onclick="setDiffMode('side')">Side by side</div>
+          <div class="diff-mode-btn" id="dm-inline" onclick="setDiffMode('inline')">Unified inline</div>
         </div>
-        <div class="diff-box" id="diff-box"></div>
+        <div class="diff-legend">
+          <span><span class="dl-swatch" style="background:#0d2010;border:1px solid #16a34a55"></span><span style="color:#64748b">Missing in actual</span></span>
+          <span><span class="dl-swatch" style="background:#200d0d;border:1px solid #dc262655"></span><span style="color:#64748b">Extra in actual</span></span>
+          <span><span class="dl-swatch" style="background:#1e1a0a;border:1px solid #d9770655"></span><span style="color:#64748b">Changed (word-level highlight)</span></span>
+          <span><span class="dl-swatch" style="background:#1e2130;border:1px solid #2a2d3e"></span><span style="color:#64748b">Matching</span></span>
+        </div>
+        <div id="diff-view-side"></div>
+        <div id="diff-view-inline" style="display:none"></div>
       </div>
     </div>
   </div>
@@ -937,57 +971,179 @@
     });
   }
 
-  /* ── QA DIFF ENGINE ── */
+  /* ── QA DIFF ENGINE v2 ── */
+  var diffMode = 'side';
+  var lastDiffResult = null;
+
+  function setDiffMode(m) {
+    diffMode = m;
+    document.getElementById('dm-side').classList.toggle('active', m === 'side');
+    document.getElementById('dm-inline').classList.toggle('active', m === 'inline');
+    document.getElementById('diff-view-side').style.display = m === 'side' ? 'block' : 'none';
+    document.getElementById('diff-view-inline').style.display = m === 'inline' ? 'block' : 'none';
+  }
+
+  function similarity(a, b) {
+    if (!a || !b) return 0;
+    a = a.trim(); b = b.trim();
+    if (a === b) return 1;
+    var longer = a.length > b.length ? a : b;
+    var shorter = a.length > b.length ? b : a;
+    if (longer.length === 0) return 1;
+    var costs = [];
+    for (var i = 0; i <= longer.length; i++) { costs[i] = []; costs[i][0] = i; }
+    for (var j = 0; j <= shorter.length; j++) { costs[0][j] = j; }
+    for (var i = 1; i <= longer.length; i++) {
+      for (var j = 1; j <= shorter.length; j++) {
+        var cost = longer.charAt(i-1) === shorter.charAt(j-1) ? 0 : 1;
+        costs[i][j] = Math.min(costs[i-1][j]+1, costs[i][j-1]+1, costs[i-1][j-1]+cost);
+      }
+    }
+    return 1 - (costs[longer.length][shorter.length] / longer.length);
+  }
+
+  function wordDiff(expLine, actLine) {
+    var ew = expLine.split(/(\s+)/), aw = actLine.split(/(\s+)/);
+    var m = ew.length, n = aw.length;
+    var dp = [];
+    for (var i = 0; i <= m; i++) { dp[i] = []; for (var j = 0; j <= n; j++) dp[i][j] = 0; }
+    for (var i = 1; i <= m; i++) for (var j = 1; j <= n; j++) {
+      if (ew[i-1] === aw[j-1]) dp[i][j] = dp[i-1][j-1] + 1;
+      else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+    }
+    var eResult = [], aResult = [];
+    var i = m, j = n;
+    var eOps = [], aOps = [];
+    while (i > 0 || j > 0) {
+      if (i > 0 && j > 0 && ew[i-1] === aw[j-1]) { eOps.unshift('eq'); aOps.unshift('eq'); i--; j--; }
+      else if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) { aOps.unshift('add'); j--; }
+      else { eOps.unshift('del'); i--; }
+    }
+    var eHtml = '', aHtml = '', ei = 0, ai = 0;
+    eOps.forEach(function(op) {
+      if (op === 'eq') eHtml += esc(ew[ei]);
+      else eHtml += '<span class="word-hi">' + esc(ew[ei]) + '</span>';
+      ei++;
+    });
+    aOps.forEach(function(op) {
+      if (op === 'eq') aHtml += esc(aw[ai]);
+      else aHtml += '<span class="word-hi">' + esc(aw[ai]) + '</span>';
+      ai++;
+    });
+    return { exp: eHtml, act: aHtml };
+  }
+
+  function computeDiffV2(expLines, actLines) {
+    var m = expLines.length, n = actLines.length;
+    var dp = [];
+    for (var i = 0; i <= m; i++) { dp[i] = []; for (var j = 0; j <= n; j++) dp[i][j] = 0; }
+    for (var i = 1; i <= m; i++) for (var j = 1; j <= n; j++) {
+      if (expLines[i-1].trim() === actLines[j-1].trim()) dp[i][j] = dp[i-1][j-1] + 1;
+      else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+    }
+    var raw = [], i = m, j = n;
+    while (i > 0 || j > 0) {
+      if (i > 0 && j > 0 && expLines[i-1].trim() === actLines[j-1].trim()) {
+        raw.unshift({ type: 'equal', exp: expLines[i-1], act: actLines[j-1], ei: i, ai: j }); i--; j--;
+      } else if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) {
+        raw.unshift({ type: 'extra', act: actLines[j-1], ai: j }); j--;
+      } else {
+        raw.unshift({ type: 'missing', exp: expLines[i-1], ei: i }); i--;
+      }
+    }
+    var result = [];
+    for (var k = 0; k < raw.length; k++) {
+      if (raw[k].type === 'missing' && k + 1 < raw.length && raw[k+1].type === 'extra') {
+        var sim = similarity(raw[k].exp, raw[k+1].act);
+        if (sim > 0.4) {
+          var wd = wordDiff(raw[k].exp, raw[k+1].act);
+          result.push({ type: 'changed', exp: raw[k].exp, act: raw[k+1].act, ei: raw[k].ei, ai: raw[k+1].ai, expHtml: wd.exp, actHtml: wd.act });
+          k++; continue;
+        }
+      }
+      if (raw[k].type === 'extra' && k + 1 < raw.length && raw[k+1].type === 'missing') {
+        var sim = similarity(raw[k+1].exp, raw[k].act);
+        if (sim > 0.4) {
+          var wd = wordDiff(raw[k+1].exp, raw[k].act);
+          result.push({ type: 'changed', exp: raw[k+1].exp, act: raw[k].act, ei: raw[k+1].ei, ai: raw[k].ai, expHtml: wd.exp, actHtml: wd.act });
+          k++; continue;
+        }
+      }
+      result.push(raw[k]);
+    }
+    return result;
+  }
+
+  function renderSideBySide(diff) {
+    var html = '<div class="sbs-box">';
+    html += '<div class="sbs-header"><div class="sbs-header-cell" style="grid-column:1/3">Expected (generated)</div><div class="sbs-header-cell" style="grid-column:3/5">Actual (deployed)</div></div>';
+    diff.forEach(function(d) {
+      if (d.type === 'equal') {
+        html += '<div class="sbs-row sbs-ok"><div class="sbs-num">' + d.ei + '</div><div class="sbs-cell sbs-mid-border">' + esc(d.exp) + '</div><div class="sbs-num">' + d.ai + '</div><div class="sbs-cell">' + esc(d.act) + '</div></div>';
+      } else if (d.type === 'missing') {
+        html += '<div class="sbs-row sbs-miss-l"><div class="sbs-num">' + d.ei + '</div><div class="sbs-cell sbs-mid-border">' + esc(d.exp) + '</div><div class="sbs-num"></div><div class="sbs-cell">(missing)</div></div>';
+      } else if (d.type === 'extra') {
+        html += '<div class="sbs-row sbs-extra-r"><div class="sbs-num"></div><div class="sbs-cell sbs-mid-border">(not in expected)</div><div class="sbs-num">' + d.ai + '</div><div class="sbs-cell">' + esc(d.act) + '</div></div>';
+      } else if (d.type === 'changed') {
+        html += '<div class="sbs-row sbs-chg"><div class="sbs-num">' + d.ei + '</div><div class="sbs-cell sbs-mid-border">' + d.expHtml + '</div><div class="sbs-num">' + d.ai + '</div><div class="sbs-cell">' + d.actHtml + '</div></div>';
+      }
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function renderUnified(diff) {
+    var html = '<div class="uni-box">';
+    diff.forEach(function(d) {
+      if (d.type === 'equal') {
+        html += '<div class="uni-row uni-ok"><div class="uni-num">' + d.ei + '</div><div class="uni-num">' + d.ai + '</div><div class="uni-content">' + esc(d.exp) + '</div></div>';
+      } else if (d.type === 'missing') {
+        html += '<div class="uni-row uni-add"><div class="uni-num">' + d.ei + '</div><div class="uni-num" style="color:#4a2020">—</div><div class="uni-content">+ ' + esc(d.exp) + '<span class="uni-tag">missing in actual</span></div></div>';
+      } else if (d.type === 'extra') {
+        html += '<div class="uni-row uni-del"><div class="uni-num" style="color:#4a2020">—</div><div class="uni-num">' + d.ai + '</div><div class="uni-content">− ' + esc(d.act) + '<span class="uni-tag">extra in actual</span></div></div>';
+      } else if (d.type === 'changed') {
+        html += '<div class="uni-row uni-chg"><div class="uni-num">' + d.ei + '</div><div class="uni-num">' + d.ai + '</div><div class="uni-content">~ ' + d.expHtml + ' → ' + d.actHtml + '<span class="uni-tag">changed</span></div></div>';
+      }
+    });
+    html += '</div>';
+    return html;
+  }
+
   function runDiff() {
     var expText = document.getElementById('qa-expected').value;
     var actText = document.getElementById('qa-actual').value;
     if (!expText.trim() && !actText.trim()) { alert('Please paste content into both fields before validating.'); return; }
-    var expLines = expText.split('\n');
-    var actLines = actText.split('\n');
-    var diff = computeDiff(expLines, actLines);
-    var matchCount = 0, addCount = 0, delCount = 0, chgCount = 0;
-    var html = ''; var lineNum = 0;
-    diff.forEach(function(item) {
-      lineNum++;
-      var cls, prefix, content;
-      if (item.type === 'equal')  { matchCount++; cls = 'dl-ok';  prefix = ' '; content = item.value; }
-      else if (item.type === 'add')    { addCount++;   cls = 'dl-add'; prefix = '+'; content = item.value; }
-      else if (item.type === 'remove') { delCount++;   cls = 'dl-del'; prefix = '−'; content = item.value; }
-      else                             { chgCount++;   cls = 'dl-chg'; prefix = '~'; content = item.value; }
-      html += '<div class="diff-line ' + cls + '"><div class="diff-line-num">' + lineNum + '</div><div class="diff-line-content">' + prefix + ' ' + esc(content) + '</div></div>';
+
+    var diff = computeDiffV2(expText.split('\n'), actText.split('\n'));
+    lastDiffResult = diff;
+
+    var matchCount = 0, missCount = 0, extraCount = 0, chgCount = 0;
+    diff.forEach(function(d) {
+      if (d.type === 'equal') matchCount++;
+      else if (d.type === 'missing') missCount++;
+      else if (d.type === 'extra') extraCount++;
+      else if (d.type === 'changed') chgCount++;
     });
-    var total = matchCount + addCount + delCount + chgCount;
-    var isMatch = (addCount === 0 && delCount === 0 && chgCount === 0);
+
+    var total = matchCount + missCount + extraCount + chgCount;
+    var isMatch = missCount === 0 && extraCount === 0 && chgCount === 0;
     document.getElementById('diff-banner').className = 'match-banner ' + (isMatch ? 'mb-ok' : 'mb-diff');
-    document.getElementById('diff-banner').textContent = isMatch ? '✅ Perfect match — no differences found!' : '❌ Differences found — ' + (addCount + delCount + chgCount) + ' line(s) differ out of ' + total;
+    document.getElementById('diff-banner').textContent = isMatch
+      ? '✅ Perfect match — no differences found!'
+      : '❌ Differences found — ' + (missCount + extraCount + chgCount) + ' issue(s) across ' + total + ' lines';
+
     document.getElementById('diff-summary').innerHTML =
       '<div class="diff-stat ds-ok"><div class="diff-stat-num">' + matchCount + '</div><div class="diff-stat-label">Matching</div></div>' +
-      '<div class="diff-stat ds-diff"><div class="diff-stat-num">' + addCount + '</div><div class="diff-stat-label">Missing in actual</div></div>' +
-      '<div class="diff-stat ds-miss"><div class="diff-stat-num">' + delCount + '</div><div class="diff-stat-label">Extra in actual</div></div>' +
-      '<div class="diff-stat ds-miss" style="border-color:#fbbf2433"><div class="diff-stat-num" style="color:#fbbf24">' + chgCount + '</div><div class="diff-stat-label">Changed</div></div>';
-    document.getElementById('diff-box').innerHTML = html;
-    document.getElementById('diff-wrap').style.display = 'block';
-    document.getElementById('diff-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
-  }
+      '<div class="diff-stat ds-diff"><div class="diff-stat-num">' + missCount + '</div><div class="diff-stat-label">Missing</div></div>' +
+      '<div class="diff-stat ds-miss"><div class="diff-stat-num">' + extraCount + '</div><div class="diff-stat-label">Extra</div></div>' +
+      '<div class="diff-stat ds-chg"><div class="diff-stat-num">' + chgCount + '</div><div class="diff-stat-label">Changed</div></div>';
 
-  function computeDiff(a, b) {
-    var m = a.length, n = b.length;
-    var dp = [];
-    for (var i = 0; i <= m; i++) { dp[i] = []; for (var j = 0; j <= n; j++) dp[i][j] = 0; }
-    for (var i = 1; i <= m; i++) for (var j = 1; j <= n; j++) {
-      if (a[i-1].trim() === b[j-1].trim()) dp[i][j] = dp[i-1][j-1] + 1;
-      else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
-    }
-    var result = [], i = m, j = n;
-    while (i > 0 || j > 0) {
-      if (i > 0 && j > 0 && a[i-1].trim() === b[j-1].trim()) { result.unshift({ type: 'equal', value: a[i-1] }); i--; j--; }
-      else if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) { result.unshift({ type: 'remove', value: b[j-1] }); j--; }
-      else { result.unshift({ type: 'add', value: a[i-1] }); i--; }
-    }
-    for (var k = 0; k < result.length - 1; k++) {
-      if (result[k].type === 'add' && result[k+1].type === 'remove') { result[k].type = 'chg'; result[k+1].type = 'chg'; }
-    }
-    return result;
+    document.getElementById('diff-view-side').innerHTML = renderSideBySide(diff);
+    document.getElementById('diff-view-inline').innerHTML = renderUnified(diff);
+    setDiffMode(diffMode);
+
+    document.getElementById('diff-wrap').style.display = 'block';
+    document.getElementById('diff-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 </script>
 <script src="nav.js"></script>
