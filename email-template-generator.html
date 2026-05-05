@@ -245,7 +245,7 @@
         <input type="text" id="whitelabel" placeholder="https://longspicpac-whitelabel.instacart.com">
       </div>
       <div class="field" style="margin-bottom:0">
-        <label>Retailer website <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">Optional — only used when custom content is enabled</span></label>
+        <label>Retailer website <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">Optional — defaults to whitelabel if empty</span></label>
         <input type="text" id="retailer-url" placeholder="https://www.longspicpac.com/">
       </div>
     </div>
@@ -784,7 +784,7 @@
     t1.push('    footer:');
     if (appstoreLink  !== null) t1.push('      appstore_link: "' + appstoreLink + '"');
     if (playstoreLink !== null) t1.push('      playstore_link: "' + playstoreLink + '"');
-    var footerRetailerLink = (contentOn && retailerUrl) ? retailerUrl : whitelabel;
+    var footerRetailerLink = retailerUrl || whitelabel;
     t1.push('      retailer_link: "' + footerRetailerLink + '"');
     t1.push('      retailer_link_label: "' + retailer + '"');
     t1.push('      help_link: "' + whitelabel + '/help"');
@@ -863,27 +863,28 @@
     renderYAML('box3', t1.join('\n'));
 
     /* ── OUTPUT 4: orders.yml (class_scoped) ── */
-    var t2 = [
-      yamlKey + ':',
-      '  class_scoped:',
-      '    orders:',
-      '      one_order_mailer:',
-      '        module_data:',
-      '          email_heading:',
-      '            order_cancellation:',
-      '              delivery: ' + chd,
-      '              pickup: '   + chp,
-      '            order_confirmation:',
-      '              delivery: ' + cfd,
-      '              pickup: '   + cfp,
-      '            order_receipt:',
-      '              delivery: "' + rhd + '"',
-      '              pickup: "'   + rhp + '"',
-      '          order_details:',
-      '            order_cancellation:',
-      '              heading: ' + cih,
-    ].join('\n');
-    renderYAML('box4', t2);
+    var t2 = [];
+    t2.push(yamlKey + ':');
+    t2.push('  class_scoped:');
+    t2.push('    orders:');
+    t2.push('      one_order_mailer:');
+    t2.push('        module_data:');
+    t2.push('          email_heading:');
+    t2.push('            order_cancellation:');
+    t2.push('              delivery: ' + chd);
+    t2.push('              pickup: ' + chp);
+    if (headingsOn) {
+      t2.push('            order_confirmation:');
+      t2.push('              delivery: ' + cfd);
+      t2.push('              pickup: ' + cfp);
+      t2.push('            order_receipt:');
+      t2.push('              delivery: "' + rhd + '"');
+      t2.push('              pickup: "' + rhp + '"');
+    }
+    t2.push('          order_details:');
+    t2.push('            order_cancellation:');
+    t2.push('              heading: ' + cih);
+    renderYAML('box4', t2.join('\n'));
 
     /* BRANCH NAME */
     var branchName = retailer.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '_') + '_email_config_template';
