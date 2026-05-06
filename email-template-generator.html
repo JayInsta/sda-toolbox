@@ -316,6 +316,25 @@
         </div>
       </div>
 
+      <!-- FOOTER LINKS -->
+      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">Footer links <span style="font-size:9px;opacity:0.7">NEW</span></div><div class="section-divider-line"></div></div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-footer-links','opts-footer-links')">
+          <input type="checkbox" class="opt-cb" id="cb-footer-links" onchange="toggleOpt('cb-footer-links','opts-footer-links')">
+          <span class="opt-title" id="lbl-footer-links">Custom help, privacy &amp; TOS links</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">unchecked = uses whitelabel/help, /privacy, /terms</span>
+        </div>
+        <div class="opt-inputs" id="opts-footer-links">
+          <div class="sub-label">Help link URL</div>
+          <input type="text" id="inp-help-link" placeholder="https://whitelabel.instacart.com/help">
+          <div class="sub-label">Privacy policy link URL</div>
+          <input type="text" id="inp-privacy-link" placeholder="https://whitelabel.instacart.com/privacy">
+          <div class="sub-label">Terms &amp; conditions link URL</div>
+          <input type="text" id="inp-tos-link" placeholder="https://whitelabel.instacart.com/terms">
+        </div>
+      </div>
+
       <!-- ORDER CANCELLATION -->
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-orange">Order cancellation</div><div class="section-divider-line"></div></div>
       <div class="field"><label>Cancellation body <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><textarea id="cancel-body" placeholder="This email is to confirm that you have canceled your order..."></textarea></div>
@@ -767,6 +786,9 @@
     var ratingPickup   = contentOn ? optVal('cb-rating-pickup', 'inp-rating-pickup',    D.ratingPickup)   : null;
     var upsellForgot   = contentOn ? optVal('cb-upsell',        'inp-upsell-forgot',    D.upsellForgot)   : null;
     var upsellAdd      = contentOn ? optVal('cb-upsell',        'inp-upsell-add',       D.upsellAdd)      : null;
+    var customHelpLink    = contentOn ? optVal('cb-footer-links', 'inp-help-link',    whitelabel + '/help')    : null;
+    var customPrivacyLink = contentOn ? optVal('cb-footer-links', 'inp-privacy-link', whitelabel + '/privacy') : null;
+    var customTosLink     = contentOn ? optVal('cb-footer-links', 'inp-tos-link',     whitelabel + '/terms')   : null;
 
     /* ── STEP 3 HEADINGS ── */
     var chd = headingsOn ? reqVal('cancel-heading-delivery',  'Your order has been canceled.')                              : 'Your order has been canceled.';
@@ -800,11 +822,14 @@
     var footerRetailerLink = retailerUrl || whitelabel;
     t1.push('      retailer_link: "' + footerRetailerLink + '"');
     t1.push('      retailer_link_label: "' + retailer + '"');
-    t1.push('      help_link: "' + whitelabel + '/help"');
+    var helpUrl    = customHelpLink    !== null ? customHelpLink    : whitelabel + '/help';
+    var privacyUrl = customPrivacyLink !== null ? customPrivacyLink : whitelabel + '/privacy';
+    var tosUrl     = customTosLink     !== null ? customTosLink     : whitelabel + '/terms';
+    t1.push('      help_link: "' + helpUrl + '"');
     t1.push('      help_link_label: "Help"');
-    t1.push('      privacy_policy_link: "' + whitelabel + '/privacy"');
+    t1.push('      privacy_policy_link: "' + privacyUrl + '"');
     t1.push('      privacy_policy_link_label: "Privacy Policy"');
-    t1.push('      tos_link: "' + whitelabel + '/terms"');
+    t1.push('      tos_link: "' + tosUrl + '"');
     t1.push('      tos_link_label: "Terms & Conditions"');
 
     // Order information
@@ -935,6 +960,9 @@
       if (ratingPickup !== null)   ccParts.push('rate_pickup_content=' + ratingPickup);
       if (upsellForgot !== null)   ccParts.push('upsell_forgot=' + upsellForgot);
       if (upsellAdd !== null)      ccParts.push('upsell_add=' + upsellAdd);
+      if (customHelpLink !== null)    ccParts.push('help_link=' + customHelpLink);
+      if (customPrivacyLink !== null) ccParts.push('privacy_link=' + customPrivacyLink);
+      if (customTosLink !== null)     ccParts.push('tos_link=' + customTosLink);
     }
 
     if (headingsOn) {
