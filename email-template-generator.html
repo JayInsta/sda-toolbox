@@ -572,9 +572,22 @@
         <span class="branch-output-val" id="branch-name">—</span>
       </div>
     </div>
-  </div>
 
-  <!-- QA VALIDATOR -->
+    <!-- CLAUDE CODE COMMAND -->
+    <div class="section-divider">
+      <div class="section-divider-line"></div><div class="section-label sl-teal">Output 6 — Claude Code command</div><div class="section-divider-line"></div>
+    </div>
+    <div class="output-block">
+      <div class="output-block-header">
+        <div class="output-block-meta">
+          <div class="output-block-title">Claude Code command</div>
+          <div class="output-block-hint">Copy this command and paste into Claude Code terminal to auto-create the branch, files, and draft PR.</div>
+        </div>
+        <button class="btn-copy bc-teal" onclick="copyCCCmd(this)" style="background:#1e3d3d;border-color:#0d948844;color:#2dd4bf">Copy command</button>
+      </div>
+      <div class="output-box" id="box-cc-cmd" style="line-height:1.6;font-size:13px;color:#2dd4bf;white-space:pre-wrap;word-break:break-all"></div>
+    </div>
+  </div>
   <div class="qa-wrap">
     <div class="section-divider" style="margin-top:2rem">
       <div class="section-divider-line"></div><div class="section-label sl-red">🔍 QA validator — diff checker</div><div class="section-divider-line"></div>
@@ -890,6 +903,56 @@
     var branchName = retailer.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '_') + '_email_config_template';
     document.getElementById('branch-name').textContent = branchName;
 
+    /* CLAUDE CODE COMMAND */
+    var ccParts = [];
+    ccParts.push('name=' + retailer);
+    ccParts.push('slug=' + slug);
+    ccParts.push('whitelabel=' + whitelabel);
+    if (selectedCountry !== 'US') ccParts.push('country=' + selectedCountry);
+    if (retailerUrl && retailerUrl !== whitelabel) ccParts.push('website=' + retailerUrl);
+
+    if (contentOn) {
+      ccParts.push('customize=yes');
+      if (gv('order-desc'))    ccParts.push('order_description=' + gv('order-desc'));
+      if (gv('family-desc'))   ccParts.push('family_description=' + gv('family-desc'));
+      if (gv('pickup'))        ccParts.push('pickup_instructions=' + gv('pickup'));
+      if (gv('cancel-body'))   ccParts.push('cancellation_body=' + gv('cancel-body'));
+      if (gv('inp-cancel-img-alt')) ccParts.push('cancellation_image_alt=' + gv('inp-cancel-img-alt'));
+      if (finePrint !== null)      ccParts.push('fine_print=' + (finePrint || '""'));
+      if (appstoreLink !== null)   ccParts.push('appstore_link=' + appstoreLink);
+      if (playstoreLink !== null)  ccParts.push('playstore_link=' + playstoreLink);
+      if (cancelSubjDel !== null)  ccParts.push('cancel_subject_delivery=' + cancelSubjDel);
+      if (cancelSubjPick !== null) ccParts.push('cancel_subject_pickup=' + cancelSubjPick);
+      if (confirmImgAlt !== null)  ccParts.push('confirm_image_alt=' + confirmImgAlt);
+      if (confirmSubjDel !== null) ccParts.push('confirm_subject_delivery=' + confirmSubjDel);
+      if (confirmSubjPick !== null) ccParts.push('confirm_subject_pickup=' + confirmSubjPick);
+      if (gv('receipt-body'))      ccParts.push('receipt_body=' + gv('receipt-body'));
+      if (receiptImgAlt !== null)  ccParts.push('receipt_image_alt=' + receiptImgAlt);
+      if (receiptSubjDel !== null) ccParts.push('receipt_subject_delivery=' + receiptSubjDel);
+      if (receiptSubjPick !== null) ccParts.push('receipt_subject_pickup=' + receiptSubjPick);
+      if (gv('rate-heading'))      ccParts.push('rate_heading=' + gv('rate-heading'));
+      if (gv('rate-content'))      ccParts.push('rate_delivery_content=' + gv('rate-content'));
+      if (ratingPickup !== null)   ccParts.push('rate_pickup_content=' + ratingPickup);
+      if (upsellForgot !== null)   ccParts.push('upsell_forgot=' + upsellForgot);
+      if (upsellAdd !== null)      ccParts.push('upsell_add=' + upsellAdd);
+    }
+
+    if (headingsOn) {
+      ccParts.push('headings=yes');
+      if (gv('cancel-heading-delivery'))  ccParts.push('cancel_heading_delivery=' + gv('cancel-heading-delivery'));
+      if (gv('cancel-heading-pickup'))    ccParts.push('cancel_heading_pickup=' + gv('cancel-heading-pickup'));
+      if (gv('confirm-heading-delivery')) ccParts.push('confirm_heading_delivery=' + gv('confirm-heading-delivery'));
+      if (gv('confirm-heading-pickup'))   ccParts.push('confirm_heading_pickup=' + gv('confirm-heading-pickup'));
+      if (gv('receipt-heading-delivery')) ccParts.push('receipt_heading_delivery=' + gv('receipt-heading-delivery'));
+      if (gv('receipt-heading-pickup'))   ccParts.push('receipt_heading_pickup=' + gv('receipt-heading-pickup'));
+      if (gv('cancel-items-heading'))     ccParts.push('cancel_items_heading=' + gv('cancel-items-heading'));
+    }
+
+    var ccCmd = '/create-email-template "' + ccParts.join(' | ') + '"';
+    var ccEl = document.getElementById('box-cc-cmd');
+    ccEl.textContent = ccCmd;
+    ccEl.dataset.raw = ccCmd;
+
     document.getElementById('output-info').textContent =
       'Generated for "' + retailer + ' Team" · ' + COUNTRIES[selectedCountry].flag + ' ' + COUNTRIES[selectedCountry].locale + ' · locale: ' + localeVar + ' · folder: ' + folderName;
     document.getElementById('output-wrap').style.display = 'block';
@@ -950,6 +1013,16 @@
     navigator.clipboard.writeText(val).then(function() {
       var orig = btn.textContent;
       btn.textContent = '✅ Copied!'; btn.style.color = '#4ade80';
+      setTimeout(function(){ btn.textContent = orig; btn.style.color = ''; }, 2000);
+    });
+  }
+
+  function copyCCCmd(btn) {
+    var raw = document.getElementById('box-cc-cmd').dataset.raw || '';
+    if (!raw) return;
+    navigator.clipboard.writeText(raw).then(function() {
+      var orig = btn.textContent;
+      btn.textContent = '✅ Copied!'; btn.style.color = '#2dd4bf';
       setTimeout(function(){ btn.textContent = orig; btn.style.color = ''; }, 2000);
     });
   }
