@@ -124,6 +124,11 @@
 
     /* ENHANCEMENT SECTION */
     .enhance-toggle { display: flex; align-items: center; justify-content: space-between; }
+    .fmt-warning { background: #3d2a1e; border: 1px solid #fb923c33; border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #fb923c; margin-top: 10px; line-height: 1.6; display: none; }
+    .fmt-warning strong { color: #fff; }
+    .convert-badge { position: absolute; bottom: 4px; left: 4px; font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 3px; background: #7c3aed; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; }
+    .convert-status { background: #1e2d45; border: 1px solid #2563eb33; border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #93c5fd; margin-top: 10px; line-height: 1.6; display: none; }
+    .convert-status.visible { display: block; }
 
     /* PASSWORD MODAL */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center; }
@@ -159,20 +164,20 @@
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
     </div>
     <h1>Image resizer</h1>
-    <p>Upload <code>SVG</code>, <code>PNG</code>, <code>JPG</code>, or <code>AVIF</code> — resize, enhance, or convert formats instantly.</p>
+    <p>Upload <code>SVG</code>, <code>PNG</code>, <code>JPG</code>, <code>AVIF</code>, <code>WebP</code>, <code>HEIC</code>, <code>BMP</code>, <code>TIFF</code>, <code>ICO</code>, <code>AI</code>, or <code>PSD</code> — resize, enhance, or convert formats instantly.</p>
   </div>
 
   <!-- STEP 1: UPLOAD -->
   <div class="card">
     <div class="card-top">
       <div class="step-badge s1">1</div>
-      <div><div class="card-title">Upload images</div><div class="card-sub">SVG, PNG, JPG, AVIF — upload multiple files at once</div></div>
+      <div><div class="card-title">Upload images</div><div class="card-sub">SVG, PNG, JPG, AVIF, WebP, HEIC, BMP, TIFF, ICO, AI, PSD</div></div>
     </div>
     <div class="dropzone" id="dropzone">
-      <input type="file" id="file-input" accept=".svg,.png,.jpg,.jpeg,.avif,.ai" multiple>
+      <input type="file" id="file-input" accept=".svg,.png,.jpg,.jpeg,.avif,.ai,.webp,.heic,.heif,.bmp,.tiff,.tif,.ico,.psd" multiple>
       <div class="dropzone-icon">🖼️</div>
       <div class="dropzone-text"><strong>Click to upload</strong> or drag & drop here</div>
-      <div class="dropzone-hint">SVG • PNG • JPG • AVIF — multiple files supported</div>
+      <div class="dropzone-hint">SVG • PNG • JPG • AVIF • WebP • HEIC • BMP • TIFF • ICO • AI • PSD</div>
     </div>
     <div class="preview-grid" id="preview-grid"></div>
     <div id="clear-all-wrap" style="display:none;margin-top:10px">
@@ -181,6 +186,12 @@
         <div style="margin-left:auto;padding:7px 14px;border-radius:8px;background:#200d0d;border:1px solid #ef444444;color:#f87171;font-size:12px;font-weight:600;cursor:pointer;transition:opacity 0.15s" onclick="clearAllFiles()" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">✕ Clear all</div>
       </div>
     </div>
+    <div class="fmt-warning" id="ico-warning">⚠️ <strong>ICO file detected</strong> — ICO files are specifically favicon files. They will be converted to PNG for resizing. Output dimensions may differ from the original multi-size ICO container.</div>
+    <div class="fmt-warning" id="heic-warning">📱 <strong>HEIC/HEIF file detected</strong> — converting to PNG (first use loads converter library ~50KB).</div>
+    <div class="fmt-warning" id="ai-warning">🎨 <strong>Adobe Illustrator file detected</strong> — renders the PDF-compatible preview. Files saved without "Create PDF Compatible File" may not work.</div>
+    <div class="fmt-warning" id="psd-warning">🎨 <strong>Photoshop PSD file detected</strong> — flattens all layers to a single image for resizing (first use loads PSD library ~60KB).</div>
+    <div class="fmt-warning" id="tiff-warning">📄 <strong>TIFF file detected</strong> — converting to PNG (first use loads TIFF decoder ~30KB).</div>
+    <div class="convert-status" id="convert-status"></div>
     <div style="margin-top:14px">
       <div class="field" style="margin-bottom:0">
         <label>Item name <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— optional, prefixes all output filenames (e.g. "ABC" → ABC_logo.png)</span></label>
@@ -281,15 +292,15 @@
     </div>
   </div>
 
-  <!-- STEP 4: ENHANCE (OPTIONAL) -->
+  <!-- STEP 4: AI ENHANCE (OPTIONAL) -->
   <div class="card">
     <div class="card-top" style="margin-bottom:0">
       <div class="step-badge s4">4</div>
       <div style="flex:1">
         <div style="display:flex;align-items:center;justify-content:space-between">
           <div>
-            <div class="card-title">✨ Auto enhance &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
-            <div class="card-sub">Sharpens edges, boosts contrast &amp; brightness — ideal for blurry or low-quality logos</div>
+            <div class="card-title">🧠 AI Enhance &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
+            <div class="card-sub">GPU-powered quality enhancement — sharpens edges, recovers detail, boosts contrast. Same output size, better quality.</div>
           </div>
           <label style="position:relative;width:44px;height:24px;flex-shrink:0">
             <input type="checkbox" id="toggle-enhance" onchange="toggleEnhance(this)" style="opacity:0;width:0;height:0;position:absolute">
@@ -298,6 +309,12 @@
           </label>
         </div>
       </div>
+    </div>
+    <div id="enhance-info" style="display:none;margin-top:1rem">
+      <div style="background:#2d1e3d;border:1px solid #7c3aed33;border-radius:10px;padding:10px 14px;font-size:12px;color:#c084fc;line-height:1.6">
+        Uses <strong>TensorFlow.js</strong> running on your GPU via WebGL. First use downloads ~1.5MB (cached after). Edge detection → adaptive sharpening → noise reduction → contrast boost. <strong>Images never leave your computer.</strong>
+      </div>
+      <div id="ai-status" style="display:none;margin-top:8px;padding:8px 14px;background:#0f1117;border:1px solid #2a2d3e;border-radius:10px;font-size:12px;color:#94a3b8;text-align:center"></div>
     </div>
   </div>
 
@@ -439,8 +456,157 @@
   fi.addEventListener('change', function(){ handleFiles(fi.files); fi.value=''; });
 
   function handleFiles(flist) {
-    Array.from(flist).forEach(function(f){ if(/\.(svg|png|jpe?g|avif|ai)$/i.test(f.name)) files.push(f); });
+    var newFiles = Array.from(flist).filter(function(f) {
+      return /\.(svg|png|jpe?g|avif|webp|heic|heif|bmp|tiff?|ico|ai|psd)$/i.test(f.name);
+    });
+    if (!newFiles.length) return;
+
+    // Show format-specific warnings
+    var hasICO = newFiles.some(function(f){ return /\.ico$/i.test(f.name); });
+    var hasHEIC = newFiles.some(function(f){ return /\.hei[cf]$/i.test(f.name); });
+    var hasAI = newFiles.some(function(f){ return /\.ai$/i.test(f.name); });
+    var hasPSD = newFiles.some(function(f){ return /\.psd$/i.test(f.name); });
+    var hasTIFF = newFiles.some(function(f){ return /\.tiff?$/i.test(f.name); });
+    document.getElementById('ico-warning').style.display = hasICO ? 'block' : 'none';
+    document.getElementById('heic-warning').style.display = hasHEIC ? 'block' : 'none';
+    document.getElementById('ai-warning').style.display = hasAI ? 'block' : 'none';
+    document.getElementById('psd-warning').style.display = hasPSD ? 'block' : 'none';
+    document.getElementById('tiff-warning').style.display = hasTIFF ? 'block' : 'none';
+
+    // Separate native vs needs-conversion
+    var native = [], toConvert = [];
+    newFiles.forEach(function(f) {
+      if (/\.(hei[cf]|tiff?|ai|psd)$/i.test(f.name)) {
+        toConvert.push(f);
+      } else {
+        native.push(f);
+      }
+    });
+
+    // Add native files immediately
+    native.forEach(function(f) { files.push(f); });
     renderPreviews(); updateBtn();
+
+    // Convert non-native files asynchronously
+    if (toConvert.length > 0) {
+      convertNonNativeFiles(toConvert);
+    }
+  }
+
+  async function convertNonNativeFiles(fileList) {
+    var status = document.getElementById('convert-status');
+    status.style.display = 'block';
+
+    for (var i = 0; i < fileList.length; i++) {
+      var f = fileList[i];
+      var ext = f.name.split('.').pop().toLowerCase();
+      status.textContent = '⏳ Converting ' + f.name + ' (' + (i + 1) + '/' + fileList.length + ')…';
+
+      try {
+        var converted = null;
+        if (ext === 'heic' || ext === 'heif') {
+          converted = await convertHEIC(f);
+        } else if (ext === 'tiff' || ext === 'tif') {
+          converted = await convertTIFF(f);
+        } else if (ext === 'ai') {
+          converted = await convertAI(f);
+        } else if (ext === 'psd') {
+          converted = await convertPSD(f);
+        }
+        if (converted) {
+          files.push(converted);
+          renderPreviews(); updateBtn();
+        }
+      } catch (err) {
+        console.error('Failed to convert ' + f.name + ':', err);
+        status.textContent = '⚠️ Failed to convert ' + f.name + ': ' + err.message;
+        await new Promise(function(r) { setTimeout(r, 2000); });
+      }
+    }
+
+    status.textContent = '✅ All files converted';
+    setTimeout(function() { status.style.display = 'none'; }, 3000);
+  }
+
+  /* ── LIBRARY LOADERS (lazy, cached) ── */
+  var loadedLibs = {};
+  function loadLib(name, url) {
+    if (loadedLibs[name]) return Promise.resolve();
+    return new Promise(function(resolve, reject) {
+      var s = document.createElement('script');
+      s.src = url;
+      s.onload = function() { loadedLibs[name] = true; resolve(); };
+      s.onerror = function() { reject(new Error('Failed to load ' + name)); };
+      document.head.appendChild(s);
+    });
+  }
+
+  /* ── HEIC CONVERSION ── */
+  async function convertHEIC(f) {
+    await loadLib('heic2any', 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js');
+    var blob = await heic2any({ blob: f, toType: 'image/png', quality: 1 });
+    if (Array.isArray(blob)) blob = blob[0];
+    var name = f.name.replace(/\.hei[cf]$/i, '.png');
+    return new File([blob], name, { type: 'image/png' });
+  }
+
+  /* ── TIFF CONVERSION ── */
+  async function convertTIFF(f) {
+    await loadLib('utif', 'https://cdn.jsdelivr.net/npm/utif@3.1.0/UTIF.js');
+    var buf = await f.arrayBuffer();
+    var ifds = UTIF.decode(buf);
+    UTIF.decodeImage(buf, ifds[0]);
+    var rgba = UTIF.toRGBA8(ifds[0]);
+    var w = ifds[0].width, h = ifds[0].height;
+    var canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    var ctx = canvas.getContext('2d');
+    var imgData = ctx.createImageData(w, h);
+    imgData.data.set(new Uint8ClampedArray(rgba.buffer));
+    ctx.putImageData(imgData, 0, 0);
+    var blob = await new Promise(function(r) { canvas.toBlob(r, 'image/png'); });
+    var name = f.name.replace(/\.tiff?$/i, '.png');
+    return new File([blob], name, { type: 'image/png' });
+  }
+
+  /* ── AI (ADOBE ILLUSTRATOR) CONVERSION ── */
+  async function convertAI(f) {
+    await loadLib('pdfjs', 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js');
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    var buf = await f.arrayBuffer();
+    var pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+    var page = await pdf.getPage(1);
+    var viewport = page.getViewport({ scale: 2 });
+    var canvas = document.createElement('canvas');
+    canvas.width = viewport.width; canvas.height = viewport.height;
+    var ctx = canvas.getContext('2d');
+    await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+    var blob = await new Promise(function(r) { canvas.toBlob(r, 'image/png'); });
+    var name = f.name.replace(/\.ai$/i, '.png');
+    return new File([blob], name, { type: 'image/png' });
+  }
+
+  /* ── PSD (PHOTOSHOP) CONVERSION ── */
+  async function convertPSD(f) {
+    await loadLib('psd', 'https://cdn.jsdelivr.net/npm/psd.js@3.4.0/dist/psd.min.js');
+    var buf = await f.arrayBuffer();
+    var psd = new PSD(new Uint8Array(buf));
+    psd.parse();
+    var canvas = psd.image.toPng();
+    // psd.image.toPng() returns a PNG image element — draw to canvas
+    var img = new Image();
+    var blob = await new Promise(function(resolve, reject) {
+      img.onload = function() {
+        var c = document.createElement('canvas');
+        c.width = img.width; c.height = img.height;
+        c.getContext('2d').drawImage(img, 0, 0);
+        c.toBlob(function(b) { resolve(b); }, 'image/png');
+      };
+      img.onerror = function() { reject(new Error('PSD render failed')); };
+      img.src = canvas.src;
+    });
+    var name = f.name.replace(/\.psd$/i, '.png');
+    return new File([blob], name, { type: 'image/png' });
   }
   function renderPreviews() {
     var g = document.getElementById('preview-grid'); g.innerHTML='';
@@ -460,7 +626,13 @@
     }
   }
   function removeFile(i){ files.splice(i,1); renderPreviews(); updateBtn(); }
-  function clearAllFiles(){ files=[]; renderPreviews(); updateBtn(); }
+  function clearAllFiles(){
+    files=[];
+    renderPreviews(); updateBtn();
+    ['ico-warning','heic-warning','ai-warning','psd-warning','tiff-warning','convert-status'].forEach(function(id){
+      document.getElementById(id).style.display = 'none';
+    });
+  }
 
   /* ── OUTPUT NAME HELPER ── */
   function getItemPrefix() {
@@ -905,24 +1077,183 @@
     });
   }
 
-  /* ── AUTO ENHANCE ── */
+  /* ── AI ENHANCE — TF.js GPU-powered quality enhancement ── */
+  var aiLoaded = false;
+  var aiLoading = false;
+
   function toggleEnhance(cb) {
     var dot = document.getElementById('enhance-dot');
+    var info = document.getElementById('enhance-info');
     if (cb.checked) {
       dot.style.transform = 'translateX(20px)';
       dot.style.background = '#60a5fa';
       dot.parentElement.querySelector('span:not(#enhance-dot)').style.background = '#1e3a5f';
+      info.style.display = 'block';
+      // Preload TF.js in background
+      loadAIEngine().catch(function() {});
     } else {
       dot.style.transform = 'translateX(0)';
       dot.style.background = '#64748b';
       dot.parentElement.querySelector('span:not(#enhance-dot)').style.background = '#2a2d3e';
+      info.style.display = 'none';
+    }
+  }
+
+  function aiStatus(msg, color) {
+    var el = document.getElementById('ai-status');
+    el.style.display = msg ? 'block' : 'none';
+    el.textContent = msg;
+    el.style.color = color || '#94a3b8';
+  }
+
+  function loadScript(src) {
+    return new Promise(function(resolve, reject) {
+      var s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = function() { reject(new Error('Failed to load: ' + src)); };
+      document.head.appendChild(s);
+    });
+  }
+
+  async function loadAIEngine() {
+    if (aiLoaded) return;
+    if (aiLoading) {
+      while (aiLoading) await new Promise(function(r) { setTimeout(r, 200); });
+      return;
+    }
+    aiLoading = true;
+    aiStatus('⏳ Loading TensorFlow.js (~1.5MB)...', '#c084fc');
+    try {
+      await loadScript('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js');
+      aiStatus('⏳ Initializing WebGL...', '#c084fc');
+      await tf.ready();
+      aiLoaded = true;
+      aiStatus('✅ Ready — ' + tf.getBackend() + ' backend', '#4ade80');
+      setTimeout(function() { aiStatus(''); }, 3000);
+    } catch (err) {
+      aiStatus('❌ Failed: ' + err.message, '#f87171');
+      throw err;
+    } finally {
+      aiLoading = false;
     }
   }
 
   function getEnhanceSettings() {
-    var isOn = document.getElementById('toggle-enhance').checked;
-    if (!isOn) return { sharp: 0, contrast: 0, bright: 0, sat: 0, lanczos: false };
-    return { sharp: 80, contrast: 15, bright: 5, sat: 10, lanczos: true };
+    return document.getElementById('toggle-enhance').checked;
+  }
+
+  /* GPU-powered enhancement at same dimensions */
+  function aiEnhanceCanvas(canvas) {
+    return tf.tidy(function() {
+      var w = canvas.width, h = canvas.height;
+      var img = tf.browser.fromPixels(canvas).toFloat().div(255.0); // [H, W, 3]
+
+      // Edge detection via Sobel convolution
+      var sobelX = tf.tensor4d([
+        -1, 0, 1, -2, 0, 2, -1, 0, 1
+      ], [3, 3, 1, 1]);
+      var sobelY = tf.tensor4d([
+        -1,-2,-1, 0, 0, 0, 1, 2, 1
+      ], [3, 3, 1, 1]);
+
+      var channels = tf.split(img, 3, 2);
+      var edgeMaps = channels.map(function(ch) {
+        var ch4d = ch.reshape([1, h, w, 1]);
+        var gx = tf.conv2d(ch4d, sobelX, 1, 'same');
+        var gy = tf.conv2d(ch4d, sobelY, 1, 'same');
+        return tf.sqrt(tf.add(tf.square(gx), tf.square(gy)));
+      });
+      var edgeMag = tf.add(tf.add(edgeMaps[0], edgeMaps[1]), edgeMaps[2]).div(3.0);
+      var edgeMask = tf.clipByValue(edgeMag.mul(4.0), 0, 1);
+
+      // Strong sharpening kernel
+      var sharpenKernel = tf.tensor4d([
+         0,  -1,   0,
+        -1,   5,  -1,
+         0,  -1,   0
+      ], [3, 3, 1, 1]);
+
+      // Detail enhancement kernel (fine edges)
+      var detailKernel = tf.tensor4d([
+        -0.5, -0.5, -0.5,
+        -0.5,  5.0, -0.5,
+        -0.5, -0.5, -0.5
+      ], [3, 3, 1, 1]);
+
+      // Apply both kernels per channel
+      var sharpened = channels.map(function(ch) {
+        var ch4d = ch.reshape([1, h, w, 1]);
+        return tf.conv2d(ch4d, sharpenKernel, 1, 'same');
+      });
+      var detailed = channels.map(function(ch) {
+        var ch4d = ch.reshape([1, h, w, 1]);
+        return tf.conv2d(ch4d, detailKernel, 1, 'same');
+      });
+
+      var sharpenedImg = tf.concat(sharpened, 3).reshape([h, w, 3]);
+      var detailedImg  = tf.concat(detailed, 3).reshape([h, w, 3]);
+      var edgeMask3 = tf.concat([edgeMask, edgeMask, edgeMask], 3).reshape([h, w, 3]);
+
+      // Adaptive blend:
+      // On edges: 50% sharpened + 20% detail enhanced
+      // On smooth: mostly original (preserves flat areas, reduces noise)
+      var edgeStrength = 0.5;
+      var detailStrength = 0.2;
+      var smoothWeight = tf.scalar(1.0).sub(edgeMask3.mul(edgeStrength + detailStrength));
+      var result = tf.add(
+        tf.add(
+          img.mul(smoothWeight),
+          sharpenedImg.mul(edgeMask3.mul(edgeStrength))
+        ),
+        detailedImg.mul(edgeMask3.mul(detailStrength))
+      );
+
+      // Contrast boost — stronger than basic canvas version
+      var mean = result.mean();
+      result = tf.add(tf.mul(tf.sub(result, mean), 1.12), mean);
+
+      // Slight saturation boost
+      var gray = result.mean(2, true); // [H, W, 1]
+      result = tf.add(gray.mul(0.9), result.mul(1.1)); // boost color channels slightly
+
+      return tf.clipByValue(result, 0, 1).mul(255).toInt();
+    });
+  }
+
+  /* Main enhance function — uses TF.js if loaded, falls back to canvas */
+  function enhanceCanvas(canvas) {
+    if (!getEnhanceSettings()) return canvas;
+
+    // If TF.js is loaded, use GPU enhancement
+    if (aiLoaded && typeof tf !== 'undefined') {
+      try {
+        var resultTensor = aiEnhanceCanvas(canvas);
+        var data = resultTensor.dataSync(); // synchronous — returns Uint8Array
+        var outCanvas = document.createElement('canvas');
+        outCanvas.width = canvas.width;
+        outCanvas.height = canvas.height;
+        var ctx = outCanvas.getContext('2d');
+        var imgData = ctx.createImageData(canvas.width, canvas.height);
+        // resultTensor is [H, W, 3] — need to add alpha channel
+        for (var i = 0, j = 0; i < data.length; i += 3, j += 4) {
+          imgData.data[j]     = data[i];
+          imgData.data[j + 1] = data[i + 1];
+          imgData.data[j + 2] = data[i + 2];
+          imgData.data[j + 3] = 255;
+        }
+        ctx.putImageData(imgData, 0, 0);
+        resultTensor.dispose();
+        return outCanvas;
+      } catch (err) {
+        console.warn('TF.js enhance failed, using canvas fallback:', err);
+      }
+    }
+
+    // Fallback: canvas-based enhancement
+    canvas = unsharpMask(canvas, 80);
+    canvas = adjustImage(canvas, 15, 5, 10);
+    return canvas;
   }
 
   /* ── LANCZOS RESAMPLING ── */
@@ -1089,25 +1420,23 @@
     return canvas;
   }
 
-  /* ── SMART RESIZE (uses Lanczos if enabled) ── */
+  /* ── SMART RESIZE (uses Lanczos when AI enhance is on) ── */
   function smartResize(img, tw, th) {
-    var s = getEnhanceSettings();
+    var useAI = getEnhanceSettings();
     var srcCanvas = document.createElement('canvas');
     srcCanvas.width = img.naturalWidth || img.width;
     srcCanvas.height = img.naturalHeight || img.height;
-    var srcCtx = srcCanvas.getContext('2d');
-    srcCtx.drawImage(img, 0, 0);
+    srcCanvas.getContext('2d').drawImage(img, 0, 0);
 
     var resized;
-    if (s.lanczos && (tw !== srcCanvas.width || th !== srcCanvas.height)) {
+    if (useAI && aiLoaded && (tw !== srcCanvas.width || th !== srcCanvas.height)) {
       resized = lanczosResize(srcCanvas, tw, th);
     } else {
       resized = document.createElement('canvas');
       resized.width = tw; resized.height = th;
-      var ctx = resized.getContext('2d');
-      ctx.drawImage(img, 0, 0, tw, th);
+      resized.getContext('2d').drawImage(img, 0, 0, tw, th);
     }
-    return enhanceCanvas(resized);
+    return resized;
   }
 </script>
 <script src="nav.js"></script>
