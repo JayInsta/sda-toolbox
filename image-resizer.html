@@ -124,21 +124,6 @@
 
     /* ENHANCEMENT SECTION */
     .enhance-toggle { display: flex; align-items: center; justify-content: space-between; }
-    .enhance-toggle label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; }
-    .enhance-controls { margin-top: 14px; }
-    .enhance-slider-row { margin-bottom: 14px; }
-    .enhance-slider-row:last-child { margin-bottom: 0; }
-    .enhance-slider-row label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; display: flex; justify-content: space-between; margin-bottom: 6px; }
-    .enhance-slider-row label span { color: #c084fc; font-family: 'Courier New', monospace; font-weight: 700; }
-    .enhance-slider-row input[type="range"] { width: 100%; accent-color: #7c3aed; cursor: pointer; }
-    .enhance-preset-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-    .enhance-preset-btn { padding: 8px 14px; border-radius: 8px; border: 1px solid #2a2d3e; background: #0f1117; color: #64748b; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; user-select: none; }
-    .enhance-preset-btn:hover { border-color: #3a3d4e; color: #94a3b8; }
-    .enhance-preset-btn.active { background: #2d1e3d; border-color: #7c3aed; color: #c084fc; }
-    .lanczos-toggle { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 14px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; }
-    .lanczos-toggle input { accent-color: #7c3aed; width: 15px; height: 15px; cursor: pointer; }
-    .lanczos-toggle .lt-text { font-size: 12px; color: #94a3b8; }
-    .lanczos-toggle .lt-text strong { color: #c084fc; }
 
     /* PASSWORD MODAL */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center; }
@@ -303,8 +288,8 @@
       <div style="flex:1">
         <div style="display:flex;align-items:center;justify-content:space-between">
           <div>
-            <div class="card-title">Image enhancement &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
-            <div class="card-sub">Sharpen, adjust contrast/brightness, and use Lanczos resampling</div>
+            <div class="card-title">✨ Auto enhance &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
+            <div class="card-sub">Sharpens edges, boosts contrast &amp; brightness — ideal for blurry or low-quality logos</div>
           </div>
           <label style="position:relative;width:44px;height:24px;flex-shrink:0">
             <input type="checkbox" id="toggle-enhance" onchange="toggleEnhance(this)" style="opacity:0;width:0;height:0;position:absolute">
@@ -312,40 +297,6 @@
             <span id="enhance-dot" style="position:absolute;width:18px;height:18px;left:3px;top:3px;background:#64748b;border-radius:50%;transition:transform 0.2s,background 0.2s"></span>
           </label>
         </div>
-      </div>
-    </div>
-
-    <div id="enhance-section" style="display:none;margin-top:1.25rem">
-      <div class="enhance-preset-row">
-        <div class="enhance-preset-btn active" onclick="setEnhancePreset('none')">None</div>
-        <div class="enhance-preset-btn" onclick="setEnhancePreset('auto')">✨ Auto enhance</div>
-        <div class="enhance-preset-btn" onclick="setEnhancePreset('sharpen')">🔍 Sharpen</div>
-        <div class="enhance-preset-btn" onclick="setEnhancePreset('vivid')">🎨 Vivid</div>
-        <div class="enhance-preset-btn" onclick="setEnhancePreset('clean')">🧹 Clean logo</div>
-      </div>
-
-      <div class="enhance-controls" id="enhance-controls">
-        <div class="enhance-slider-row">
-          <label>Sharpness <span id="sharp-val">0%</span></label>
-          <input type="range" id="sharp-slider" min="0" max="200" value="0" oninput="document.getElementById('sharp-val').textContent=this.value+'%';clearEnhancePreset()">
-        </div>
-        <div class="enhance-slider-row">
-          <label>Contrast <span id="contrast-val">0%</span></label>
-          <input type="range" id="contrast-slider" min="-100" max="100" value="0" oninput="document.getElementById('contrast-val').textContent=this.value+'%';clearEnhancePreset()">
-        </div>
-        <div class="enhance-slider-row">
-          <label>Brightness <span id="bright-val">0%</span></label>
-          <input type="range" id="bright-slider" min="-100" max="100" value="0" oninput="document.getElementById('bright-val').textContent=this.value+'%';clearEnhancePreset()">
-        </div>
-        <div class="enhance-slider-row">
-          <label>Saturation <span id="sat-val">0%</span></label>
-          <input type="range" id="sat-slider" min="-100" max="100" value="0" oninput="document.getElementById('sat-val').textContent=this.value+'%';clearEnhancePreset()">
-        </div>
-      </div>
-
-      <div class="lanczos-toggle">
-        <input type="checkbox" id="lanczos-cb" checked>
-        <div class="lt-text"><strong>Lanczos resampling</strong> — higher quality upscaling (slower but sharper edges)</div>
       </div>
     </div>
   </div>
@@ -954,9 +905,8 @@
     });
   }
 
-  /* ── ENHANCEMENT PRESETS ── */
+  /* ── AUTO ENHANCE ── */
   function toggleEnhance(cb) {
-    document.getElementById('enhance-section').style.display = cb.checked ? 'block' : 'none';
     var dot = document.getElementById('enhance-dot');
     if (cb.checked) {
       dot.style.transform = 'translateX(20px)';
@@ -969,42 +919,10 @@
     }
   }
 
-  var ENHANCE_PRESETS = {
-    none:    { sharp: 0,   contrast: 0,  bright: 0,  sat: 0   },
-    auto:    { sharp: 80,  contrast: 15, bright: 5,  sat: 10  },
-    sharpen: { sharp: 150, contrast: 0,  bright: 0,  sat: 0   },
-    vivid:   { sharp: 40,  contrast: 25, bright: 5,  sat: 40  },
-    clean:   { sharp: 120, contrast: 20, bright: 10, sat: -20 }
-  };
-
-  function setEnhancePreset(name) {
-    var p = ENHANCE_PRESETS[name];
-    document.getElementById('sharp-slider').value = p.sharp;
-    document.getElementById('contrast-slider').value = p.contrast;
-    document.getElementById('bright-slider').value = p.bright;
-    document.getElementById('sat-slider').value = p.sat;
-    document.getElementById('sharp-val').textContent = p.sharp + '%';
-    document.getElementById('contrast-val').textContent = p.contrast + '%';
-    document.getElementById('bright-val').textContent = p.bright + '%';
-    document.getElementById('sat-val').textContent = p.sat + '%';
-    document.querySelectorAll('.enhance-preset-btn').forEach(function(b) { b.classList.remove('active'); });
-    event.target.classList.add('active');
-  }
-
-  function clearEnhancePreset() {
-    document.querySelectorAll('.enhance-preset-btn').forEach(function(b) { b.classList.remove('active'); });
-  }
-
   function getEnhanceSettings() {
     var isOn = document.getElementById('toggle-enhance').checked;
     if (!isOn) return { sharp: 0, contrast: 0, bright: 0, sat: 0, lanczos: false };
-    return {
-      sharp:    parseInt(document.getElementById('sharp-slider').value) || 0,
-      contrast: parseInt(document.getElementById('contrast-slider').value) || 0,
-      bright:   parseInt(document.getElementById('bright-slider').value) || 0,
-      sat:      parseInt(document.getElementById('sat-slider').value) || 0,
-      lanczos:  document.getElementById('lanczos-cb').checked
-    };
+    return { sharp: 80, contrast: 15, bright: 5, sat: 10, lanczos: true };
   }
 
   /* ── LANCZOS RESAMPLING ── */
