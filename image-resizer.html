@@ -1337,15 +1337,6 @@
     return canvas;
   }
 
-  /* ── APPLY ALL ENHANCEMENTS TO A CANVAS ── */
-  function enhanceCanvas(canvas) {
-    var s = getEnhanceSettings();
-    if (s.sharp === 0 && s.contrast === 0 && s.bright === 0 && s.sat === 0) return canvas;
-    canvas = unsharpMask(canvas, s.sharp);
-    canvas = adjustImage(canvas, s.contrast, s.bright, s.sat);
-    return canvas;
-  }
-
   /* ── SMART RESIZE (uses Lanczos when AI enhance is on) ── */
   function smartResize(img, tw, th) {
     var useAI = getEnhanceSettings();
