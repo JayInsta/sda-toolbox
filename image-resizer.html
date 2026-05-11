@@ -572,6 +572,15 @@
     var name = (document.getElementById('item-name').value || '').trim();
     return name ? name.replace(/[^a-z0-9_\-]/gi, '_') + '_' : '';
   }
+  function getFileBase(f) {
+    return f.name.replace(/\.[^.]+$/, '').replace(/[^a-z0-9_\-]/gi, '_');
+  }
+  function buildOutName(prefix, labelName, ext, f, idx) {
+    if (files.length > 1) {
+      return prefix + getFileBase(f) + '_' + labelName + '.' + ext;
+    }
+    return prefix + labelName + '.' + ext;
+  }
 
   /* ── MODE ── */
   function setMode(m) {
@@ -803,7 +812,7 @@
             var prefix = getItemPrefix();
             var ext = outputFmt==='jpeg' ? 'jpg' : 'png';
             var labelName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase() : f.name.replace(/\.[^.]+$/,'')+'_'+p.w+'x'+p.h;
-            var outName = prefix + labelName + '.' + ext;
+            var outName = buildOutName(prefix, labelName, ext, f, idx);
             results[idx] = { dataUrl: dataUrl, name: outName, w: p.w, h: p.h };
             done++;
             if (done===files.length) renderResults();
@@ -854,7 +863,7 @@
               var dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(serialized);
               var prefix = getItemPrefix();
               var labelName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase() : f.name.replace(/\.[^.]+$/,'')+'_'+tw+'x'+th;
-              var outName = prefix + labelName + '.svg';
+              var outName = buildOutName(prefix, labelName, 'svg', f, idx);
               results[idx] = { dataUrl: dataUrl, name: outName, w: tw, h: th };
               done++; if (done===files.length) renderResults();
             };
@@ -866,7 +875,7 @@
             var dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
             var prefix = getItemPrefix();
             var labelName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase() : f.name.replace(/\.[^.]+$/,'')+'_'+tw+'x'+th;
-            var outName = prefix + labelName + '.svg';
+            var outName = buildOutName(prefix, labelName, 'svg', f, idx);
             results[idx] = { dataUrl: dataUrl, name: outName, w: tw, h: th };
             done++; if (done===files.length) renderResults();
             return;
@@ -877,7 +886,7 @@
         var prefix  = getItemPrefix();
         var ext     = outputFmt==='jpeg' ? 'jpg' : 'png';
         var labelName = activePreset ? activePreset.label.replace(/[^a-z0-9_\-]/gi,'_').toLowerCase() : f.name.replace(/\.[^.]+$/,'')+'_'+tw+'x'+th;
-        var outName = prefix + labelName + '.' + ext;
+        var outName = buildOutName(prefix, labelName, ext, f, idx);
         results[idx] = { dataUrl:dataUrl, name:outName, w:tw, h:th };
         done++;
         if (done===files.length) renderResults();
