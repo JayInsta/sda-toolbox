@@ -1157,25 +1157,63 @@
         raw.unshift({ type: 'missing', exp: expLines[i-1], ei: i }); i--;
       }
     }
+
+    // Collect consecutive unmatched blocks and pair by best similarity
     var result = [];
-    for (var k = 0; k < raw.length; k++) {
-      if (raw[k].type === 'missing' && k + 1 < raw.length && raw[k+1].type === 'extra') {
-        var sim = similarity(raw[k].exp, raw[k+1].act);
-        if (sim > 0.4) {
-          var wd = wordDiff(raw[k].exp, raw[k+1].act);
-          result.push({ type: 'changed', exp: raw[k].exp, act: raw[k+1].act, ei: raw[k].ei, ai: raw[k+1].ai, expHtml: wd.exp, actHtml: wd.act });
-          k++; continue;
+    var k = 0;
+    while (k < raw.length) {
+      if (raw[k].type === 'equal') { result.push(raw[k]); k++; continue; }
+
+      // Gather consecutive unmatched items (missing + extra block)
+      var block = [];
+      while (k < raw.length && raw[k].type !== 'equal') { block.push(raw[k]); k++; }
+
+      var misses = block.filter(function(b) { return b.type === 'missing'; });
+      var extras = block.filter(function(b) { return b.type === 'extra'; });
+
+      // Find best pairings by similarity
+      var usedM = {}, usedE = {};
+      var pairs = [];
+
+      // Build similarity matrix and sort by best score
+      var candidates = [];
+      for (var mi = 0; mi < misses.length; mi++) {
+        for (var ei = 0; ei < extras.length; ei++) {
+          var sim = similarity(misses[mi].exp, extras[ei].act);
+          if (sim > 0.4) candidates.push({ mi: mi, ei: ei, sim: sim });
         }
       }
-      if (raw[k].type === 'extra' && k + 1 < raw.length && raw[k+1].type === 'missing') {
-        var sim = similarity(raw[k+1].exp, raw[k].act);
-        if (sim > 0.4) {
-          var wd = wordDiff(raw[k+1].exp, raw[k].act);
-          result.push({ type: 'changed', exp: raw[k+1].exp, act: raw[k].act, ei: raw[k+1].ei, ai: raw[k].ai, expHtml: wd.exp, actHtml: wd.act });
-          k++; continue;
+      candidates.sort(function(a, b) { return b.sim - a.sim; }); // best first
+
+      // Greedily pair best matches
+      candidates.forEach(function(c) {
+        if (usedM[c.mi] || usedE[c.ei]) return;
+        usedM[c.mi] = true;
+        usedE[c.ei] = true;
+        var wd = wordDiff(misses[c.mi].exp, extras[c.ei].act);
+        pairs.push({
+          type: 'changed', exp: misses[c.mi].exp, act: extras[c.ei].act,
+          ei: misses[c.mi].ei, ai: extras[c.ei].ai, expHtml: wd.exp, actHtml: wd.act,
+          _mIdx: c.mi, _eIdx: c.ei
+        });
+      });
+
+      // Build ordered output: iterate original block order, emit paired or unpaired
+      var pairByM = {}, pairByE = {};
+      pairs.forEach(function(p) { pairByM[p._mIdx] = p; pairByE[p._eIdx] = p; });
+
+      var mIdx = 0, eIdx = 0;
+      block.forEach(function(item) {
+        if (item.type === 'missing') {
+          if (pairByM[mIdx]) { result.push(pairByM[mIdx]); }
+          else { result.push(item); }
+          mIdx++;
+        } else {
+          if (pairByE[eIdx]) { /* already emitted via the missing side */ }
+          else { result.push(item); }
+          eIdx++;
         }
-      }
-      result.push(raw[k]);
+      });
     }
     return result;
   }
