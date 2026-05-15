@@ -648,6 +648,11 @@
     outputFmt = fmt;
     document.querySelectorAll('.fmt-btn').forEach(function(b){ b.classList.remove('active'); });
     document.querySelectorAll('.fmt-btn').forEach(function(b){ if(b.textContent.toLowerCase()===fmt||( fmt==='jpeg'&&b.textContent==='JPG')) b.classList.add('active'); });
+    // Keep the format-dependent UI in sync (parity with setFmt). Without
+    // this, picking an SVG/JPG preset would leave the quality slider or
+    // SVG info panel mis-toggled relative to the active format.
+    document.getElementById('quality-section').style.display = fmt === 'jpeg' ? 'block' : 'none';
+    document.getElementById('svg-fmt-info').style.display    = fmt === 'svg'  ? 'block' : 'none';
     updateBtn();
   }
 
@@ -832,6 +837,9 @@
         }
 
         var canvas = smartResize(img, tw, th);
+        // Apply AI/canvas enhancement when toggle is on. enhanceCanvas is a
+        // no-op when the toggle is off, so this is safe for the default path.
+        canvas = enhanceCanvas(canvas);
         if (outputFmt==='jpeg') {
           var jc = document.createElement('canvas');
           jc.width = tw; jc.height = th;
