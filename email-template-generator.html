@@ -607,6 +607,8 @@
       <div class="output-box" id="box-cc-cmd" style="line-height:1.6;font-size:13px;color:#2dd4bf;white-space:pre-wrap;word-break:break-all"></div>
     </div>
   </div>
+
+  <!-- QA SECTION -->
   <div class="qa-wrap">
     <div class="section-divider" style="margin-top:2rem">
       <div class="section-divider-line"></div><div class="section-label sl-red">🔍 QA validator — diff checker</div><div class="section-divider-line"></div>
@@ -693,22 +695,16 @@
   function toggleSection(id, cb) { document.getElementById(id).style.display = cb.checked ? 'block' : 'none'; }
   function ensureHttps(url) { if (!url) return ''; return /^https?:\/\//i.test(url) ? url : 'https://' + url; }
 
-  /* Toggle optional field visibility and update label color */
   function toggleOpt(cbId, sectionId) {
     var cb = document.getElementById(cbId);
     var section = document.getElementById(sectionId);
-    // Find label associated (lbl- prefix convention)
     var lblId = 'lbl-' + cbId.replace('cb-', '');
     var lbl = document.getElementById(lblId);
     if (section) section.style.display = cb.checked ? 'block' : 'none';
     if (lbl) lbl.classList.toggle('active', cb.checked);
-    // Stop click from double-firing when clicking checkbox directly
     event && event.stopPropagation && event.stopPropagation();
   }
 
-  /* Get value of optional (checkbox-gated) field.
-     Returns null  → checkbox unchecked, do NOT include in output
-     Returns string → checkbox checked; value = custom (if filled) or default (if blank) */
   function optVal(cbId, inputId, defaultVal) {
     var cb = document.getElementById(cbId);
     if (!cb || !cb.checked) return null;
@@ -716,7 +712,6 @@
     return val || defaultVal;
   }
 
-  /* Get value of regular (always-included) field. Blank = use default. */
   function reqVal(inputId, defaultVal) {
     return gv(inputId) || defaultVal;
   }
@@ -759,7 +754,6 @@
     var contentOn  = document.getElementById('toggle-content').checked;
     var headingsOn = document.getElementById('toggle-headings').checked;
 
-    /* ── EXISTING FIELDS (blank = default) ── */
     var orderDesc   = contentOn ? reqVal('order-desc',   fillR(D.orderDesc,   retailer)) : fillR(D.orderDesc,   retailer);
     var familyDesc  = contentOn ? reqVal('family-desc',  fillR(D.familyDesc,  retailer)) : fillR(D.familyDesc,  retailer);
     var pickup      = contentOn ? reqVal('pickup',        D.pickup)                        : D.pickup;
@@ -768,10 +762,8 @@
     var rateHeading = contentOn ? reqVal('rate-heading', D.rateHeading)                   : D.rateHeading;
     var rateContent = contentOn ? reqVal('rate-content', D.rateContent)                   : D.rateContent;
 
-    /* Cancellation image alt — always included, default = retailer name */
     var cancelImgAlt = contentOn ? reqVal('inp-cancel-img-alt', retailer) : retailer;
 
-    /* ── NEW OPTIONAL FIELDS (checkbox gated, null = not included) ── */
     var finePrint      = contentOn ? optVal('cb-fine-print',    'inp-fine-print',       D.finePrint)      : null;
     var appstoreLink   = contentOn ? optVal('cb-app-links',     'inp-appstore-link',    D.appstoreLink)   : null;
     var playstoreLink  = contentOn ? optVal('cb-app-links',     'inp-playstore-link',   D.playstoreLink)  : null;
@@ -790,7 +782,6 @@
     var customPrivacyLink = contentOn ? optVal('cb-footer-links', 'inp-privacy-link', whitelabel + '/privacy') : null;
     var customTosLink     = contentOn ? optVal('cb-footer-links', 'inp-tos-link',     whitelabel + '/terms')   : null;
 
-    /* ── STEP 3 HEADINGS ── */
     var chd = headingsOn ? reqVal('cancel-heading-delivery',  'Your order has been canceled.')                              : 'Your order has been canceled.';
     var chp = headingsOn ? reqVal('cancel-heading-pickup',    'Your order has been canceled.')                              : 'Your order has been canceled.';
     var cfd = headingsOn ? reqVal('confirm-heading-delivery', 'Hi %{first_name}, your ' + retailer + ' order is all set.') : 'Hi %{first_name}, your ' + retailer + ' order is all set.';
@@ -802,7 +793,6 @@
     document.getElementById('hint-folder-t1').textContent = folderName;
     document.getElementById('hint-folder-t2').textContent = folderName;
 
-    /* OUTPUT 1 + 2 */
     renderPlain('box1', localeVar);
     renderPlain('box2', folderName);
 
@@ -810,12 +800,8 @@
     var t1 = [];
     t1.push(yamlKey + ':');
     t1.push('  one_order_mailer:');
-
-    // Fine print
     t1.push('    fine_print:');
     t1.push('      content: "' + (finePrint !== null ? finePrint : '') + '"');
-
-    // Footer
     t1.push('    footer:');
     if (appstoreLink  !== null) t1.push('      appstore_link: "' + appstoreLink + '"');
     if (playstoreLink !== null) t1.push('      playstore_link: "' + playstoreLink + '"');
@@ -831,15 +817,11 @@
     t1.push('      privacy_policy_link_label: "Privacy Policy"');
     t1.push('      tos_link: "' + tosUrl + '"');
     t1.push('      tos_link_label: "Terms & Conditions"');
-
-    // Order information
     t1.push('    order_information:');
     t1.push('      description: "' + orderDesc + '"');
     t1.push('      family_description: "' + familyDesc + '"');
     t1.push('      pickup:');
     t1.push('        instructions_details: "' + pickup + '"');
-
-    // Order cancellation
     t1.push('    order_cancellation:');
     t1.push('      generic_image:');
     t1.push('        image_alt: "' + cancelImgAlt + '"');
@@ -850,8 +832,6 @@
       t1.push('        delivery: "' + cancelSubjDel + '"');
       t1.push('        pickup: "' + cancelSubjPick + '"');
     }
-
-    // Order confirmation (only if any opt-in enabled)
     if (confirmImgAlt !== null || confirmSubjDel !== null) {
       t1.push('    order_confirmation:');
       if (confirmImgAlt !== null) {
@@ -864,8 +844,6 @@
         t1.push('        pickup: "' + confirmSubjPick + '"');
       }
     }
-
-    // Order receipt (only when custom content is enabled)
     if (contentOn) {
       t1.push('    order_receipt:');
       if (receiptImgAlt !== null) {
@@ -880,8 +858,6 @@
         t1.push('        pickup: "' + receiptSubjPick + '"');
       }
     }
-
-    // Order rating (only when custom content is enabled)
     if (contentOn) {
       t1.push('    order_rating:');
       t1.push('      rate_your_order: "' + rateHeading + '"');
@@ -890,14 +866,11 @@
         t1.push('      pickup_content: "' + ratingPickup + '"');
       }
     }
-
-    // Order upsell (only if opted in)
     if (upsellForgot !== null) {
       t1.push('    order_upsell:');
       t1.push('      forgot_something: ' + upsellForgot);
       t1.push('      you_can_add_until_shopper_checks_out: ' + upsellAdd);
     }
-
     renderYAML('box3', t1.join('\n'));
 
     /* ── OUTPUT 4: orders.yml (class_scoped) ── */
@@ -935,7 +908,6 @@
     ccParts.push('whitelabel=' + whitelabel);
     if (selectedCountry !== 'US') ccParts.push('country=' + selectedCountry);
     if (retailerUrl && retailerUrl !== whitelabel) ccParts.push('website=' + retailerUrl);
-
     if (contentOn) {
       ccParts.push('customize=yes');
       if (gv('order-desc'))    ccParts.push('order_description=' + gv('order-desc'));
@@ -964,7 +936,6 @@
       if (customPrivacyLink !== null) ccParts.push('privacy_link=' + customPrivacyLink);
       if (customTosLink !== null)     ccParts.push('tos_link=' + customTosLink);
     }
-
     if (headingsOn) {
       ccParts.push('headings=yes');
       if (gv('cancel-heading-delivery'))  ccParts.push('cancel_heading_delivery=' + gv('cancel-heading-delivery'));
@@ -975,7 +946,6 @@
       if (gv('receipt-heading-pickup'))   ccParts.push('receipt_heading_pickup=' + gv('receipt-heading-pickup'));
       if (gv('cancel-items-heading'))     ccParts.push('cancel_items_heading=' + gv('cancel-items-heading'));
     }
-
     var ccCmd = '/create-email-template "' + ccParts.join(' | ') + '"';
     var ccEl = document.getElementById('box-cc-cmd');
     ccEl.textContent = ccCmd;
@@ -1061,12 +1031,10 @@
     if (!t1Raw || !t2Raw) { alert('Please generate outputs first.'); return; }
     var folderName = document.getElementById('preview-folder').textContent || 'email-templates';
     if (folderName === '—') folderName = 'email-templates';
-
     var zip = new JSZip();
     var folder = zip.folder(folderName);
     folder.file('one_order_mailer.yml', t1Raw);
     folder.file('orders.yml', t2Raw);
-
     zip.generateAsync({ type: 'blob' }).then(function(blob) {
       var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
@@ -1077,7 +1045,28 @@
     });
   }
 
-  /* ── QA DIFF ENGINE v2 ── */
+  /* ═══════════════════════════════════════════════════════════
+     QA DIFF ENGINE v3
+     FIX: replaced Levenshtein similarity (failed on lines like
+          image_alt: "Agora (Fulfillment Testing Warehouse)" vs
+          image_alt: "Agora US" because the edit distance vs the
+          longer string fell below 0.4) with a two-pass approach:
+
+     1. tokenSimilarity() — Jaccard index on whitespace-split
+        tokens. Shared YAML key tokens (image_alt:, "Agora) push
+        the score well above threshold even when the value portion
+        differs drastically.
+
+     2. keySimilarity() — extracts the YAML key prefix before the
+        colon and checks for an exact key match. If both lines
+        share the same key (e.g. "image_alt") they are ALWAYS
+        paired as "changed", regardless of how different the
+        values are.
+
+     Pairing threshold lowered from 0.4 → 0.25 as an additional
+     safety net for short lines with long differing values.
+  ═══════════════════════════════════════════════════════════ */
+
   var diffMode = 'side';
   var lastDiffResult = null;
 
@@ -1085,27 +1074,49 @@
     diffMode = m;
     document.getElementById('dm-side').classList.toggle('active', m === 'side');
     document.getElementById('dm-inline').classList.toggle('active', m === 'inline');
-    document.getElementById('diff-view-side').style.display = m === 'side' ? 'block' : 'none';
+    document.getElementById('diff-view-side').style.display   = m === 'side'   ? 'block' : 'none';
     document.getElementById('diff-view-inline').style.display = m === 'inline' ? 'block' : 'none';
   }
 
-  function similarity(a, b) {
+  /* ── NEW: Jaccard token similarity ──────────────────────────
+     Splits each line on whitespace, builds two token sets, and
+     returns intersection / union. This is robust to long value
+     differences because shared key tokens still contribute.     */
+  function tokenSimilarity(a, b) {
     if (!a || !b) return 0;
     a = a.trim(); b = b.trim();
     if (a === b) return 1;
-    var longer = a.length > b.length ? a : b;
-    var shorter = a.length > b.length ? b : a;
-    if (longer.length === 0) return 1;
-    var costs = [];
-    for (var i = 0; i <= longer.length; i++) { costs[i] = []; costs[i][0] = i; }
-    for (var j = 0; j <= shorter.length; j++) { costs[0][j] = j; }
-    for (var i = 1; i <= longer.length; i++) {
-      for (var j = 1; j <= shorter.length; j++) {
-        var cost = longer.charAt(i-1) === shorter.charAt(j-1) ? 0 : 1;
-        costs[i][j] = Math.min(costs[i-1][j]+1, costs[i][j-1]+1, costs[i-1][j-1]+cost);
-      }
-    }
-    return 1 - (costs[longer.length][shorter.length] / longer.length);
+    var wa = a.split(/\s+/);
+    var wb = b.split(/\s+/);
+    var setA = {}, setB = {}, union = {}, inter = 0;
+    wa.forEach(function(t) { setA[t] = true; union[t] = true; });
+    wb.forEach(function(t) { setB[t] = true; union[t] = true; });
+    Object.keys(setA).forEach(function(t) { if (setB[t]) inter++; });
+    var unionSize = Object.keys(union).length;
+    return unionSize === 0 ? 0 : inter / unionSize;
+  }
+
+  /* ── NEW: YAML key equality check ───────────────────────────
+     Extracts the leading indented key (everything before the
+     first colon) and returns true if both lines share the same
+     key. Ensures lines like:
+       image_alt: "Agora (Fulfillment Testing Warehouse)"
+       image_alt: "Agora US"
+     are ALWAYS treated as a changed pair, never as
+     missing + extra.                                           */
+  function sameYamlKey(a, b) {
+    var reKey = /^(\s*[a-zA-Z0-9_]+)\s*:/;
+    var ma = a.match(reKey);
+    var mb = b.match(reKey);
+    if (!ma || !mb) return false;
+    return ma[1].trim() === mb[1].trim();
+  }
+
+  /* Combined score: if the YAML keys match exactly, boost to 1.
+     Otherwise fall back to Jaccard token similarity.           */
+  function lineSimilarity(a, b) {
+    if (sameYamlKey(a, b)) return 1;
+    return tokenSimilarity(a, b);
   }
 
   function wordDiff(expLine, actLine) {
@@ -1117,9 +1128,8 @@
       if (ew[i-1] === aw[j-1]) dp[i][j] = dp[i-1][j-1] + 1;
       else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
     }
-    var eResult = [], aResult = [];
-    var i = m, j = n;
     var eOps = [], aOps = [];
+    var i = m, j = n;
     while (i > 0 || j > 0) {
       if (i > 0 && j > 0 && ew[i-1] === aw[j-1]) { eOps.unshift('eq'); aOps.unshift('eq'); i--; j--; }
       else if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) { aOps.unshift('add'); j--; }
@@ -1127,13 +1137,11 @@
     }
     var eHtml = '', aHtml = '', ei = 0, ai = 0;
     eOps.forEach(function(op) {
-      if (op === 'eq') eHtml += esc(ew[ei]);
-      else eHtml += '<span class="word-hi">' + esc(ew[ei]) + '</span>';
+      eHtml += op === 'eq' ? esc(ew[ei]) : '<span class="word-hi">' + esc(ew[ei]) + '</span>';
       ei++;
     });
     aOps.forEach(function(op) {
-      if (op === 'eq') aHtml += esc(aw[ai]);
-      else aHtml += '<span class="word-hi">' + esc(aw[ai]) + '</span>';
+      aHtml += op === 'eq' ? esc(aw[ai]) : '<span class="word-hi">' + esc(aw[ai]) + '</span>';
       ai++;
     });
     return { exp: eHtml, act: aHtml };
@@ -1158,59 +1166,56 @@
       }
     }
 
-    // Collect consecutive unmatched blocks and pair by best similarity
     var result = [];
     var k = 0;
     while (k < raw.length) {
       if (raw[k].type === 'equal') { result.push(raw[k]); k++; continue; }
 
-      // Gather consecutive unmatched items (missing + extra block)
       var block = [];
       while (k < raw.length && raw[k].type !== 'equal') { block.push(raw[k]); k++; }
 
       var misses = block.filter(function(b) { return b.type === 'missing'; });
       var extras = block.filter(function(b) { return b.type === 'extra'; });
 
-      // Find best pairings by similarity
       var usedM = {}, usedE = {};
       var pairs = [];
 
-      // Build similarity matrix and sort by best score
+      /* Build similarity candidates using the improved lineSimilarity().
+         Threshold lowered from 0.4 → 0.25 to catch lines where values
+         differ drastically but the YAML key is shared.                  */
       var candidates = [];
       for (var mi = 0; mi < misses.length; mi++) {
         for (var ei = 0; ei < extras.length; ei++) {
-          var sim = similarity(misses[mi].exp, extras[ei].act);
-          if (sim > 0.4) candidates.push({ mi: mi, ei: ei, sim: sim });
+          var sim = lineSimilarity(misses[mi].exp, extras[ei].act);
+          if (sim > 0.25) candidates.push({ mi: mi, ei: ei, sim: sim });
         }
       }
-      candidates.sort(function(a, b) { return b.sim - a.sim; }); // best first
+      candidates.sort(function(a, b) { return b.sim - a.sim; });
 
-      // Greedily pair best matches
       candidates.forEach(function(c) {
         if (usedM[c.mi] || usedE[c.ei]) return;
         usedM[c.mi] = true;
         usedE[c.ei] = true;
         var wd = wordDiff(misses[c.mi].exp, extras[c.ei].act);
         pairs.push({
-          type: 'changed', exp: misses[c.mi].exp, act: extras[c.ei].act,
-          ei: misses[c.mi].ei, ai: extras[c.ei].ai, expHtml: wd.exp, actHtml: wd.act,
+          type: 'changed',
+          exp: misses[c.mi].exp, act: extras[c.ei].act,
+          ei: misses[c.mi].ei,  ai: extras[c.ei].ai,
+          expHtml: wd.exp, actHtml: wd.act,
           _mIdx: c.mi, _eIdx: c.ei
         });
       });
 
-      // Build ordered output: iterate original block order, emit paired or unpaired
       var pairByM = {}, pairByE = {};
       pairs.forEach(function(p) { pairByM[p._mIdx] = p; pairByE[p._eIdx] = p; });
 
       var mIdx = 0, eIdx = 0;
       block.forEach(function(item) {
         if (item.type === 'missing') {
-          if (pairByM[mIdx]) { result.push(pairByM[mIdx]); }
-          else { result.push(item); }
+          result.push(pairByM[mIdx] ? pairByM[mIdx] : item);
           mIdx++;
         } else {
-          if (pairByE[eIdx]) { /* already emitted via the missing side */ }
-          else { result.push(item); }
+          if (!pairByE[eIdx]) result.push(item);
           eIdx++;
         }
       });
@@ -1263,9 +1268,9 @@
 
     var matchCount = 0, missCount = 0, extraCount = 0, chgCount = 0;
     diff.forEach(function(d) {
-      if (d.type === 'equal') matchCount++;
+      if      (d.type === 'equal')   matchCount++;
       else if (d.type === 'missing') missCount++;
-      else if (d.type === 'extra') extraCount++;
+      else if (d.type === 'extra')   extraCount++;
       else if (d.type === 'changed') chgCount++;
     });
 
@@ -1277,12 +1282,12 @@
       : '❌ Differences found — ' + (missCount + extraCount + chgCount) + ' issue(s) across ' + total + ' lines';
 
     document.getElementById('diff-summary').innerHTML =
-      '<div class="diff-stat ds-ok"><div class="diff-stat-num">' + matchCount + '</div><div class="diff-stat-label">Matching</div></div>' +
-      '<div class="diff-stat ds-diff"><div class="diff-stat-num">' + missCount + '</div><div class="diff-stat-label">Missing</div></div>' +
-      '<div class="diff-stat ds-miss"><div class="diff-stat-num">' + extraCount + '</div><div class="diff-stat-label">Extra</div></div>' +
-      '<div class="diff-stat ds-chg"><div class="diff-stat-num">' + chgCount + '</div><div class="diff-stat-label">Changed</div></div>';
+      '<div class="diff-stat ds-ok"><div class="diff-stat-num">'   + matchCount + '</div><div class="diff-stat-label">Matching</div></div>' +
+      '<div class="diff-stat ds-diff"><div class="diff-stat-num">' + missCount  + '</div><div class="diff-stat-label">Missing</div></div>'  +
+      '<div class="diff-stat ds-miss"><div class="diff-stat-num">' + extraCount + '</div><div class="diff-stat-label">Extra</div></div>'    +
+      '<div class="diff-stat ds-chg"><div class="diff-stat-num">'  + chgCount   + '</div><div class="diff-stat-label">Changed</div></div>';
 
-    document.getElementById('diff-view-side').innerHTML = renderSideBySide(diff);
+    document.getElementById('diff-view-side').innerHTML   = renderSideBySide(diff);
     document.getElementById('diff-view-inline').innerHTML = renderUnified(diff);
     setDiffMode(diffMode);
 
