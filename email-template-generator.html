@@ -108,7 +108,7 @@
   .section-h.acc-clickable { cursor: pointer; user-select: none; transition: opacity 0.15s; padding-bottom: 4px; margin-bottom: 8px; border-bottom: 1px solid transparent; }
   .section-h.acc-clickable:hover { border-bottom-color: var(--border); }
   .section-h.acc-clickable:hover .label { color: var(--text-1); }
-  .section-h .acc-chev { margin-left: auto; font-size: 10px; color: var(--text-3); transition: transform 0.2s; flex-shrink: 0; line-height: 1; padding: 0 2px; }
+  .section-h .acc-chev { margin-left: auto; font-size: 14px; color: var(--text-3); transition: transform 0.2s; flex-shrink: 0; line-height: 1; padding: 0 4px; }
   .section-h.acc-clickable:hover .acc-chev { color: var(--accent); }
   .section-h.collapsed .acc-chev { transform: rotate(-90deg); }
   .section-h.collapsed { margin-bottom: 0; padding-bottom: 6px; }
@@ -507,12 +507,7 @@
 
         <div id="content-section" style="display:none">
 
-          <div class="section-h"><div class="dot"></div><div class="label">Order information</div></div>
-          <div class="field"><label>Order description <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="order-desc" placeholder="Keep an eye out for order updates..."></textarea></div>
-          <div class="field"><label>Family order description <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="family-desc" placeholder="Keep an eye out... Remember only %{owner_name} can add items..."></textarea></div>
-          <div class="field"><label>Pickup instructions <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="pickup" placeholder="Pull into the designated parking area..." style="min-height:58px"></textarea></div>
-
-          <div class="section-h"><div class="dot"></div><div class="label">Fine print</div><span class="new-pill">NEW</span></div>
+          <div class="section-h"><div class="dot"></div><div class="label">Fine print</div></div>
           <div class="opt">
             <div class="opt-h" onclick="toggleOpt('cb-fine-print','opts-fine-print')">
               <input type="checkbox" class="opt-cb" id="cb-fine-print" onchange="toggleOpt('cb-fine-print','opts-fine-print')">
@@ -523,7 +518,7 @@
             <div class="opt-body" id="opts-fine-print"><input type="text" id="inp-fine-print" placeholder="Maplebear Inc. (d/b/a Instacart) 50 Beale St. #600 San Francisco, CA 94105"></div>
           </div>
 
-          <div class="section-h"><div class="dot"></div><div class="label">Footer — app links</div><span class="new-pill">NEW</span></div>
+          <div class="section-h"><div class="dot"></div><div class="label">Footer — app links</div></div>
           <div class="opt">
             <div class="opt-h" onclick="toggleOpt('cb-app-links','opts-app-links')">
               <input type="checkbox" class="opt-cb" id="cb-app-links" onchange="toggleOpt('cb-app-links','opts-app-links')">
@@ -539,7 +534,7 @@
             </div>
           </div>
 
-          <div class="section-h"><div class="dot"></div><div class="label">Footer — custom links</div><span class="new-pill">NEW</span></div>
+          <div class="section-h"><div class="dot"></div><div class="label">Footer — custom links</div></div>
           <div class="opt">
             <div class="opt-h" onclick="toggleOpt('cb-footer-links','opts-footer-links')">
               <input type="checkbox" class="opt-cb" id="cb-footer-links" onchange="toggleOpt('cb-footer-links','opts-footer-links')">
@@ -557,46 +552,12 @@
             </div>
           </div>
 
-          <div class="section-h"><div class="dot"></div><div class="label">Order cancellation</div></div>
-          <div class="field"><label>Cancellation body <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="cancel-body" placeholder="This email is to confirm..."></textarea></div>
-          <div class="field"><label>Cancellation image alt <span class="hint">blank = retailer name</span></label><input type="text" id="inp-cancel-img-alt" placeholder="Retailer name (auto-filled if blank)"></div>
-          <div class="opt">
-            <div class="opt-h" onclick="toggleOpt('cb-cancel-img-extras','opts-cancel-img-extras')">
-              <input type="checkbox" class="opt-cb" id="cb-cancel-img-extras" onchange="toggleOpt('cb-cancel-img-extras','opts-cancel-img-extras')">
-              <span class="opt-name" id="lbl-cancel-img-extras">Image link &amp; path (advanced)</span>
-              <span class="opt-new">new</span>
-              <span class="opt-desc">image_link &amp; image_path keys</span>
-            </div>
-            <div class="opt-body" id="opts-cancel-img-extras">
-              <div class="sub-l">Image link URL</div>
-              <input type="text" id="inp-cancel-img-link" placeholder="#">
-              <div class="sub-l">Image path <span style="color:var(--text-4);font-weight:400">prefix auto from slug</span></div>
-              <div class="path-input-group">
-                <span class="path-input-prefix" id="cancel-img-path-prefix">mailers/one_order_mailer/retailers/[slug]/</span>
-                <input type="text" class="path-input-suffix" id="inp-cancel-img-path" placeholder="order_cancellation.jpg">
-              </div>
-              <div class="sub-l">Preview image <span style="color:var(--text-4);font-weight:400">renders in mockup only · not emitted to YAML</span></div>
-              <input type="file" id="upload-cancel-img" accept="image/*" style="display:none" onchange="handleImageUpload(this,'cancel')">
-              <div class="img-upload-zone" id="upload-zone-cancel" onclick="document.getElementById('upload-cancel-img').click()">Drop an image or <span class="img-upload-link">browse</span></div>
-              <div class="img-upload-preview" id="img-preview-cancel" style="display:none"></div>
-            </div>
-          </div>
-          <div class="opt">
-            <div class="opt-h" onclick="toggleOpt('cb-cancel-subj','opts-cancel-subj')">
-              <input type="checkbox" class="opt-cb" id="cb-cancel-subj" onchange="toggleOpt('cb-cancel-subj','opts-cancel-subj')">
-              <span class="opt-name" id="lbl-cancel-subj">Email subject lines</span>
-              <span class="opt-new">new</span>
-              <span class="opt-desc">unchecked = not added</span>
-            </div>
-            <div class="opt-body" id="opts-cancel-subj">
-              <div class="two-col">
-                <div><div class="sub-l">Delivery</div><input type="text" id="inp-cancel-subj-del" placeholder="%{warehouse_name} order canceled"></div>
-                <div><div class="sub-l">Pickup</div><input type="text" id="inp-cancel-subj-pick" placeholder="%{warehouse_name} order canceled"></div>
-              </div>
-            </div>
-          </div>
+          <div class="section-h"><div class="dot"></div><div class="label">Order information</div></div>
+          <div class="field"><label>Order description <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="order-desc" placeholder="Keep an eye out for order updates..."></textarea></div>
+          <div class="field"><label>Family order description <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="family-desc" placeholder="Keep an eye out... Remember only %{owner_name} can add items..."></textarea></div>
+          <div class="field"><label>Pickup instructions <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="pickup" placeholder="Pull into the designated parking area..." style="min-height:58px"></textarea></div>
 
-          <div class="section-h"><div class="dot"></div><div class="label">Order confirmation</div><span class="new-pill">NEW</span></div>
+          <div class="section-h"><div class="dot"></div><div class="label">Order confirmation</div></div>
           <div class="opt">
             <div class="opt-h" onclick="toggleOpt('cb-confirm-img','opts-confirm-img')">
               <input type="checkbox" class="opt-cb" id="cb-confirm-img" onchange="toggleOpt('cb-confirm-img','opts-confirm-img')">
@@ -638,6 +599,61 @@
               <div class="two-col">
                 <div><div class="sub-l">Delivery</div><input type="text" id="inp-confirm-subj-del" placeholder="%{warehouse_name} order confirmed!"></div>
                 <div><div class="sub-l">Pickup</div><input type="text" id="inp-confirm-subj-pick" placeholder="%{warehouse_name} order confirmed!"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-h"><div class="dot"></div><div class="label">Order upsell</div></div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-upsell','opts-upsell')">
+              <input type="checkbox" class="opt-cb" id="cb-upsell" onchange="toggleOpt('cb-upsell','opts-upsell')">
+              <span class="opt-name" id="lbl-upsell">Order upsell section</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">unchecked = not added</span>
+            </div>
+            <div class="opt-body" id="opts-upsell">
+              <div class="sub-l">Forgot something label</div>
+              <input type="text" id="inp-upsell-forgot" placeholder="Forgot something?">
+              <div class="sub-l">Add items message</div>
+              <input type="text" id="inp-upsell-add" placeholder="You can add items until your shopper checks out.">
+            </div>
+          </div>
+
+          <div class="section-h"><div class="dot"></div><div class="label">Order cancellation</div></div>
+          <div class="field"><label>Cancellation body <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="cancel-body" placeholder="This email is to confirm..."></textarea></div>
+          <div class="field"><label>Cancellation image alt <span class="hint">blank = retailer name</span></label><input type="text" id="inp-cancel-img-alt" placeholder="Retailer name (auto-filled if blank)"></div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-cancel-img-extras','opts-cancel-img-extras')">
+              <input type="checkbox" class="opt-cb" id="cb-cancel-img-extras" onchange="toggleOpt('cb-cancel-img-extras','opts-cancel-img-extras')">
+              <span class="opt-name" id="lbl-cancel-img-extras">Image link &amp; path (advanced)</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">image_link &amp; image_path keys</span>
+            </div>
+            <div class="opt-body" id="opts-cancel-img-extras">
+              <div class="sub-l">Image link URL</div>
+              <input type="text" id="inp-cancel-img-link" placeholder="#">
+              <div class="sub-l">Image path <span style="color:var(--text-4);font-weight:400">prefix auto from slug</span></div>
+              <div class="path-input-group">
+                <span class="path-input-prefix" id="cancel-img-path-prefix">mailers/one_order_mailer/retailers/[slug]/</span>
+                <input type="text" class="path-input-suffix" id="inp-cancel-img-path" placeholder="order_cancellation.jpg">
+              </div>
+              <div class="sub-l">Preview image <span style="color:var(--text-4);font-weight:400">renders in mockup only · not emitted to YAML</span></div>
+              <input type="file" id="upload-cancel-img" accept="image/*" style="display:none" onchange="handleImageUpload(this,'cancel')">
+              <div class="img-upload-zone" id="upload-zone-cancel" onclick="document.getElementById('upload-cancel-img').click()">Drop an image or <span class="img-upload-link">browse</span></div>
+              <div class="img-upload-preview" id="img-preview-cancel" style="display:none"></div>
+            </div>
+          </div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-cancel-subj','opts-cancel-subj')">
+              <input type="checkbox" class="opt-cb" id="cb-cancel-subj" onchange="toggleOpt('cb-cancel-subj','opts-cancel-subj')">
+              <span class="opt-name" id="lbl-cancel-subj">Email subject lines</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">unchecked = not added</span>
+            </div>
+            <div class="opt-body" id="opts-cancel-subj">
+              <div class="two-col">
+                <div><div class="sub-l">Delivery</div><input type="text" id="inp-cancel-subj-del" placeholder="%{warehouse_name} order canceled"></div>
+                <div><div class="sub-l">Pickup</div><input type="text" id="inp-cancel-subj-pick" placeholder="%{warehouse_name} order canceled"></div>
               </div>
             </div>
           </div>
@@ -702,22 +718,6 @@
               <div style="font-size:11.5px;color:var(--text-3);background:var(--bg-card);border:1px solid var(--border);padding:8px 10px;border-radius:6px;line-height:1.6">
                 When ON: <code style="background:var(--accent-bg);color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10.5px">rate_your_order</code> emits inside <code style="background:var(--accent-bg);color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10.5px">order_receipt.generic_body</code>. OFF: stays under <code style="background:var(--accent-bg);color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10.5px">order_rating</code>.
               </div>
-            </div>
-          </div>
-
-          <div class="section-h"><div class="dot"></div><div class="label">Order upsell</div><span class="new-pill">NEW</span></div>
-          <div class="opt">
-            <div class="opt-h" onclick="toggleOpt('cb-upsell','opts-upsell')">
-              <input type="checkbox" class="opt-cb" id="cb-upsell" onchange="toggleOpt('cb-upsell','opts-upsell')">
-              <span class="opt-name" id="lbl-upsell">Order upsell section</span>
-              <span class="opt-new">new</span>
-              <span class="opt-desc">unchecked = not added</span>
-            </div>
-            <div class="opt-body" id="opts-upsell">
-              <div class="sub-l">Forgot something label</div>
-              <input type="text" id="inp-upsell-forgot" placeholder="Forgot something?">
-              <div class="sub-l">Add items message</div>
-              <input type="text" id="inp-upsell-add" placeholder="You can add items until your shopper checks out.">
             </div>
           </div>
 
