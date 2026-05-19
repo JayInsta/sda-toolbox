@@ -3,142 +3,554 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Splash Screen Previewer</title>
+  <title>Studio · Splash Screen Previewer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; padding: 2rem 1rem 4rem; }
-    .page { max-width: 960px; margin: 0 auto; }
 
-    /* HERO */
-    .hero { text-align: center; padding: 3rem 1rem 2.5rem; }
-    .hero-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #7c3aed, #2563eb); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
-    .hero-icon svg { width: 28px; height: 28px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .hero h1 { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: -0.4px; margin-bottom: 8px; }
-    .hero p { font-size: 14px; color: #64748b; line-height: 1.6; }
+    /* ───────── STUDIO TOKENS ───────── */
+    :root {
+      --bg-page:    #0a0a0f;
+      --bg-card:    #14141a;
+      --bg-sub:     #0f0f15;
+      --bg-input:   #08080d;
+      --bg-muted:   #1a1a22;
+      --border:     #26262e;
+      --border-hov: #3a3a44;
+      --text-1:     #fafafa;
+      --text-2:     #d4d4d8;
+      --text-3:     #a1a1aa;
+      --text-4:     #71717a;
+      --text-mute:  #52525b;
+      --accent:     #d4ff3a;
+      --accent-h:   #c5f028;
+      --accent-bg:  rgba(212,255,58,0.10);
+      --accent-bd:  rgba(212,255,58,0.30);
+      --on-accent:  #0a0a0f;
+      --success:    #34d399;
+      --warning:    #fbbf24;
+      --danger:     #f87171;
+      --info-bg:    rgba(96,165,250,0.12);
+      --info-bd:    rgba(96,165,250,0.30);
+      --info-text:  #93c5fd;
 
-    /* PLATFORM TABS */
-    .platform-tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; }
-    .platform-tab { flex: 1; padding: 13px; border-radius: 12px; border: 1px solid #2a2d3e; background: #0f1117; color: #64748b; font-size: 14px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.15s; user-select: none; }
-    .platform-tab:hover { border-color: #3a3d4e; color: #94a3b8; }
-    .platform-tab.active-android { background: #1e3d2f; border-color: #16a34a; color: #4ade80; }
-    .platform-tab.active-ios     { background: #1e3a5f; border-color: #2563eb; color: #60a5fa; }
+      --font:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --mono:  'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    }
+
+    html, body { background: var(--bg-page); color: var(--text-1); }
+    body { font-family: var(--font); -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.5; min-height: 100vh; }
+    button { font: inherit; color: inherit; cursor: pointer; background: none; border: none; }
+    code, .mono { font-family: var(--mono); }
+    ::selection { background: var(--accent-bg); color: var(--accent); }
+
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg-page); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-muted); border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-hov); }
+
+    /* ───────── TOOLBAR ───────── */
+    .studio-toolbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(10,10,15,0.78);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      padding: 11px 22px;
+      display: flex; align-items: center; gap: 14px;
+      border-bottom: 1px solid var(--border);
+      height: 54px;
+    }
+    .studio-logo {
+      width: 30px; height: 30px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--on-accent);
+      font-size: 14px; font-weight: 800;
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+      box-shadow: 0 0 16px rgba(212,255,58,0.25);
+    }
+    .studio-toolbar-title { font-size: 14px; font-weight: 600; color: var(--text-1); }
+    .studio-breadcrumb { font-size: 12px; color: var(--text-3); display: flex; align-items: center; gap: 6px; }
+    .studio-breadcrumb .crumb-sep { color: var(--text-mute); }
+    .studio-toolbar-spacer { flex: 1; }
+
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px;
+      background: rgba(212,255,58,0.08);
+      border: 1px solid rgba(212,255,58,0.2);
+      border-radius: 99px;
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 500;
+      font-family: var(--mono);
+    }
+    .live-badge.idle { background: var(--bg-muted); border-color: var(--border); color: var(--text-4); }
+    .live-badge.idle .live-dot { background: var(--text-mute); box-shadow: none; animation: none; }
+    .live-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+      box-shadow: 0 0 8px rgba(212,255,58,0.6);
+    }
+    @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
+
+    /* ───────── SHELL ───────── */
+    .studio-shell { max-width: 1000px; margin: 0 auto; padding: 26px 28px 60px; }
+
+    /* ───────── INTRO ───────── */
+    .intro-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 11px 15px;
+      margin-bottom: 14px;
+      font-size: 12.5px;
+      color: var(--text-3);
+      line-height: 1.6;
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .intro-card svg { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+    .intro-card strong { color: var(--text-1); font-weight: 600; }
+
+    /* ───────── PLATFORM TABS ───────── */
+    .platform-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+    .platform-tab {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-3);
+      font-size: 13.5px; font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.12s;
+      user-select: none;
+      font-family: inherit;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .platform-tab:hover { border-color: var(--border-hov); color: var(--text-2); background: var(--bg-muted); }
+    .platform-tab.active-android,
+    .platform-tab.active-ios {
+      background: var(--accent-bg);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 14px rgba(212,255,58,0.10);
+    }
 
     .platform-panel { display: none; }
     .platform-panel.active { display: block; }
 
-    /* SIDE BY SIDE LAYOUT */
-    .side-by-side { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-    .side-by-side.three-col { grid-template-columns: 1fr 1fr 1fr; }
+    /* ───────── SECTION HEADERS (dotted lime dot) ───────── */
+    .section-h {
+      display: flex; align-items: center; gap: 10px;
+      margin: 22px 0 10px;
+    }
+    .section-h:first-child { margin-top: 6px; }
+    .section-h .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .section-h .label {
+      font-size: 10.5px; font-weight: 600;
+      color: var(--text-2);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: var(--mono);
+    }
+    .section-h .line { flex: 1; height: 1px; background: var(--border); }
+    .section-h .meta {
+      font-size: 10.5px;
+      color: var(--text-4);
+      font-family: var(--mono);
+    }
 
-    /* LEFT PANEL — controls */
-    .controls-panel { display: flex; flex-direction: column; gap: 14px; }
+    /* ───────── SIDE BY SIDE ───────── */
+    .side-by-side {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
 
-    /* CARD */
-    .card { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 16px; padding: 1.25rem; }
-    .card-label { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+    /* ───────── CONTROLS ───────── */
+    .controls-panel { display: flex; flex-direction: column; gap: 12px; }
 
-    /* COLOR PICKER */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 14px 16px;
+      transition: border-color 0.12s;
+    }
+    .card:hover { border-color: var(--border-hov); }
+    .card-label {
+      font-size: 10.5px; font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+      font-family: var(--mono);
+    }
+
+    /* ───────── COLOR PICKER ───────── */
     .color-row { display: flex; align-items: center; gap: 10px; }
-    .color-swatch { width: 42px; height: 42px; border-radius: 10px; border: 2px solid #2a2d3e; cursor: pointer; overflow: hidden; position: relative; flex-shrink: 0; }
-    .color-swatch input[type="color"] { position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px); opacity: 0; cursor: pointer; }
-    .color-hex { flex: 1; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 14px; font-weight: 600; color: #e2e8f0; outline: none; font-family: 'Courier New', monospace; transition: border-color 0.15s; }
-    .color-hex:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.2); }
+    .color-swatch {
+      width: 40px; height: 40px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+      transition: border-color 0.12s, box-shadow 0.12s;
+    }
+    .color-swatch:hover { border-color: var(--accent); box-shadow: 0 0 12px rgba(212,255,58,0.12); }
+    .color-swatch input[type="color"] {
+      position: absolute; inset: -4px;
+      width: calc(100% + 8px); height: calc(100% + 8px);
+      opacity: 0; cursor: pointer;
+    }
+    .color-hex {
+      flex: 1;
+      padding: 9px 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      color: var(--text-1);
+      outline: none;
+      font-family: var(--mono);
+      transition: border-color 0.12s, box-shadow 0.12s;
+    }
+    .color-hex:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(212,255,58,0.18);
+    }
+    .color-hex::placeholder { color: var(--text-mute); }
 
-    /* UPLOAD */
-    .upload-zone { border: 2px dashed #2a2d3e; border-radius: 12px; padding: 1.25rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
-    .upload-zone:hover, .upload-zone.drag-over { border-color: #7c3aed; background: #1e1528; }
-    .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-    .uz-icon { font-size: 24px; margin-bottom: 6px; }
-    .uz-text { font-size: 12px; color: #64748b; }
-    .uz-text strong { color: #a78bfa; }
-    .uz-hint { font-size: 11px; color: #374151; margin-top: 3px; }
-    .upload-preview { display: none; margin-top: 10px; align-items: center; gap: 8px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 8px; padding: 6px 10px; }
-    .upload-preview img { height: 28px; width: auto; object-fit: contain; border-radius: 3px; background: #fff; padding: 1px; }
-    .up-name { font-size: 11px; color: #94a3b8; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .up-remove { color: #ef4444; cursor: pointer; font-size: 13px; font-weight: 700; }
+    /* ───────── UPLOAD ZONE ───────── */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 9px;
+      padding: 18px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+      background: var(--bg-sub);
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+    }
+    .upload-zone input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+    }
+    .uz-icon {
+      width: 26px; height: 26px;
+      margin: 0 auto 8px;
+      color: var(--text-3);
+      display: block;
+    }
+    .upload-zone:hover .uz-icon, .upload-zone.drag-over .uz-icon { color: var(--accent); }
+    .uz-text { font-size: 12.5px; color: var(--text-2); margin-bottom: 3px; }
+    .uz-text strong { color: var(--accent); font-weight: 600; }
+    .uz-hint { font-size: 10.5px; color: var(--text-4); font-family: var(--mono); letter-spacing: 0.02em; }
 
-    /* INFO BOX */
-    .info-box { background: #1e2d45; border: 1px solid #2563eb33; border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #93c5fd; line-height: 1.6; }
+    .upload-preview {
+      display: none;
+      margin-top: 10px;
+      align-items: center; gap: 8px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 6px 9px;
+    }
+    .upload-preview img {
+      height: 28px; width: auto;
+      object-fit: contain;
+      border-radius: 4px;
+      background: #fff;
+      padding: 1px;
+    }
+    .up-name {
+      font-size: 11px;
+      color: var(--text-3);
+      flex: 1;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-family: var(--mono);
+    }
+    .up-remove {
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 12px; font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 4px;
+      transition: background 0.12s;
+    }
+    .up-remove:hover { background: rgba(248,113,113,0.12); }
 
-    /* RIGHT PANEL — preview */
-    .preview-panel { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 12px; }
-    .preview-label { font-size: 12px; color: #64748b; font-weight: 500; text-align: center; line-height: 1.6; }
+    /* ───────── INFO BOX (semantic — stays blue) ───────── */
+    .info-box {
+      background: var(--info-bg);
+      border: 1px solid var(--info-bd);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 12px;
+      color: var(--info-text);
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+    .info-box strong { color: #c7ddff; font-weight: 600; }
+    .info-box code {
+      background: rgba(0,0,0,0.3);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--info-text);
+    }
 
-    /* PHONE FRAMES */
-    .android-frame { width: 180px; height: 346px; background: #1a1d27; border: 3px solid #374151; border-radius: 30px; overflow: hidden; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 #ffffff11; flex-shrink: 0; }
-    .android-notch { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 28px; height: 6px; background: #0f1117; border-radius: 3px; z-index: 10; }
-    .android-splash { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    /* ───────── PREVIEW PANEL ───────── */
+    .preview-panel {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-start;
+      gap: 12px;
+      padding: 14px;
+      background: var(--bg-sub);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      position: relative;
+      overflow: hidden;
+    }
+    .preview-panel::before {
+      content: '';
+      position: absolute;
+      inset: -50% -10% auto -10%;
+      height: 60%;
+      background: radial-gradient(ellipse at center, rgba(212,255,58,0.06), transparent 70%);
+      pointer-events: none;
+    }
+    .preview-label {
+      font-size: 11px;
+      color: var(--text-3);
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.7;
+      position: relative;
+    }
+    .preview-label .mono { color: var(--accent); font-family: var(--mono); font-size: 11.5px; }
+
+    /* ───────── PHONE FRAMES ───────── */
+    .android-frame, .ios-frame {
+      width: 180px; height: 346px;
+      background: var(--bg-page);
+      border: 3px solid var(--border-hov);
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06);
+      flex-shrink: 0;
+      z-index: 1;
+    }
+    .android-frame { border-radius: 30px; }
+    .ios-frame { border-radius: 36px; }
+
+    .android-notch {
+      position: absolute;
+      top: 10px; left: 50%;
+      transform: translateX(-50%);
+      width: 28px; height: 6px;
+      background: var(--bg-page);
+      border-radius: 3px;
+      z-index: 10;
+    }
+    .ios-island {
+      position: absolute;
+      top: 9px; left: 50%;
+      transform: translateX(-50%);
+      width: 46px; height: 11px;
+      background: var(--bg-page);
+      border-radius: 6px;
+      z-index: 10;
+    }
+
+    .android-splash, .ios-splash {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
     .android-splash img { max-width: 55%; max-height: 35%; object-fit: contain; }
-    .android-home { position: absolute; bottom: 0; left: 0; right: 0; height: 28px; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; gap: 16px; }
+    .ios-splash img { max-width: 50%; max-height: 28%; object-fit: contain; }
+
+    .android-home {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 28px;
+      background: rgba(0,0,0,0.3);
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+    }
     .home-circle { width: 13px; height: 13px; border-radius: 50%; background: rgba(255,255,255,0.2); }
     .home-sq { width: 12px; height: 12px; border-radius: 3px; background: rgba(255,255,255,0.2); }
     .home-tri { width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 12px solid rgba(255,255,255,0.2); }
 
-    .ios-frame { width: 180px; height: 346px; background: #1a1d27; border: 3px solid #374151; border-radius: 36px; overflow: hidden; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 #ffffff11; flex-shrink: 0; }
-    .ios-island { position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 46px; height: 11px; background: #0f1117; border-radius: 6px; z-index: 10; }
-    .ios-splash { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-    .ios-splash img { max-width: 50%; max-height: 28%; object-fit: contain; }
-    .ios-home-bar { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 48px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; }
+    .ios-home-bar {
+      position: absolute; bottom: 7px; left: 50%;
+      transform: translateX(-50%);
+      width: 48px; height: 4px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px;
+    }
 
-    /* STATUS BAR */
-    .status-bar { position: absolute; top: 0; left: 0; right: 0; height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 4px 12px 0; z-index: 5; }
-    .status-time { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.7); }
+    /* ───────── STATUS BAR ───────── */
+    .status-bar {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 4px 12px 0;
+      z-index: 5;
+    }
+    .status-time { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.7); font-family: var(--mono); }
     .status-icons { font-size: 7px; color: rgba(255,255,255,0.6); }
 
-    .placeholder-logo { font-size: 10px; color: rgba(255,255,255,0.25); text-align: center; line-height: 1.5; }
+    .placeholder-logo {
+      font-size: 10px;
+      color: rgba(255,255,255,0.28);
+      text-align: center;
+      line-height: 1.5;
+      font-family: var(--mono);
+    }
 
-    /* APP ICON PREVIEW */
-    .icon-frame { width: 120px; height: 120px; border-radius: 26px; overflow: hidden; position: relative; box-shadow: 0 8px 30px rgba(0,0,0,0.5); border: 2px solid #374151; flex-shrink: 0; }
-    .icon-bg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-    .icon-bg img { max-width: 60%; max-height: 60%; object-fit: contain; display: none; }
+    /* ───────── APP ICON FRAME ───────── */
+    .icon-frame {
+      width: 120px; height: 120px;
+      border-radius: 26px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 8px 26px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+      border: 2px solid var(--border-hov);
+      flex-shrink: 0;
+      z-index: 1;
+    }
+    .icon-bg {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .icon-bg img {
+      max-width: 60%; max-height: 60%;
+      object-fit: contain;
+      display: none;
+    }
 
-    /* COLOUR SUMMARY */
-    .summary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .summary-tile { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 10px 14px; }
-    .st-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
-    .st-row { display: flex; align-items: center; gap: 8px; }
-    .st-dot { width: 20px; height: 20px; border-radius: 5px; border: 1px solid #2a2d3e; flex-shrink: 0; }
-    .st-hex { font-family: 'Courier New', monospace; font-size: 13px; font-weight: 600; color: #fff; }
+    /* ───────── COLOUR SUMMARY ───────── */
+    .summary-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .summary-row.one-col { grid-template-columns: 1fr; }
+    .summary-tile {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 11px 14px;
+    }
+    .st-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+      font-family: var(--mono);
+    }
+    .st-row { display: flex; align-items: center; gap: 9px; }
+    .st-dot {
+      width: 20px; height: 20px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .st-hex {
+      font-family: var(--mono);
+      font-size: 13px; font-weight: 500;
+      color: var(--text-1);
+    }
 
-    .sep { border: none; border-top: 1px solid #2a2d3e; margin: 6px 0; }
+    /* ───────── FOOTER ───────── */
+    .studio-footer {
+      padding: 18px 28px 22px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-4);
+      border-top: 1px solid var(--border);
+      margin-top: 32px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .studio-footer .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
+    .studio-footer strong { color: var(--text-3); font-weight: 600; }
 
-    /* FOOTER */
-    .footer { text-align: center; padding: 2rem 0 0.5rem; font-size: 12px; color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #2a2d3e; }
-
-    /* SECTION HEADER */
-    .section-header { font-size: 13px; font-weight: 600; color: #94a3b8; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-
-    @media (max-width: 680px) {
-      .side-by-side, .side-by-side.three-col { grid-template-columns: 1fr; }
-      .preview-panel { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+    /* ───────── RESPONSIVE ───────── */
+    @media (max-width: 720px) {
+      .side-by-side { grid-template-columns: 1fr; }
+      .preview-panel { padding: 18px; }
+    }
+    @media (max-width: 540px) {
+      .studio-shell { padding: 18px 14px 40px; }
+      .platform-tab { font-size: 12.5px; padding: 11px 10px; }
+      .studio-toolbar-title { display: none; }
     }
   </style>
 </head>
 <body>
-<div class="page">
 
-  <div class="hero">
-    <div class="hero-icon">
-      <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r="1"/><line x1="9" y1="6" x2="15" y2="6"/></svg>
-    </div>
-    <h1>Splash screen previewer</h1>
-    <p>Pick a colour and upload your logo — preview updates live on the right.</p>
+<header class="studio-toolbar">
+  <div class="studio-logo">S</div>
+  <div class="studio-toolbar-title">Studio</div>
+  <div class="studio-breadcrumb">
+    <span>Splash previewer</span>
+    <span class="crumb-sep">/</span>
+    <span id="breadcrumb-platform" class="mono">Android</span>
+  </div>
+  <div class="studio-toolbar-spacer"></div>
+  <div class="live-badge idle" id="live-badge">
+    <div class="live-dot"></div>
+    <span id="live-badge-text">no logos</span>
+  </div>
+</header>
+
+<main class="studio-shell">
+
+  <div class="intro-card">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div>Pick a background colour and upload your logo — previews update <strong>live</strong> on the right of each section. Switch platforms with the tabs below.</div>
   </div>
 
   <!-- PLATFORM TABS -->
   <div class="platform-tabs">
-    <div class="platform-tab active-android" id="tab-android" onclick="setTab('android')">🤖 &nbsp;Android</div>
-    <div class="platform-tab" id="tab-ios" onclick="setTab('ios')">🍎 &nbsp;iOS</div>
+    <button class="platform-tab active-android" id="tab-android" onclick="setTab('android')">
+      <span style="font-size:14px">🤖</span> Android
+    </button>
+    <button class="platform-tab" id="tab-ios" onclick="setTab('ios')">
+      <span style="font-size:14px">🍎</span> iOS
+    </button>
   </div>
 
   <!-- ═══════════ ANDROID PANEL ═══════════ -->
   <div class="platform-panel active" id="panel-android">
 
-    <!-- ROW 1: Splash screen -->
-    <div style="margin-bottom:8px" class="section-header"><span>📱</span> Splash screen</div>
-    <div class="side-by-side" style="margin-bottom:20px">
-      <!-- LEFT: controls -->
+    <!-- Section: Splash screen -->
+    <div class="section-h">
+      <div class="dot"></div>
+      <div class="label">Splash screen</div>
+      <div class="line"></div>
+      <div class="meta">PNG · 1024px wide</div>
+    </div>
+    <div class="side-by-side">
       <div class="controls-panel">
         <div class="card">
           <div class="card-label">Background colour</div>
@@ -150,12 +562,12 @@
           </div>
         </div>
         <div class="card">
-          <div class="card-label">Splash logo — PNG, 1024px wide</div>
+          <div class="card-label">Splash logo</div>
           <div class="upload-zone" id="as-zone">
             <input type="file" id="as-file" accept=".png" onchange="handleUpload('as',this)">
-            <div class="uz-icon">📱</div>
-            <div class="uz-text"><strong>Click to upload</strong> or drag & drop</div>
-            <div class="uz-hint">PNG — 1024px wide</div>
+            <svg class="uz-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div class="uz-text"><strong>Click to upload</strong> or drag &amp; drop</div>
+            <div class="uz-hint">PNG · 1024px wide</div>
           </div>
           <div class="upload-preview" id="as-preview">
             <img id="as-preview-img" src="" alt="">
@@ -164,7 +576,6 @@
           </div>
         </div>
       </div>
-      <!-- RIGHT: phone preview -->
       <div class="preview-panel">
         <div class="android-frame">
           <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● ▐</span></div>
@@ -178,15 +589,19 @@
           </div>
         </div>
         <div class="preview-label">Splash screen<br>
-          <span style="font-family:'Courier New',monospace;font-size:11px" id="as-color-label">#FFFFFF</span>
+          <span class="mono" id="as-color-label">#FFFFFF</span>
         </div>
       </div>
     </div>
 
-    <!-- ROW 2: App icon -->
-    <div style="margin-bottom:8px" class="section-header"><span>🎨</span> App icon</div>
-    <div class="side-by-side" style="margin-bottom:20px">
-      <!-- LEFT: controls -->
+    <!-- Section: App icon -->
+    <div class="section-h">
+      <div class="dot"></div>
+      <div class="label">App icon</div>
+      <div class="line"></div>
+      <div class="meta">PNG · 1024×1024</div>
+    </div>
+    <div class="side-by-side">
       <div class="controls-panel">
         <div class="card">
           <div class="card-label">Icon background colour</div>
@@ -198,12 +613,12 @@
           </div>
         </div>
         <div class="card">
-          <div class="card-label">App icon logo — PNG, 1024×1024px</div>
+          <div class="card-label">App icon logo</div>
           <div class="upload-zone" id="ai-zone">
             <input type="file" id="ai-file" accept=".png" onchange="handleUpload('ai',this)">
-            <div class="uz-icon">🎨</div>
-            <div class="uz-text"><strong>Click to upload</strong> or drag & drop</div>
-            <div class="uz-hint">PNG — 1024×1024px</div>
+            <svg class="uz-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div class="uz-text"><strong>Click to upload</strong> or drag &amp; drop</div>
+            <div class="uz-hint">PNG · 1024×1024 px</div>
           </div>
           <div class="upload-preview" id="ai-preview">
             <img id="ai-preview-img" src="" alt="">
@@ -212,7 +627,6 @@
           </div>
         </div>
       </div>
-      <!-- RIGHT: icon preview -->
       <div class="preview-panel">
         <div class="icon-frame">
           <div class="icon-bg" id="ai-bg" style="background:#FFFFFF">
@@ -221,24 +635,28 @@
           </div>
         </div>
         <div class="preview-label">App icon<br>
-          <span style="font-family:'Courier New',monospace;font-size:11px" id="ai-color-label">#FFFFFF</span>
+          <span class="mono" id="ai-color-label">#FFFFFF</span>
         </div>
       </div>
     </div>
 
-    <!-- Colour summary -->
+    <!-- Section: Colour summary -->
+    <div class="section-h">
+      <div class="dot"></div>
+      <div class="label">Colour summary</div>
+      <div class="line"></div>
+    </div>
     <div class="card">
-      <div class="card-label">Colour summary</div>
       <div class="summary-row">
         <div class="summary-tile">
-          <div class="st-label" style="color:#4ade80">Splash background</div>
+          <div class="st-label">Splash background</div>
           <div class="st-row">
             <div class="st-dot" id="as-sum-dot" style="background:#FFFFFF"></div>
             <span class="st-hex" id="as-sum-hex">#FFFFFF</span>
           </div>
         </div>
         <div class="summary-tile">
-          <div class="st-label" style="color:#4ade80">Icon background</div>
+          <div class="st-label">Icon background</div>
           <div class="st-row">
             <div class="st-dot" id="ai-sum-dot" style="background:#FFFFFF"></div>
             <span class="st-hex" id="ai-sum-hex">#FFFFFF</span>
@@ -251,10 +669,14 @@
   <!-- ═══════════ iOS PANEL ═══════════ -->
   <div class="platform-panel" id="panel-ios">
 
-    <!-- Splash screen -->
-    <div style="margin-bottom:8px" class="section-header"><span>📱</span> Splash screen</div>
-    <div class="side-by-side" style="margin-bottom:20px">
-      <!-- LEFT -->
+    <!-- Section: Splash screen -->
+    <div class="section-h">
+      <div class="dot"></div>
+      <div class="label">Splash screen</div>
+      <div class="line"></div>
+      <div class="meta">SVG · 256px width</div>
+    </div>
+    <div class="side-by-side">
       <div class="controls-panel">
         <div class="card">
           <div class="card-label">Background colour</div>
@@ -266,22 +688,21 @@
           </div>
         </div>
         <div class="card">
-          <div class="card-label">Splash logo — SVG, 256px width</div>
+          <div class="card-label">Splash logo</div>
           <div class="upload-zone" id="is-zone">
             <input type="file" id="is-file" accept=".svg" onchange="handleUpload('is',this)">
-            <div class="uz-icon">🍎</div>
-            <div class="uz-text"><strong>Click to upload</strong> or drag & drop</div>
-            <div class="uz-hint">SVG — 256px width</div>
+            <svg class="uz-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div class="uz-text"><strong>Click to upload</strong> or drag &amp; drop</div>
+            <div class="uz-hint">SVG · 256px width</div>
           </div>
           <div class="upload-preview" id="is-preview">
             <img id="is-preview-img" src="" alt="">
             <span class="up-name" id="is-preview-name"></span>
             <span class="up-remove" onclick="removeUpload('is')">✕</span>
           </div>
-          <div class="info-box" style="margin-top:10px">IPP Tooling requires the iOS logo to be an <strong>SVG file</strong>. PNG files will not work for <code>logo_dark</code> and <code>logo_light</code>.</div>
+          <div class="info-box">IPP Tooling requires the iOS logo to be an <strong>SVG file</strong>. PNG files will not work for <code>logo_dark</code> and <code>logo_light</code>.</div>
         </div>
       </div>
-      <!-- RIGHT -->
       <div class="preview-panel">
         <div class="ios-frame">
           <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● ▐</span></div>
@@ -293,17 +714,21 @@
           <div class="ios-home-bar"></div>
         </div>
         <div class="preview-label">Splash screen<br>
-          <span style="font-family:'Courier New',monospace;font-size:11px" id="is-color-label">#FFFFFF</span>
+          <span class="mono" id="is-color-label">#FFFFFF</span>
         </div>
       </div>
     </div>
 
-    <!-- Colour summary -->
+    <!-- Section: Colour summary -->
+    <div class="section-h">
+      <div class="dot"></div>
+      <div class="label">Colour summary</div>
+      <div class="line"></div>
+    </div>
     <div class="card">
-      <div class="card-label">Colour summary</div>
-      <div class="summary-row">
+      <div class="summary-row one-col">
         <div class="summary-tile">
-          <div class="st-label" style="color:#60a5fa">iOS splash background</div>
+          <div class="st-label">iOS splash background</div>
           <div class="st-row">
             <div class="st-dot" id="is-sum-dot" style="background:#FFFFFF"></div>
             <span class="st-hex" id="is-sum-hex">#FFFFFF</span>
@@ -313,20 +738,52 @@
     </div>
   </div>
 
-  <div class="footer">
-    <span>SDA Toolbox</span>
-    <div class="footer-dot"></div>
+  <div class="studio-footer">
+    <strong>Studio</strong>
+    <div class="dot"></div>
+    <span>Splash previewer</span>
+    <div class="dot"></div>
     <span>IPP Build Tooling</span>
   </div>
-</div>
+
+</main>
 
 <script>
+  var currentPlatform = 'android';
+
   /* ── TAB ── */
   function setTab(t) {
+    currentPlatform = t;
     document.getElementById('tab-android').className = 'platform-tab' + (t==='android' ? ' active-android' : '');
     document.getElementById('tab-ios').className     = 'platform-tab' + (t==='ios'     ? ' active-ios'     : '');
     document.getElementById('panel-android').classList.toggle('active', t==='android');
     document.getElementById('panel-ios').classList.toggle('active',     t==='ios');
+    updateBreadcrumb();
+  }
+
+  /* ── BREADCRUMB ── */
+  function updateBreadcrumb() {
+    var crumb = document.getElementById('breadcrumb-platform');
+    if (crumb) crumb.textContent = currentPlatform === 'android' ? 'Android' : 'iOS';
+  }
+
+  /* ── LIVE BADGE (upload count) ── */
+  function updateLiveBadge() {
+    var count = 0;
+    ['as','ai','is'].forEach(function(p) {
+      var logo = document.getElementById(p+'-logo');
+      if (logo && logo.src && logo.style.display !== 'none') count++;
+    });
+    var badge = document.getElementById('live-badge');
+    var text  = document.getElementById('live-badge-text');
+    if (!badge || !text) return;
+    if (count === 0) {
+      badge.className = 'live-badge idle';
+      text.textContent = 'no logos';
+    } else {
+      badge.className = 'live-badge';
+      text.textContent = count + ' logo' + (count > 1 ? 's' : '') + ' uploaded';
+    }
   }
 
   /* ── DRAG & DROP ── */
@@ -384,15 +841,14 @@
     var reader = new FileReader();
     reader.onload = function(e) {
       var src = e.target.result;
-      /* upload preview bar */
       document.getElementById(p+'-preview').style.display = 'flex';
       document.getElementById(p+'-preview-img').src = src;
       document.getElementById(p+'-preview-name').textContent = file.name;
-      /* phone / icon preview */
       var logo = document.getElementById(p+'-logo');
       logo.src = src; logo.style.display = 'block';
       var ph = document.getElementById(p+'-placeholder');
       if (ph) ph.style.display = 'none';
+      updateLiveBadge();
     };
     reader.readAsDataURL(file);
   }
@@ -405,8 +861,14 @@
     var ph = document.getElementById(p+'-placeholder');
     if (ph) ph.style.display = 'block';
     document.getElementById(p+'-file').value = '';
+    updateLiveBadge();
   }
+
+  /* ── INIT ── */
+  updateBreadcrumb();
+  updateLiveBadge();
 </script>
-  <script src="nav.js"></script>
+
+<script src="nav.js"></script>
 </body>
 </html>
