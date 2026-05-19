@@ -510,7 +510,7 @@
 
 <header class="studio-toolbar">
   <div class="studio-logo">S</div>
-  <div class="studio-toolbar-title">Splash Screen Preview</div>
+  <div class="studio-toolbar-title">Studio</div>
   <div class="studio-breadcrumb">
     <span>Splash previewer</span>
     <span class="crumb-sep">/</span>
@@ -631,7 +631,7 @@
         <div class="icon-frame">
           <div class="icon-bg" id="ai-bg" style="background:#FFFFFF">
             <div class="placeholder-logo" id="ai-placeholder" style="font-size:9px">Upload<br>app icon</div>
-            <img id="ai-logo" src="" alt="">
+            <img id="ai-logo" src="" alt="" style="display:none">
           </div>
         </div>
         <div class="preview-label">App icon<br>
@@ -772,7 +772,10 @@
     var count = 0;
     ['as','ai','is'].forEach(function(p) {
       var logo = document.getElementById(p+'-logo');
-      if (logo && logo.src && logo.style.display !== 'none') count++;
+      // Use getAttribute('src') — img.src property returns the resolved
+      // URL (page URL when src=""), which is always truthy. The attribute
+      // returns the literal value, which is empty until upload.
+      if (logo && logo.getAttribute('src')) count++;
     });
     var badge = document.getElementById('live-badge');
     var text  = document.getElementById('live-badge-text');
