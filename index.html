@@ -359,6 +359,39 @@
     .rt-ipp, .rt-major-ipp {
       background: linear-gradient(135deg, var(--accent-bg), transparent);
       border-color: var(--accent-bd);
+      animation: ipp-glow 2.5s ease-in-out infinite;
+    }
+    /* Pulsing glow draws attention to "the value to enter in IPP" */
+    @keyframes ipp-glow {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(212,255,58,0);
+        border-color: var(--accent-bd);
+      }
+      50% {
+        box-shadow: 0 0 26px rgba(212,255,58,0.26),
+                    0 0 0 1px var(--accent);
+        border-color: var(--accent);
+      }
+    }
+    /* Small blinking dot in the rt-label of IPP tiles */
+    .rt-pulse-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+      margin-right: 7px;
+      vertical-align: 1px;
+      box-shadow: 0 0 6px var(--accent);
+      animation: rt-dot-blink 1.2s ease-in-out infinite;
+    }
+    @keyframes rt-dot-blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.35; transform: scale(0.7); }
+    }
+    /* Respect user's reduced-motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      .rt-ipp, .rt-major-ipp { animation: none; box-shadow: 0 0 0 1px var(--accent-bd); }
+      .rt-pulse-dot { animation: none; }
     }
     /* Both "Resulting" tiles → success green (outcome) */
     .rt-final, .rt-major-final {
@@ -532,7 +565,7 @@
     <div class="sep"></div>
     <div class="result-grid">
       <div class="result-tile rt-major-ipp">
-        <div class="rt-label">Set in IPP</div>
+        <div class="rt-label"><span class="rt-pulse-dot"></span>Set in IPP</div>
         <div class="rt-val" id="m-ipp-value"></div>
         <div id="m-ipp-badge"></div>
         <div class="rt-sub" id="m-ipp-sub"></div>
@@ -601,7 +634,7 @@
     <div class="sep"></div>
     <div class="result-grid">
       <div class="result-tile rt-ipp">
-        <div class="rt-label">Set in IPP</div>
+        <div class="rt-label"><span class="rt-pulse-dot"></span>Set in IPP</div>
         <div class="rt-val" id="ipp-value"></div>
         <div id="ipp-badge"></div>
         <div class="rt-sub" id="ipp-sub"></div>
@@ -821,6 +854,7 @@
       });
   })();
 </script>
+
 <script src="nav.js"></script>
 </body>
 </html>
