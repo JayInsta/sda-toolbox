@@ -118,6 +118,41 @@
     .opt-inputs .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .opt-inputs .two-col input { margin-top: 0; }
 
+    /* NL2BR HINT */
+    .nl2br-hint { font-size: 10px; color: #4ade80; background: #0d2010; border: 1px solid #16a34a33; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-top: 6px; font-family: 'Courier New', monospace; letter-spacing: 0.02em; }
+
+    /* ── STEP 0 — DOC IMPORT ── */
+    .s0 { background: #3d2a1e; color: #fbbf24; }
+    .doc-drop-zone { border: 2px dashed #2a2d3e; border-radius: 12px; padding: 28px 20px; text-align: center; cursor: pointer; transition: all 0.15s; background: #0f1117; }
+    .doc-drop-zone:hover, .doc-drop-zone.drag-over { border-color: #fbbf24; background: #1e1a0a; }
+    .doc-drop-icon { width: 32px; height: 32px; margin: 0 auto 10px; display: block; color: #475569; }
+    .doc-drop-zone:hover .doc-drop-icon, .doc-drop-zone.drag-over .doc-drop-icon { color: #fbbf24; }
+    .doc-drop-title { font-size: 14px; color: #94a3b8; margin-bottom: 4px; }
+    .doc-drop-link { color: #fbbf24; font-weight: 600; }
+    .doc-drop-hint { font-size: 11px; color: #475569; }
+    .doc-status { margin-top: 14px; padding: 10px 14px; border-radius: 10px; font-size: 12px; font-family: 'Courier New', monospace; line-height: 1.5; }
+    .doc-status-loading { background: #1e3a5f; border: 1px solid #2563eb33; color: #60a5fa; }
+    .doc-status-success { background: #1e3d2f; border: 1px solid #16a34a33; color: #4ade80; }
+    .doc-status-error   { background: #3d1010; border: 1px solid #dc262633; color: #f87171; }
+    .doc-status-info    { background: #1e3a5f; border: 1px solid #2563eb33; color: #60a5fa; }
+    .doc-select-label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; margin-top: 14px; }
+    .doc-select { width: 100%; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 14px; color: #e2e8f0; outline: none; font-family: 'Courier New', monospace; cursor: pointer; }
+    .doc-select:focus { border-color: #fbbf24; box-shadow: 0 0 0 3px rgba(251,191,36,0.15); }
+    .btn-import { width: 100%; padding: 12px; background: linear-gradient(135deg, #fbbf24, #f97316); border: none; border-radius: 10px; color: #0f1117; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.02em; margin-top: 14px; }
+    .btn-import:hover { opacity: 0.9; }
+    .doc-found-fields { font-size: 11px; color: #4ade80; margin-top: 8px; font-family: 'Courier New', monospace; line-height: 1.7; }
+    .doc-found-fields .field-tag { background: #1e3d2f; border: 1px solid #16a34a44; padding: 1px 7px; border-radius: 4px; margin-right: 4px; display: inline-block; margin-bottom: 3px; }
+    .doc-found-fields .field-tag-missing { background: #3d2a1e; border-color: #fbbf2444; color: #fbbf24; }
+    .doc-found-fields .field-tag-default { background: #1e3a5f; border-color: #2563eb44; color: #60a5fa; }
+
+    /* ── PATH INPUT GROUP (prefix + editable filename) ── */
+    .path-input-group { display: flex; align-items: stretch; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 13px; margin-top: 6px; transition: border-color 0.15s, box-shadow 0.15s; overflow: hidden; }
+    .path-input-group:focus-within { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
+    .path-input-prefix { padding: 10px 6px 10px 12px; background: #1a1228; color: #94a3b8; white-space: nowrap; user-select: all; font-size: 12px; display: flex; align-items: center; border-right: 1px solid #2a2d3e; overflow: hidden; text-overflow: ellipsis; max-width: 60%; }
+    .path-input-suffix { flex: 1; padding: 10px 12px; background: transparent; border: none; outline: none; color: #e2e8f0; font-family: inherit; font-size: 13px; min-width: 0; margin-top: 0 !important; }
+    .path-input-suffix::placeholder { color: #374151; }
+    @media (max-width: 600px) { .path-input-group { flex-direction: column; } .path-input-prefix { max-width: 100%; border-right: none; border-bottom: 1px solid #2a2d3e; } }
+
     /* QA SECTION */
     .qa-wrap { margin-top: 2rem; }
     .qa-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
@@ -203,6 +238,7 @@
     }
   </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 </head>
 <body>
 <div class="page">
@@ -213,6 +249,35 @@
     </div>
     <h1>Email template generator</h1>
     <p>Generate locale variables, folder name, and both YAML email templates. Includes QA diff validator.</p>
+  </div>
+
+  <!-- STEP 0 — DOC IMPORT -->
+  <div class="card">
+    <div class="card-top">
+      <div class="step-badge s0">📄</div>
+      <div>
+        <div class="card-title">Quick import from doc <span style="font-size:11px;color:#475569;font-weight:400">— Optional</span></div>
+        <div class="card-sub">Upload a retailer brief (.docx). Fields auto-fill below. Parsing happens in your browser — your doc never leaves this page.</div>
+      </div>
+    </div>
+    <div class="doc-drop-zone" id="doc-drop-zone" onclick="document.getElementById('doc-upload-input').click()">
+      <input type="file" id="doc-upload-input" accept=".docx,.pdf" style="display:none">
+      <svg class="doc-drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="12" y1="18" x2="12" y2="12"/>
+        <polyline points="9 15 12 12 15 15"/>
+      </svg>
+      <div class="doc-drop-title">Drop a <code style="background:#1a1228;padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;color:#fbbf24">.docx</code> or <code style="background:#1a1228;padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;color:#fbbf24">.pdf</code> here, or <span class="doc-drop-link">browse</span></div>
+      <div class="doc-drop-hint">Word documents or PDFs with retailer email configuration</div>
+    </div>
+    <div id="doc-status" class="doc-status" style="display:none"></div>
+    <div id="doc-retailer-row" style="display:none">
+      <label class="doc-select-label">Select retailer to import</label>
+      <select id="doc-retailer-select" class="doc-select" onchange="previewSelectedRetailer()"></select>
+      <div id="doc-found-fields" class="doc-found-fields"></div>
+    </div>
+    <button id="doc-import-btn" class="btn-import" onclick="importSelectedRetailer()" style="display:none">⬇ &nbsp;Import to form</button>
   </div>
 
   <!-- STEP 1 -->
@@ -249,6 +314,20 @@
         <input type="text" id="retailer-url" placeholder="https://www.longspicpac.com/">
       </div>
     </div>
+
+    <!-- RETAILER NAME PLACEHOLDER TOGGLE -->
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#0f1117;border:1px solid #2a2d3e;border-radius:10px;margin-top:14px">
+      <label class="toggle-switch" style="flex-shrink:0">
+        <input type="checkbox" id="use-retailer-placeholder">
+        <span class="toggle-slider"></span>
+      </label>
+      <div style="flex:1;line-height:1.4">
+        <div style="font-size:12px;color:#e2e8f0;font-weight:600">Use <code style="background:#2d1e3d;color:#c084fc;padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:11px">%{retailer_name}</code> placeholder instead of literal name</div>
+        <div style="font-size:11px;color:#64748b;margin-top:3px">OFF (default): <code style="color:#94a3b8;font-family:'Courier New',monospace">The Piggly Wiggly Team</code> · ON: <code style="color:#94a3b8;font-family:'Courier New',monospace">The %{retailer_name} Team</code></div>
+        <div style="font-size:10px;color:#475569;margin-top:3px">Affects body text defaults, footer label, and doc-import conversion. User-typed field values are never auto-rewritten.</div>
+      </div>
+    </div>
+
     <div style="margin-top:14px;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Derived values preview</div>
     <div class="derived-grid">
       <div class="derived-tile">
@@ -270,7 +349,7 @@
         <div class="toggle-row">
           <div>
             <div class="card-title">Custom message content &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
-            <div class="card-sub">Blank fields use the default template. <span style="color:#c084fc">New</span> fields require the checkbox to be included in output.</div>
+            <div class="card-sub">Blank fields use the default template. <span style="color:#c084fc">New</span> fields require the checkbox to be included in output. <span style="color:#4ade80">↵ Newlines in body fields auto-convert to &lt;br/&gt;</span></div>
           </div>
           <label class="toggle-switch"><input type="checkbox" id="toggle-content" onchange="toggleSection('content-section',this)"><span class="toggle-slider"></span></label>
         </div>
@@ -281,9 +360,9 @@
 
       <!-- ORDER INFORMATION -->
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order information</div><div class="section-divider-line"></div></div>
-      <div class="field"><label>Order description <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><textarea id="order-desc" placeholder="Keep an eye out for order updates..."></textarea></div>
-      <div class="field"><label>Family order description <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><textarea id="family-desc" placeholder="Keep an eye out for order updates... Remember, only %{owner_name} can add items..."></textarea></div>
-      <div class="field"><label>Pickup instructions <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><textarea id="pickup" placeholder="Pull into the designated parking area..." style="min-height:60px"></textarea></div>
+      <div class="field"><label>Order description <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default · ↵ Enter = &lt;br/&gt;</span></label><textarea id="order-desc" placeholder="Keep an eye out for order updates..."></textarea></div>
+      <div class="field"><label>Family order description <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default · ↵ Enter = &lt;br/&gt;</span></label><textarea id="family-desc" placeholder="Keep an eye out for order updates... Remember, only %{owner_name} can add items..."></textarea></div>
+      <div class="field"><label>Pickup instructions <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default · ↵ Enter = &lt;br/&gt;</span></label><textarea id="pickup" placeholder="Pull into the designated parking area..." style="min-height:60px"></textarea></div>
 
       <!-- FINE PRINT -->
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-teal">Fine print <span style="font-size:9px;opacity:0.7">NEW</span></div><div class="section-divider-line"></div></div>
@@ -337,10 +416,27 @@
 
       <!-- ORDER CANCELLATION -->
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-orange">Order cancellation</div><div class="section-divider-line"></div></div>
-      <div class="field"><label>Cancellation body <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><textarea id="cancel-body" placeholder="This email is to confirm that you have canceled your order..."></textarea></div>
+      <div class="field"><label>Cancellation body <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default · ↵ Enter = &lt;br/&gt;</span></label><textarea id="cancel-body" placeholder="This email is to confirm that you have canceled your order..."></textarea></div>
       <div class="field">
         <label>Cancellation image alt <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses retailer name</span></label>
         <input type="text" id="inp-cancel-img-alt" placeholder="Retailer name (auto-filled if blank)">
+      </div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-cancel-img-extras','opts-cancel-img-extras')">
+          <input type="checkbox" class="opt-cb" id="cb-cancel-img-extras" onchange="toggleOpt('cb-cancel-img-extras','opts-cancel-img-extras')">
+          <span class="opt-title" id="lbl-cancel-img-extras">Image link &amp; path (advanced)</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">image_link &amp; image_path keys</span>
+        </div>
+        <div class="opt-inputs" id="opts-cancel-img-extras">
+          <div class="sub-label">Image link URL</div>
+          <input type="text" id="inp-cancel-img-link" placeholder="#">
+          <div class="sub-label">Image path <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— prefix auto-fills from slug</span></div>
+          <div class="path-input-group">
+            <span class="path-input-prefix" id="cancel-img-path-prefix">mailers/one_order_mailer/retailers/[slug]/</span>
+            <input type="text" class="path-input-suffix" id="inp-cancel-img-path" placeholder="order_cancellation.jpg">
+          </div>
+        </div>
       </div>
       <div class="opt-block">
         <div class="opt-header" onclick="toggleOpt('cb-cancel-subj','opts-cancel-subj')">
@@ -377,6 +473,23 @@
         </div>
       </div>
       <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-confirm-img-extras','opts-confirm-img-extras')">
+          <input type="checkbox" class="opt-cb" id="cb-confirm-img-extras" onchange="toggleOpt('cb-confirm-img-extras','opts-confirm-img-extras')">
+          <span class="opt-title" id="lbl-confirm-img-extras">Image link &amp; path (advanced)</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">image_link &amp; image_path keys</span>
+        </div>
+        <div class="opt-inputs" id="opts-confirm-img-extras">
+          <div class="sub-label">Image link URL</div>
+          <input type="text" id="inp-confirm-img-link" placeholder="#">
+          <div class="sub-label">Image path <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— prefix auto-fills from slug</span></div>
+          <div class="path-input-group">
+            <span class="path-input-prefix" id="confirm-img-path-prefix">mailers/one_order_mailer/retailers/[slug]/</span>
+            <input type="text" class="path-input-suffix" id="inp-confirm-img-path" placeholder="order_confirmation.jpg">
+          </div>
+        </div>
+      </div>
+      <div class="opt-block">
         <div class="opt-header" onclick="toggleOpt('cb-confirm-subj','opts-confirm-subj')">
           <input type="checkbox" class="opt-cb" id="cb-confirm-subj" onchange="toggleOpt('cb-confirm-subj','opts-confirm-subj')">
           <span class="opt-title" id="lbl-confirm-subj">Email subject lines</span>
@@ -399,7 +512,18 @@
 
       <!-- ORDER RECEIPT -->
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order receipt</div><div class="section-divider-line"></div></div>
-      <div class="field"><label>Receipt body <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><textarea id="receipt-body" placeholder="Thank you for shopping at [Retailer Name]..."></textarea></div>
+      <div class="field"><label>Receipt body <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default · ↵ Enter = &lt;br/&gt;</span></label><textarea id="receipt-body" placeholder="Thank you for shopping at [Retailer Name]..."></textarea></div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-receipt-header','opts-receipt-header')">
+          <input type="checkbox" class="opt-cb" id="cb-receipt-header" onchange="toggleOpt('cb-receipt-header','opts-receipt-header')">
+          <span class="opt-title" id="lbl-receipt-header">Generic header content (advanced)</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">order_receipt.generic_header.content block</span>
+        </div>
+        <div class="opt-inputs" id="opts-receipt-header">
+          <input type="text" id="inp-receipt-header-content" placeholder="%{first_name}, here's your receipt">
+        </div>
+      </div>
       <div class="opt-block">
         <div class="opt-header" onclick="toggleOpt('cb-receipt-img','opts-receipt-img')">
           <input type="checkbox" class="opt-cb" id="cb-receipt-img" onchange="toggleOpt('cb-receipt-img','opts-receipt-img')">
@@ -447,6 +571,20 @@
         </div>
         <div class="opt-inputs" id="opts-rating-pickup">
           <input type="text" id="inp-rating-pickup" placeholder="Help us improve by rating your order experience and any replacement preferences.">
+        </div>
+      </div>
+      <div class="opt-block">
+        <div class="opt-header" onclick="toggleOpt('cb-rate-legacy','opts-rate-legacy')">
+          <input type="checkbox" class="opt-cb" id="cb-rate-legacy" onchange="toggleOpt('cb-rate-legacy','opts-rate-legacy')">
+          <span class="opt-title" id="lbl-rate-legacy">Legacy rate_your_order placement</span>
+          <span class="new-badge">new</span>
+          <span class="opt-desc">nest under order_receipt.generic_body</span>
+        </div>
+        <div class="opt-inputs" id="opts-rate-legacy">
+          <div style="font-size:11px;color:#94a3b8;background:#0f1117;border:1px solid #2a2d3e;padding:8px 12px;border-radius:8px;line-height:1.6">
+            When ON: <code style="background:#1e3a5f;color:#60a5fa;padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:11px">rate_your_order</code> emits inside <code style="background:#1e3a5f;color:#60a5fa;padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:11px">order_receipt.generic_body</code>.<br/>
+            When OFF (default): emits under <code style="background:#1e3a5f;color:#60a5fa;padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:11px">order_rating</code>.
+          </div>
         </div>
       </div>
 
@@ -502,6 +640,18 @@
       </div>
       <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order details</div><div class="section-divider-line"></div></div>
       <div class="field" style="margin-bottom:0"><label>Cancellation items heading</label><input type="text" id="cancel-items-heading" placeholder="Canceled Items"></div>
+    </div>
+  </div>
+
+  <!-- OUTPUT 6 TOGGLE -->
+  <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:10px;margin-bottom:12px">
+    <label class="toggle-switch" style="flex-shrink:0">
+      <input type="checkbox" id="toggle-cc-cmd">
+      <span class="toggle-slider"></span>
+    </label>
+    <div style="flex:1;line-height:1.4">
+      <div style="font-size:12px;color:#e2e8f0;font-weight:600">Include Claude Code command (Output 6)</div>
+      <div style="font-size:11px;color:#64748b;margin-top:2px">OFF (default): hide CLI command output · ON: generate <code style="color:#2dd4bf;font-family:'Courier New',monospace">/create-email-template</code> command for terminal automation</div>
     </div>
   </div>
 
@@ -593,6 +743,7 @@
     </div>
 
     <!-- CLAUDE CODE COMMAND -->
+    <div id="output-6-wrap" style="display:none">
     <div class="section-divider">
       <div class="section-divider-line"></div><div class="section-label sl-teal">Output 6 — Claude Code command</div><div class="section-divider-line"></div>
     </div>
@@ -605,6 +756,7 @@
         <button class="btn-copy bc-teal" onclick="copyCCCmd(this)" style="background:#1e3d3d;border-color:#0d948844;color:#2dd4bf">Copy command</button>
       </div>
       <div class="output-box" id="box-cc-cmd" style="line-height:1.6;font-size:13px;color:#2dd4bf;white-space:pre-wrap;word-break:break-all"></div>
+    </div>
     </div>
   </div>
 
@@ -695,6 +847,19 @@
   function toggleSection(id, cb) { document.getElementById(id).style.display = cb.checked ? 'block' : 'none'; }
   function ensureHttps(url) { if (!url) return ''; return /^https?:\/\//i.test(url) ? url : 'https://' + url; }
 
+  /* ── NL2BR AUTOMATION ──
+     Converts newlines (\n, \r\n) in user-typed body text into <br/> tags.
+     Defaults already contain literal <br/> tags so this is only applied
+     when the user actually types something — defaults pass through. */
+  function nl2br(text) {
+    if (!text) return text;
+    return text.replace(/\r\n/g, '\n').replace(/\n/g, '<br/>');
+  }
+  function reqValBr(inputId, defaultVal) {
+    var v = gv(inputId);
+    return v ? nl2br(v) : defaultVal;
+  }
+
   function toggleOpt(cbId, sectionId) {
     var cb = document.getElementById(cbId);
     var section = document.getElementById(sectionId);
@@ -734,7 +899,815 @@
     var slug = gv('slug');
     document.getElementById('preview-locale').textContent = slug ? slugToLocale(slug) : '—';
     document.getElementById('preview-folder').textContent = slug ? slugToFolder(slug) : '—';
+    // Update image path prefixes for both confirmation and cancellation
+    var prefix = 'mailers/one_order_mailer/retailers/' + (slug ? slug.toLowerCase() : '[slug]') + '/';
+    var cancelPrefix  = document.getElementById('cancel-img-path-prefix');
+    var confirmPrefix = document.getElementById('confirm-img-path-prefix');
+    if (cancelPrefix)  cancelPrefix.textContent  = prefix;
+    if (confirmPrefix) confirmPrefix.textContent = prefix;
   }
+
+  /* ════════════════════════════════════════════════════════════
+     DOC IMPORT MODULE
+     Parses .docx files via mammoth.js (fully client-side).
+     Strategy:
+       1. Convert docx → HTML
+       2. Split into retailer sections by <h1> or all-caps standalone bold
+       3. Walk paragraphs, tracking current section (CONFIRMATION/
+          RECEIPT/CANCELLATION/GENERAL) and current field label
+       4. Buffer body text between labels, join paragraphs with \n\n
+          so the existing nl2br pipeline produces <br/><br/> in YAML
+       5. Auto-convert {customer name}→%{first_name}, {amount}→%{amount},
+          and any other {...} → %{retailer_name}
+  ════════════════════════════════════════════════════════════ */
+
+  var importedRetailers = []; // array of {name, children: [Element]}
+
+  function setupDocImport() {
+    var input = document.getElementById('doc-upload-input');
+    var drop  = document.getElementById('doc-drop-zone');
+    if (!input || !drop) return;
+    input.addEventListener('change', function(e) {
+      if (e.target.files && e.target.files[0]) processDocFile(e.target.files[0]);
+    });
+    drop.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      drop.classList.add('drag-over');
+    });
+    drop.addEventListener('dragleave', function() { drop.classList.remove('drag-over'); });
+    drop.addEventListener('drop', function(e) {
+      e.preventDefault();
+      drop.classList.remove('drag-over');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) processDocFile(e.dataTransfer.files[0]);
+    });
+  }
+
+  function setImportStatus(msg, type) {
+    var el = document.getElementById('doc-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'doc-status doc-status-' + (type || 'info');
+    el.style.display = 'block';
+  }
+
+  function processDocFile(file) {
+    var lowerName = file.name.toLowerCase();
+    var isDocx = lowerName.endsWith('.docx');
+    var isPdf  = lowerName.endsWith('.pdf');
+    if (!isDocx && !isPdf) {
+      setImportStatus('⚠ Please upload a .docx or .pdf file. Other formats are not supported.', 'error');
+      return;
+    }
+    setImportStatus('⏳ Reading "' + file.name + '"…', 'loading');
+    document.getElementById('doc-retailer-row').style.display = 'none';
+    document.getElementById('doc-import-btn').style.display = 'none';
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      if (isDocx) processDocxBuffer(e.target.result, file.name);
+      else        processPdfBuffer(e.target.result, file.name);
+    };
+    reader.onerror = function() { setImportStatus('⚠ Could not read file.', 'error'); };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function processDocxBuffer(arrayBuffer, fileName) {
+    if (typeof mammoth === 'undefined') {
+      setImportStatus('⚠ Parser library not loaded — check your internet connection and refresh.', 'error');
+      return;
+    }
+    mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
+      .then(function(result) { handleParsedHtml(result.value, fileName); })
+      .catch(function(err)   { setImportStatus('⚠ Error parsing document: ' + err.message, 'error'); });
+  }
+
+  function processPdfBuffer(arrayBuffer, fileName) {
+    setImportStatus('⏳ Loading PDF parser…', 'loading');
+    loadPdfJs()
+      .then(function() { setImportStatus('⏳ Extracting text from "' + fileName + '"…', 'loading'); return extractPdfText(arrayBuffer); })
+      .then(function(text) {
+        var html = plainTextToHtml(text);
+        handleParsedHtml(html, fileName);
+      })
+      .catch(function(err) { setImportStatus('⚠ Error parsing PDF: ' + err.message, 'error'); });
+  }
+
+  function handleParsedHtml(html, fileName) {
+    var format = detectDocFormat(html);
+    if (format === 'table') {
+      importedRetailers = parseTableDoc(html);
+    } else {
+      importedRetailers = splitRetailers(html);
+    }
+    if (importedRetailers.length === 0) {
+      setImportStatus('⚠ Could not find any retailer sections in this document.', 'error');
+      return;
+    }
+    showRetailerSelector(fileName, format);
+  }
+
+  /* ── PDF.js lazy loader — only loaded when a PDF is uploaded ── */
+  function loadPdfJs() {
+    if (window.pdfjsLib) return Promise.resolve();
+    return new Promise(function(resolve, reject) {
+      var script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      script.onload = function() {
+        if (window.pdfjsLib) {
+          pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+          resolve();
+        } else {
+          reject(new Error('PDF.js failed to initialize'));
+        }
+      };
+      script.onerror = function() { reject(new Error('Could not load PDF.js library')); };
+      document.head.appendChild(script);
+    });
+  }
+
+  function extractPdfText(arrayBuffer) {
+    return pdfjsLib.getDocument({ data: arrayBuffer }).promise.then(function(pdf) {
+      var promises = [];
+      for (var i = 1; i <= pdf.numPages; i++) {
+        promises.push(pdf.getPage(i).then(function(page) { return page.getTextContent(); }));
+      }
+      return Promise.all(promises);
+    }).then(function(pageContents) {
+      var allText = '';
+      pageContents.forEach(function(content) {
+        var lines = {};
+        content.items.forEach(function(item) {
+          var y = Math.round(item.transform[5]);
+          if (!lines[y]) lines[y] = [];
+          lines[y].push(item.str);
+        });
+        Object.keys(lines).sort(function(a, b) { return parseFloat(b) - parseFloat(a); }).forEach(function(y) {
+          var line = lines[y].join('').trim();
+          if (line) allText += line + '\n';
+        });
+        allText += '\n';
+      });
+      return allText;
+    });
+  }
+
+  /* ── Convert flat PDF text into pseudo-HTML the paragraph parser can read ── */
+  function plainTextToHtml(text) {
+    var lines = text.split('\n');
+    var html = '';
+    var i = 0;
+    var KNOWN_LABEL = /^(Email heading|Body text|Order confirmation body text|Order upsell text|Order confirmation fine print|Rating heading|Rating text|Website|Help Link[^:]*|Privacy Policy Link|Terms of (?:Use|Service)|Facebook|Marketing image|Background Image|Buttons)\s*:?\s*(.*)$/i;
+    while (i < lines.length) {
+      var line = lines[i].trim();
+      if (!line) { i++; continue; }
+      if (line === line.toUpperCase() && line.length > 3 && line.length < 80 && /[A-Z]{2,}/.test(line)) {
+        var wordCount = line.split(/\s+/).length;
+        if (wordCount <= 4 && line.length < 30 && !isKnownSectionHeader(line)) {
+          html += '<h1>' + escapeHtml(line) + '</h1>';
+        } else {
+          html += '<p><strong>' + escapeHtml(line) + '</strong></p>';
+        }
+        i++; continue;
+      }
+      var m = line.match(KNOWN_LABEL);
+      if (m) {
+        if (m[2]) {
+          html += '<p><strong>' + escapeHtml(m[1]) + '</strong>: ' + escapeHtml(m[2]) + '</p>';
+        } else {
+          html += '<p><strong>' + escapeHtml(m[1]) + '</strong></p>';
+        }
+        i++; continue;
+      }
+      html += '<p>' + escapeHtml(line);
+      i++;
+      while (i < lines.length && lines[i].trim() && !lines[i].trim().match(KNOWN_LABEL)) {
+        var next = lines[i].trim();
+        if (next === next.toUpperCase() && /[A-Z]{2,}/.test(next) && next.length < 80) break;
+        html += '<br/>' + escapeHtml(next);
+        i++;
+      }
+      html += '</p>';
+    }
+    return html;
+  }
+
+  /* ── Format detection ──
+        Returns 'table' if the doc contains tables with a Configuration column
+        (Calgary Co-op-style layout), otherwise 'paragraph' (Wakefield/PW style). */
+  function detectDocFormat(html) {
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(html, 'text/html');
+    var tables = doc.querySelectorAll('table');
+    for (var i = 0; i < tables.length; i++) {
+      var firstRow = tables[i].querySelector('tr');
+      if (!firstRow) continue;
+      var headers = Array.from(firstRow.querySelectorAll('td, th')).map(function(c) {
+        return c.textContent.trim().toLowerCase();
+      });
+      if (headers.some(function(h) { return /configuration/.test(h); }) &&
+          headers.some(function(h) { return /value/.test(h); })) {
+        return 'table';
+      }
+    }
+    return 'paragraph';
+  }
+
+  /* ── TABLE-FORMAT PARSER ──
+        Handles docs where each section has a table with columns:
+          ID | Configuration | Default Value | <Retailer> Value
+        Supports multiple retailer columns (one per retailer). */
+  function parseTableDoc(html) {
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(html, 'text/html');
+    var nodes = Array.from(doc.body.querySelectorAll('h1, h2, h3, table'));
+    var currentSection = '';
+    var retailersByName = {};
+    nodes.forEach(function(el) {
+      if (el.tagName === 'H1' || el.tagName === 'H2' || el.tagName === 'H3') {
+        currentSection = tableSectionFromText(el.textContent.trim());
+      } else if (el.tagName === 'TABLE') {
+        parseConfigTable(el, currentSection, retailersByName);
+      }
+    });
+    return Object.keys(retailersByName).map(function(name) {
+      return { name: name, isPreParsed: true, data: retailersByName[name] };
+    });
+  }
+
+  function tableSectionFromText(text) {
+    var t = text.toUpperCase();
+    if (/SENDING\s*DOMAINS/.test(t)) return 'DOMAINS';
+    if (/GENERAL\s*CONFIG/.test(t))  return 'GENERAL';
+    if (/ORDER\s*CONFIRMATION/.test(t)) return 'CONFIRMATION';
+    if (/ORDER\s*RECEIPT/.test(t))   return 'RECEIPT';
+    if (/ORDER\s*CANCELLATION/.test(t)) return 'CANCELLATION';
+    return '';
+  }
+
+  function parseConfigTable(table, section, retailersByName) {
+    var rows = Array.from(table.querySelectorAll('tr'));
+    if (rows.length < 2) return;
+    var headerCells = Array.from(rows[0].querySelectorAll('th, td')).map(function(c) { return c.textContent.trim(); });
+    var configCol = headerCells.findIndex(function(h) { return /^configuration$/i.test(h); });
+    if (configCol === -1) return;
+    var retailerCols = [];
+    headerCells.forEach(function(h, idx) {
+      if (idx === configCol) return;
+      if (/^id$/i.test(h)) return;
+      if (/^default\s*value$/i.test(h)) return;
+      if (!h.trim()) return;
+      var m = h.match(/^(.+?)\s+Value$/i);
+      var name = (m ? m[1] : h).trim();
+      retailerCols.push({ idx: idx, name: name });
+    });
+    for (var i = 1; i < rows.length; i++) {
+      var cells = Array.from(rows[i].querySelectorAll('td'));
+      if (cells.length <= configCol) continue;
+      var configName = paragraphText(cells[configCol]).trim();
+      if (!configName) continue;
+      var fieldKey = mapConfigToField(configName, section);
+      if (!fieldKey) continue;
+      retailerCols.forEach(function(col) {
+        if (cells.length <= col.idx) return;
+        var rawValue = paragraphText(cells[col.idx]).trim();
+        var value = normalizeTableValue(rawValue);
+        if (!value) return;
+        if (!retailersByName[col.name]) {
+          retailersByName[col.name] = createEmptyRetailerData(col.name);
+        }
+        if (fieldKey === 'appLinks') {
+          var iosM    = rawValue.match(/https?:\/\/apps\.apple\.com\/[^\s)<>]+/i);
+          var googleM = rawValue.match(/https?:\/\/play\.google\.com\/[^\s)<>]+/i);
+          if (iosM)    retailersByName[col.name].appstoreLink  = iosM[0];
+          if (googleM) retailersByName[col.name].playstoreLink = googleM[0];
+        } else {
+          retailersByName[col.name][fieldKey] = value;
+        }
+      });
+    }
+  }
+
+  function normalizeTableValue(text) {
+    if (!text) return '';
+    var t = text.trim();
+    if (/^(N\/A|Not needed|Not Needed|TBD|TBA|---?|—|–|None)$/i.test(t)) return '';
+    return t;
+  }
+
+  function mapConfigToField(configName, section) {
+    var c = configName.toLowerCase().replace(/\s+/g, ' ').trim();
+    if (section === 'GENERAL') {
+      if (/^website link?$/.test(c)) return 'website';
+      if (/^help link$/.test(c))     return 'helpLink';
+      if (/^privacy policy link$/.test(c)) return 'privacyLink';
+      if (/^terms of (service|use) link$/.test(c)) return 'tosLink';
+      if (/footer app links?/.test(c)) return 'appLinks';
+    }
+    if (section === 'CONFIRMATION') {
+      if (/^email heading$/.test(c)) return 'confirmHeading';
+      if (/order confirmation body text/.test(c)) return 'confirmBody';
+      if (/order upsell text/.test(c))  return 'upsellText';
+      if (/order confirmation fine print/.test(c)) return 'finePrint';
+    }
+    if (section === 'RECEIPT') {
+      if (/^email heading$/.test(c)) return 'receiptHeading';
+      if (/^body text$/.test(c))     return 'receiptBody';
+      if (/^rating heading$/.test(c)) return 'ratingHeading';
+      if (/^rating text$/.test(c))    return 'ratingContent';
+    }
+    if (section === 'CANCELLATION') {
+      if (/^email heading$/.test(c)) return 'cancelHeading';
+      if (/^body text$/.test(c))     return 'cancelBody';
+    }
+    return null;
+  }
+
+  function createEmptyRetailerData(name) {
+    return {
+      retailerName: name, website: '', helpLink: '', privacyLink: '', tosLink: '',
+      appstoreLink: '', playstoreLink: '',
+      confirmHeading: '', confirmBody: '', upsellText: '', finePrint: '',
+      receiptHeading: '', receiptBody: '', ratingHeading: '', ratingContent: '',
+      cancelHeading: '', cancelBody: '', defaults: {}
+    };
+  }
+
+  function splitRetailers(html) {
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(html, 'text/html');
+    var children = Array.from(doc.body.children);
+    var splits = [];
+
+    // Pass 1: prefer <h1>
+    children.forEach(function(el, idx) {
+      if (el.tagName === 'H1' && el.textContent.trim()) {
+        splits.push({ idx: idx, name: el.textContent.trim() });
+      }
+    });
+
+    // Pass 2 (fallback): all-caps standalone bold paragraphs that aren't known section headers
+    if (splits.length === 0) {
+      children.forEach(function(el, idx) {
+        if (el.tagName !== 'P') return;
+        if (el.children.length !== 1 || el.children[0].tagName !== 'STRONG') return;
+        var t = el.children[0].textContent.trim();
+        if (t.length < 4) return;
+        if (t !== t.toUpperCase()) return;
+        if (isKnownSectionHeader(t)) return;
+        // Looks like a retailer name in caps (e.g., "WAKEFIELD MARKET")
+        splits.push({ idx: idx, name: t.split(/\s+/).map(function(w) {
+          return w.charAt(0) + w.slice(1).toLowerCase();
+        }).join(' ') });
+      });
+    }
+
+    if (splits.length === 0) {
+      return [{ name: 'Retailer', children: children }];
+    }
+
+    var retailers = [];
+    for (var i = 0; i < splits.length; i++) {
+      var start = splits[i].idx + 1;
+      var end = (i + 1 < splits.length) ? splits[i + 1].idx : children.length;
+      retailers.push({
+        name: splits[i].name,
+        children: children.slice(start, end)
+      });
+    }
+    return retailers;
+  }
+
+  function isKnownSectionHeader(text) {
+    var t = text.toUpperCase();
+    return /SENDING DOMAINS|GENERAL CONFIG|ORDER (CONFIRMATION|RECEIPT|CANCELLATION) EMAIL|OTHER NOTES|BACKGROUND IMAGE|MARKETING IMAGE/.test(t);
+  }
+
+  function showRetailerSelector(fileName, format) {
+    var sel = document.getElementById('doc-retailer-select');
+    sel.innerHTML = importedRetailers.map(function(r, i) {
+      return '<option value="' + i + '">' + escapeHtml(r.name) + '</option>';
+    }).join('');
+    document.getElementById('doc-retailer-row').style.display = 'block';
+    document.getElementById('doc-import-btn').style.display = 'block';
+    var fmtNote = format === 'table' ? ' · table-format detected' :
+                  format === 'paragraph' ? ' · paragraph-format detected' : '';
+    setImportStatus('✓ Loaded "' + fileName + '"' + fmtNote + ' — found ' + importedRetailers.length + ' retailer section(s).', 'success');
+    previewSelectedRetailer();
+  }
+
+  function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function previewSelectedRetailer() {
+    var idx = parseInt(document.getElementById('doc-retailer-select').value, 10);
+    if (isNaN(idx) || !importedRetailers[idx]) return;
+    var data = parseRetailer(importedRetailers[idx]);
+    var custom = [], usingDefault = [], missing = [];
+    // [label, dataKey, hasDefaultDetection]
+    var fieldMap = [
+      ['Retailer name',   'retailerName',   false],
+      ['Website',         'website',        false],
+      ['Help link',       'helpLink',       false],
+      ['Privacy link',    'privacyLink',    false],
+      ['TOS link',        'tosLink',        false],
+      ['iOS app link',    'appstoreLink',   false],
+      ['Android app link','playstoreLink',  false],
+      ['Confirm heading', 'confirmHeading', true],
+      ['Confirm body',    'confirmBody',    true],
+      ['Upsell',          'upsellText',     true],
+      ['Fine print',      'finePrint',      true],
+      ['Receipt heading', 'receiptHeading', true],
+      ['Receipt body',    'receiptBody',    true],
+      ['Rating heading',  'ratingHeading',  true],
+      ['Rating text',     'ratingContent',  true],
+      ['Cancel heading',  'cancelHeading',  true],
+      ['Cancel body',     'cancelBody',     true]
+    ];
+    fieldMap.forEach(function(f) {
+      var label = f[0], key = f[1], hasDefault = f[2];
+      var value = data[key];
+      if (!value) {
+        missing.push(label);
+      } else if (hasDefault && data.defaults[key]) {
+        usingDefault.push(label);
+      } else {
+        custom.push(label);
+      }
+    });
+    var html = '';
+    if (custom.length) {
+      html += '<div style="margin-bottom:4px"><strong style="color:#4ade80">Will fill (custom values):</strong></div>';
+      html += custom.map(function(f) { return '<span class="field-tag">' + escapeHtml(f) + '</span>'; }).join('');
+    }
+    if (usingDefault.length) {
+      html += '<div style="margin-top:8px;margin-bottom:4px"><strong style="color:#60a5fa">Matches default — will skip:</strong></div>';
+      html += usingDefault.map(function(f) { return '<span class="field-tag field-tag-default">' + escapeHtml(f) + '</span>'; }).join('');
+      html += '<div style="font-size:10px;color:#475569;margin-top:4px;font-family:inherit">These fields stay blank in the form so the generator emits the default template.</div>';
+    }
+    if (missing.length) {
+      html += '<div style="margin-top:8px;margin-bottom:4px"><strong style="color:#fbbf24">Not found in doc:</strong></div>';
+      html += missing.map(function(f) { return '<span class="field-tag field-tag-missing">' + escapeHtml(f) + '</span>'; }).join('');
+    }
+    document.getElementById('doc-found-fields').innerHTML = html;
+  }
+
+  /* ── Extract one retailer's section into a structured data object ── */
+  function parseRetailer(retailer) {
+    // Pre-parsed (table-format): apply default-detection then return as-is
+    if (retailer.isPreParsed) {
+      var d = retailer.data;
+      [
+        'confirmHeading','confirmBody','upsellText','finePrint',
+        'receiptHeading','receiptBody','ratingHeading','ratingContent',
+        'cancelHeading','cancelBody'
+      ].forEach(function(field) {
+        if (d[field] && isDefaultValue(field, d[field], retailer.name)) {
+          d.defaults[field] = true;
+        }
+      });
+      return d;
+    }
+
+    var data = {
+      retailerName:     retailer.name,
+      website:          '',
+      helpLink:         '',
+      privacyLink:      '',
+      tosLink:          '',
+      confirmHeading:   '',
+      confirmBody:      '',
+      upsellText:       '',
+      finePrint:        '',
+      receiptHeading:   '',
+      receiptBody:      '',
+      ratingHeading:    '',
+      ratingContent:    '',
+      cancelHeading:    '',
+      cancelBody:       '',
+      defaults:         {}    // { fieldName: true } when doc value === system default
+    };
+
+    var section = '';   // CONFIRMATION | RECEIPT | CANCELLATION | GENERAL | ''
+    var label   = '';   // current field label (original case)
+    var buffer  = [];   // paragraphs of text waiting to be assigned to `label`
+
+    function flushLabel() {
+      if (!label || buffer.length === 0) { buffer = []; return; }
+      var text = buffer.join('\n\n').replace(/^\s+|\s+$/g, '');
+      assignField(section, label, text, data);
+      buffer = [];
+    }
+
+    retailer.children.forEach(function(el) {
+      if (!el.textContent.trim()) return;
+      if (el.tagName === 'H1' || el.tagName === 'H2' || el.tagName === 'H3') {
+        // Treat headings as label/section markers using their text
+        flushLabel();
+        var ht = el.textContent.trim();
+        if (ht === ht.toUpperCase() && /[A-Z]{2,}/.test(ht)) {
+          section = sectionFromText(ht); label = '';
+        } else {
+          label = ht;
+        }
+        return;
+      }
+      if (el.tagName !== 'P') return;
+
+      var firstChild = el.children[0];
+      var hasStrongPrefix = firstChild && firstChild.tagName === 'STRONG';
+
+      // STANDALONE BOLD = label or section header
+      var isStandaloneBold = hasStrongPrefix &&
+        el.children.length === 1 &&
+        el.textContent.trim() === firstChild.textContent.trim();
+
+      if (isStandaloneBold) {
+        flushLabel();
+        var t = firstChild.textContent.trim().replace(/[:\s]+$/, '');
+        var isAllCaps = (t === t.toUpperCase() && /[A-Z]{2,}/.test(t));
+        if (isAllCaps) {
+          section = sectionFromText(t);
+          label = '';
+        } else {
+          label = t;
+        }
+        return;
+      }
+
+      // INLINE BOLD PREFIX + content (e.g., "**Website**: <url>")
+      if (hasStrongPrefix) {
+        var labelText = firstChild.textContent.trim();
+        var fullText  = paragraphText(el);
+        var afterLabel = fullText.substring(labelText.length).replace(/^\s*[:\.]?\s*/, '').trim();
+
+        if (afterLabel) {
+          // Try to handle as inline-labeled value (works in any section, mostly GENERAL fields)
+          var lUp = labelText.toUpperCase();
+          var handled = false;
+          if (/WEBSITE/.test(lUp))         { data.website     = data.website     || extractUrl(el, afterLabel); handled = true; }
+          else if (/HELP/.test(lUp))       { data.helpLink    = data.helpLink    || extractUrl(el, afterLabel); handled = true; }
+          else if (/PRIVACY/.test(lUp))    { data.privacyLink = data.privacyLink || extractUrl(el, afterLabel); handled = true; }
+          else if (/TERMS|TOS/.test(lUp))  { data.tosLink     = data.tosLink     || extractUrl(el, afterLabel); handled = true; }
+          if (handled) return;
+        }
+        // Not an inline label match — fall through and buffer the whole paragraph
+        // (handles cases like "**Forgot something?** You can add items..." in upsell)
+      }
+
+      // REGULAR CONTENT PARAGRAPH → buffer
+      buffer.push(paragraphText(el));
+    });
+    flushLabel();
+
+    // ── Detect which extracted values match the system defaults
+    [
+      'confirmHeading','confirmBody','upsellText','finePrint',
+      'receiptHeading','receiptBody','ratingHeading','ratingContent',
+      'cancelHeading','cancelBody'
+    ].forEach(function(field) {
+      if (data[field] && isDefaultValue(field, data[field], retailer.name)) {
+        data.defaults[field] = true;
+      }
+    });
+
+    return data;
+  }
+
+  /* ── Default-value comparison ─────────────────────────────────
+     normalizeForCompare collapses doc text and default text into
+     a directly-comparable form: paragraph breaks become <br/>,
+     whitespace around tags is stripped, runs of spaces collapse.
+     If the doc says exactly what the default already says, the
+     field is flagged as `data.defaults[field] = true` and the
+     importer skips it — leaving the form blank so the YAML emits
+     the default automatically.
+  ──────────────────────────────────────────────────────────── */
+  function normalizeForCompare(text) {
+    if (!text) return '';
+    return text
+      .replace(/\r\n/g, '\n')
+      .replace(/\n+/g, function(m) { return new Array(m.length + 1).join('<br/>'); })
+      .replace(/<br\s*\/?>/gi, '<br/>')
+      .replace(/\s*<br\/>\s*/g, '<br/>')
+      .replace(/[ \t]+/g, ' ')
+      .trim();
+  }
+
+  function defaultValueFor(field, retailerName) {
+    var ph = document.getElementById('use-retailer-placeholder');
+    var token = (ph && ph.checked) ? '%{retailer_name}' : retailerName;
+    switch (field) {
+      case 'confirmHeading': return 'Hi %{first_name}, your ' + token + ' order is all set.';
+      case 'confirmBody':    return fillR(D.orderDesc, token);
+      case 'upsellText':     return D.upsellForgot + ' ' + D.upsellAdd;
+      case 'finePrint':      return '';
+      case 'receiptHeading': return "%{first_name}, here's your receipt";
+      case 'receiptBody':    return fillR(D.receiptBody, token);
+      case 'ratingHeading':  return D.rateHeading;
+      case 'ratingContent':  return D.rateContent;
+      case 'cancelHeading':  return 'Your order has been canceled.';
+      case 'cancelBody':     return fillR(D.cancelBody, token);
+      default:               return null;
+    }
+  }
+
+  function isDefaultValue(field, rawDocText, retailerName) {
+    var def = defaultValueFor(field, retailerName);
+    if (def === null) return false;
+    if (def === '' && rawDocText === '') return true;
+    var converted = convertPlaceholders(rawDocText);
+    return normalizeForCompare(converted) === normalizeForCompare(def);
+  }
+
+  /* Get paragraph text preserving <br> as \n */
+  function paragraphText(el) {
+    var clone = el.cloneNode(true);
+    clone.querySelectorAll('br').forEach(function(br) {
+      br.replaceWith(document.createTextNode('\n'));
+    });
+    return clone.textContent;
+  }
+
+  function extractUrl(el, fallback) {
+    var a = el.querySelector('a');
+    if (a) {
+      var href = a.getAttribute('href');
+      if (href && /^https?:/i.test(href)) return href;
+      var t = a.textContent.trim();
+      if (/^https?:/i.test(t)) return t;
+    }
+    var m = (fallback || '').match(/(https?:\/\/[^\s)<>]+)/);
+    return m ? m[1] : (fallback || '').trim();
+  }
+
+  function sectionFromText(text) {
+    var t = text.toUpperCase();
+    if (/ORDER CONFIRMATION EMAIL/.test(t)) return 'CONFIRMATION';
+    if (/ORDER RECEIPT EMAIL/.test(t))      return 'RECEIPT';
+    if (/ORDER CANCELLATION EMAIL/.test(t)) return 'CANCELLATION';
+    if (/GENERAL CONFIG/.test(t))           return 'GENERAL';
+    return ''; // unknown section, fields under it are ignored
+  }
+
+  function assignField(section, label, text, data) {
+    var l = label.toUpperCase();
+    if (section === 'CONFIRMATION') {
+      if (/^EMAIL HEADING$/.test(l))                            data.confirmHeading = text;
+      else if (/CONFIRMATION BODY|ORDER CONFIRMATION BODY/.test(l)) data.confirmBody = text;
+      else if (/UPSELL/.test(l))                                data.upsellText     = text;
+      else if (/FINE PRINT/.test(l))                            data.finePrint      = text;
+    } else if (section === 'RECEIPT') {
+      if (/^EMAIL HEADING$/.test(l))    data.receiptHeading = text;
+      else if (/^BODY TEXT$/.test(l))   data.receiptBody    = text;
+      else if (/RATING HEADING/.test(l)) data.ratingHeading = text;
+      else if (/RATING TEXT|RATING CONTENT/.test(l)) data.ratingContent = text;
+    } else if (section === 'CANCELLATION') {
+      if (/^EMAIL HEADING$/.test(l))    data.cancelHeading = text;
+      else if (/^BODY TEXT$/.test(l))   data.cancelBody    = text;
+    }
+  }
+
+  /* ── Placeholder mapping: {customer name}→%{first_name}, {amount}→%{amount},
+        {anything else}→%{retailer_name} OR literal name depending on toggle ── */
+  function convertPlaceholders(text) {
+    if (!text) return text;
+    var ph = document.getElementById('use-retailer-placeholder');
+    var usePlaceholder = ph && ph.checked;
+    return text.replace(/\{([^{}]+)\}/g, function(_, content) {
+      var c = content.trim().toLowerCase().replace(/_/g, ' ');
+      if (/^customer ?name$|^first ?name$/.test(c)) return '%{first_name}';
+      if (/^amount$/.test(c)) return '%{amount}';
+      // Retailer name reference: placeholder OR strip braces to keep the literal name from the doc
+      return usePlaceholder ? '%{retailer_name}' : content.trim();
+    });
+  }
+
+  /* ── Slug from retailer name: "Piggly Wiggly East" → "piggly-wiggly-east" ── */
+  function slugifyName(name) {
+    return name.toLowerCase()
+      .replace(/['']/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  /* ── Fill form fields from the parsed retailer data ── */
+  function importSelectedRetailer() {
+    var idx = parseInt(document.getElementById('doc-retailer-select').value, 10);
+    if (isNaN(idx) || !importedRetailers[idx]) return;
+    var data = parseRetailer(importedRetailers[idx]);
+
+    // ── Step 1
+    if (!gv('slug') && data.retailerName) {
+      document.getElementById('slug').value = slugifyName(data.retailerName);
+    }
+    if (data.retailerName) document.getElementById('retailer-name').value = data.retailerName;
+    if (data.website)      document.getElementById('retailer-url').value  = data.website;
+    updatePreviews();
+
+    var hasContentToFill = !!(
+      (data.confirmBody    && !data.defaults.confirmBody) ||
+      (data.receiptBody    && !data.defaults.receiptBody) ||
+      (data.cancelBody     && !data.defaults.cancelBody) ||
+      (data.upsellText     && !data.defaults.upsellText) ||
+      (data.ratingContent  && !data.defaults.ratingContent) ||
+      (data.ratingHeading  && !data.defaults.ratingHeading) ||
+      (data.finePrint      && !data.defaults.finePrint) ||
+      data.helpLink || data.privacyLink || data.tosLink ||
+      data.appstoreLink || data.playstoreLink
+    );
+
+    if (hasContentToFill) {
+      var contentToggle = document.getElementById('toggle-content');
+      contentToggle.checked = true;
+      toggleSection('content-section', contentToggle);
+
+      if (data.confirmBody   && !data.defaults.confirmBody)   document.getElementById('order-desc').value   = convertPlaceholders(data.confirmBody);
+      if (data.cancelBody    && !data.defaults.cancelBody)    document.getElementById('cancel-body').value  = convertPlaceholders(data.cancelBody);
+      if (data.receiptBody   && !data.defaults.receiptBody)   document.getElementById('receipt-body').value = convertPlaceholders(data.receiptBody);
+      if (data.ratingHeading && !data.defaults.ratingHeading) document.getElementById('rate-heading').value = convertPlaceholders(data.ratingHeading);
+      if (data.ratingContent && !data.defaults.ratingContent) document.getElementById('rate-content').value = convertPlaceholders(data.ratingContent);
+
+      // Always emit fine_print key (per existing convention) — check the box even when blank
+      enableOpt('cb-fine-print', 'opts-fine-print');
+      if (data.finePrint && !data.defaults.finePrint) document.getElementById('inp-fine-print').value = convertPlaceholders(data.finePrint);
+
+      // Footer links — no defaults to compare against; fill if present
+      if (data.helpLink || data.privacyLink || data.tosLink) {
+        enableOpt('cb-footer-links', 'opts-footer-links');
+        if (data.helpLink)    document.getElementById('inp-help-link').value    = data.helpLink;
+        if (data.privacyLink) document.getElementById('inp-privacy-link').value = data.privacyLink;
+        if (data.tosLink)     document.getElementById('inp-tos-link').value     = data.tosLink;
+      }
+
+      // App store links — fill if extracted from doc
+      if (data.appstoreLink || data.playstoreLink) {
+        enableOpt('cb-app-links', 'opts-app-links');
+        if (data.appstoreLink)  document.getElementById('inp-appstore-link').value  = data.appstoreLink;
+        if (data.playstoreLink) document.getElementById('inp-playstore-link').value = data.playstoreLink;
+      }
+
+      // Upsell — split "**Forgot something?** You can add items..." into two parts
+      if (data.upsellText && !data.defaults.upsellText) {
+        enableOpt('cb-upsell', 'opts-upsell');
+        var upsellParts = data.upsellText.match(/^([^?]*\?)\s*(.+)$/s);
+        if (upsellParts) {
+          document.getElementById('inp-upsell-forgot').value = upsellParts[1].trim();
+          document.getElementById('inp-upsell-add').value    = upsellParts[2].trim().replace(/\s*\n\s*/g, ' ');
+        } else {
+          document.getElementById('inp-upsell-add').value = data.upsellText;
+        }
+      }
+    }
+
+    // ── Step 3 — headings (skip if matches default)
+    var hasHeadingsToFill = !!(
+      (data.confirmHeading && !data.defaults.confirmHeading) ||
+      (data.receiptHeading && !data.defaults.receiptHeading) ||
+      (data.cancelHeading  && !data.defaults.cancelHeading)
+    );
+    if (hasHeadingsToFill) {
+      var headingsToggle = document.getElementById('toggle-headings');
+      headingsToggle.checked = true;
+      toggleSection('headings-section', headingsToggle);
+
+      if (data.confirmHeading && !data.defaults.confirmHeading) {
+        var h = convertPlaceholders(data.confirmHeading);
+        document.getElementById('confirm-heading-delivery').value = h;
+        document.getElementById('confirm-heading-pickup').value   = h;
+      }
+      if (data.receiptHeading && !data.defaults.receiptHeading) {
+        var h = convertPlaceholders(data.receiptHeading);
+        document.getElementById('receipt-heading-delivery').value = h;
+        document.getElementById('receipt-heading-pickup').value   = h;
+      }
+      if (data.cancelHeading && !data.defaults.cancelHeading) {
+        var h = convertPlaceholders(data.cancelHeading);
+        document.getElementById('cancel-heading-delivery').value = h;
+        document.getElementById('cancel-heading-pickup').value   = h;
+      }
+    }
+
+    // Build status message including default-matched count
+    var defaultCount = Object.keys(data.defaults).length;
+    var statusMsg = '✓ Imported "' + data.retailerName + '"';
+    if (defaultCount > 0) {
+      statusMsg += ' · ' + defaultCount + ' field(s) match defaults (left blank)';
+    }
+    statusMsg += '. Review fields, fill Whitelabel domain, then click Generate.';
+    setImportStatus(statusMsg, 'success');
+    document.getElementById('slug').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function enableOpt(cbId, sectionId) {
+    var cb = document.getElementById(cbId);
+    if (!cb || cb.checked) return;
+    cb.checked = true;
+    var section = document.getElementById(sectionId);
+    var lbl = document.getElementById('lbl-' + cbId.replace('cb-', ''));
+    if (section) section.style.display = 'block';
+    if (lbl) lbl.classList.add('active');
+  }
+
+  window.addEventListener('DOMContentLoaded', setupDocImport);
 
   /* ── GENERATE ── */
   function generate() {
@@ -754,11 +1727,17 @@
     var contentOn  = document.getElementById('toggle-content').checked;
     var headingsOn = document.getElementById('toggle-headings').checked;
 
-    var orderDesc   = contentOn ? reqVal('order-desc',   fillR(D.orderDesc,   retailer)) : fillR(D.orderDesc,   retailer);
-    var familyDesc  = contentOn ? reqVal('family-desc',  fillR(D.familyDesc,  retailer)) : fillR(D.familyDesc,  retailer);
-    var pickup      = contentOn ? reqVal('pickup',        D.pickup)                        : D.pickup;
-    var cancelBody  = contentOn ? reqVal('cancel-body',  fillR(D.cancelBody,  retailer)) : fillR(D.cancelBody,  retailer);
-    var receiptBody = contentOn ? reqVal('receipt-body', fillR(D.receiptBody, retailer)) : fillR(D.receiptBody, retailer);
+    /* ── Placeholder toggle: when ON, defaults use %{retailer_name} instead
+          of the literal retailer name. User-typed field values are
+          unaffected (they're used as-typed). ── */
+    var usePlaceholder = document.getElementById('use-retailer-placeholder').checked;
+    var retailerToken  = usePlaceholder ? '%{retailer_name}' : retailer;
+
+    var orderDesc   = contentOn ? reqValBr('order-desc',   fillR(D.orderDesc,   retailerToken)) : fillR(D.orderDesc,   retailerToken);
+    var familyDesc  = contentOn ? reqValBr('family-desc',  fillR(D.familyDesc,  retailerToken)) : fillR(D.familyDesc,  retailerToken);
+    var pickup      = contentOn ? reqValBr('pickup',        D.pickup)                            : D.pickup;
+    var cancelBody  = contentOn ? reqValBr('cancel-body',  fillR(D.cancelBody,  retailerToken)) : fillR(D.cancelBody,  retailerToken);
+    var receiptBody = contentOn ? reqValBr('receipt-body', fillR(D.receiptBody, retailerToken)) : fillR(D.receiptBody, retailerToken);
     var rateHeading = contentOn ? reqVal('rate-heading', D.rateHeading)                   : D.rateHeading;
     var rateContent = contentOn ? reqVal('rate-content', D.rateContent)                   : D.rateContent;
 
@@ -782,10 +1761,26 @@
     var customPrivacyLink = contentOn ? optVal('cb-footer-links', 'inp-privacy-link', whitelabel + '/privacy') : null;
     var customTosLink     = contentOn ? optVal('cb-footer-links', 'inp-tos-link',     whitelabel + '/terms')   : null;
 
-    var chd = headingsOn ? reqVal('cancel-heading-delivery',  'Your order has been canceled.')                              : 'Your order has been canceled.';
-    var chp = headingsOn ? reqVal('cancel-heading-pickup',    'Your order has been canceled.')                              : 'Your order has been canceled.';
-    var cfd = headingsOn ? reqVal('confirm-heading-delivery', 'Hi %{first_name}, your ' + retailer + ' order is all set.') : 'Hi %{first_name}, your ' + retailer + ' order is all set.';
-    var cfp = headingsOn ? reqVal('confirm-heading-pickup',   'Hi %{first_name}, your ' + retailer + ' order is all set.') : 'Hi %{first_name}, your ' + retailer + ' order is all set.';
+    /* ── STRUCTURAL OPTIONS ── */
+    var pathPrefix      = 'mailers/one_order_mailer/retailers/' + slug.toLowerCase() + '/';
+
+    var cancelImgExtras = contentOn && document.getElementById('cb-cancel-img-extras').checked;
+    var cancelImgLink   = cancelImgExtras ? (gv('inp-cancel-img-link') || '#') : null;
+    var cancelImgPath   = cancelImgExtras ? (pathPrefix + (gv('inp-cancel-img-path') || 'order_cancellation.jpg')) : null;
+
+    var confirmImgExtras = contentOn && document.getElementById('cb-confirm-img-extras').checked;
+    var confirmImgLink   = confirmImgExtras ? (gv('inp-confirm-img-link') || '#') : null;
+    var confirmImgPath   = confirmImgExtras ? (pathPrefix + (gv('inp-confirm-img-path') || 'order_confirmation.jpg')) : null;
+    // When image extras is on, force image_alt to appear in the block (defaults to retailer name)
+    var confirmImgAltFinal = (confirmImgAlt !== null) ? confirmImgAlt : (confirmImgExtras ? retailer : null);
+
+    var receiptHeader   = contentOn ? optVal('cb-receipt-header', 'inp-receipt-header-content', "%{first_name}, here's your receipt") : null;
+    var rateLegacy      = contentOn && document.getElementById('cb-rate-legacy').checked;
+
+    var chd = headingsOn ? reqVal('cancel-heading-delivery',  'Your order has been canceled.')                                   : 'Your order has been canceled.';
+    var chp = headingsOn ? reqVal('cancel-heading-pickup',    'Your order has been canceled.')                                   : 'Your order has been canceled.';
+    var cfd = headingsOn ? reqVal('confirm-heading-delivery', 'Hi %{first_name}, your ' + retailerToken + ' order is all set.') : 'Hi %{first_name}, your ' + retailerToken + ' order is all set.';
+    var cfp = headingsOn ? reqVal('confirm-heading-pickup',   'Hi %{first_name}, your ' + retailerToken + ' order is all set.') : 'Hi %{first_name}, your ' + retailerToken + ' order is all set.';
     var rhd = headingsOn ? reqVal('receipt-heading-delivery', "%{first_name}, here's your receipt")                        : "%{first_name}, here's your receipt";
     var rhp = headingsOn ? reqVal('receipt-heading-pickup',   "%{first_name}, here's your receipt")                        : "%{first_name}, here's your receipt";
     var cih = headingsOn ? reqVal('cancel-items-heading',     'Canceled Items')                                            : 'Canceled Items';
@@ -807,7 +1802,7 @@
     if (playstoreLink !== null) t1.push('      playstore_link: "' + playstoreLink + '"');
     var footerRetailerLink = retailerUrl || whitelabel;
     t1.push('      retailer_link: "' + footerRetailerLink + '"');
-    t1.push('      retailer_link_label: "' + retailer + '"');
+    t1.push('      retailer_link_label: "' + retailerToken + '"');
     var helpUrl    = customHelpLink    !== null ? customHelpLink    : whitelabel + '/help';
     var privacyUrl = customPrivacyLink !== null ? customPrivacyLink : whitelabel + '/privacy';
     var tosUrl     = customTosLink     !== null ? customTosLink     : whitelabel + '/terms';
@@ -824,7 +1819,9 @@
     t1.push('        instructions_details: "' + pickup + '"');
     t1.push('    order_cancellation:');
     t1.push('      generic_image:');
+    if (cancelImgLink !== null) t1.push('        image_link: "' + cancelImgLink + '"');
     t1.push('        image_alt: "' + cancelImgAlt + '"');
+    if (cancelImgPath !== null) t1.push('        image_path: "' + cancelImgPath + '"');
     t1.push('      generic_body:');
     t1.push('        content: "' + cancelBody + '"');
     if (cancelSubjDel !== null) {
@@ -832,11 +1829,15 @@
       t1.push('        delivery: "' + cancelSubjDel + '"');
       t1.push('        pickup: "' + cancelSubjPick + '"');
     }
-    if (confirmImgAlt !== null || confirmSubjDel !== null) {
+    var emitConfirmImage = (confirmImgAltFinal !== null) || confirmImgExtras;
+    var emitConfirmBlock = emitConfirmImage || (confirmSubjDel !== null);
+    if (emitConfirmBlock) {
       t1.push('    order_confirmation:');
-      if (confirmImgAlt !== null) {
+      if (emitConfirmImage) {
         t1.push('      generic_image:');
-        t1.push('        image_alt: "' + confirmImgAlt + '"');
+        if (confirmImgLink     !== null) t1.push('        image_link: "' + confirmImgLink + '"');
+        if (confirmImgAltFinal !== null) t1.push('        image_alt: "' + confirmImgAltFinal + '"');
+        if (confirmImgPath     !== null) t1.push('        image_path: "' + confirmImgPath + '"');
       }
       if (confirmSubjDel !== null) {
         t1.push('      subject:');
@@ -846,11 +1847,18 @@
     }
     if (contentOn) {
       t1.push('    order_receipt:');
+      if (receiptHeader !== null) {
+        t1.push('      generic_header:');
+        t1.push('        content: "' + receiptHeader + '"');
+      }
       if (receiptImgAlt !== null) {
         t1.push('      generic_image:');
         t1.push('        image_alt: "' + receiptImgAlt + '"');
       }
       t1.push('      generic_body:');
+      if (rateLegacy) {
+        t1.push('        rate_your_order: "' + rateHeading + '"');
+      }
       t1.push('        content: "' + receiptBody + '"');
       if (receiptSubjDel !== null) {
         t1.push('      subject:');
@@ -860,7 +1868,9 @@
     }
     if (contentOn) {
       t1.push('    order_rating:');
-      t1.push('      rate_your_order: "' + rateHeading + '"');
+      if (!rateLegacy) {
+        t1.push('      rate_your_order: "' + rateHeading + '"');
+      }
       t1.push('      delivery_content: "' + rateContent + '"');
       if (ratingPickup !== null) {
         t1.push('      pickup_content: "' + ratingPickup + '"');
@@ -901,13 +1911,17 @@
     var branchName = retailer.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '_') + '_email_config_template';
     document.getElementById('branch-name').textContent = branchName;
 
-    /* CLAUDE CODE COMMAND */
+    /* CLAUDE CODE COMMAND — only generated when the toggle is on */
+    var ccCmdOn = document.getElementById('toggle-cc-cmd').checked;
+    document.getElementById('output-6-wrap').style.display = ccCmdOn ? 'block' : 'none';
+    if (ccCmdOn) {
     var ccParts = [];
     ccParts.push('name=' + retailer);
     ccParts.push('slug=' + slug);
     ccParts.push('whitelabel=' + whitelabel);
     if (selectedCountry !== 'US') ccParts.push('country=' + selectedCountry);
     if (retailerUrl && retailerUrl !== whitelabel) ccParts.push('website=' + retailerUrl);
+    if (usePlaceholder) ccParts.push('use_retailer_placeholder=yes');
     if (contentOn) {
       ccParts.push('customize=yes');
       if (gv('order-desc'))    ccParts.push('order_description=' + gv('order-desc'));
@@ -935,6 +1949,16 @@
       if (customHelpLink !== null)    ccParts.push('help_link=' + customHelpLink);
       if (customPrivacyLink !== null) ccParts.push('privacy_link=' + customPrivacyLink);
       if (customTosLink !== null)     ccParts.push('tos_link=' + customTosLink);
+      if (cancelImgExtras) {
+        ccParts.push('cancel_image_link=' + cancelImgLink);
+        ccParts.push('cancel_image_path=' + cancelImgPath);
+      }
+      if (confirmImgExtras) {
+        ccParts.push('confirm_image_link=' + confirmImgLink);
+        ccParts.push('confirm_image_path=' + confirmImgPath);
+      }
+      if (receiptHeader !== null) ccParts.push('receipt_header=' + receiptHeader);
+      if (rateLegacy) ccParts.push('rate_legacy_placement=yes');
     }
     if (headingsOn) {
       ccParts.push('headings=yes');
@@ -950,6 +1974,7 @@
     var ccEl = document.getElementById('box-cc-cmd');
     ccEl.textContent = ccCmd;
     ccEl.dataset.raw = ccCmd;
+    } /* end if (ccCmdOn) */
 
     document.getElementById('output-info').textContent =
       'Generated for "' + retailer + ' Team" · ' + COUNTRIES[selectedCountry].flag + ' ' + COUNTRIES[selectedCountry].locale + ' · locale: ' + localeVar + ' · folder: ' + folderName;
@@ -1045,28 +2070,7 @@
     });
   }
 
-  /* ═══════════════════════════════════════════════════════════
-     QA DIFF ENGINE v3
-     FIX: replaced Levenshtein similarity (failed on lines like
-          image_alt: "Agora (Fulfillment Testing Warehouse)" vs
-          image_alt: "Agora US" because the edit distance vs the
-          longer string fell below 0.4) with a two-pass approach:
-
-     1. tokenSimilarity() — Jaccard index on whitespace-split
-        tokens. Shared YAML key tokens (image_alt:, "Agora) push
-        the score well above threshold even when the value portion
-        differs drastically.
-
-     2. keySimilarity() — extracts the YAML key prefix before the
-        colon and checks for an exact key match. If both lines
-        share the same key (e.g. "image_alt") they are ALWAYS
-        paired as "changed", regardless of how different the
-        values are.
-
-     Pairing threshold lowered from 0.4 → 0.25 as an additional
-     safety net for short lines with long differing values.
-  ═══════════════════════════════════════════════════════════ */
-
+  /* QA DIFF ENGINE v3 */
   var diffMode = 'side';
   var lastDiffResult = null;
 
@@ -1078,10 +2082,6 @@
     document.getElementById('diff-view-inline').style.display = m === 'inline' ? 'block' : 'none';
   }
 
-  /* ── NEW: Jaccard token similarity ──────────────────────────
-     Splits each line on whitespace, builds two token sets, and
-     returns intersection / union. This is robust to long value
-     differences because shared key tokens still contribute.     */
   function tokenSimilarity(a, b) {
     if (!a || !b) return 0;
     a = a.trim(); b = b.trim();
@@ -1096,14 +2096,6 @@
     return unionSize === 0 ? 0 : inter / unionSize;
   }
 
-  /* ── NEW: YAML key equality check ───────────────────────────
-     Extracts the leading indented key (everything before the
-     first colon) and returns true if both lines share the same
-     key. Ensures lines like:
-       image_alt: "Agora (Fulfillment Testing Warehouse)"
-       image_alt: "Agora US"
-     are ALWAYS treated as a changed pair, never as
-     missing + extra.                                           */
   function sameYamlKey(a, b) {
     var reKey = /^(\s*[a-zA-Z0-9_]+)\s*:/;
     var ma = a.match(reKey);
@@ -1112,8 +2104,6 @@
     return ma[1].trim() === mb[1].trim();
   }
 
-  /* Combined score: if the YAML keys match exactly, boost to 1.
-     Otherwise fall back to Jaccard token similarity.           */
   function lineSimilarity(a, b) {
     if (sameYamlKey(a, b)) return 1;
     return tokenSimilarity(a, b);
@@ -1180,9 +2170,6 @@
       var usedM = {}, usedE = {};
       var pairs = [];
 
-      /* Build similarity candidates using the improved lineSimilarity().
-         Threshold lowered from 0.4 → 0.25 to catch lines where values
-         differ drastically but the YAML key is shared.                  */
       var candidates = [];
       for (var mi = 0; mi < misses.length; mi++) {
         for (var ei = 0; ei < extras.length; ei++) {
