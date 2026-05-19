@@ -245,6 +245,17 @@
   .pe-item-savings { color: #16a34a; font-size: 11px; margin-top: 4px; font-weight: 500; }
   .pe-item-price.red { color: #d92e3e; }
 
+  .img-upload-zone { border: 1.5px dashed var(--border); border-radius: 8px; padding: 14px; text-align: center; cursor: pointer; background: var(--bg-sub); font-size: 12px; color: var(--text-3); transition: all 0.15s; margin-top: 6px; }
+  .img-upload-zone:hover, .img-upload-zone.drag-over { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+  .img-upload-link { color: var(--accent); font-weight: 600; }
+  .img-upload-preview { margin-top: 8px; padding: 10px; background: var(--bg-sub); border: 1px solid var(--border); border-radius: 7px; }
+  .img-upload-preview img { display: block; max-width: 100%; max-height: 110px; margin: 0 auto 8px; border-radius: 5px; border: 1px solid var(--border); }
+  .img-upload-preview .filename { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-3); margin-bottom: 8px; word-break: break-all; text-align: center; }
+  .img-upload-preview .remove-btn { display: block; margin: 0 auto; padding: 4px 12px; font-size: 11px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 5px; color: var(--text-2); cursor: pointer; font-family: inherit; }
+  .img-upload-preview .remove-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+  .pe-hero-image { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+
   /* ── BOTTOM SECTIONS ── */
   .studio-bottom { padding: 40px 32px 60px; max-width: 1100px; margin: 0 auto; }
   .section-title { font-size: 18px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; letter-spacing: -0.01em; }
@@ -354,8 +365,8 @@
 <body>
 
 <header class="studio-toolbar">
-  <div class="studio-logo">E</div>
-  <div class="studio-toolbar-title">Email Template Generator</div>
+  <div class="studio-logo">S</div>
+  <div class="studio-toolbar-title">Studio</div>
   <div class="studio-breadcrumb">
     <span>SDA toolbox</span>
     <span class="crumb-sep">/</span>
@@ -547,6 +558,10 @@
                 <span class="path-input-prefix" id="cancel-img-path-prefix">mailers/one_order_mailer/retailers/[slug]/</span>
                 <input type="text" class="path-input-suffix" id="inp-cancel-img-path" placeholder="order_cancellation.jpg">
               </div>
+              <div class="sub-l">Preview image <span style="color:var(--text-4);font-weight:400">renders in mockup only · not emitted to YAML</span></div>
+              <input type="file" id="upload-cancel-img" accept="image/*" style="display:none" onchange="handleImageUpload(this,'cancel')">
+              <div class="img-upload-zone" id="upload-zone-cancel" onclick="document.getElementById('upload-cancel-img').click()">Drop an image or <span class="img-upload-link">browse</span></div>
+              <div class="img-upload-preview" id="img-preview-cancel" style="display:none"></div>
             </div>
           </div>
           <div class="opt">
@@ -589,6 +604,10 @@
                 <span class="path-input-prefix" id="confirm-img-path-prefix">mailers/one_order_mailer/retailers/[slug]/</span>
                 <input type="text" class="path-input-suffix" id="inp-confirm-img-path" placeholder="order_confirmation.jpg">
               </div>
+              <div class="sub-l">Preview image <span style="color:var(--text-4);font-weight:400">renders in mockup only · not emitted to YAML</span></div>
+              <input type="file" id="upload-confirm-img" accept="image/*" style="display:none" onchange="handleImageUpload(this,'confirm')">
+              <div class="img-upload-zone" id="upload-zone-confirm" onclick="document.getElementById('upload-confirm-img').click()">Drop an image or <span class="img-upload-link">browse</span></div>
+              <div class="img-upload-preview" id="img-preview-confirm" style="display:none"></div>
             </div>
           </div>
           <div class="opt">
@@ -759,7 +778,8 @@
             </div>
 
             <div class="pe-hero" id="preview-hero" style="display:none">
-              <div class="pe-hero-banner"><span id="preview-hero-name">YOUR RETAILER</span></div>
+              <div class="pe-hero-banner" id="preview-hero-banner"><span id="preview-hero-name">YOUR RETAILER</span></div>
+              <img class="pe-hero-image" id="preview-hero-image" alt="" style="display:none">
             </div>
 
             <div class="pe-heading" id="preview-heading">Hi Jay, your order is all set</div>
@@ -1334,9 +1354,20 @@
         if (cells.length <= col.idx) return;
         var rawValue = paragraphText(cells[col.idx]).trim();
         var value = normalizeTableValue(rawValue);
-        if (!value) return;
+        var isMarker = !value && isUserProvidedMarker(rawValue);
+        if (!value && !isMarker) return;
         if (!retailersByName[col.key]) {
           retailersByName[col.key] = createEmptyRetailerData(col.name);
+        }
+        if (isMarker) {
+          if (fieldKey === 'confirmImage') retailersByName[col.key].flags.confirmImage = true;
+          if (fieldKey === 'cancelImage')  retailersByName[col.key].flags.cancelImage  = true;
+          return;
+        }
+        if (fieldKey === 'confirmImage' || fieldKey === 'cancelImage') {
+          if (fieldKey === 'confirmImage') retailersByName[col.key].flags.confirmImage = true;
+          if (fieldKey === 'cancelImage')  retailersByName[col.key].flags.cancelImage  = true;
+          return;
         }
         if (fieldKey === 'appLinks') {
           var iosM    = rawValue.match(/https?:\/\/apps\.apple\.com\/[^\s)<>]+/i);
@@ -1362,6 +1393,12 @@
     return t;
   }
 
+  function isUserProvidedMarker(text) {
+    if (!text) return false;
+    var t = text.trim();
+    return /^use\s+provided\b/i.test(t) || /^provided\s+by/i.test(t);
+  }
+
   function mapConfigToField(configName, section) {
     var c = configName.toLowerCase().replace(/\s+/g, ' ').trim();
     if (section === 'GENERAL') {
@@ -1373,6 +1410,7 @@
     }
     if (section === 'CONFIRMATION') {
       if (/^email heading$/.test(c)) return 'confirmHeading';
+      if (/background\s*image/.test(c)) return 'confirmImage';
       if (/order confirmation body text/.test(c)) return 'confirmBody';
       if (/order upsell text/.test(c))  return 'upsellText';
       if (/order confirmation fine print/.test(c)) return 'finePrint';
@@ -1384,6 +1422,7 @@
       if (/^rating text$/.test(c))    return 'ratingContent';
     }
     if (section === 'CANCELLATION') {
+      if (/marketing\s*image/.test(c)) return 'cancelImage';
       if (/^email heading$/.test(c)) return 'cancelHeading';
       if (/^body text$/.test(c))     return 'cancelBody';
     }
@@ -1396,7 +1435,7 @@
       appstoreLink: '', playstoreLink: '',
       confirmHeading: '', confirmBody: '', upsellText: '', finePrint: '',
       receiptHeading: '', receiptBody: '', ratingHeading: '', ratingContent: '',
-      cancelHeading: '', cancelBody: '', defaults: {}
+      cancelHeading: '', cancelBody: '', defaults: {}, flags: {}
     };
   }
 
@@ -1771,6 +1810,7 @@
     if (data.website)      document.getElementById('retailer-url').value  = data.website;
     updatePreviews();
 
+    var hasImageFlags = !!(data.flags && (data.flags.confirmImage || data.flags.cancelImage));
     var hasContentToFill = !!(
       (data.confirmBody    && !data.defaults.confirmBody) ||
       (data.receiptBody    && !data.defaults.receiptBody) ||
@@ -1780,7 +1820,8 @@
       (data.ratingHeading  && !data.defaults.ratingHeading) ||
       (data.finePrint      && !data.defaults.finePrint) ||
       data.helpLink || data.privacyLink || data.tosLink ||
-      data.appstoreLink || data.playstoreLink
+      data.appstoreLink || data.playstoreLink ||
+      hasImageFlags
     );
 
     if (hasContentToFill) {
@@ -1794,11 +1835,9 @@
       if (data.ratingHeading && !data.defaults.ratingHeading) document.getElementById('rate-heading').value = convertPlaceholders(data.ratingHeading);
       if (data.ratingContent && !data.defaults.ratingContent) document.getElementById('rate-content').value = convertPlaceholders(data.ratingContent);
 
-      // Always emit fine_print key (per existing convention) — check the box even when blank
       enableOpt('cb-fine-print', 'opts-fine-print');
       if (data.finePrint && !data.defaults.finePrint) document.getElementById('inp-fine-print').value = convertPlaceholders(data.finePrint);
 
-      // Footer links — no defaults to compare against; fill if present
       if (data.helpLink || data.privacyLink || data.tosLink) {
         enableOpt('cb-footer-links', 'opts-footer-links');
         if (data.helpLink)    document.getElementById('inp-help-link').value    = data.helpLink;
@@ -1806,14 +1845,12 @@
         if (data.tosLink)     document.getElementById('inp-tos-link').value     = data.tosLink;
       }
 
-      // App store links — fill if extracted from doc
       if (data.appstoreLink || data.playstoreLink) {
         enableOpt('cb-app-links', 'opts-app-links');
         if (data.appstoreLink)  document.getElementById('inp-appstore-link').value  = data.appstoreLink;
         if (data.playstoreLink) document.getElementById('inp-playstore-link').value = data.playstoreLink;
       }
 
-      // Upsell — split "**Forgot something?** You can add items..." into two parts
       if (data.upsellText && !data.defaults.upsellText) {
         enableOpt('cb-upsell', 'opts-upsell');
         var upsellParts = data.upsellText.match(/^([^?]*\?)\s*(.+)$/s);
@@ -1823,6 +1860,13 @@
         } else {
           document.getElementById('inp-upsell-add').value = data.upsellText;
         }
+      }
+
+      if (data.flags && data.flags.confirmImage) {
+        enableOpt('cb-confirm-img-extras', 'opts-confirm-img-extras');
+      }
+      if (data.flags && data.flags.cancelImage) {
+        enableOpt('cb-cancel-img-extras', 'opts-cancel-img-extras');
       }
     }
 
@@ -2524,6 +2568,65 @@
     }
   }
 
+  var uploadedConfirmImage = null;
+  var uploadedCancelImage  = null;
+
+  function handleImageUpload(input, target) {
+    var file = input.files && input.files[0];
+    if (file) processImageFile(file, target);
+  }
+
+  function processImageFile(file, target) {
+    if (!file || !file.type || file.type.indexOf('image/') !== 0) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var dataUrl = e.target.result;
+      var fname = file.name;
+      if (target === 'confirm') {
+        uploadedConfirmImage = dataUrl;
+        if (/order_confirmation/i.test(fname)) {
+          document.getElementById('inp-confirm-img-path').value = fname;
+        }
+      } else {
+        uploadedCancelImage = dataUrl;
+        if (/order_cancellation/i.test(fname)) {
+          document.getElementById('inp-cancel-img-path').value = fname;
+        }
+      }
+      var prev = document.getElementById('img-preview-' + target);
+      prev.style.display = 'block';
+      prev.innerHTML =
+        '<div class="filename">' + esc(fname) + '</div>' +
+        '<img src="' + dataUrl + '" alt="">' +
+        '<button class="remove-btn" onclick="clearImage(\'' + target + '\')">Remove</button>';
+      updatePreview();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearImage(target) {
+    if (target === 'confirm') uploadedConfirmImage = null;
+    else uploadedCancelImage = null;
+    document.getElementById('img-preview-' + target).style.display = 'none';
+    document.getElementById('upload-' + target + '-img').value = '';
+    updatePreview();
+  }
+
+  function setupImageDragDrop() {
+    ['confirm', 'cancel'].forEach(function(target) {
+      var zone = document.getElementById('upload-zone-' + target);
+      if (!zone) return;
+      zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', function() { zone.classList.remove('drag-over'); });
+      zone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        var file = e.dataTransfer.files && e.dataTransfer.files[0];
+        if (file) processImageFile(file, target);
+      });
+    });
+  }
+
   function updatePreview() {
     var retailer = gv('retailer-name') || 'Your Retailer';
     var ph = document.getElementById('use-retailer-placeholder');
@@ -2569,7 +2672,28 @@
     var isCancel  = (tab === 'cancellation');
 
     var upsellOn = document.getElementById('cb-upsell') && document.getElementById('cb-upsell').checked;
-    document.getElementById('preview-hero').style.display          = isCancel ? 'block' : 'none';
+    var confirmImgOn = document.getElementById('cb-confirm-img-extras') && document.getElementById('cb-confirm-img-extras').checked;
+    var cancelImgOn  = document.getElementById('cb-cancel-img-extras')  && document.getElementById('cb-cancel-img-extras').checked;
+
+    var hero = document.getElementById('preview-hero');
+    var heroBanner = document.getElementById('preview-hero-banner');
+    var heroImage  = document.getElementById('preview-hero-image');
+    var showConfirmImg = isConfirm && confirmImgOn && uploadedConfirmImage;
+    var showCancelImg  = isCancel  && cancelImgOn  && uploadedCancelImage;
+    var showCancelBanner = isCancel && !showCancelImg;
+    if (showConfirmImg || showCancelImg) {
+      hero.style.display = 'block';
+      heroBanner.style.display = 'none';
+      heroImage.src = showConfirmImg ? uploadedConfirmImage : uploadedCancelImage;
+      heroImage.style.display = 'block';
+    } else if (showCancelBanner) {
+      hero.style.display = 'block';
+      heroBanner.style.display = 'inline-block';
+      heroImage.style.display = 'none';
+    } else {
+      hero.style.display = 'none';
+    }
+
     document.getElementById('preview-info-group').style.display    = isConfirm ? 'block' : 'none';
     document.getElementById('preview-upsell-section').style.display = (isConfirm && upsellOn) ? 'block' : 'none';
     document.getElementById('preview-rate-section').style.display  = isReceipt ? 'block' : 'none';
@@ -2684,6 +2808,7 @@
   }
 
   window.addEventListener('DOMContentLoaded', setupPreviewListeners);
+  window.addEventListener('DOMContentLoaded', setupImageDragDrop);
 
 </script>
 <script src="nav.js"></script>
