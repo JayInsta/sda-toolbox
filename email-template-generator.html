@@ -234,6 +234,17 @@
   .pe-links a, .pe-tos a { color: #d92e3e; text-decoration: none; cursor: pointer; }
   .pe-tos { margin-top: 10px; font-size: 11.5px; font-weight: 700; text-align: center; }
 
+  .pe-rate-h { padding: 22px 22px 12px; font-size: 17px; font-weight: 700; color: #3a3a3a; text-align: center; line-height: 1.3; word-break: break-word; }
+  .pe-completion-line { padding: 0 22px 14px; font-size: 14px; font-weight: 700; color: #18181b; text-align: center; line-height: 1.5; }
+  .pe-rate-content { padding: 0 22px 4px; font-size: 14px; color: #3a3a3a; line-height: 1.55; text-align: center; word-break: break-word; }
+  .pe-cta-twin { display: flex; gap: 12px; justify-content: center; margin: 16px 22px 22px; }
+  .pe-cta-twin a { padding: 10px 24px; background: #18181b; color: white; border-radius: 6px; font-size: 12.5px; font-weight: 600; cursor: pointer; text-decoration: none; text-align: center; flex: 1; max-width: 130px; }
+  .pe-cta-twin a:hover { background: #27272a; }
+  .pe-items-found-h { padding: 4px 22px 10px; font-size: 14px; font-weight: 700; color: #18181b; display: flex; align-items: center; gap: 8px; }
+  .pe-items-found-h .check { color: #18181b; font-weight: 700; font-size: 15px; }
+  .pe-item-savings { color: #16a34a; font-size: 11px; margin-top: 4px; font-weight: 500; }
+  .pe-item-price.red { color: #d92e3e; }
+
   /* ── BOTTOM SECTIONS ── */
   .studio-bottom { padding: 40px 32px 60px; max-width: 1100px; margin: 0 auto; }
   .section-title { font-size: 18px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; letter-spacing: -0.01em; }
@@ -780,8 +791,17 @@
               <div class="pe-divider"></div>
             </div>
 
+            <div id="preview-rate-section" style="display:none">
+              <div class="pe-rate-h" id="preview-rate-heading">We'd love to hear from you!</div>
+              <div class="pe-completion-line" id="preview-completion-line">Shopper delivered your order on Apr 13, 2026, 1:41 PM</div>
+              <div class="pe-rate-content" id="preview-rate-content">Don't forget to rate and tip your shopper if you want to recognize their efforts. 100% of tips goes to your shopper.</div>
+              <div class="pe-cta-twin"><a>Rate</a><a>View Order</a></div>
+              <div class="pe-divider"></div>
+            </div>
+
             <div class="pe-section-h" id="preview-items-heading">Order Details</div>
             <div class="pe-order-id" id="preview-order-id">Order ID: # 18983848525411916</div>
+            <div class="pe-items-found-h" id="preview-items-found" style="display:none"><span class="check">✓</span>Items Found</div>
             <div class="pe-items" id="preview-items"></div>
             <div class="pe-totals" id="preview-totals"></div>
 
@@ -2456,7 +2476,19 @@
   var previewFirstName = _pn.first;
   var previewFullName  = _pn.first + ' ' + _pn.last;
   var previewCardSuffix = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
-  var previewDisclaimerText = 'This is not a receipt. Your Visa ' + previewCardSuffix + ' card has been authorized for $12.74. The final amount charged may be different based on special requests, added items, replacement items or weight adjustments. You will receive a finalized receipt once your order is completed. Your card statement will reflect the final amount charged within 7-10 business days of your order being completed.';
+  var previewAuthAmount = (Math.random() * 20 + 35).toFixed(2);
+  var previewCompletionDate = (function() {
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var m = months[Math.floor(Math.random() * 12)];
+    var d = Math.floor(Math.random() * 28) + 1;
+    var h = Math.floor(Math.random() * 12) + 1;
+    var mm = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+    var ampm = Math.random() > 0.5 ? 'AM' : 'PM';
+    return m + ' ' + d + ', 2026, ' + h + ':' + mm + ' ' + ampm;
+  })();
+  var previewConfirmDisclaimer = 'This is not a receipt. Your Visa ' + previewCardSuffix + ' card has been authorized for $12.74. The final amount charged may be different based on special requests, added items, replacement items or weight adjustments. You will receive a finalized receipt once your order is completed. Your card statement will reflect the final amount charged within 7-10 business days of your order being completed.';
+  var previewReceiptDisclaimer = 'Your Visa ' + previewCardSuffix + ' card was temporarily authorized for $' + previewAuthAmount + '. You should see the hold removed and a final charge reflected on your statement within 7 business days of order completion depending on your bank\u2019s policies.';
+  var previewDisclaimerText = previewConfirmDisclaimer;
 
   function switchPreviewTab(tab) {
     currentPreviewTab = tab;
@@ -2491,7 +2523,7 @@
     } else if (tab === 'receipt') {
       heading = gv('receipt-heading-delivery') || "%{first_name}, here's your receipt";
       body    = gv('receipt-body') || fillR(D.receiptBody, retailerToken);
-      ctaText = 'View receipt';
+      ctaText = 'Report an issue';
       subject = 'Your ' + retailer + ' order receipt';
     } else {
       heading = gv('cancel-heading-delivery') || 'Your order has been canceled.';
@@ -2522,6 +2554,8 @@
     document.getElementById('preview-hero').style.display          = isCancel ? 'block' : 'none';
     document.getElementById('preview-info-group').style.display    = isConfirm ? 'block' : 'none';
     document.getElementById('preview-upsell-section').style.display = (isConfirm && upsellOn) ? 'block' : 'none';
+    document.getElementById('preview-rate-section').style.display  = isReceipt ? 'block' : 'none';
+    document.getElementById('preview-items-found').style.display   = isReceipt ? 'flex' : 'none';
     document.getElementById('preview-disclaimer').style.display    = (isConfirm || isReceipt) ? 'block' : 'none';
 
     if (upsellOn) {
@@ -2529,30 +2563,56 @@
       document.getElementById('preview-upsell-add').textContent    = gv('inp-upsell-add') || 'You can add items until your shopper checks out.';
     }
 
-    var itemsHeadingText = isCancel
-      ? (gv('cancel-items-heading') || 'Canceled Items')
-      : 'Order Details';
-    document.getElementById('preview-items-heading').textContent = itemsHeadingText;
-    document.getElementById('preview-order-id').textContent = 'Order ID: # ' + (isCancel ? '19013421676458620' : '18983848525411916');
+    if (isReceipt) {
+      document.getElementById('preview-rate-heading').textContent = gv('rate-heading') || "We'd love to hear from you!";
+      document.getElementById('preview-rate-content').textContent = gv('rate-content') || "Don't forget to rate and tip your shopper if you want to recognize their efforts. 100% of tips goes to your shopper.";
+      document.getElementById('preview-completion-line').textContent = 'Shopper delivered your order on ' + previewCompletionDate;
+    }
 
-    var items = isCancel ? [
-      { img:'🍪', qty:'1', name:"Mother's Recipe Original Circus Animal Cookies, 1 Resealable Bag, 9 oz", meta:'9 oz', price:'$0.00' },
-      { img:'🥓', qty:'1', name:"Slim Jim Smoked Meat Sticks, Original Flavor",                          meta:'3.92 oz', price:'$0.00' },
-      { img:'🌭', qty:'1', name:"Zatarain's Cajun Style Smoked Sausage, 100% pork",                       meta:'14 oz', price:'$0.00' },
-      { img:'🥓', qty:'1', name:"Oscar Mayer Naturally Hardwood Smoked Thick Cut Bacon",                  meta:'16 oz', price:'$0.00' }
-    ] : [
-      { img:'🥔', qty:'2', name:"Lay's Potato Chips, Classic",                              meta:'Classic',     price:'$5.38', priceOld:'$10.78' },
-      { img:'🥛', qty:'2', name:"Chobani Yogurt, Greek, Nonfat, Zero Sugar, Mixed Berry",  meta:'mixed berry', price:'$2.18', priceOld:'$4.38' },
-      { img:'🍟', qty:'1', name:"Lay's Wavy Onion Potato Chips",                            meta:'Onion',       price:'$2.69', priceOld:'$5.39' }
-    ];
+    var itemsHeadingText = isCancel  ? (gv('cancel-items-heading') || 'Canceled Items')
+                         : isReceipt ? 'Order Receipt'
+                         :             'Order Details';
+    document.getElementById('preview-items-heading').textContent = itemsHeadingText;
+    document.getElementById('preview-order-id').textContent = 'Order ID: # ' + (
+      isCancel  ? '19013421676458620' :
+      isReceipt ? '19825899085429944' :
+                  '18983848525411916'
+    );
+
+    var items;
+    if (isCancel) {
+      items = [
+        { img:'🍪', qty:'1', name:"Mother's Recipe Original Circus Animal Cookies, 1 Resealable Bag, 9 oz", meta:'9 oz', price:'$0.00' },
+        { img:'🥓', qty:'1', name:"Slim Jim Smoked Meat Sticks, Original Flavor",                          meta:'3.92 oz', price:'$0.00' },
+        { img:'🌭', qty:'1', name:"Zatarain's Cajun Style Smoked Sausage, 100% pork",                       meta:'14 oz', price:'$0.00' },
+        { img:'🥓', qty:'1', name:"Oscar Mayer Naturally Hardwood Smoked Thick Cut Bacon",                  meta:'16 oz', price:'$0.00' }
+      ];
+    } else if (isReceipt) {
+      items = [
+        { img:'🍫', qty:'1', name:"Duncan Hines Family Size Chewy Fudge Brownie Mix",              meta:'18.3 oz',  price:'$1.99',  priceOld:'$2.99',  savings:'$1.00'  },
+        { img:'🎂', qty:'1', name:"Duncan Hines Signature Perfectly Moist Pineapple Supreme Cake Mix", meta:'15.25 oz', price:'$1.99',  priceOld:'$3.89',  savings:'$1.90'  },
+        { img:'🥛', qty:'1', name:"Reddi-wip Original Dairy Whipped Topping",                       meta:'6.5 oz',   price:'$3.89',  priceOld:'$4.89',  savings:'$1.00'  },
+        { img:'☕', qty:'2', name:"Maxwell House Half Caff Medium Roast Ground Coffee",            meta:'25.6 oz',  price:'$32.98', priceOld:'$68.18', savings:'$35.20' }
+      ];
+    } else {
+      items = [
+        { img:'🥔', qty:'2', name:"Lay's Potato Chips, Classic",                              meta:'Classic',     price:'$5.38', priceOld:'$10.78' },
+        { img:'🥛', qty:'2', name:"Chobani Yogurt, Greek, Nonfat, Zero Sugar, Mixed Berry",  meta:'mixed berry', price:'$2.18', priceOld:'$4.38' },
+        { img:'🍟', qty:'1', name:"Lay's Wavy Onion Potato Chips",                            meta:'Onion',       price:'$2.69', priceOld:'$5.39' }
+      ];
+    }
 
     var itemsHtml = items.map(function(it) {
+      var priceClass = 'pe-item-price' + (isReceipt ? ' red' : '');
       var priceCell = '<div>' + it.price + '</div>' +
         (it.priceOld ? '<span class="pe-item-price-old">' + it.priceOld + '</span>' : '');
+      var savings = (isReceipt && it.savings)
+        ? '<div class="pe-item-savings">\u2713 Sale savings: ' + esc(it.savings) + '</div>'
+        : '';
       return '<div class="pe-item">' +
         '<div class="pe-item-img">' + it.img + '</div>' +
-        '<div class="pe-item-body"><strong>' + it.qty + ' x</strong> ' + esc(it.name) + '<div class="pe-item-meta">' + esc(it.meta) + '</div></div>' +
-        '<div class="pe-item-price">' + priceCell + '</div>' +
+        '<div class="pe-item-body"><strong>' + it.qty + ' x</strong> ' + esc(it.name) + '<div class="pe-item-meta">' + esc(it.meta) + '</div>' + savings + '</div>' +
+        '<div class="' + priceClass + '">' + priceCell + '</div>' +
       '</div>';
     }).join('');
     document.getElementById('preview-items').innerHTML = itemsHtml;
@@ -2561,6 +2621,15 @@
     if (isCancel) {
       totalsHtml =
         '<div class="pe-total-row strong spacer"><span>Total:</span><span>$0.00</span></div>' +
+        '<div class="pe-total-row strong"><span>Name:</span><span>' + esc(previewFullName) + '</span></div>';
+    } else if (isReceipt) {
+      totalsHtml =
+        '<div class="pe-total-row strong"><span>Items Subtotal:</span><span>$40.85</span></div>' +
+        '<div class="pe-total-row strong"><span>Delivery Fee:</span><span>$7.99</span></div>' +
+        '<div class="pe-total-row strong"><span>Tip:</span><span>$2.00</span></div>' +
+        '<div class="pe-total-row strong"><span>Service Fee:</span><span>$2.49</span></div>' +
+        '<div class="pe-total-row strong spacer"><span>Total:</span><span>$53.33</span></div>' +
+        '<div class="pe-total-row strong"><span>You saved:</span><span>$39.10</span></div>' +
         '<div class="pe-total-row strong"><span>Name:</span><span>' + esc(previewFullName) + '</span></div>';
     } else {
       totalsHtml =
@@ -2573,7 +2642,7 @@
     }
     document.getElementById('preview-totals').innerHTML = totalsHtml;
 
-    document.getElementById('preview-disclaimer').textContent = previewDisclaimerText;
+    document.getElementById('preview-disclaimer').textContent = isReceipt ? previewReceiptDisclaimer : previewConfirmDisclaimer;
 
     var bc = document.getElementById('breadcrumb-retailer');
     if (bc) bc.textContent = (gv('slug') || 'untitled');
