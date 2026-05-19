@@ -1016,6 +1016,29 @@
     FR: { code: 'FR', locale: 'en_FR', folderPrefix: 'en_FR', flag: '🇫🇷' }
   };
 
+  /* ── LOCALE SPELLING ── en-CA uses "cancelled" (double L) per Commonwealth convention.
+     Applied to defaults and placeholders only — never to user-typed values. */
+  function loc(text) {
+    if (!text || selectedCountry !== 'CA') return text;
+    return text
+      .replace(/\bCanceled\b/g, 'Cancelled')
+      .replace(/\bcanceled\b/g, 'cancelled');
+  }
+
+  function updateLocalizedPlaceholders() {
+    var placeholders = {
+      'inp-cancel-subj-del':     '%{warehouse_name} order canceled',
+      'inp-cancel-subj-pick':    '%{warehouse_name} order canceled',
+      'cancel-heading-delivery': 'Your order has been canceled.',
+      'cancel-heading-pickup':   'Your order has been canceled.',
+      'cancel-items-heading':    'Canceled Items'
+    };
+    Object.keys(placeholders).forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.placeholder = loc(placeholders[id]);
+    });
+  }
+
   /* ── DEFAULT VALUES ── */
   var D = {
     orderDesc:      'Keep an eye out for order updates, and any messages from your shopper if replacements are needed. <br/><br/>Thanks, <br/>The {{R}} Team',
@@ -1090,7 +1113,9 @@
     selectedCountry = code;
     document.querySelectorAll('.country-btn').forEach(function(b){ b.classList.remove('active'); });
     document.getElementById('c-' + code).classList.add('active');
+    updateLocalizedPlaceholders();
     updatePreviews();
+    if (typeof updatePreview === 'function') updatePreview();
   }
   function updatePreviews() {
     var slug = gv('slug');
@@ -1730,8 +1755,8 @@
       case 'receiptBody':    return fillR(D.receiptBody, token);
       case 'ratingHeading':  return D.rateHeading;
       case 'ratingContent':  return D.rateContent;
-      case 'cancelHeading':  return 'Your order has been canceled.';
-      case 'cancelBody':     return fillR(D.cancelBody, token);
+      case 'cancelHeading':  return loc('Your order has been canceled.');
+      case 'cancelBody':     return loc(fillR(D.cancelBody, token));
       default:               return null;
     }
   }
@@ -1968,7 +1993,7 @@
     var orderDesc   = contentOn ? reqValBr('order-desc',   fillR(D.orderDesc,   retailerToken)) : fillR(D.orderDesc,   retailerToken);
     var familyDesc  = contentOn ? reqValBr('family-desc',  fillR(D.familyDesc,  retailerToken)) : fillR(D.familyDesc,  retailerToken);
     var pickup      = contentOn ? reqValBr('pickup',        D.pickup)                            : D.pickup;
-    var cancelBody  = contentOn ? reqValBr('cancel-body',  fillR(D.cancelBody,  retailerToken)) : fillR(D.cancelBody,  retailerToken);
+    var cancelBody  = contentOn ? reqValBr('cancel-body',  loc(fillR(D.cancelBody,  retailerToken))) : loc(fillR(D.cancelBody,  retailerToken));
     var receiptBody = contentOn ? reqValBr('receipt-body', fillR(D.receiptBody, retailerToken)) : fillR(D.receiptBody, retailerToken);
     var rateHeading = contentOn ? reqVal('rate-heading', D.rateHeading)                   : D.rateHeading;
     var rateContent = contentOn ? reqVal('rate-content', D.rateContent)                   : D.rateContent;
@@ -1978,8 +2003,8 @@
     var finePrint      = contentOn ? optVal('cb-fine-print',    'inp-fine-print',       D.finePrint)      : null;
     var appstoreLink   = contentOn ? optVal('cb-app-links',     'inp-appstore-link',    D.appstoreLink)   : null;
     var playstoreLink  = contentOn ? optVal('cb-app-links',     'inp-playstore-link',   D.playstoreLink)  : null;
-    var cancelSubjDel  = contentOn ? optVal('cb-cancel-subj',   'inp-cancel-subj-del',  D.cancelSubjDel)  : null;
-    var cancelSubjPick = contentOn ? optVal('cb-cancel-subj',   'inp-cancel-subj-pick', D.cancelSubjPick) : null;
+    var cancelSubjDel  = contentOn ? optVal('cb-cancel-subj',   'inp-cancel-subj-del',  loc(D.cancelSubjDel))  : null;
+    var cancelSubjPick = contentOn ? optVal('cb-cancel-subj',   'inp-cancel-subj-pick', loc(D.cancelSubjPick)) : null;
     var confirmImgAlt  = contentOn ? optVal('cb-confirm-img',   'inp-confirm-img-alt',  retailer)         : null;
     var confirmSubjDel = contentOn ? optVal('cb-confirm-subj',  'inp-confirm-subj-del', D.confirmSubjDel) : null;
     var confirmSubjPick= contentOn ? optVal('cb-confirm-subj',  'inp-confirm-subj-pick',D.confirmSubjPick): null;
@@ -2009,13 +2034,31 @@
     var receiptHeader   = contentOn ? optVal('cb-receipt-header', 'inp-receipt-header-content', "%{first_name}, here's your receipt") : null;
     var rateLegacy      = contentOn && document.getElementById('cb-rate-legacy').checked;
 
-    var chd = headingsOn ? reqVal('cancel-heading-delivery',  'Your order has been canceled.')                                   : 'Your order has been canceled.';
-    var chp = headingsOn ? reqVal('cancel-heading-pickup',    'Your order has been canceled.')                                   : 'Your order has been canceled.';
+    /* ── Input-presence checks ──
+       order_receipt and order_rating blocks emit only when the user actually
+       typed something or ticked a sub-option. Mirrors toggle-OFF behaviour
+       so that toggling Step 2 on without filling anything produces no extra
+       content blocks. */
+    function _cbOn(id) { var el = document.getElementById(id); return !!(el && el.checked); }
+    var receiptHasInput = !!gv('receipt-body') ||
+                          _cbOn('cb-receipt-header') ||
+                          _cbOn('cb-receipt-img') ||
+                          _cbOn('cb-receipt-subj') ||
+                          rateLegacy;
+    var ratingHasInput  = !!gv('rate-heading') ||
+                          !!gv('rate-content') ||
+                          _cbOn('cb-rating-pickup') ||
+                          rateLegacy;
+    var confirmHeadingFilled = !!gv('confirm-heading-delivery') || !!gv('confirm-heading-pickup');
+    var receiptHeadingFilled = !!gv('receipt-heading-delivery') || !!gv('receipt-heading-pickup');
+
+    var chd = headingsOn ? reqVal('cancel-heading-delivery',  loc('Your order has been canceled.'))                                   : loc('Your order has been canceled.');
+    var chp = headingsOn ? reqVal('cancel-heading-pickup',    loc('Your order has been canceled.'))                                   : loc('Your order has been canceled.');
     var cfd = headingsOn ? reqVal('confirm-heading-delivery', 'Hi %{first_name}, your ' + retailerToken + ' order is all set.') : 'Hi %{first_name}, your ' + retailerToken + ' order is all set.';
     var cfp = headingsOn ? reqVal('confirm-heading-pickup',   'Hi %{first_name}, your ' + retailerToken + ' order is all set.') : 'Hi %{first_name}, your ' + retailerToken + ' order is all set.';
     var rhd = headingsOn ? reqVal('receipt-heading-delivery', "%{first_name}, here's your receipt")                        : "%{first_name}, here's your receipt";
     var rhp = headingsOn ? reqVal('receipt-heading-pickup',   "%{first_name}, here's your receipt")                        : "%{first_name}, here's your receipt";
-    var cih = headingsOn ? reqVal('cancel-items-heading',     'Canceled Items')                                            : 'Canceled Items';
+    var cih = headingsOn ? reqVal('cancel-items-heading',     loc('Canceled Items'))                                            : loc('Canceled Items');
 
     document.getElementById('hint-folder-t1').textContent = folderName;
     document.getElementById('hint-folder-t2').textContent = folderName;
@@ -2034,7 +2077,7 @@
     if (playstoreLink !== null) t1.push('      playstore_link: "' + playstoreLink + '"');
     var footerRetailerLink = retailerUrl || whitelabel;
     t1.push('      retailer_link: "' + footerRetailerLink + '"');
-    t1.push('      retailer_link_label: "' + retailerToken + '"');
+    t1.push('      retailer_link_label: "' + retailer + '"');
     var helpUrl    = customHelpLink    !== null ? customHelpLink    : whitelabel + '/help';
     var privacyUrl = customPrivacyLink !== null ? customPrivacyLink : whitelabel + '/privacy';
     var tosUrl     = customTosLink     !== null ? customTosLink     : whitelabel + '/terms';
@@ -2077,7 +2120,7 @@
         t1.push('        pickup: "' + confirmSubjPick + '"');
       }
     }
-    if (contentOn) {
+    if (contentOn && receiptHasInput) {
       t1.push('    order_receipt:');
       if (receiptHeader !== null) {
         t1.push('      generic_header:');
@@ -2098,7 +2141,7 @@
         t1.push('        pickup: "' + receiptSubjPick + '"');
       }
     }
-    if (contentOn) {
+    if (contentOn && ratingHasInput) {
       t1.push('    order_rating:');
       if (!rateLegacy) {
         t1.push('      rate_your_order: "' + rateHeading + '"');
@@ -2126,10 +2169,12 @@
     t2.push('            order_cancellation:');
     t2.push('              delivery: ' + chd);
     t2.push('              pickup: ' + chp);
-    if (headingsOn) {
+    if (headingsOn && confirmHeadingFilled) {
       t2.push('            order_confirmation:');
       t2.push('              delivery: ' + cfd);
       t2.push('              pickup: ' + cfp);
+    }
+    if (headingsOn && receiptHeadingFilled) {
       t2.push('            order_receipt:');
       t2.push('              delivery: "' + rhd + '"');
       t2.push('              pickup: "' + rhp + '"');
@@ -2710,10 +2755,10 @@
       ctaText = 'Report an issue';
       subject = 'Your ' + retailer + ' order receipt';
     } else {
-      heading = gv('cancel-heading-delivery') || 'Your order has been canceled.';
-      body    = gv('cancel-body') || fillR(D.cancelBody, retailerToken);
+      heading = gv('cancel-heading-delivery') || loc('Your order has been canceled.');
+      body    = gv('cancel-body') || loc(fillR(D.cancelBody, retailerToken));
       ctaText = 'Begin a new order';
-      subject = retailer + ' order canceled';
+      subject = loc(retailer + ' order canceled');
     }
 
     heading = heading.replace(/%\{first_name\}/g, previewFirstName);
@@ -2792,7 +2837,7 @@
       document.getElementById('preview-completion-line').textContent = 'Shopper delivered your order on ' + previewCompletionDate;
     }
 
-    var itemsHeadingText = isCancel  ? (gv('cancel-items-heading') || 'Canceled Items')
+    var itemsHeadingText = isCancel  ? (gv('cancel-items-heading') || loc('Canceled Items'))
                          : isReceipt ? 'Order Receipt'
                          :             'Order Details';
     document.getElementById('preview-items-heading').textContent = itemsHeadingText;
