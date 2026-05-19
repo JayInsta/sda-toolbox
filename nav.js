@@ -53,6 +53,7 @@
       '}',
       '#sda-nav-inner {',
       '  display: flex; align-items: center;',
+      '  justify-content: center;',
       '  height: 52px;',
       '  gap: 10px;',
       '  max-width: 1400px;',
@@ -86,7 +87,6 @@
       /* Link list */
       '#sda-links {',
       '  display: flex; align-items: center; gap: 2px;',
-      '  flex: 1;',
       '  overflow-x: auto;',
       '  scrollbar-width: none;',
       '  -ms-overflow-style: none;',
