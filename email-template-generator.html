@@ -1,791 +1,927 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Email Template Generator</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; padding: 2rem 1rem 4rem; }
-    .page { max-width: 860px; margin: 0 auto; }
-
-    .hero { text-align: center; padding: 3rem 1rem 2.5rem; }
-    .hero-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #7c3aed, #2563eb); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
-    .hero-icon svg { width: 28px; height: 28px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .hero h1 { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: -0.4px; margin-bottom: 8px; }
-    .hero p { font-size: 14px; color: #64748b; line-height: 1.6; }
-
-    .card { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 16px; padding: 1.5rem; margin-bottom: 14px; }
-    .card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
-    .step-badge { width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-    .s1 { background: #2d1e3d; color: #c084fc; }
-    .s2 { background: #1e3a5f; color: #60a5fa; }
-    .s3 { background: #1e3d2f; color: #4ade80; }
-    .s4 { background: #3d1f0e; color: #fb923c; }
-    .card-title { font-size: 15px; font-weight: 600; color: #e2e8f0; }
-    .card-sub { font-size: 12px; color: #475569; margin-top: 2px; }
-
-    .field { margin-bottom: 14px; }
-    .field:last-child { margin-bottom: 0; }
-    .field label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
-    .field input, .field textarea { width: 100%; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 14px; color: #e2e8f0; outline: none; font-family: 'Courier New', monospace; transition: border-color 0.15s; }
-    .field input:focus, .field textarea:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
-    .field input::placeholder, .field textarea::placeholder { color: #374151; }
-    .field textarea { resize: vertical; min-height: 80px; line-height: 1.6; font-size: 13px; }
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-    /* TOGGLE */
-    .toggle-row { display: flex; align-items: center; justify-content: space-between; }
-    .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
-    .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
-    .toggle-slider { position: absolute; inset: 0; background: #2a2d3e; border-radius: 99px; cursor: pointer; transition: background 0.2s; }
-    .toggle-slider:before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #64748b; border-radius: 50%; transition: transform 0.2s, background 0.2s; }
-    .toggle-switch input:checked + .toggle-slider { background: #1e3a5f; }
-    .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); background: #60a5fa; }
-
-    /* SECTION DIVIDERS */
-    .section-divider { display: flex; align-items: center; gap: 14px; margin: 1.25rem 0 1rem; }
-    .section-divider-line { flex: 1; height: 1px; background: #2a2d3e; }
-    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; white-space: nowrap; }
-    .sl-purple { background: #2d1e3d; color: #c084fc; border: 1px solid #7c3aed33; }
-    .sl-blue   { background: #1e3a5f; color: #60a5fa; border: 1px solid #2563eb33; }
-    .sl-green  { background: #1e3d2f; color: #4ade80; border: 1px solid #16a34a33; }
-    .sl-orange { background: #3d2a1e; color: #fb923c; border: 1px solid #fb923c33; }
-    .sl-red    { background: #3d1010; color: #f87171; border: 1px solid #f8717133; }
-    .sl-teal   { background: #1e3d3d; color: #2dd4bf; border: 1px solid #0d948833; }
-
-    .btn-generate { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c3aed, #2563eb); border: none; border-radius: 12px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.02em; margin-top: 4px; }
-    .btn-generate:hover { opacity: 0.9; }
-    .btn-dl { padding: 7px 14px; border: 1px solid; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; flex-shrink: 0; background: #1e3d2f; border-color: #16a34a44; color: #4ade80; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
-    .btn-dl:hover { opacity: 0.8; }
-    .btn-dl-orange { background: #3d1f0e; border-color: #fb923c44; color: #fb923c; }
-    .branch-output { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 12px; padding: 14px 18px; font-family: 'Courier New', monospace; font-size: 14px; color: #c084fc; margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .branch-output-val { word-break: break-all; }
-    .btn-zip { width: 100%; padding: 14px; background: linear-gradient(135deg, #16a34a, #0f766e); border: none; border-radius: 12px; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.02em; }
-    .btn-zip:hover { opacity: 0.9; }
-
-    /* OUTPUT BLOCKS */
-    .output-wrap { display: none; margin-top: 14px; }
-    .output-block { margin-bottom: 24px; }
-    .output-block-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
-    .output-block-meta { flex: 1; }
-    .output-block-title { font-size: 13px; font-weight: 700; color: #e2e8f0; margin-bottom: 3px; }
-    .output-block-hint { font-size: 12px; color: #64748b; line-height: 1.5; }
-    .output-block-hint code { background: #0f1117; padding: 1px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 11px; }
-    .output-box { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 12px; padding: 1.25rem; font-family: 'Courier New', monospace; font-size: 12px; color: #94a3b8; line-height: 2; white-space: pre; overflow-x: auto; max-height: 440px; overflow-y: auto; }
-    .out-key     { color: #60a5fa; }
-    .out-val     { color: #4ade80; }
-    .out-indent1 { color: #c084fc; }
-    .out-indent2 { color: #fb923c; }
-    .out-plain   { color: #2dd4bf; font-size: 18px; font-weight: 600; }
-
-    .btn-copy { padding: 7px 14px; border: 1px solid; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; flex-shrink: 0; }
-    .btn-copy:hover { opacity: 0.8; }
-    .bc-purple { background: #2d1e3d; border-color: #7c3aed44; color: #c084fc; }
-    .bc-blue   { background: #1e3a5f; border-color: #2563eb44; color: #60a5fa; }
-    .bc-green  { background: #1e3d2f; border-color: #16a34a44; color: #4ade80; }
-    .bc-orange { background: #3d2a1e; border-color: #fb923c44; color: #fb923c; }
-
-    .derived-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-    .derived-tile { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 12px 14px; }
-    .derived-tile-label { font-size: 11px; color: #475569; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
-    .derived-tile-value { font-family: 'Courier New', monospace; font-size: 14px; color: #e2e8f0; font-weight: 600; word-break: break-all; }
-
-    .country-btn { padding: 9px 16px; border-radius: 10px; border: 1px solid #2a2d3e; background: #0f1117; color: #64748b; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; user-select: none; display: flex; align-items: center; gap: 6px; }
-    .country-btn:hover { border-color: #3a3d4e; color: #94a3b8; }
-    .country-btn.active { background: #2d1e3d; border-color: #7c3aed; color: #c084fc; }
-    .locale-tag { font-family: 'Courier New', monospace; font-size: 11px; background: #1a1228; padding: 1px 6px; border-radius: 4px; margin-left: 2px; }
-    .country-btn.active .locale-tag { background: #3d1e5f; color: #e2d4ff; }
-
-    /* ── OPTIONAL FIELD STYLES ── */
-    .opt-block { margin-bottom: 14px; }
-    .opt-block:last-child { margin-bottom: 0; }
-    .opt-header { display: flex; align-items: center; gap: 9px; cursor: pointer; user-select: none; margin-bottom: 0; }
-    .opt-cb { width: 15px; height: 15px; cursor: pointer; accent-color: #7c3aed; flex-shrink: 0; margin: 0; }
-    .opt-title { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; transition: color 0.15s; }
-    .opt-title.active { color: #c084fc; }
-    .new-badge { font-size: 9px; background: #2d1e3d; color: #c084fc; border: 1px solid #7c3aed33; padding: 1px 6px; border-radius: 4px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-left: 2px; }
-    .opt-desc { font-size: 10px; color: #374151; margin-left: auto; }
-    .opt-inputs { margin-top: 8px; padding-left: 24px; display: none; }
-    .opt-inputs.visible { display: block; }
-    .opt-inputs input, .opt-inputs textarea { width: 100%; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 13px; color: #e2e8f0; outline: none; font-family: 'Courier New', monospace; transition: border-color 0.15s; margin-top: 6px; }
-    .opt-inputs input:first-child, .opt-inputs textarea:first-child { margin-top: 0; }
-    .opt-inputs input:focus, .opt-inputs textarea:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
-    .opt-inputs input::placeholder, .opt-inputs textarea::placeholder { color: #374151; }
-    .opt-inputs textarea { resize: vertical; min-height: 70px; line-height: 1.6; }
-    .opt-inputs .sub-label { font-size: 10px; color: #475569; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 10px; margin-bottom: 4px; }
-    .opt-inputs .sub-label:first-child { margin-top: 0; }
-    .opt-inputs .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .opt-inputs .two-col input { margin-top: 0; }
-
-    /* NL2BR HINT */
-    .nl2br-hint { font-size: 10px; color: #4ade80; background: #0d2010; border: 1px solid #16a34a33; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-top: 6px; font-family: 'Courier New', monospace; letter-spacing: 0.02em; }
-
-    /* ── STEP 0 — DOC IMPORT ── */
-    .s0 { background: #3d2a1e; color: #fbbf24; }
-    .doc-drop-zone { border: 2px dashed #2a2d3e; border-radius: 12px; padding: 28px 20px; text-align: center; cursor: pointer; transition: all 0.15s; background: #0f1117; }
-    .doc-drop-zone:hover, .doc-drop-zone.drag-over { border-color: #fbbf24; background: #1e1a0a; }
-    .doc-drop-icon { width: 32px; height: 32px; margin: 0 auto 10px; display: block; color: #475569; }
-    .doc-drop-zone:hover .doc-drop-icon, .doc-drop-zone.drag-over .doc-drop-icon { color: #fbbf24; }
-    .doc-drop-title { font-size: 14px; color: #94a3b8; margin-bottom: 4px; }
-    .doc-drop-link { color: #fbbf24; font-weight: 600; }
-    .doc-drop-hint { font-size: 11px; color: #475569; }
-    .doc-status { margin-top: 14px; padding: 10px 14px; border-radius: 10px; font-size: 12px; font-family: 'Courier New', monospace; line-height: 1.5; }
-    .doc-status-loading { background: #1e3a5f; border: 1px solid #2563eb33; color: #60a5fa; }
-    .doc-status-success { background: #1e3d2f; border: 1px solid #16a34a33; color: #4ade80; }
-    .doc-status-error   { background: #3d1010; border: 1px solid #dc262633; color: #f87171; }
-    .doc-status-info    { background: #1e3a5f; border: 1px solid #2563eb33; color: #60a5fa; }
-    .doc-select-label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; margin-top: 14px; }
-    .doc-select { width: 100%; padding: 10px 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-size: 14px; color: #e2e8f0; outline: none; font-family: 'Courier New', monospace; cursor: pointer; }
-    .doc-select:focus { border-color: #fbbf24; box-shadow: 0 0 0 3px rgba(251,191,36,0.15); }
-    .btn-import { width: 100%; padding: 12px; background: linear-gradient(135deg, #fbbf24, #f97316); border: none; border-radius: 10px; color: #0f1117; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.02em; margin-top: 14px; }
-    .btn-import:hover { opacity: 0.9; }
-    .doc-found-fields { font-size: 11px; color: #4ade80; margin-top: 8px; font-family: 'Courier New', monospace; line-height: 1.7; }
-    .doc-found-fields .field-tag { background: #1e3d2f; border: 1px solid #16a34a44; padding: 1px 7px; border-radius: 4px; margin-right: 4px; display: inline-block; margin-bottom: 3px; }
-    .doc-found-fields .field-tag-missing { background: #3d2a1e; border-color: #fbbf2444; color: #fbbf24; }
-    .doc-found-fields .field-tag-default { background: #1e3a5f; border-color: #2563eb44; color: #60a5fa; }
-
-    /* ── PATH INPUT GROUP (prefix + editable filename) ── */
-    .path-input-group { display: flex; align-items: stretch; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 13px; margin-top: 6px; transition: border-color 0.15s, box-shadow 0.15s; overflow: hidden; }
-    .path-input-group:focus-within { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
-    .path-input-prefix { padding: 10px 6px 10px 12px; background: #1a1228; color: #94a3b8; white-space: nowrap; user-select: all; font-size: 12px; display: flex; align-items: center; border-right: 1px solid #2a2d3e; overflow: hidden; text-overflow: ellipsis; max-width: 60%; }
-    .path-input-suffix { flex: 1; padding: 10px 12px; background: transparent; border: none; outline: none; color: #e2e8f0; font-family: inherit; font-size: 13px; min-width: 0; margin-top: 0 !important; }
-    .path-input-suffix::placeholder { color: #374151; }
-    @media (max-width: 600px) { .path-input-group { flex-direction: column; } .path-input-prefix { max-width: 100%; border-right: none; border-bottom: 1px solid #2a2d3e; } }
-
-    /* QA SECTION */
-    .qa-wrap { margin-top: 2rem; }
-    .qa-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-    .qa-cols textarea { width: 100%; padding: 12px; background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 12px; color: #e2e8f0; outline: none; resize: vertical; min-height: 260px; line-height: 1.8; transition: border-color 0.15s; }
-    .qa-cols textarea:focus { border-color: #fb923c; box-shadow: 0 0 0 3px rgba(251,146,60,0.15); }
-    .qa-col-label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
-
-    .btn-validate { width: 100%; padding: 13px; background: linear-gradient(135deg, #fb923c, #ef4444); border: none; border-radius: 12px; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.02em; }
-    .btn-validate:hover { opacity: 0.9; }
-
-    .diff-wrap { display: none; margin-top: 14px; }
-    .diff-summary { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
-    .diff-stat { background: #0f1117; border: 1px solid #2a2d3e; border-radius: 10px; padding: 10px 16px; text-align: center; flex: 1; min-width: 80px; }
-    .diff-stat-num { font-size: 22px; font-weight: 700; margin-bottom: 2px; }
-    .diff-stat-label { font-size: 11px; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; }
-    .ds-ok   .diff-stat-num { color: #4ade80; }
-    .ds-diff .diff-stat-num { color: #f87171; }
-    .ds-miss .diff-stat-num { color: #fb923c; }
-    .ds-chg  .diff-stat-num { color: #fbbf24; }
-    .match-banner { padding: 14px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; margin-bottom: 10px; }
-    .mb-ok   { background: #1e2d1e; border: 1px solid #16a34a44; color: #4ade80; }
-    .mb-diff { background: #2d1a1a; border: 1px solid #dc262644; color: #f87171; }
-
-    .diff-mode-toggle { display: flex; gap: 8px; margin-bottom: 14px; }
-    .diff-mode-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid #2a2d3e; background: #0f1117; color: #64748b; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
-    .diff-mode-btn:hover { border-color: #3a3d4e; color: #94a3b8; }
-    .diff-mode-btn.active { background: #1e3a5f; border-color: #2563eb; color: #60a5fa; }
-
-    .diff-legend { display: flex; gap: 12px; font-size: 11px; margin-bottom: 12px; flex-wrap: wrap; }
-    .dl-swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; vertical-align: middle; margin-right: 4px; }
-
-    /* SIDE-BY-SIDE */
-    .sbs-box { border: 1px solid #2a2d3e; border-radius: 12px; overflow: hidden; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.9; }
-    .sbs-header { display: grid; grid-template-columns: 36px 1fr 36px 1fr; background: #0f1117; border-bottom: 1px solid #2a2d3e; }
-    .sbs-header-cell { padding: 8px 10px; font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; }
-    .sbs-row { display: grid; grid-template-columns: 36px 1fr 36px 1fr; border-bottom: 1px solid #1a1d27; }
-    .sbs-row:last-child { border-bottom: none; }
-    .sbs-num { padding: 3px 6px; text-align: right; font-size: 10px; color: #374151; background: #0a0c12; user-select: none; border-right: 1px solid #1a1d27; }
-    .sbs-cell { padding: 3px 10px; word-break: break-all; white-space: pre-wrap; min-height: 24px; }
-    .sbs-mid-border { border-right: 2px solid #2a2d3e; }
-    .sbs-ok .sbs-cell { color: #64748b; }
-    .sbs-miss-l .sbs-cell:nth-child(2) { background: #0d2010; color: #4ade80; }
-    .sbs-miss-l .sbs-cell:nth-child(4) { background: #1a0a0a; color: #4a2020; font-style: italic; }
-    .sbs-miss-l .sbs-num:nth-child(1) { background: #0a1a0c; color: #16a34a; }
-    .sbs-miss-l .sbs-num:nth-child(3) { background: #1a0a0a; color: #4a2020; }
-    .sbs-extra-r .sbs-cell:nth-child(2) { background: #1a0a0a; color: #4a2020; font-style: italic; }
-    .sbs-extra-r .sbs-cell:nth-child(4) { background: #200d0d; color: #f87171; }
-    .sbs-extra-r .sbs-num:nth-child(1) { background: #1a0a0a; color: #4a2020; }
-    .sbs-extra-r .sbs-num:nth-child(3) { background: #1a0a0a; color: #dc2626; }
-    .sbs-chg .sbs-cell:nth-child(2) { background: #1e1a0a; color: #fbbf24; }
-    .sbs-chg .sbs-cell:nth-child(4) { background: #1e1a0a; color: #fbbf24; }
-    .sbs-chg .sbs-num { background: #18150a; color: #d97706; }
-    .word-hi { background: #b45309; color: #fff; padding: 0 3px; border-radius: 3px; }
-
-    /* UNIFIED INLINE */
-    .uni-box { border: 1px solid #2a2d3e; border-radius: 12px; overflow: hidden; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.9; }
-    .uni-row { display: flex; border-bottom: 1px solid #1a1d27; }
-    .uni-row:last-child { border-bottom: none; }
-    .uni-num { width: 32px; padding: 3px 6px; text-align: right; font-size: 10px; color: #374151; border-right: 1px solid #1a1d27; background: #0a0c12; user-select: none; flex-shrink: 0; }
-    .uni-content { flex: 1; padding: 3px 10px; word-break: break-all; white-space: pre-wrap; }
-    .uni-tag { font-size: 9px; padding: 1px 6px; border-radius: 3px; margin-left: 8px; font-weight: 700; letter-spacing: 0.04em; }
-    .uni-ok .uni-content { color: #64748b; }
-    .uni-add { background: #0d2010; }
-    .uni-add .uni-content { color: #4ade80; }
-    .uni-add .uni-num { background: #0a1a0c; color: #16a34a; }
-    .uni-add .uni-tag { background: #16a34a33; color: #4ade80; }
-    .uni-del { background: #200d0d; }
-    .uni-del .uni-content { color: #f87171; }
-    .uni-del .uni-num { background: #1a0a0a; color: #dc2626; }
-    .uni-del .uni-tag { background: #dc262633; color: #f87171; }
-    .uni-chg { background: #1e1a0a; }
-    .uni-chg .uni-content { color: #fbbf24; }
-    .uni-chg .uni-num { background: #18150a; color: #d97706; }
-    .uni-chg .uni-tag { background: #d9770633; color: #fbbf24; }
-
-    .info-box { background: #1e2d1e; border: 1px solid #16a34a33; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #4ade80; line-height: 1.6; margin-top: 10px; }
-
-    .footer { text-align: center; padding: 2rem 0 0.5rem; font-size: 12px; color: #334155; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #2a2d3e; }
-
-    @media (max-width: 600px) {
-      .two-col, .derived-grid, .qa-cols, .opt-inputs .two-col { grid-template-columns: 1fr; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio · Email Template Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-page:    #0a0a0f;
+    --bg-card:    #14141a;
+    --bg-sub:     #0f0f15;
+    --bg-input:   #08080d;
+    --bg-muted:   #1a1a22;
+    --border:     #26262e;
+    --border-hov: #3a3a44;
+    --text-1:     #fafafa;
+    --text-2:     #d4d4d8;
+    --text-3:     #a1a1aa;
+    --text-4:     #71717a;
+    --text-mute:  #52525b;
+    --accent:     #d4ff3a;
+    --accent-h:   #c5f028;
+    --accent-bg:  rgba(212,255,58,0.1);
+    --accent-bd:  rgba(212,255,58,0.3);
+    --on-accent:  #0a0a0f;
+    --success:    #34d399;
+    --success-bg: rgba(52,211,153,0.12);
+    --warning:    #fbbf24;
+    --warning-bg: rgba(251,191,36,0.12);
+    --danger:     #f87171;
+    --danger-bg:  rgba(248,113,113,0.12);
+    --info-bg:    rgba(96,165,250,0.12);
+    --info-text:  #93c5fd;
+  }
+
+  html, body { background: var(--bg-page); color: var(--text-1); }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.5; }
+
+  code, .mono { font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace; }
+
+  /* ── TOOLBAR ── */
+  .studio-toolbar { position: sticky; top: 0; z-index: 50; background: rgba(10,10,15,0.78); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); padding: 11px 20px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border); height: 54px; }
+  .studio-logo { width: 30px; height: 30px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--on-accent); font-size: 14px; font-weight: 700; letter-spacing: -0.02em; flex-shrink: 0; box-shadow: 0 0 16px rgba(212,255,58,0.25); }
+  .studio-toolbar-title { font-size: 14px; font-weight: 600; color: var(--text-1); }
+  .studio-breadcrumb { font-size: 12px; color: var(--text-3); display: flex; align-items: center; gap: 6px; }
+  .studio-breadcrumb .crumb-sep { color: var(--text-mute); }
+  .studio-toolbar-spacer { flex: 1; }
+  .studio-toolbar-actions { display: flex; align-items: center; gap: 8px; }
+  .studio-toolbar-btn { padding: 7px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; font-size: 12.5px; font-weight: 500; color: var(--text-2); cursor: pointer; transition: all 0.12s; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
+  .studio-toolbar-btn:hover { border-color: var(--border-hov); background: var(--bg-muted); }
+  .studio-toolbar-btn.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 600; }
+  .studio-toolbar-btn.primary:hover { background: var(--accent-h); border-color: var(--accent-h); }
+
+  /* ── SPLIT PANE ── */
+  .studio-shell { max-width: 100%; }
+  .studio-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: calc(100vh - 54px); }
+  .studio-left { padding: 28px 32px 60px; overflow-y: auto; min-width: 0; }
+  .studio-right { background: radial-gradient(ellipse 700px 500px at 50% -100px, rgba(212,255,58,0.06), transparent 70%), #0a0a0f; border-left: 1px solid var(--border); position: sticky; top: 54px; height: calc(100vh - 54px); display: flex; flex-direction: column; }
+
+  /* ── STEP CARDS ── */
+  .step { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; margin-bottom: 12px; }
+  .step:hover { border-color: var(--border-hov); }
+  .step-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .step-num { width: 26px; height: 26px; border-radius: 7px; background: var(--accent-bg); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
+  .step-num.done { background: var(--success-bg); color: var(--success); }
+  .step-title { font-size: 14px; font-weight: 600; color: var(--text-1); }
+  .step-sub { font-size: 12px; color: var(--text-3); margin-top: 2px; line-height: 1.45; }
+  .step-meta { margin-left: auto; font-size: 11px; color: var(--text-4); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.04em; }
+  .step-badge { padding: 2px 8px; background: var(--bg-muted); border-radius: 5px; font-size: 11px; font-weight: 500; color: var(--text-3); }
+  .step-badge.required { background: var(--accent-bg); color: var(--accent); }
+
+  /* ── FORM ── */
+  .field { margin-bottom: 12px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 11.5px; font-weight: 500; color: var(--text-2); margin-bottom: 6px; letter-spacing: 0.01em; }
+  .field label .hint { color: var(--text-4); font-weight: 400; font-size: 11px; margin-left: 4px; }
+  .field input[type="text"], .field input[type="url"], .field textarea, .field select { width: 100%; padding: 9px 12px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--text-1); outline: none; font-family: 'JetBrains Mono', monospace; transition: border-color 0.12s, box-shadow 0.12s; }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(212,255,58,0.18); }
+  .field input::placeholder, .field textarea::placeholder { color: var(--text-mute); }
+  .field textarea { resize: vertical; min-height: 78px; line-height: 1.55; font-size: 13px; font-family: 'Inter', sans-serif; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* ── TOGGLE ── */
+  .toggle-row { display: flex; align-items: center; gap: 12px; }
+  .toggle-switch { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .toggle-slider { position: absolute; inset: 0; background: var(--border); border-radius: 99px; cursor: pointer; transition: background 0.18s; }
+  .toggle-slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: transform 0.18s; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  .toggle-switch input:checked + .toggle-slider { background: var(--accent); }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); }
+
+  .step-toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+  .inline-toggle { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+  .inline-toggle .toggle-row { gap: 14px; align-items: flex-start; }
+  .inline-toggle .toggle-switch { margin-top: 2px; }
+  .inline-toggle-title { font-size: 13px; color: var(--text-1); font-weight: 500; }
+  .inline-toggle-desc { font-size: 11.5px; color: var(--text-3); margin-top: 3px; line-height: 1.5; }
+
+  /* ── SECTION DIVIDERS (within Step cards) ── */
+  .section-h { display: flex; align-items: center; gap: 10px; margin: 18px 0 12px; padding-top: 14px; border-top: 1px dashed var(--border); }
+  .section-h:first-child { margin-top: 4px; padding-top: 0; border-top: none; }
+  .section-h .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .section-h .label { font-size: 11.5px; font-weight: 600; color: var(--text-2); letter-spacing: 0.02em; text-transform: uppercase; font-size: 10.5px; }
+  .section-h .new-pill { padding: 1px 7px; background: var(--accent-bg); color: var(--accent); border-radius: 4px; font-size: 9px; font-weight: 600; letter-spacing: 0.05em; }
+
+  /* ── OPT-BLOCKS (checkbox-gated sections) ── */
+  .opt { background: var(--bg-sub); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+  .opt:last-child { margin-bottom: 0; }
+  .opt-h { display: flex; align-items: center; gap: 9px; cursor: pointer; user-select: none; }
+  .opt-cb { width: 14px; height: 14px; cursor: pointer; accent-color: var(--accent); flex-shrink: 0; margin: 0; }
+  .opt-name { font-size: 12px; font-weight: 500; color: var(--text-2); transition: color 0.12s; }
+  .opt-name.active { color: var(--text-1); }
+  .opt-new { font-size: 9px; background: var(--accent-bg); color: var(--accent); padding: 1px 6px; border-radius: 4px; font-weight: 600; letter-spacing: 0.05em; }
+  .opt-desc { margin-left: auto; font-size: 10.5px; color: var(--text-4); }
+  .opt-body { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .opt-body.visible { display: block; }
+  .opt-body input[type="text"], .opt-body textarea { width: 100%; padding: 8px 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 7px; font-size: 12.5px; color: var(--text-1); outline: none; font-family: 'JetBrains Mono', monospace; margin-top: 6px; }
+  .opt-body input:first-child, .opt-body textarea:first-child { margin-top: 0; }
+  .opt-body input:focus, .opt-body textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(212,255,58,0.15); }
+  .opt-body .sub-l { font-size: 10.5px; color: var(--text-3); font-weight: 500; margin-top: 10px; margin-bottom: 4px; letter-spacing: 0.02em; }
+  .opt-body .sub-l:first-child { margin-top: 0; }
+
+  /* ── COUNTRY BTNS ── */
+  .country-btn { padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-3); font-size: 12.5px; font-weight: 500; cursor: pointer; transition: all 0.12s; user-select: none; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
+  .country-btn:hover { border-color: var(--border-hov); color: var(--text-2); }
+  .country-btn.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+  .locale-tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; background: var(--bg-muted); padding: 1px 5px; border-radius: 4px; }
+  .country-btn.active .locale-tag { background: rgba(212,255,58,0.18); color: var(--accent); }
+
+  /* ── DERIVED VALUES ── */
+  .derived-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .derived-cell { background: var(--bg-sub); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; }
+  .derived-cell-label { font-size: 10px; color: var(--text-3); font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase; margin-bottom: 3px; }
+  .derived-cell-value { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--text-1); font-weight: 500; word-break: break-all; line-height: 1.4; }
+  .derived-cell-value.empty { color: var(--text-mute); }
+
+  /* ── PATH INPUT GROUP ── */
+  .path-input-group { display: flex; align-items: stretch; background: var(--bg-card); border: 1px solid var(--border); border-radius: 7px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; margin-top: 6px; overflow: hidden; transition: border-color 0.12s, box-shadow 0.12s; }
+  .path-input-group:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(212,255,58,0.15); }
+  .path-input-prefix { padding: 8px 6px 8px 10px; background: var(--bg-sub); color: var(--text-3); white-space: nowrap; user-select: all; font-size: 11.5px; display: flex; align-items: center; border-right: 1px solid var(--border); overflow: hidden; text-overflow: ellipsis; max-width: 60%; }
+  .path-input-suffix { flex: 1; padding: 8px 10px; background: transparent; border: none; outline: none; color: var(--text-1); font-family: inherit; font-size: 12.5px; min-width: 0; margin-top: 0 !important; }
+
+  /* ── DOC IMPORT ── */
+  .doc-drop { border: 2px dashed var(--border); border-radius: 10px; padding: 22px 18px; text-align: center; cursor: pointer; transition: all 0.15s; background: var(--bg-sub); }
+  .doc-drop:hover, .doc-drop.drag-over { border-color: var(--accent); background: var(--accent-bg); }
+  .doc-drop-icon { width: 28px; height: 28px; margin: 0 auto 8px; display: block; color: var(--text-3); }
+  .doc-drop:hover .doc-drop-icon, .doc-drop.drag-over .doc-drop-icon { color: var(--accent); }
+  .doc-drop-title { font-size: 13px; color: var(--text-2); margin-bottom: 3px; }
+  .doc-drop-link { color: var(--accent); font-weight: 600; }
+  .doc-drop-hint { font-size: 11px; color: var(--text-3); }
+  .doc-status { margin-top: 10px; padding: 8px 12px; border-radius: 7px; font-size: 12px; font-family: 'JetBrains Mono', monospace; line-height: 1.5; }
+  .doc-status-loading { background: var(--info-bg); color: var(--info-text); }
+  .doc-status-success { background: var(--success-bg); color: var(--success); }
+  .doc-status-error   { background: var(--danger-bg); color: var(--danger); }
+  .doc-status-info    { background: var(--info-bg); color: var(--info-text); }
+  .doc-select-label { font-size: 11px; font-weight: 500; color: var(--text-2); display: block; margin-bottom: 5px; margin-top: 10px; }
+  .doc-select { width: 100%; padding: 9px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 7px; font-size: 13px; color: var(--text-1); outline: none; font-family: 'JetBrains Mono', monospace; cursor: pointer; }
+  .doc-import-btn { width: 100%; padding: 10px; background: var(--accent); border: none; border-radius: 8px; color: var(--on-accent); font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.12s; margin-top: 10px; font-family: inherit; }
+  .doc-import-btn:hover { background: var(--accent-h); }
+  .doc-found { font-size: 11px; margin-top: 8px; line-height: 1.7; }
+  .field-tag { background: var(--success-bg); border: 1px solid rgba(52,211,153,0.3); color: var(--success); padding: 1px 7px; border-radius: 4px; margin-right: 4px; display: inline-block; margin-bottom: 3px; }
+  .field-tag-missing { background: var(--warning-bg); border-color: rgba(251,191,36,0.3); color: var(--warning); }
+  .field-tag-default { background: var(--info-bg); border-color: rgba(96,165,250,0.3); color: var(--info-text); }
+
+  /* ── GENERATE BUTTON & FOOTER ROW ── */
+  .generate-btn { width: 100%; padding: 12px; background: var(--accent); border: none; border-radius: 10px; color: var(--on-accent); font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.18s; letter-spacing: 0.01em; margin-top: 8px; font-family: inherit; box-shadow: 0 0 24px rgba(212,255,58,0.18); }
+  .generate-btn:hover { background: var(--accent-h); box-shadow: 0 0 36px rgba(212,255,58,0.32); transform: translateY(-1px); }
+
+  /* ── RIGHT PANE: PREVIEW ── */
+  .preview-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(255,255,255,0.02); }
+  .preview-tabs { display: flex; gap: 3px; background: var(--bg-muted); padding: 3px; border-radius: 8px; }
+  .preview-tab { padding: 6px 12px; border-radius: 6px; background: transparent; font-size: 12px; font-weight: 500; color: var(--text-3); cursor: pointer; border: none; font-family: inherit; transition: all 0.15s; }
+  .preview-tab.active { background: var(--bg-card); color: var(--text-1); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+  .preview-tab:hover:not(.active) { color: var(--text-2); }
+  .live-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(212,255,58,0.08); border: 1px solid rgba(212,255,58,0.2); border-radius: 99px; font-size: 11px; color: var(--accent); font-weight: 500; }
+  .live-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(212,255,58,0.6); }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
+
+  .preview-area { flex: 1; padding: 28px; overflow-y: auto; display: flex; align-items: flex-start; justify-content: center; }
+  .preview-mobile { max-width: 380px; width: 100%; }
+  .preview-meta { font-size: 11px; color: var(--text-3); margin-bottom: 10px; font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; gap: 8px; }
+  .preview-meta .meta-label { color: var(--text-4); }
+
+  .preview-email { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 2px 6px rgba(0,0,0,0.2); border: 1px solid var(--border); font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; color: #3a3a3a; }
+  .pe-top-bar { padding: 20px 20px 14px; text-align: center; }
+  .pe-top-logo { display: inline-block; padding: 6px 14px; background: #18181b; color: white; border-radius: 5px; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; }
+  .pe-hero { padding: 0 20px 16px; text-align: center; }
+  .pe-hero-banner { display: inline-block; padding: 22px 28px; background: #d92e3e; color: white; font-size: 22px; font-weight: 900; letter-spacing: 0.03em; border-radius: 4px; text-transform: uppercase; line-height: 1; }
+  .pe-hero-sub { display: block; font-size: 13px; font-weight: 600; letter-spacing: 0.18em; margin-top: 6px; opacity: 0.95; }
+  .pe-heading { padding: 6px 22px 16px; font-size: 21px; font-weight: 700; color: #3a3a3a; line-height: 1.3; word-break: break-word; }
+  .pe-info-group { padding: 0 22px 6px; }
+  .pe-info { margin-bottom: 14px; }
+  .pe-info:last-child { margin-bottom: 8px; }
+  .pe-info-label { font-size: 13.5px; color: #555; margin-bottom: 4px; line-height: 1.4; }
+  .pe-info-val { font-size: 14px; color: #18181b; font-weight: 700; line-height: 1.5; }
+  .pe-info-val.pe-link { color: #2563eb; }
+  .pe-body { padding: 8px 22px 18px; font-size: 14px; color: #3a3a3a; line-height: 1.6; word-break: break-word; }
+  .pe-cta-link { display: block; text-align: center; margin: 6px 22px 22px; padding: 13px 18px; background: #18181b; color: white; border-radius: 6px; font-size: 13.5px; font-weight: 600; cursor: pointer; text-decoration: none; letter-spacing: 0.01em; }
+  .pe-cta-link:hover { background: #27272a; }
+  .pe-divider { border-top: 1px solid #e5e5e5; margin: 0 22px; }
+  .pe-upsell { padding: 22px 22px 4px; text-align: center; }
+  .pe-upsell-text { font-size: 14px; color: #3a3a3a; line-height: 1.55; }
+  .pe-upsell-text strong { font-weight: 700; color: #18181b; }
+  .pe-section-h { padding: 22px 22px 10px; font-size: 17px; font-weight: 700; color: #3a3a3a; }
+  .pe-order-id { padding: 0 22px 12px; font-size: 12.5px; color: #555; }
+  .pe-items { padding: 0 22px; }
+  .pe-item { display: grid; grid-template-columns: 32px 1fr auto; gap: 10px; padding: 9px 0; align-items: start; }
+  .pe-item-img { width: 32px; height: 32px; background: #f3f4f6; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+  .pe-item-body { font-size: 12.5px; line-height: 1.4; color: #18181b; word-break: break-word; }
+  .pe-item-body strong { font-weight: 700; }
+  .pe-item-meta { color: #777; font-size: 11px; margin-top: 3px; }
+  .pe-item-price { text-align: right; font-size: 12.5px; font-weight: 700; color: #18181b; white-space: nowrap; flex-shrink: 0; line-height: 1.4; }
+  .pe-item-price-old { display: block; color: #888; text-decoration: line-through; font-weight: 400; font-size: 11px; margin-top: 2px; }
+  .pe-totals { padding: 14px 22px 6px; }
+  .pe-total-row { display: flex; justify-content: space-between; align-items: baseline; padding: 2px 0; font-size: 13.5px; color: #18181b; }
+  .pe-total-row.strong { font-weight: 700; }
+  .pe-total-row.spacer { padding-top: 8px; }
+  .pe-disclaimer { padding: 14px 22px 8px; font-size: 11.5px; color: #777; line-height: 1.55; }
+  .pe-foot { padding: 18px 22px 24px; text-align: center; }
+  .pe-foot-logo { display: inline-block; padding: 5px 11px; background: #18181b; color: white; border-radius: 4px; font-size: 9px; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 14px; }
+  .pe-app-row { display: flex; gap: 6px; justify-content: center; margin-bottom: 12px; }
+  .pe-app-btn { padding: 5px 10px; background: #18181b; color: white; border-radius: 4px; font-size: 9px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; line-height: 1; }
+  .pe-app-btn svg { flex-shrink: 0; }
+  .pe-social { display: flex; gap: 18px; justify-content: center; margin-bottom: 14px; color: #6b7280; align-items: center; }
+  .pe-social svg { display: block; }
+  .pe-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; font-size: 11.5px; font-weight: 700; }
+  .pe-links a, .pe-tos a { color: #d92e3e; text-decoration: none; cursor: pointer; }
+  .pe-tos { margin-top: 10px; font-size: 11.5px; font-weight: 700; text-align: center; }
+
+  /* ── BOTTOM SECTIONS ── */
+  .studio-bottom { padding: 40px 32px 60px; max-width: 1100px; margin: 0 auto; }
+  .section-title { font-size: 18px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; letter-spacing: -0.01em; }
+  .section-meta { font-size: 12.5px; color: var(--text-3); margin-bottom: 18px; }
+  .output-wrap { display: none; margin-bottom: 36px; }
+  .output-section-div { display: flex; align-items: center; gap: 10px; margin: 28px 0 12px; }
+  .output-section-div .num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); }
+  .output-section-div .title { font-size: 13px; font-weight: 600; color: var(--text-1); }
+  .output-section-div .line { flex: 1; height: 1px; background: var(--border); }
+  .output-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+  .output-block-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+  .output-block-meta { flex: 1; }
+  .output-block-title { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 2px; }
+  .output-block-hint { font-size: 11.5px; color: var(--text-3); line-height: 1.5; }
+  .output-block-hint code { background: var(--bg-muted); padding: 1px 5px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-2); }
+  .output-box { background: var(--bg-sub); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--text-2); line-height: 1.7; white-space: pre; overflow-x: auto; max-height: 420px; overflow-y: auto; }
+  .out-key { color: var(--info-text); }
+  .out-val { color: #6ee7b7; }
+  .out-indent1 { color: #c4b5fd; }
+  .out-indent2 { color: #fcd34d; }
+  .out-plain { color: var(--text-1); font-size: 16px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+
+  .btn-copy, .btn-dl, .btn-zip { padding: 6px 12px; border: 1px solid var(--border); border-radius: 7px; font-size: 11.5px; font-weight: 500; cursor: pointer; white-space: nowrap; background: var(--bg-card); color: var(--text-2); font-family: inherit; transition: all 0.12s; }
+  .btn-copy:hover, .btn-dl:hover { background: var(--bg-muted); border-color: var(--border-hov); color: var(--text-1); }
+  .btn-zip { width: 100%; padding: 12px; background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-size: 13px; font-weight: 700; }
+  .btn-zip:hover { background: var(--accent-h); border-color: var(--accent-h); color: var(--on-accent); }
+
+  .branch-output { background: var(--bg-sub); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .branch-output-val { word-break: break-all; }
+  .info-box { background: var(--info-bg); border: 1px solid rgba(96,165,250,0.3); border-radius: 8px; padding: 10px 14px; font-size: 12.5px; color: var(--info-text); line-height: 1.55; }
+
+  .derived-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+
+  /* ── QA SECTION ── */
+  .qa-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; }
+  .qa-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .qa-cols textarea { width: 100%; padding: 10px; background: var(--bg-sub); border: 1px solid var(--border); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--text-1); outline: none; resize: vertical; min-height: 240px; line-height: 1.7; transition: border-color 0.15s; }
+  .qa-cols textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(212,255,58,0.15); background: var(--bg-card); }
+  .qa-col-label { font-size: 11px; font-weight: 500; color: var(--text-2); margin-bottom: 5px; }
+  .btn-validate { width: 100%; padding: 11px; background: var(--accent); border: none; border-radius: 8px; color: var(--on-accent); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .btn-validate:hover { background: var(--accent-h); }
+  .diff-wrap { display: none; margin-top: 14px; }
+  .diff-summary { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .diff-stat { background: var(--bg-sub); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; text-align: center; flex: 1; min-width: 75px; }
+  .diff-stat-num { font-size: 20px; font-weight: 700; margin-bottom: 2px; font-family: 'JetBrains Mono', monospace; }
+  .diff-stat-label { font-size: 10.5px; color: var(--text-3); letter-spacing: 0.04em; text-transform: uppercase; }
+  .ds-ok   .diff-stat-num { color: var(--success); }
+  .ds-diff .diff-stat-num { color: var(--danger); }
+  .ds-miss .diff-stat-num { color: var(--warning); }
+  .ds-chg  .diff-stat-num { color: #fb923c; }
+  .match-banner { padding: 12px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; text-align: center; margin-bottom: 10px; }
+  .mb-ok   { background: var(--success-bg); border: 1px solid rgba(52,211,153,0.3); color: var(--success); }
+  .mb-diff { background: var(--danger-bg); border: 1px solid rgba(248,113,113,0.3); color: var(--danger); }
+  .diff-mode-toggle { display: flex; gap: 6px; margin-bottom: 12px; }
+  .diff-mode-btn { padding: 6px 12px; border-radius: 7px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-3); font-size: 11.5px; font-weight: 500; cursor: pointer; font-family: inherit; }
+  .diff-mode-btn:hover { color: var(--text-2); }
+  .diff-mode-btn.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+  .diff-legend { display: flex; gap: 12px; font-size: 10.5px; margin-bottom: 10px; flex-wrap: wrap; color: var(--text-3); }
+  .dl-swatch { width: 11px; height: 11px; border-radius: 3px; display: inline-block; vertical-align: middle; margin-right: 4px; border: 1px solid var(--border); }
+
+  .sbs-box, .uni-box { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.8; }
+  .sbs-header { display: grid; grid-template-columns: 32px 1fr 32px 1fr; background: var(--bg-sub); border-bottom: 1px solid var(--border); }
+  .sbs-header-cell { padding: 6px 10px; font-size: 10px; font-weight: 600; color: var(--text-3); letter-spacing: 0.06em; text-transform: uppercase; }
+  .sbs-row { display: grid; grid-template-columns: 32px 1fr 32px 1fr; border-bottom: 1px solid var(--border); }
+  .sbs-row:last-child { border-bottom: none; }
+  .sbs-num { padding: 3px 6px; text-align: right; font-size: 10px; color: var(--text-4); background: var(--bg-sub); user-select: none; border-right: 1px solid var(--border); }
+  .sbs-cell { padding: 3px 10px; word-break: break-all; white-space: pre-wrap; min-height: 22px; color: var(--text-2); }
+  .sbs-mid-border { border-right: 1px solid var(--border); }
+  .sbs-miss-l .sbs-cell:nth-child(2) { background: var(--success-bg); color: var(--success); }
+  .sbs-miss-l .sbs-cell:nth-child(4) { background: var(--bg-muted); color: var(--text-mute); font-style: italic; }
+  .sbs-extra-r .sbs-cell:nth-child(2) { background: var(--bg-muted); color: var(--text-mute); font-style: italic; }
+  .sbs-extra-r .sbs-cell:nth-child(4) { background: var(--danger-bg); color: var(--danger); }
+  .sbs-chg .sbs-cell:nth-child(2) { background: var(--warning-bg); color: var(--warning); }
+  .sbs-chg .sbs-cell:nth-child(4) { background: var(--warning-bg); color: var(--warning); }
+  .word-hi { background: rgba(251,191,36,0.3); color: #fcd34d; padding: 0 3px; border-radius: 3px; }
+
+  .uni-row { display: flex; border-bottom: 1px solid var(--border); }
+  .uni-row:last-child { border-bottom: none; }
+  .uni-num { width: 30px; padding: 3px 6px; text-align: right; font-size: 10px; color: var(--text-4); border-right: 1px solid var(--border); background: var(--bg-sub); user-select: none; flex-shrink: 0; }
+  .uni-content { flex: 1; padding: 3px 10px; word-break: break-all; white-space: pre-wrap; color: var(--text-2); }
+  .uni-tag { font-size: 9px; padding: 1px 6px; border-radius: 3px; margin-left: 8px; font-weight: 600; letter-spacing: 0.04em; }
+  .uni-add { background: var(--success-bg); } .uni-add .uni-content { color: var(--success); } .uni-add .uni-tag { background: rgba(52,211,153,0.25); color: var(--success); }
+  .uni-del { background: var(--danger-bg); } .uni-del .uni-content { color: var(--danger); } .uni-del .uni-tag { background: rgba(248,113,113,0.25); color: var(--danger); }
+  .uni-chg { background: var(--warning-bg); } .uni-chg .uni-content { color: var(--warning); } .uni-chg .uni-tag { background: rgba(251,191,36,0.25); color: var(--warning); }
+
+  /* ── PAGE FOOTER ── */
+  .studio-footer { padding: 20px 32px 30px; text-align: center; font-size: 11px; color: var(--text-4); border-top: 1px solid var(--border); margin-top: 30px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .studio-footer .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 980px) {
+    .studio-split { grid-template-columns: 1fr; }
+    .studio-right { position: relative; top: auto; height: auto; min-height: 500px; border-left: none; border-top: 1px solid var(--border); }
+    .two-col, .qa-cols, .derived-row, .derived-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .studio-breadcrumb { display: none; }
+    .studio-left { padding: 18px; }
+    .studio-bottom { padding: 30px 18px; }
+    .preview-area { padding: 18px; }
+    .qa-cols { grid-template-columns: 1fr; }
+    .path-input-group { flex-direction: column; }
+    .path-input-prefix { max-width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+  }
+</style>
 </head>
 <body>
-<div class="page">
 
-  <div class="hero">
-    <div class="hero-icon">
-      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-    </div>
-    <h1>Email template generator</h1>
-    <p>Generate locale variables, folder name, and both YAML email templates. Includes QA diff validator.</p>
+<header class="studio-toolbar">
+  <div class="studio-logo">S</div>
+  <div class="studio-toolbar-title">Studio</div>
+  <div class="studio-breadcrumb">
+    <span>SDA toolbox</span>
+    <span class="crumb-sep">/</span>
+    <span>Email generator</span>
+    <span class="crumb-sep">/</span>
+    <span id="breadcrumb-retailer" class="mono">untitled</span>
   </div>
-
-  <!-- STEP 0 — DOC IMPORT -->
-  <div class="card">
-    <div class="card-top">
-      <div class="step-badge s0">📄</div>
-      <div>
-        <div class="card-title">Quick import from doc <span style="font-size:11px;color:#475569;font-weight:400">— Optional</span></div>
-        <div class="card-sub">Upload a retailer brief (.docx). Fields auto-fill below. Parsing happens in your browser — your doc never leaves this page.</div>
-      </div>
-    </div>
-    <div class="doc-drop-zone" id="doc-drop-zone" onclick="document.getElementById('doc-upload-input').click()">
-      <input type="file" id="doc-upload-input" accept=".docx,.pdf" style="display:none">
-      <svg class="doc-drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-        <polyline points="14 2 14 8 20 8"/>
-        <line x1="12" y1="18" x2="12" y2="12"/>
-        <polyline points="9 15 12 12 15 15"/>
-      </svg>
-      <div class="doc-drop-title">Drop a <code style="background:#1a1228;padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;color:#fbbf24">.docx</code> or <code style="background:#1a1228;padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;color:#fbbf24">.pdf</code> here, or <span class="doc-drop-link">browse</span></div>
-      <div class="doc-drop-hint">Word documents or PDFs with retailer email configuration</div>
-    </div>
-    <div id="doc-status" class="doc-status" style="display:none"></div>
-    <div id="doc-retailer-row" style="display:none">
-      <label class="doc-select-label">Select retailer to import</label>
-      <select id="doc-retailer-select" class="doc-select" onchange="previewSelectedRetailer()"></select>
-      <div id="doc-found-fields" class="doc-found-fields"></div>
-    </div>
-    <button id="doc-import-btn" class="btn-import" onclick="importSelectedRetailer()" style="display:none">⬇ &nbsp;Import to form</button>
+  <div class="studio-toolbar-spacer"></div>
+  <div class="studio-toolbar-actions">
+    <button class="studio-toolbar-btn" onclick="document.querySelector('.qa-wrap').scrollIntoView({behavior:'smooth'})">QA validator</button>
+    <button class="studio-toolbar-btn primary" onclick="generate()">⚡ Generate</button>
   </div>
+</header>
 
-  <!-- STEP 1 -->
-  <div class="card">
-    <div class="card-top">
-      <div class="step-badge s1">1</div>
-      <div><div class="card-title">Core retailer details</div><div class="card-sub">Required — all outputs are derived from these values</div></div>
-    </div>
-    <div class="field">
-      <label>Country / Locale</label>
-      <div style="display:flex;gap:8px;flex-wrap:wrap" id="country-group">
-        <div class="country-btn active" id="c-US" onclick="setCountry('US')">🇺🇸 &nbsp;United States <span class="locale-tag">en_US</span></div>
-        <div class="country-btn" id="c-CA" onclick="setCountry('CA')">🇨🇦 &nbsp;Canada <span class="locale-tag">en_CA</span></div>
-        <div class="country-btn" id="c-FR" onclick="setCountry('FR')">🇫🇷 &nbsp;France <span class="locale-tag">en_FR</span></div>
-      </div>
-    </div>
-    <div class="two-col">
-      <div class="field">
-        <label>Slug <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">(e.g. longs-picpac-sfp)</span></label>
-        <input type="text" id="slug" placeholder="longs-picpac-sfp" oninput="updatePreviews()">
-      </div>
-      <div class="field">
-        <label>Retailer name <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">(e.g. Long's Pic Pac)</span></label>
-        <input type="text" id="retailer-name" placeholder="Long's Pic Pac">
-      </div>
-    </div>
-    <div class="two-col">
-      <div class="field">
-        <label>Whitelabel domain</label>
-        <input type="text" id="whitelabel" placeholder="https://longspicpac-whitelabel.instacart.com">
-      </div>
-      <div class="field" style="margin-bottom:0">
-        <label>Retailer website <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">Optional — defaults to whitelabel if empty</span></label>
-        <input type="text" id="retailer-url" placeholder="https://www.longspicpac.com/">
-      </div>
-    </div>
+<div class="studio-shell">
 
-    <!-- RETAILER NAME PLACEHOLDER TOGGLE -->
-    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#0f1117;border:1px solid #2a2d3e;border-radius:10px;margin-top:14px">
-      <label class="toggle-switch" style="flex-shrink:0">
-        <input type="checkbox" id="use-retailer-placeholder">
-        <span class="toggle-slider"></span>
-      </label>
-      <div style="flex:1;line-height:1.4">
-        <div style="font-size:12px;color:#e2e8f0;font-weight:600">Use <code style="background:#2d1e3d;color:#c084fc;padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:11px">%{retailer_name}</code> placeholder instead of literal name</div>
-        <div style="font-size:11px;color:#64748b;margin-top:3px">OFF (default): <code style="color:#94a3b8;font-family:'Courier New',monospace">The Piggly Wiggly Team</code> · ON: <code style="color:#94a3b8;font-family:'Courier New',monospace">The %{retailer_name} Team</code></div>
-        <div style="font-size:10px;color:#475569;margin-top:3px">Affects body text defaults, footer label, and doc-import conversion. User-typed field values are never auto-rewritten.</div>
-      </div>
-    </div>
+  <div class="studio-split">
 
-    <div style="margin-top:14px;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Derived values preview</div>
-    <div class="derived-grid">
-      <div class="derived-tile">
-        <div class="derived-tile-label">Output 1 — locale.rb variable</div>
-        <div class="derived-tile-value" id="preview-locale" style="color:#c084fc">—</div>
-      </div>
-      <div class="derived-tile">
-        <div class="derived-tile-label">Output 2 — Folder name</div>
-        <div class="derived-tile-value" id="preview-folder" style="color:#60a5fa">—</div>
-      </div>
-    </div>
-  </div>
+    <main class="studio-left" id="studio-left">
 
-  <!-- STEP 2 — CUSTOM CONTENT -->
-  <div class="card">
-    <div class="card-top" style="margin-bottom:0">
-      <div class="step-badge s2">2</div>
-      <div style="flex:1">
-        <div class="toggle-row">
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">00</div>
           <div>
-            <div class="card-title">Custom message content &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
-            <div class="card-sub">Blank fields use the default template. <span style="color:#c084fc">New</span> fields require the checkbox to be included in output. <span style="color:#4ade80">↵ Newlines in body fields auto-convert to &lt;br/&gt;</span></div>
+            <div class="step-title">Quick import</div>
+            <div class="step-sub">Drop a .docx or .pdf — parsed in-browser, your doc never leaves this page</div>
           </div>
-          <label class="toggle-switch"><input type="checkbox" id="toggle-content" onchange="toggleSection('content-section',this)"><span class="toggle-slider"></span></label>
+          <div class="step-meta"><span class="step-badge">optional</span></div>
         </div>
-      </div>
-    </div>
-
-    <div id="content-section" style="display:none;margin-top:1.25rem">
-
-      <!-- ORDER INFORMATION -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order information</div><div class="section-divider-line"></div></div>
-      <div class="field"><label>Order description <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default · ↵ Enter = &lt;br/&gt;</span></label><textarea id="order-desc" placeholder="Keep an eye out for order updates..."></textarea></div>
-      <div class="field"><label>Family order description <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default · ↵ Enter = &lt;br/&gt;</span></label><textarea id="family-desc" placeholder="Keep an eye out for order updates... Remember, only %{owner_name} can add items..."></textarea></div>
-      <div class="field"><label>Pickup instructions <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default · ↵ Enter = &lt;br/&gt;</span></label><textarea id="pickup" placeholder="Pull into the designated parking area..." style="min-height:60px"></textarea></div>
-
-      <!-- FINE PRINT -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-teal">Fine print <span style="font-size:9px;opacity:0.7">NEW</span></div><div class="section-divider-line"></div></div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-fine-print','opts-fine-print')">
-          <input type="checkbox" class="opt-cb" id="cb-fine-print" onchange="toggleOpt('cb-fine-print','opts-fine-print')">
-          <span class="opt-title" id="lbl-fine-print">Fine print content</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">unchecked = empty string in output</span>
+        <div class="doc-drop" id="doc-drop-zone" onclick="document.getElementById('doc-upload-input').click()">
+          <input type="file" id="doc-upload-input" accept=".docx,.pdf" style="display:none">
+          <svg class="doc-drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 12 15 15"/></svg>
+          <div class="doc-drop-title">Drop a <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:11.5px">.docx</code> or <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:11.5px">.pdf</code> here, or <span class="doc-drop-link">browse</span></div>
+          <div class="doc-drop-hint">Retailer email configuration documents</div>
         </div>
-        <div class="opt-inputs" id="opts-fine-print">
-          <input type="text" id="inp-fine-print" placeholder='Maplebear Inc. (d/b/a Instacart) 50 Beale St. #600 San Francisco, CA 94105'>
+        <div id="doc-status" class="doc-status" style="display:none"></div>
+        <div id="doc-retailer-row" style="display:none">
+          <label class="doc-select-label">Select retailer to import</label>
+          <select id="doc-retailer-select" class="doc-select" onchange="previewSelectedRetailer()"></select>
+          <div id="doc-found-fields" class="doc-found"></div>
         </div>
+        <button id="doc-import-btn" class="doc-import-btn" onclick="importSelectedRetailer()" style="display:none">⬇ Import to form</button>
       </div>
 
-      <!-- FOOTER -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">Footer app store links <span style="font-size:9px;opacity:0.7">NEW</span></div><div class="section-divider-line"></div></div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-app-links','opts-app-links')">
-          <input type="checkbox" class="opt-cb" id="cb-app-links" onchange="toggleOpt('cb-app-links','opts-app-links')">
-          <span class="opt-title" id="lbl-app-links">App store links</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">unchecked = not added to output</span>
-        </div>
-        <div class="opt-inputs" id="opts-app-links">
-          <div class="sub-label">iOS App Store URL</div>
-          <input type="text" id="inp-appstore-link" placeholder="https://apps.apple.com/us/app/instacart-grocery-deliveries/id545599256">
-          <div class="sub-label">Google Play Store URL</div>
-          <input type="text" id="inp-playstore-link" placeholder="https://play.google.com/store/apps/details?id=com.instacart.client&hl=en_US&gl=US">
-        </div>
-      </div>
-
-      <!-- FOOTER LINKS -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">Footer links <span style="font-size:9px;opacity:0.7">NEW</span></div><div class="section-divider-line"></div></div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-footer-links','opts-footer-links')">
-          <input type="checkbox" class="opt-cb" id="cb-footer-links" onchange="toggleOpt('cb-footer-links','opts-footer-links')">
-          <span class="opt-title" id="lbl-footer-links">Custom help, privacy &amp; TOS links</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">unchecked = uses whitelabel/help, /privacy, /terms</span>
-        </div>
-        <div class="opt-inputs" id="opts-footer-links">
-          <div class="sub-label">Help link URL</div>
-          <input type="text" id="inp-help-link" placeholder="https://whitelabel.instacart.com/help">
-          <div class="sub-label">Privacy policy link URL</div>
-          <input type="text" id="inp-privacy-link" placeholder="https://whitelabel.instacart.com/privacy">
-          <div class="sub-label">Terms &amp; conditions link URL</div>
-          <input type="text" id="inp-tos-link" placeholder="https://whitelabel.instacart.com/terms">
-        </div>
-      </div>
-
-      <!-- ORDER CANCELLATION -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-orange">Order cancellation</div><div class="section-divider-line"></div></div>
-      <div class="field"><label>Cancellation body <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default · ↵ Enter = &lt;br/&gt;</span></label><textarea id="cancel-body" placeholder="This email is to confirm that you have canceled your order..."></textarea></div>
-      <div class="field">
-        <label>Cancellation image alt <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses retailer name</span></label>
-        <input type="text" id="inp-cancel-img-alt" placeholder="Retailer name (auto-filled if blank)">
-      </div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-cancel-img-extras','opts-cancel-img-extras')">
-          <input type="checkbox" class="opt-cb" id="cb-cancel-img-extras" onchange="toggleOpt('cb-cancel-img-extras','opts-cancel-img-extras')">
-          <span class="opt-title" id="lbl-cancel-img-extras">Image link &amp; path (advanced)</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">image_link &amp; image_path keys</span>
-        </div>
-        <div class="opt-inputs" id="opts-cancel-img-extras">
-          <div class="sub-label">Image link URL</div>
-          <input type="text" id="inp-cancel-img-link" placeholder="#">
-          <div class="sub-label">Image path <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— prefix auto-fills from slug</span></div>
-          <div class="path-input-group">
-            <span class="path-input-prefix" id="cancel-img-path-prefix">mailers/one_order_mailer/retailers/[slug]/</span>
-            <input type="text" class="path-input-suffix" id="inp-cancel-img-path" placeholder="order_cancellation.jpg">
-          </div>
-        </div>
-      </div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-cancel-subj','opts-cancel-subj')">
-          <input type="checkbox" class="opt-cb" id="cb-cancel-subj" onchange="toggleOpt('cb-cancel-subj','opts-cancel-subj')">
-          <span class="opt-title" id="lbl-cancel-subj">Email subject lines</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">unchecked = not added to output</span>
-        </div>
-        <div class="opt-inputs" id="opts-cancel-subj">
-          <div class="two-col">
-            <div>
-              <div class="sub-label">Delivery subject</div>
-              <input type="text" id="inp-cancel-subj-del" placeholder="%{warehouse_name} order canceled">
-            </div>
-            <div>
-              <div class="sub-label">Pickup subject</div>
-              <input type="text" id="inp-cancel-subj-pick" placeholder="%{warehouse_name} order canceled">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ORDER CONFIRMATION -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">Order confirmation <span style="font-size:9px;opacity:0.7">NEW</span></div><div class="section-divider-line"></div></div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-confirm-img','opts-confirm-img')">
-          <input type="checkbox" class="opt-cb" id="cb-confirm-img" onchange="toggleOpt('cb-confirm-img','opts-confirm-img')">
-          <span class="opt-title" id="lbl-confirm-img">Image alt text</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">unchecked = not added to output</span>
-        </div>
-        <div class="opt-inputs" id="opts-confirm-img">
-          <input type="text" id="inp-confirm-img-alt" placeholder="Retailer name (auto-filled if blank)">
-        </div>
-      </div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-confirm-img-extras','opts-confirm-img-extras')">
-          <input type="checkbox" class="opt-cb" id="cb-confirm-img-extras" onchange="toggleOpt('cb-confirm-img-extras','opts-confirm-img-extras')">
-          <span class="opt-title" id="lbl-confirm-img-extras">Image link &amp; path (advanced)</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">image_link &amp; image_path keys</span>
-        </div>
-        <div class="opt-inputs" id="opts-confirm-img-extras">
-          <div class="sub-label">Image link URL</div>
-          <input type="text" id="inp-confirm-img-link" placeholder="#">
-          <div class="sub-label">Image path <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— prefix auto-fills from slug</span></div>
-          <div class="path-input-group">
-            <span class="path-input-prefix" id="confirm-img-path-prefix">mailers/one_order_mailer/retailers/[slug]/</span>
-            <input type="text" class="path-input-suffix" id="inp-confirm-img-path" placeholder="order_confirmation.jpg">
-          </div>
-        </div>
-      </div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-confirm-subj','opts-confirm-subj')">
-          <input type="checkbox" class="opt-cb" id="cb-confirm-subj" onchange="toggleOpt('cb-confirm-subj','opts-confirm-subj')">
-          <span class="opt-title" id="lbl-confirm-subj">Email subject lines</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">unchecked = not added to output</span>
-        </div>
-        <div class="opt-inputs" id="opts-confirm-subj">
-          <div class="two-col">
-            <div>
-              <div class="sub-label">Delivery subject</div>
-              <input type="text" id="inp-confirm-subj-del" placeholder="%{warehouse_name} order confirmed!">
-            </div>
-            <div>
-              <div class="sub-label">Pickup subject</div>
-              <input type="text" id="inp-confirm-subj-pick" placeholder="%{warehouse_name} order confirmed!">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ORDER RECEIPT -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order receipt</div><div class="section-divider-line"></div></div>
-      <div class="field"><label>Receipt body <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default · ↵ Enter = &lt;br/&gt;</span></label><textarea id="receipt-body" placeholder="Thank you for shopping at [Retailer Name]..."></textarea></div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-receipt-header','opts-receipt-header')">
-          <input type="checkbox" class="opt-cb" id="cb-receipt-header" onchange="toggleOpt('cb-receipt-header','opts-receipt-header')">
-          <span class="opt-title" id="lbl-receipt-header">Generic header content (advanced)</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">order_receipt.generic_header.content block</span>
-        </div>
-        <div class="opt-inputs" id="opts-receipt-header">
-          <input type="text" id="inp-receipt-header-content" placeholder="%{first_name}, here's your receipt">
-        </div>
-      </div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-receipt-img','opts-receipt-img')">
-          <input type="checkbox" class="opt-cb" id="cb-receipt-img" onchange="toggleOpt('cb-receipt-img','opts-receipt-img')">
-          <span class="opt-title" id="lbl-receipt-img">Image alt text</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">unchecked = not added to output</span>
-        </div>
-        <div class="opt-inputs" id="opts-receipt-img">
-          <input type="text" id="inp-receipt-img-alt" placeholder="Retailer name (auto-filled if blank)">
-        </div>
-      </div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-receipt-subj','opts-receipt-subj')">
-          <input type="checkbox" class="opt-cb" id="cb-receipt-subj" onchange="toggleOpt('cb-receipt-subj','opts-receipt-subj')">
-          <span class="opt-title" id="lbl-receipt-subj">Email subject lines</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">unchecked = not added to output</span>
-        </div>
-        <div class="opt-inputs" id="opts-receipt-subj">
-          <div class="two-col">
-            <div>
-              <div class="sub-label">Delivery subject</div>
-              <input type="text" id="inp-receipt-subj-del" placeholder="%{warehouse_name} order receipt">
-            </div>
-            <div>
-              <div class="sub-label">Pickup subject</div>
-              <input type="text" id="inp-receipt-subj-pick" placeholder="%{warehouse_name} order receipt">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ORDER RATING -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order rating</div><div class="section-divider-line"></div></div>
-      <div class="two-col">
-        <div class="field"><label>Rate your order heading <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><input type="text" id="rate-heading" placeholder="We'd love to hear from you!"></div>
-        <div class="field"><label>Delivery rating content <span style="color:#374151;font-weight:400;text-transform:none;font-size:10px">— blank uses default</span></label><input type="text" id="rate-content" placeholder="Don't forget to rate and tip your shopper..."></div>
-      </div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-rating-pickup','opts-rating-pickup')">
-          <input type="checkbox" class="opt-cb" id="cb-rating-pickup" onchange="toggleOpt('cb-rating-pickup','opts-rating-pickup')">
-          <span class="opt-title" id="lbl-rating-pickup">Pickup rating content</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">unchecked = not added to output</span>
-        </div>
-        <div class="opt-inputs" id="opts-rating-pickup">
-          <input type="text" id="inp-rating-pickup" placeholder="Help us improve by rating your order experience and any replacement preferences.">
-        </div>
-      </div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-rate-legacy','opts-rate-legacy')">
-          <input type="checkbox" class="opt-cb" id="cb-rate-legacy" onchange="toggleOpt('cb-rate-legacy','opts-rate-legacy')">
-          <span class="opt-title" id="lbl-rate-legacy">Legacy rate_your_order placement</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">nest under order_receipt.generic_body</span>
-        </div>
-        <div class="opt-inputs" id="opts-rate-legacy">
-          <div style="font-size:11px;color:#94a3b8;background:#0f1117;border:1px solid #2a2d3e;padding:8px 12px;border-radius:8px;line-height:1.6">
-            When ON: <code style="background:#1e3a5f;color:#60a5fa;padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:11px">rate_your_order</code> emits inside <code style="background:#1e3a5f;color:#60a5fa;padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:11px">order_receipt.generic_body</code>.<br/>
-            When OFF (default): emits under <code style="background:#1e3a5f;color:#60a5fa;padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:11px">order_rating</code>.
-          </div>
-        </div>
-      </div>
-
-      <!-- ORDER UPSELL -->
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-teal">Order upsell <span style="font-size:9px;opacity:0.7">NEW</span></div><div class="section-divider-line"></div></div>
-      <div class="opt-block">
-        <div class="opt-header" onclick="toggleOpt('cb-upsell','opts-upsell')">
-          <input type="checkbox" class="opt-cb" id="cb-upsell" onchange="toggleOpt('cb-upsell','opts-upsell')">
-          <span class="opt-title" id="lbl-upsell">Order upsell section</span>
-          <span class="new-badge">new</span>
-          <span class="opt-desc">unchecked = not added to output</span>
-        </div>
-        <div class="opt-inputs" id="opts-upsell">
-          <div class="sub-label">Forgot something label</div>
-          <input type="text" id="inp-upsell-forgot" placeholder="Forgot something?">
-          <div class="sub-label">Add items message</div>
-          <input type="text" id="inp-upsell-add" placeholder="You can add items until your shopper checks out.">
-        </div>
-      </div>
-
-    </div><!-- /content-section -->
-  </div>
-
-  <!-- STEP 3 — EMAIL HEADINGS -->
-  <div class="card">
-    <div class="card-top" style="margin-bottom:0">
-      <div class="step-badge s3">3</div>
-      <div style="flex:1">
-        <div class="toggle-row">
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">01</div>
           <div>
-            <div class="card-title">Email headings &amp; order details &nbsp;<span style="font-size:11px;color:#475569;font-weight:400">Optional</span></div>
-            <div class="card-sub">Customise subject headings for cancellation, confirmation and receipt emails</div>
+            <div class="step-title">Core retailer details</div>
+            <div class="step-sub">All outputs derive from these values</div>
           </div>
-          <label class="toggle-switch"><input type="checkbox" id="toggle-headings" onchange="toggleSection('headings-section',this)"><span class="toggle-slider"></span></label>
+          <div class="step-meta"><span class="step-badge required">required</span></div>
+        </div>
+
+        <div class="field">
+          <label>Country / locale</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <div class="country-btn active" id="c-US" onclick="setCountry('US')">🇺🇸 United States <span class="locale-tag">en_US</span></div>
+            <div class="country-btn" id="c-CA" onclick="setCountry('CA')">🇨🇦 Canada <span class="locale-tag">en_CA</span></div>
+            <div class="country-btn" id="c-FR" onclick="setCountry('FR')">🇫🇷 France <span class="locale-tag">en_FR</span></div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label>Slug <span class="hint">e.g. longs-picpac-sfp</span></label>
+            <input type="text" id="slug" placeholder="longs-picpac-sfp" oninput="updatePreviews()">
+          </div>
+          <div class="field">
+            <label>Retailer name <span class="hint">e.g. Long's Pic Pac</span></label>
+            <input type="text" id="retailer-name" placeholder="Long's Pic Pac">
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label>Whitelabel domain</label>
+            <input type="text" id="whitelabel" placeholder="https://...whitelabel.instacart.com">
+          </div>
+          <div class="field">
+            <label>Retailer website <span class="hint">optional</span></label>
+            <input type="text" id="retailer-url" placeholder="https://www....com">
+          </div>
+        </div>
+
+        <div class="inline-toggle" style="margin-bottom:0;margin-top:6px">
+          <div class="toggle-row">
+            <label class="toggle-switch"><input type="checkbox" id="use-retailer-placeholder"><span class="toggle-slider"></span></label>
+            <div>
+              <div class="inline-toggle-title">Use <code style="background:var(--accent-bg);color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:11px">%{retailer_name}</code> placeholder instead of literal name</div>
+              <div class="inline-toggle-desc">OFF: <span class="mono">The Piggly Wiggly Team</span> · ON: <span class="mono">The %{retailer_name} Team</span>. Affects body defaults, footer label, and doc import.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="derived-row">
+          <div class="derived-cell">
+            <div class="derived-cell-label">locale.rb variable</div>
+            <div class="derived-cell-value empty" id="preview-locale">—</div>
+          </div>
+          <div class="derived-cell">
+            <div class="derived-cell-label">Folder name</div>
+            <div class="derived-cell-value empty" id="preview-folder">—</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div id="headings-section" style="display:none;margin-top:1.25rem">
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order cancellation headings</div><div class="section-divider-line"></div></div>
-      <div class="two-col">
-        <div class="field"><label>Delivery</label><input type="text" id="cancel-heading-delivery" placeholder="Your order has been canceled."></div>
-        <div class="field"><label>Pickup</label><input type="text" id="cancel-heading-pickup" placeholder="Your order has been canceled."></div>
+
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">02</div>
+          <div style="flex:1">
+            <div class="step-toggle-row">
+              <div>
+                <div class="step-title">Custom message content</div>
+                <div class="step-sub">Blank fields use defaults. ↵ Enter in body fields = <code style="background:var(--bg-muted);padding:1px 4px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--accent)">&lt;br/&gt;</code></div>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="toggle-content" onchange="toggleSection('content-section',this)"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <div id="content-section" style="display:none">
+
+          <div class="section-h"><div class="dot"></div><div class="label">Order information</div></div>
+          <div class="field"><label>Order description <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="order-desc" placeholder="Keep an eye out for order updates..."></textarea></div>
+          <div class="field"><label>Family order description <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="family-desc" placeholder="Keep an eye out... Remember only %{owner_name} can add items..."></textarea></div>
+          <div class="field"><label>Pickup instructions <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="pickup" placeholder="Pull into the designated parking area..." style="min-height:58px"></textarea></div>
+
+          <div class="section-h"><div class="dot"></div><div class="label">Fine print</div><span class="new-pill">NEW</span></div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-fine-print','opts-fine-print')">
+              <input type="checkbox" class="opt-cb" id="cb-fine-print" onchange="toggleOpt('cb-fine-print','opts-fine-print')">
+              <span class="opt-name" id="lbl-fine-print">Fine print content</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">unchecked = empty string</span>
+            </div>
+            <div class="opt-body" id="opts-fine-print"><input type="text" id="inp-fine-print" placeholder="Maplebear Inc. (d/b/a Instacart) 50 Beale St. #600 San Francisco, CA 94105"></div>
+          </div>
+
+          <div class="section-h"><div class="dot"></div><div class="label">Footer — app links</div><span class="new-pill">NEW</span></div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-app-links','opts-app-links')">
+              <input type="checkbox" class="opt-cb" id="cb-app-links" onchange="toggleOpt('cb-app-links','opts-app-links')">
+              <span class="opt-name" id="lbl-app-links">App store links</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">unchecked = not added</span>
+            </div>
+            <div class="opt-body" id="opts-app-links">
+              <div class="sub-l">iOS App Store URL</div>
+              <input type="text" id="inp-appstore-link" placeholder="https://apps.apple.com/...">
+              <div class="sub-l">Google Play URL</div>
+              <input type="text" id="inp-playstore-link" placeholder="https://play.google.com/...">
+            </div>
+          </div>
+
+          <div class="section-h"><div class="dot"></div><div class="label">Footer — custom links</div><span class="new-pill">NEW</span></div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-footer-links','opts-footer-links')">
+              <input type="checkbox" class="opt-cb" id="cb-footer-links" onchange="toggleOpt('cb-footer-links','opts-footer-links')">
+              <span class="opt-name" id="lbl-footer-links">Custom help, privacy &amp; TOS links</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">unchecked = uses whitelabel paths</span>
+            </div>
+            <div class="opt-body" id="opts-footer-links">
+              <div class="sub-l">Help link URL</div>
+              <input type="text" id="inp-help-link" placeholder="https://whitelabel.instacart.com/help">
+              <div class="sub-l">Privacy policy link URL</div>
+              <input type="text" id="inp-privacy-link" placeholder="https://whitelabel.instacart.com/privacy">
+              <div class="sub-l">Terms &amp; conditions link URL</div>
+              <input type="text" id="inp-tos-link" placeholder="https://whitelabel.instacart.com/terms">
+            </div>
+          </div>
+
+          <div class="section-h"><div class="dot"></div><div class="label">Order cancellation</div></div>
+          <div class="field"><label>Cancellation body <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="cancel-body" placeholder="This email is to confirm..."></textarea></div>
+          <div class="field"><label>Cancellation image alt <span class="hint">blank = retailer name</span></label><input type="text" id="inp-cancel-img-alt" placeholder="Retailer name (auto-filled if blank)"></div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-cancel-img-extras','opts-cancel-img-extras')">
+              <input type="checkbox" class="opt-cb" id="cb-cancel-img-extras" onchange="toggleOpt('cb-cancel-img-extras','opts-cancel-img-extras')">
+              <span class="opt-name" id="lbl-cancel-img-extras">Image link &amp; path (advanced)</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">image_link &amp; image_path keys</span>
+            </div>
+            <div class="opt-body" id="opts-cancel-img-extras">
+              <div class="sub-l">Image link URL</div>
+              <input type="text" id="inp-cancel-img-link" placeholder="#">
+              <div class="sub-l">Image path <span style="color:var(--text-4);font-weight:400">prefix auto from slug</span></div>
+              <div class="path-input-group">
+                <span class="path-input-prefix" id="cancel-img-path-prefix">mailers/one_order_mailer/retailers/[slug]/</span>
+                <input type="text" class="path-input-suffix" id="inp-cancel-img-path" placeholder="order_cancellation.jpg">
+              </div>
+            </div>
+          </div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-cancel-subj','opts-cancel-subj')">
+              <input type="checkbox" class="opt-cb" id="cb-cancel-subj" onchange="toggleOpt('cb-cancel-subj','opts-cancel-subj')">
+              <span class="opt-name" id="lbl-cancel-subj">Email subject lines</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">unchecked = not added</span>
+            </div>
+            <div class="opt-body" id="opts-cancel-subj">
+              <div class="two-col">
+                <div><div class="sub-l">Delivery</div><input type="text" id="inp-cancel-subj-del" placeholder="%{warehouse_name} order canceled"></div>
+                <div><div class="sub-l">Pickup</div><input type="text" id="inp-cancel-subj-pick" placeholder="%{warehouse_name} order canceled"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-h"><div class="dot"></div><div class="label">Order confirmation</div><span class="new-pill">NEW</span></div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-confirm-img','opts-confirm-img')">
+              <input type="checkbox" class="opt-cb" id="cb-confirm-img" onchange="toggleOpt('cb-confirm-img','opts-confirm-img')">
+              <span class="opt-name" id="lbl-confirm-img">Image alt text</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">unchecked = not added</span>
+            </div>
+            <div class="opt-body" id="opts-confirm-img"><input type="text" id="inp-confirm-img-alt" placeholder="Retailer name (auto-filled if blank)"></div>
+          </div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-confirm-img-extras','opts-confirm-img-extras')">
+              <input type="checkbox" class="opt-cb" id="cb-confirm-img-extras" onchange="toggleOpt('cb-confirm-img-extras','opts-confirm-img-extras')">
+              <span class="opt-name" id="lbl-confirm-img-extras">Image link &amp; path (advanced)</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">image_link &amp; image_path keys</span>
+            </div>
+            <div class="opt-body" id="opts-confirm-img-extras">
+              <div class="sub-l">Image link URL</div>
+              <input type="text" id="inp-confirm-img-link" placeholder="#">
+              <div class="sub-l">Image path <span style="color:var(--text-4);font-weight:400">prefix auto from slug</span></div>
+              <div class="path-input-group">
+                <span class="path-input-prefix" id="confirm-img-path-prefix">mailers/one_order_mailer/retailers/[slug]/</span>
+                <input type="text" class="path-input-suffix" id="inp-confirm-img-path" placeholder="order_confirmation.jpg">
+              </div>
+            </div>
+          </div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-confirm-subj','opts-confirm-subj')">
+              <input type="checkbox" class="opt-cb" id="cb-confirm-subj" onchange="toggleOpt('cb-confirm-subj','opts-confirm-subj')">
+              <span class="opt-name" id="lbl-confirm-subj">Email subject lines</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">unchecked = not added</span>
+            </div>
+            <div class="opt-body" id="opts-confirm-subj">
+              <div class="two-col">
+                <div><div class="sub-l">Delivery</div><input type="text" id="inp-confirm-subj-del" placeholder="%{warehouse_name} order confirmed!"></div>
+                <div><div class="sub-l">Pickup</div><input type="text" id="inp-confirm-subj-pick" placeholder="%{warehouse_name} order confirmed!"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-h"><div class="dot"></div><div class="label">Order receipt</div></div>
+          <div class="field"><label>Receipt body <span class="hint">↵ Enter = &lt;br/&gt;</span></label><textarea id="receipt-body" placeholder="Thank you for shopping at..."></textarea></div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-receipt-header','opts-receipt-header')">
+              <input type="checkbox" class="opt-cb" id="cb-receipt-header" onchange="toggleOpt('cb-receipt-header','opts-receipt-header')">
+              <span class="opt-name" id="lbl-receipt-header">Generic header content (advanced)</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">order_receipt.generic_header.content block</span>
+            </div>
+            <div class="opt-body" id="opts-receipt-header"><input type="text" id="inp-receipt-header-content" placeholder="%{first_name}, here's your receipt"></div>
+          </div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-receipt-img','opts-receipt-img')">
+              <input type="checkbox" class="opt-cb" id="cb-receipt-img" onchange="toggleOpt('cb-receipt-img','opts-receipt-img')">
+              <span class="opt-name" id="lbl-receipt-img">Image alt text</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">unchecked = not added</span>
+            </div>
+            <div class="opt-body" id="opts-receipt-img"><input type="text" id="inp-receipt-img-alt" placeholder="Retailer name (auto-filled if blank)"></div>
+          </div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-receipt-subj','opts-receipt-subj')">
+              <input type="checkbox" class="opt-cb" id="cb-receipt-subj" onchange="toggleOpt('cb-receipt-subj','opts-receipt-subj')">
+              <span class="opt-name" id="lbl-receipt-subj">Email subject lines</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">unchecked = not added</span>
+            </div>
+            <div class="opt-body" id="opts-receipt-subj">
+              <div class="two-col">
+                <div><div class="sub-l">Delivery</div><input type="text" id="inp-receipt-subj-del" placeholder="%{warehouse_name} order receipt"></div>
+                <div><div class="sub-l">Pickup</div><input type="text" id="inp-receipt-subj-pick" placeholder="%{warehouse_name} order receipt"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-h"><div class="dot"></div><div class="label">Order rating</div></div>
+          <div class="two-col">
+            <div class="field"><label>Rate your order heading</label><input type="text" id="rate-heading" placeholder="We'd love to hear from you!"></div>
+            <div class="field"><label>Delivery rating content</label><input type="text" id="rate-content" placeholder="Don't forget to rate and tip..."></div>
+          </div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-rating-pickup','opts-rating-pickup')">
+              <input type="checkbox" class="opt-cb" id="cb-rating-pickup" onchange="toggleOpt('cb-rating-pickup','opts-rating-pickup')">
+              <span class="opt-name" id="lbl-rating-pickup">Pickup rating content</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">unchecked = not added</span>
+            </div>
+            <div class="opt-body" id="opts-rating-pickup"><input type="text" id="inp-rating-pickup" placeholder="Help us improve by rating your order experience..."></div>
+          </div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-rate-legacy','opts-rate-legacy')">
+              <input type="checkbox" class="opt-cb" id="cb-rate-legacy" onchange="toggleOpt('cb-rate-legacy','opts-rate-legacy')">
+              <span class="opt-name" id="lbl-rate-legacy">Legacy rate_your_order placement</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">nest under order_receipt.generic_body</span>
+            </div>
+            <div class="opt-body" id="opts-rate-legacy">
+              <div style="font-size:11.5px;color:var(--text-3);background:var(--bg-card);border:1px solid var(--border);padding:8px 10px;border-radius:6px;line-height:1.6">
+                When ON: <code style="background:var(--accent-bg);color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10.5px">rate_your_order</code> emits inside <code style="background:var(--accent-bg);color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10.5px">order_receipt.generic_body</code>. OFF: stays under <code style="background:var(--accent-bg);color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10.5px">order_rating</code>.
+              </div>
+            </div>
+          </div>
+
+          <div class="section-h"><div class="dot"></div><div class="label">Order upsell</div><span class="new-pill">NEW</span></div>
+          <div class="opt">
+            <div class="opt-h" onclick="toggleOpt('cb-upsell','opts-upsell')">
+              <input type="checkbox" class="opt-cb" id="cb-upsell" onchange="toggleOpt('cb-upsell','opts-upsell')">
+              <span class="opt-name" id="lbl-upsell">Order upsell section</span>
+              <span class="opt-new">new</span>
+              <span class="opt-desc">unchecked = not added</span>
+            </div>
+            <div class="opt-body" id="opts-upsell">
+              <div class="sub-l">Forgot something label</div>
+              <input type="text" id="inp-upsell-forgot" placeholder="Forgot something?">
+              <div class="sub-l">Add items message</div>
+              <input type="text" id="inp-upsell-add" placeholder="You can add items until your shopper checks out.">
+            </div>
+          </div>
+
+        </div>
       </div>
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-blue">Order confirmation headings</div><div class="section-divider-line"></div></div>
-      <div class="two-col">
-        <div class="field"><label>Delivery</label><input type="text" id="confirm-heading-delivery" placeholder="Hi %{first_name}, your [Retailer] order is all set."></div>
-        <div class="field"><label>Pickup</label><input type="text" id="confirm-heading-pickup" placeholder="Hi %{first_name}, your [Retailer] order is all set."></div>
+
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">03</div>
+          <div style="flex:1">
+            <div class="step-toggle-row">
+              <div>
+                <div class="step-title">Email headings &amp; order details</div>
+                <div class="step-sub">Customise subject headings for cancellation, confirmation &amp; receipt</div>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="toggle-headings" onchange="toggleSection('headings-section',this)"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <div id="headings-section" style="display:none">
+          <div class="section-h"><div class="dot"></div><div class="label">Cancellation headings</div></div>
+          <div class="two-col">
+            <div class="field"><label>Delivery</label><input type="text" id="cancel-heading-delivery" placeholder="Your order has been canceled."></div>
+            <div class="field"><label>Pickup</label><input type="text" id="cancel-heading-pickup" placeholder="Your order has been canceled."></div>
+          </div>
+          <div class="section-h"><div class="dot"></div><div class="label">Confirmation headings</div></div>
+          <div class="two-col">
+            <div class="field"><label>Delivery</label><input type="text" id="confirm-heading-delivery" placeholder="Hi %{first_name}, your [Retailer] order is all set."></div>
+            <div class="field"><label>Pickup</label><input type="text" id="confirm-heading-pickup" placeholder="Hi %{first_name}, your [Retailer] order is all set."></div>
+          </div>
+          <div class="section-h"><div class="dot"></div><div class="label">Receipt headings</div></div>
+          <div class="two-col">
+            <div class="field"><label>Delivery</label><input type="text" id="receipt-heading-delivery" placeholder="%{first_name}, here's your receipt"></div>
+            <div class="field"><label>Pickup</label><input type="text" id="receipt-heading-pickup" placeholder="%{first_name}, here's your receipt"></div>
+          </div>
+          <div class="section-h"><div class="dot"></div><div class="label">Order details</div></div>
+          <div class="field" style="margin-bottom:0"><label>Cancellation items heading</label><input type="text" id="cancel-items-heading" placeholder="Canceled Items"></div>
+        </div>
       </div>
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-green">Order receipt headings</div><div class="section-divider-line"></div></div>
-      <div class="two-col">
-        <div class="field"><label>Delivery</label><input type="text" id="receipt-heading-delivery" placeholder="%{first_name}, here's your receipt"></div>
-        <div class="field"><label>Pickup</label><input type="text" id="receipt-heading-pickup" placeholder="%{first_name}, here's your receipt"></div>
+
+      <div class="inline-toggle" style="margin-bottom:14px">
+        <div class="toggle-row">
+          <label class="toggle-switch"><input type="checkbox" id="toggle-cc-cmd"><span class="toggle-slider"></span></label>
+          <div>
+            <div class="inline-toggle-title">Include Claude Code command (Output 6)</div>
+            <div class="inline-toggle-desc">OFF: hide CLI command output · ON: generate <code style="background:var(--bg-muted);color:var(--accent);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:11px">/create-email-template</code> command</div>
+          </div>
+        </div>
       </div>
-      <div class="section-divider"><div class="section-divider-line"></div><div class="section-label sl-purple">Order details</div><div class="section-divider-line"></div></div>
-      <div class="field" style="margin-bottom:0"><label>Cancellation items heading</label><input type="text" id="cancel-items-heading" placeholder="Canceled Items"></div>
-    </div>
+
+      <button class="generate-btn" onclick="generate()">⚡ Generate all outputs</button>
+
+    </main>
+
+    <aside class="studio-right">
+      <div class="preview-header">
+        <div class="preview-tabs">
+          <button class="preview-tab active" data-tab="confirmation">Confirmation</button>
+          <button class="preview-tab" data-tab="receipt">Receipt</button>
+          <button class="preview-tab" data-tab="cancellation">Cancellation</button>
+        </div>
+        <div class="live-badge"><div class="live-dot"></div>Live</div>
+      </div>
+      <div class="preview-area">
+        <div class="preview-mobile">
+          <div class="preview-meta">
+            <span class="meta-label">Subject:</span>
+            <span id="preview-subject">Your order is confirmed</span>
+          </div>
+          <div class="preview-email">
+
+            <div class="pe-top-bar">
+              <div class="pe-top-logo" id="preview-logo-top">YOUR RETAILER</div>
+            </div>
+
+            <div class="pe-hero" id="preview-hero" style="display:none">
+              <div class="pe-hero-banner"><span id="preview-hero-name">YOUR RETAILER</span></div>
+            </div>
+
+            <div class="pe-heading" id="preview-heading">Hi Jay, your order is all set</div>
+
+            <div class="pe-info-group" id="preview-info-group" style="display:none">
+              <div class="pe-info">
+                <div class="pe-info-label">Delivery Address</div>
+                <div class="pe-info-val pe-link">10 Spring Street</div>
+                <div class="pe-info-val pe-link">Charleston, WV 25302</div>
+                <div class="pe-info-val">4168969450</div>
+              </div>
+              <div class="pe-info">
+                <div class="pe-info-label">Delivery Time</div>
+                <div class="pe-info-val">Jan 10 by 11pm</div>
+              </div>
+            </div>
+
+            <div class="pe-body" id="preview-body">Keep an eye out for order updates, and any messages from your shopper if replacements are needed.<br><br>Thanks,<br>The Team</div>
+
+            <div class="pe-cta-link" id="preview-cta">View Order Status</div>
+
+            <div class="pe-divider"></div>
+
+            <div id="preview-upsell-section" style="display:none">
+              <div class="pe-upsell">
+                <div class="pe-upsell-text"><strong id="preview-upsell-forgot">Forgot something?</strong> <span id="preview-upsell-add">You can add items until your shopper checks out.</span></div>
+              </div>
+              <div class="pe-cta-link">Add items to order</div>
+              <div class="pe-divider"></div>
+            </div>
+
+            <div class="pe-section-h" id="preview-items-heading">Order Details</div>
+            <div class="pe-order-id" id="preview-order-id">Order ID: # 18983848525411916</div>
+            <div class="pe-items" id="preview-items"></div>
+            <div class="pe-totals" id="preview-totals"></div>
+
+            <div class="pe-disclaimer" id="preview-disclaimer" style="display:none"></div>
+
+            <div class="pe-foot">
+              <div class="pe-foot-logo" id="preview-logo-bottom">YOUR RETAILER</div>
+
+              <div class="pe-app-row">
+                <div class="pe-app-btn"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>App Store</div>
+                <div class="pe-app-btn"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zM14.499 12.708l2.62 2.62-10.79 6.213zM17.625 9.32a1 1 0 0 1 0 1.736L15.292 12 12.5 9.207l5.125-3.052zM6.328 1.461l10.791 6.213L14.499 11.293 6.328 1.46z"/></svg>Google Play</div>
+              </div>
+
+              <div class="pe-social">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06c0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7c4.78-.75 8.44-4.9 8.44-9.9 0-5.53-4.5-10.02-10-10.02z"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+              </div>
+
+              <div class="pe-links">
+                <a id="preview-footer-retailer">Your Retailer</a>
+                <a>Help</a>
+                <a>Privacy Policy</a>
+              </div>
+              <div class="pe-tos">
+                <a>Terms &amp; Conditions</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </aside>
+
   </div>
 
-  <!-- OUTPUT 6 TOGGLE -->
-  <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:#1a1d27;border:1px solid #2a2d3e;border-radius:10px;margin-bottom:12px">
-    <label class="toggle-switch" style="flex-shrink:0">
-      <input type="checkbox" id="toggle-cc-cmd">
-      <span class="toggle-slider"></span>
-    </label>
-    <div style="flex:1;line-height:1.4">
-      <div style="font-size:12px;color:#e2e8f0;font-weight:600">Include Claude Code command (Output 6)</div>
-      <div style="font-size:11px;color:#64748b;margin-top:2px">OFF (default): hide CLI command output · ON: generate <code style="color:#2dd4bf;font-family:'Courier New',monospace">/create-email-template</code> command for terminal automation</div>
-    </div>
-  </div>
+  <section class="studio-bottom">
 
-  <button class="btn-generate" onclick="generate()">⚡ &nbsp;Generate all outputs</button>
+    <div class="output-wrap" id="output-wrap">
+      <div class="section-title">Generated outputs</div>
+      <div class="section-meta" id="output-info">Configure the form above and click Generate.</div>
 
-  <!-- OUTPUTS -->
-  <div class="output-wrap" id="output-wrap">
-
-    <div class="section-divider" style="margin-top:2rem">
-      <div class="section-divider-line"></div><div class="section-label sl-purple">Output 1 — locale.rb variable</div><div class="section-divider-line"></div>
-    </div>
-    <div class="output-block">
-      <div class="output-block-header">
-        <div class="output-block-meta">
-          <div class="output-block-title">locale.rb variable</div>
-          <div class="output-block-hint">Add to <code>locale.rb</code> — Ruby locale identifier.</div>
+      <div class="output-section-div"><div class="num">01</div><div class="title">locale.rb variable</div><div class="line"></div></div>
+      <div class="output-block">
+        <div class="output-block-header">
+          <div class="output-block-meta">
+            <div class="output-block-title">locale.rb variable</div>
+            <div class="output-block-hint">Add to <code>locale.rb</code> — Ruby locale identifier</div>
+          </div>
+          <button class="btn-copy" onclick="copyBox('box1',this)">Copy</button>
         </div>
-        <button class="btn-copy bc-purple" onclick="copyBox('box1',this)">Copy</button>
+        <div class="output-box" id="box1"></div>
       </div>
-      <div class="output-box" id="box1"></div>
-    </div>
 
-    <div class="section-divider">
-      <div class="section-divider-line"></div><div class="section-label sl-blue">Output 2 — Folder name</div><div class="section-divider-line"></div>
-    </div>
-    <div class="output-block">
-      <div class="output-block-header">
-        <div class="output-block-meta">
-          <div class="output-block-title">Email template folder name</div>
-          <div class="output-block-hint">Create the email template folder using this name.</div>
+      <div class="output-section-div"><div class="num">02</div><div class="title">Folder name</div><div class="line"></div></div>
+      <div class="output-block">
+        <div class="output-block-header">
+          <div class="output-block-meta">
+            <div class="output-block-title">Email template folder name</div>
+            <div class="output-block-hint">Create the email template folder using this name</div>
+          </div>
+          <button class="btn-copy" onclick="copyBox('box2',this)">Copy</button>
         </div>
-        <button class="btn-copy bc-blue" onclick="copyBox('box2',this)">Copy</button>
+        <div class="output-box" id="box2"></div>
       </div>
-      <div class="output-box" id="box2"></div>
-    </div>
 
-    <div class="section-divider">
-      <div class="section-divider-line"></div><div class="section-label sl-green">Output 3 — Template 1 (one_order_mailer)</div><div class="section-divider-line"></div>
-    </div>
-    <div class="output-block">
-      <div class="output-block-header">
-        <div class="output-block-meta">
-          <div class="output-block-title">one_order_mailer YAML</div>
-          <div class="output-block-hint">Save as <code>one_order_mailer.yml</code> — add this under <code id="hint-folder-t1">en-US-[slug]</code></div>
+      <div class="output-section-div"><div class="num">03</div><div class="title">one_order_mailer.yml</div><div class="line"></div></div>
+      <div class="output-block">
+        <div class="output-block-header">
+          <div class="output-block-meta">
+            <div class="output-block-title">one_order_mailer YAML</div>
+            <div class="output-block-hint">Save as <code>one_order_mailer.yml</code> — add this under <code id="hint-folder-t1">en_US-[slug]</code></div>
+          </div>
+          <button class="btn-copy" onclick="copyBox('box3',this)">Copy</button>
+          <button class="btn-dl" onclick="downloadYML('box3','one_order_mailer.yml')">⬇ .yml</button>
         </div>
-        <button class="btn-copy bc-green" onclick="copyBox('box3',this)">Copy</button>
-        <button class="btn-dl" onclick="downloadYML('box3','one_order_mailer.yml')">⬇ Export .yml</button>
+        <div class="output-box" id="box3"></div>
       </div>
-      <div class="output-box" id="box3"></div>
-    </div>
 
-    <div class="section-divider">
-      <div class="section-divider-line"></div><div class="section-label sl-orange">Output 4 — Template 2 (class_scoped)</div><div class="section-divider-line"></div>
-    </div>
-    <div class="output-block">
-      <div class="output-block-header">
-        <div class="output-block-meta">
-          <div class="output-block-title">class_scoped YAML</div>
-          <div class="output-block-hint">Save as <code>orders.yml</code> — add this under <code id="hint-folder-t2">en-US-[slug]</code></div>
+      <div class="output-section-div"><div class="num">04</div><div class="title">orders.yml (class_scoped)</div><div class="line"></div></div>
+      <div class="output-block">
+        <div class="output-block-header">
+          <div class="output-block-meta">
+            <div class="output-block-title">class_scoped YAML</div>
+            <div class="output-block-hint">Save as <code>orders.yml</code> — add this under <code id="hint-folder-t2">en_US-[slug]</code></div>
+          </div>
+          <button class="btn-copy" onclick="copyBox('box4',this)">Copy</button>
+          <button class="btn-dl" onclick="downloadYML('box4','orders.yml')">⬇ .yml</button>
         </div>
-        <button class="btn-copy bc-orange" onclick="copyBox('box4',this)">Copy</button>
-        <button class="btn-dl btn-dl-orange" onclick="downloadYML('box4','orders.yml')">⬇ Export .yml</button>
+        <div class="output-box" id="box4"></div>
       </div>
-      <div class="output-box" id="box4"></div>
-    </div>
 
-    <!-- EXPORT AS ZIP -->
-    <div style="margin:20px 0">
-      <button class="btn-zip" onclick="exportZip()">📦 &nbsp;Export as ZIP — both templates in folder</button>
-    </div>
+      <div style="margin:18px 0"><button class="btn-zip" onclick="exportZip()">📦 Export as ZIP — both templates in folder</button></div>
 
-    <div class="info-box" id="output-info"></div>
-
-    <!-- BRANCH NAME -->
-    <div class="section-divider">
-      <div class="section-divider-line"></div><div class="section-label sl-purple">Output 5 — Branch name</div><div class="section-divider-line"></div>
-    </div>
-    <div class="output-block">
-      <div class="output-block-header">
-        <div class="output-block-meta">
-          <div class="output-block-title">Git branch name</div>
-          <div class="output-block-hint">Use this as the branch name when creating a PR for the email templates.</div>
+      <div class="output-section-div"><div class="num">05</div><div class="title">Git branch name</div><div class="line"></div></div>
+      <div class="output-block">
+        <div class="output-block-header">
+          <div class="output-block-meta">
+            <div class="output-block-title">Git branch name</div>
+            <div class="output-block-hint">Use this when creating a PR for the email templates</div>
+          </div>
+          <button class="btn-copy" onclick="copyBranch(this)">Copy</button>
         </div>
-        <button class="btn-copy bc-purple" onclick="copyBranch(this)">Copy</button>
-      </div>
-      <div class="branch-output">
-        <span class="branch-output-val" id="branch-name">—</span>
-      </div>
-    </div>
-
-    <!-- CLAUDE CODE COMMAND -->
-    <div id="output-6-wrap" style="display:none">
-    <div class="section-divider">
-      <div class="section-divider-line"></div><div class="section-label sl-teal">Output 6 — Claude Code command</div><div class="section-divider-line"></div>
-    </div>
-    <div class="output-block">
-      <div class="output-block-header">
-        <div class="output-block-meta">
-          <div class="output-block-title">Claude Code command</div>
-          <div class="output-block-hint">Copy this command and paste into Claude Code terminal to auto-create the branch, files, and draft PR.</div>
-        </div>
-        <button class="btn-copy bc-teal" onclick="copyCCCmd(this)" style="background:#1e3d3d;border-color:#0d948844;color:#2dd4bf">Copy command</button>
-      </div>
-      <div class="output-box" id="box-cc-cmd" style="line-height:1.6;font-size:13px;color:#2dd4bf;white-space:pre-wrap;word-break:break-all"></div>
-    </div>
-    </div>
-  </div>
-
-  <!-- QA SECTION -->
-  <div class="qa-wrap">
-    <div class="section-divider" style="margin-top:2rem">
-      <div class="section-divider-line"></div><div class="section-label sl-red">🔍 QA validator — diff checker</div><div class="section-divider-line"></div>
-    </div>
-    <div class="card">
-      <div class="card-top">
-        <div class="step-badge s4">QA</div>
-        <div>
-          <div class="card-title">Template diff validator</div>
-          <div class="card-sub">Paste the generated template on the left and the actual deployed/file content on the right — the tool highlights every difference</div>
+        <div class="branch-output">
+          <span class="branch-output-val" id="branch-name">—</span>
         </div>
       </div>
+
+      <div id="output-6-wrap" style="display:none">
+      <div class="output-section-div"><div class="num">06</div><div class="title">Claude Code command</div><div class="line"></div></div>
+      <div class="output-block">
+        <div class="output-block-header">
+          <div class="output-block-meta">
+            <div class="output-block-title">Claude Code command</div>
+            <div class="output-block-hint">Paste into Claude Code terminal to auto-create branch, files, and draft PR</div>
+          </div>
+          <button class="btn-copy" onclick="copyCCCmd(this)">Copy</button>
+        </div>
+        <div class="output-box" id="box-cc-cmd" style="line-height:1.6;font-size:12.5px;color:var(--accent);white-space:pre-wrap;word-break:break-all"></div>
+      </div>
+      </div>
+    </div>
+
+    <div class="output-section-div" style="margin-top:40px"><div class="num">QA</div><div class="title">Template diff validator</div><div class="line"></div></div>
+    <div class="qa-wrap">
+      <div class="section-title" style="font-size:14px;margin-bottom:2px">Diff checker</div>
+      <div class="section-meta" style="margin-bottom:14px">Paste the generated template (left) and the actual deployed/file content (right) — see every difference highlighted</div>
       <div class="qa-cols">
         <div>
-          <div class="qa-col-label" style="color:#60a5fa">Expected (generated)</div>
-          <textarea id="qa-expected" placeholder="Paste the generated template here (from Output 3 or 4 above)..."></textarea>
+          <div class="qa-col-label" style="color:var(--accent)">Expected (generated)</div>
+          <textarea id="qa-expected" placeholder="Paste generated template here (from Output 3 or 4 above)..."></textarea>
         </div>
         <div>
-          <div class="qa-col-label" style="color:#4ade80">Actual (deployed / file content)</div>
-          <textarea id="qa-actual" placeholder="Paste the actual content from the file or deployed environment here..."></textarea>
+          <div class="qa-col-label" style="color:var(--success)">Actual (deployed / file content)</div>
+          <textarea id="qa-actual" placeholder="Paste actual content from file or deployed environment..."></textarea>
         </div>
       </div>
-      <button class="btn-validate" onclick="runDiff()">🔍 &nbsp;Validate &amp; highlight differences</button>
+      <button class="btn-validate" onclick="runDiff()">🔍 Validate &amp; highlight differences</button>
       <div class="diff-wrap" id="diff-wrap">
-        <div style="margin-top:1.25rem"></div>
+        <div style="margin-top:14px"></div>
         <div class="match-banner" id="diff-banner"></div>
         <div class="diff-summary" id="diff-summary"></div>
         <div class="diff-mode-toggle">
@@ -793,22 +929,24 @@
           <div class="diff-mode-btn" id="dm-inline" onclick="setDiffMode('inline')">Unified inline</div>
         </div>
         <div class="diff-legend">
-          <span><span class="dl-swatch" style="background:#0d2010;border:1px solid #16a34a55"></span><span style="color:#64748b">Missing in actual</span></span>
-          <span><span class="dl-swatch" style="background:#200d0d;border:1px solid #dc262655"></span><span style="color:#64748b">Extra in actual</span></span>
-          <span><span class="dl-swatch" style="background:#1e1a0a;border:1px solid #d9770655"></span><span style="color:#64748b">Changed (word-level highlight)</span></span>
-          <span><span class="dl-swatch" style="background:#1e2130;border:1px solid #2a2d3e"></span><span style="color:#64748b">Matching</span></span>
+          <span><span class="dl-swatch" style="background:rgba(52,211,153,0.15)"></span>Missing in actual</span>
+          <span><span class="dl-swatch" style="background:rgba(248,113,113,0.15)"></span>Extra in actual</span>
+          <span><span class="dl-swatch" style="background:rgba(251,191,36,0.15)"></span>Changed (word-level)</span>
+          <span><span class="dl-swatch" style="background:rgba(255,255,255,0.04)"></span>Matching</span>
         </div>
         <div id="diff-view-side"></div>
         <div id="diff-view-inline" style="display:none"></div>
       </div>
     </div>
-  </div>
 
-  <div class="footer">
-    <span>Instacart SDA Toolbox</span>
-    <div class="footer-dot"></div>
-    <span>Email Template Generator</span>
-  </div>
+    <div class="studio-footer">
+      <span>Instacart SDA Toolbox</span>
+      <div class="dot"></div>
+      <span>Studio · Email Template Generator</span>
+    </div>
+
+  </section>
+
 </div>
 
 <script>
@@ -1129,8 +1267,8 @@
         parseConfigTable(el, currentSection, retailersByName);
       }
     });
-    return Object.keys(retailersByName).map(function(name) {
-      return { name: name, isPreParsed: true, data: retailersByName[name] };
+    return Object.keys(retailersByName).map(function(key) {
+      return { name: retailersByName[key].retailerName, isPreParsed: true, data: retailersByName[key] };
     });
   }
 
@@ -1140,25 +1278,30 @@
     if (/GENERAL\s*CONFIG/.test(t))  return 'GENERAL';
     if (/ORDER\s*CONFIRMATION/.test(t)) return 'CONFIRMATION';
     if (/ORDER\s*RECEIPT/.test(t))   return 'RECEIPT';
-    if (/ORDER\s*CANCELLATION/.test(t)) return 'CANCELLATION';
+    if (/ORDER\s*CANCEL/.test(t))    return 'CANCELLATION';
     return '';
   }
 
   function parseConfigTable(table, section, retailersByName) {
     var rows = Array.from(table.querySelectorAll('tr'));
     if (rows.length < 2) return;
-    var headerCells = Array.from(rows[0].querySelectorAll('th, td')).map(function(c) { return c.textContent.trim(); });
+    var headerCells = Array.from(rows[0].querySelectorAll('th, td')).map(function(c) {
+      return c.textContent.replace(/\s+/g, ' ').trim();
+    });
     var configCol = headerCells.findIndex(function(h) { return /^configuration$/i.test(h); });
     if (configCol === -1) return;
     var retailerCols = [];
     headerCells.forEach(function(h, idx) {
       if (idx === configCol) return;
-      if (/^id$/i.test(h)) return;
+      if (!h) return;
+      if (/^(id|ref|#|no\.?)$/i.test(h)) return;
       if (/^default\s*value$/i.test(h)) return;
-      if (!h.trim()) return;
-      var m = h.match(/^(.+?)\s+Value$/i);
-      var name = (m ? m[1] : h).trim();
-      retailerCols.push({ idx: idx, name: name });
+      if (/^example\s*values?$/i.test(h)) return;
+      var m = h.match(/^(.+?)\s+value$/i);
+      if (!m) return;
+      var name = m[1].trim();
+      var canonical = name.toLowerCase().replace(/[''`]/g, '').replace(/\s+/g, ' ').trim();
+      retailerCols.push({ idx: idx, name: name, key: canonical });
     });
     for (var i = 1; i < rows.length; i++) {
       var cells = Array.from(rows[i].querySelectorAll('td'));
@@ -1172,16 +1315,16 @@
         var rawValue = paragraphText(cells[col.idx]).trim();
         var value = normalizeTableValue(rawValue);
         if (!value) return;
-        if (!retailersByName[col.name]) {
-          retailersByName[col.name] = createEmptyRetailerData(col.name);
+        if (!retailersByName[col.key]) {
+          retailersByName[col.key] = createEmptyRetailerData(col.name);
         }
         if (fieldKey === 'appLinks') {
           var iosM    = rawValue.match(/https?:\/\/apps\.apple\.com\/[^\s)<>]+/i);
           var googleM = rawValue.match(/https?:\/\/play\.google\.com\/[^\s)<>]+/i);
-          if (iosM)    retailersByName[col.name].appstoreLink  = iosM[0];
-          if (googleM) retailersByName[col.name].playstoreLink = googleM[0];
+          if (iosM)    retailersByName[col.key].appstoreLink  = iosM[0];
+          if (googleM) retailersByName[col.key].playstoreLink = googleM[0];
         } else {
-          retailersByName[col.name][fieldKey] = value;
+          retailersByName[col.key][fieldKey] = value;
         }
       });
     }
@@ -1191,6 +1334,11 @@
     if (!text) return '';
     var t = text.trim();
     if (/^(N\/A|Not needed|Not Needed|TBD|TBA|---?|—|–|None)$/i.test(t)) return '';
+    if (/^use\s+default$/i.test(t)) return '';
+    if (/^use\s+provided\s+image$/i.test(t)) return '';
+    if (/^use\s+the\s+default$/i.test(t)) return '';
+    if (/^retailer\s+logo$/i.test(t)) return '';
+    if (/^inherited\s+from\s+pre[-\s]?existing/i.test(t)) return '';
     return t;
   }
 
@@ -2234,9 +2382,9 @@
       if (d.type === 'equal') {
         html += '<div class="uni-row uni-ok"><div class="uni-num">' + d.ei + '</div><div class="uni-num">' + d.ai + '</div><div class="uni-content">' + esc(d.exp) + '</div></div>';
       } else if (d.type === 'missing') {
-        html += '<div class="uni-row uni-add"><div class="uni-num">' + d.ei + '</div><div class="uni-num" style="color:#4a2020">—</div><div class="uni-content">+ ' + esc(d.exp) + '<span class="uni-tag">missing in actual</span></div></div>';
+        html += '<div class="uni-row uni-add"><div class="uni-num">' + d.ei + '</div><div class="uni-num" style="color:#71717a">—</div><div class="uni-content">+ ' + esc(d.exp) + '<span class="uni-tag">missing in actual</span></div></div>';
       } else if (d.type === 'extra') {
-        html += '<div class="uni-row uni-del"><div class="uni-num" style="color:#4a2020">—</div><div class="uni-num">' + d.ai + '</div><div class="uni-content">− ' + esc(d.act) + '<span class="uni-tag">extra in actual</span></div></div>';
+        html += '<div class="uni-row uni-del"><div class="uni-num" style="color:#71717a">—</div><div class="uni-num">' + d.ai + '</div><div class="uni-content">− ' + esc(d.act) + '<span class="uni-tag">extra in actual</span></div></div>';
       } else if (d.type === 'changed') {
         html += '<div class="uni-row uni-chg"><div class="uni-num">' + d.ei + '</div><div class="uni-num">' + d.ai + '</div><div class="uni-content">~ ' + d.expHtml + ' → ' + d.actHtml + '<span class="uni-tag">changed</span></div></div>';
       }
@@ -2281,6 +2429,170 @@
     document.getElementById('diff-wrap').style.display = 'block';
     document.getElementById('diff-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+
+  /* ════════════════════════════════════════════════════════════
+     STUDIO LIVE PREVIEW
+     Re-renders the email mockup in the right pane whenever
+     anything in the form changes. Three tabs (confirmation /
+     receipt / cancellation) each pull from the relevant fields,
+     fall back to defaults when blank, and substitute
+     %{first_name} with a sample name for readability.
+  ════════════════════════════════════════════════════════════ */
+  var currentPreviewTab = 'confirmation';
+
+  var PREVIEW_NAMES = [
+    { first: 'John',   last: 'Smith' },
+    { first: 'Alex',   last: 'Johnson' },
+    { first: 'Sam',    last: 'Williams' },
+    { first: 'Casey',  last: 'Brown' },
+    { first: 'Taylor', last: 'Davis' },
+    { first: 'Morgan', last: 'Miller' },
+    { first: 'Riley',  last: 'Wilson' },
+    { first: 'Chris',  last: 'Moore' },
+    { first: 'Jordan', last: 'Anderson' },
+    { first: 'Avery',  last: 'Thomas' }
+  ];
+  var _pn = PREVIEW_NAMES[Math.floor(Math.random() * PREVIEW_NAMES.length)];
+  var previewFirstName = _pn.first;
+  var previewFullName  = _pn.first + ' ' + _pn.last;
+  var previewCardSuffix = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+  var previewDisclaimerText = 'This is not a receipt. Your Visa ' + previewCardSuffix + ' card has been authorized for $12.74. The final amount charged may be different based on special requests, added items, replacement items or weight adjustments. You will receive a finalized receipt once your order is completed. Your card statement will reflect the final amount charged within 7-10 business days of your order being completed.';
+
+  function switchPreviewTab(tab) {
+    currentPreviewTab = tab;
+    document.querySelectorAll('.preview-tab').forEach(function(el) {
+      el.classList.toggle('active', el.dataset.tab === tab);
+    });
+    updatePreview();
+  }
+
+  function bodyToPreviewHtml(text) {
+    if (!text) return '';
+    text = text.replace(/<br\s*\/?>/gi, '\n');
+    return text.split(/\r?\n/).map(function(line) {
+      return line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }).join('<br>');
+  }
+
+  function updatePreview() {
+    var retailer = gv('retailer-name') || 'Your Retailer';
+    var ph = document.getElementById('use-retailer-placeholder');
+    var usePlaceholder = ph && ph.checked;
+    var retailerToken = usePlaceholder ? '%{retailer_name}' : retailer;
+
+    var heading, body, ctaText, subject;
+    var tab = currentPreviewTab;
+
+    if (tab === 'confirmation') {
+      heading = gv('confirm-heading-delivery') || ('Hi %{first_name}, your ' + retailerToken + ' order is all set');
+      body    = gv('order-desc') || fillR(D.orderDesc, retailerToken);
+      ctaText = 'View Order Status';
+      subject = 'Your ' + retailer + ' order is confirmed for 01/10/26';
+    } else if (tab === 'receipt') {
+      heading = gv('receipt-heading-delivery') || "%{first_name}, here's your receipt";
+      body    = gv('receipt-body') || fillR(D.receiptBody, retailerToken);
+      ctaText = 'View receipt';
+      subject = 'Your ' + retailer + ' order receipt';
+    } else {
+      heading = gv('cancel-heading-delivery') || 'Your order has been canceled.';
+      body    = gv('cancel-body') || fillR(D.cancelBody, retailerToken);
+      ctaText = 'Begin a new order';
+      subject = retailer + ' order canceled';
+    }
+
+    heading = heading.replace(/%\{first_name\}/g, previewFirstName);
+    body    = body.replace(/%\{first_name\}/g, previewFirstName);
+
+    document.getElementById('preview-heading').textContent = heading;
+    document.getElementById('preview-body').innerHTML      = bodyToPreviewHtml(body);
+    document.getElementById('preview-cta').textContent     = ctaText;
+    document.getElementById('preview-subject').textContent = subject;
+
+    var rUpper = retailer.toUpperCase();
+    document.getElementById('preview-logo-top').textContent    = rUpper;
+    document.getElementById('preview-logo-bottom').textContent = rUpper;
+    document.getElementById('preview-hero-name').textContent   = rUpper;
+    document.getElementById('preview-footer-retailer').textContent = retailer;
+
+    var isConfirm = (tab === 'confirmation');
+    var isReceipt = (tab === 'receipt');
+    var isCancel  = (tab === 'cancellation');
+
+    var upsellOn = document.getElementById('cb-upsell') && document.getElementById('cb-upsell').checked;
+    document.getElementById('preview-hero').style.display          = isCancel ? 'block' : 'none';
+    document.getElementById('preview-info-group').style.display    = isConfirm ? 'block' : 'none';
+    document.getElementById('preview-upsell-section').style.display = (isConfirm && upsellOn) ? 'block' : 'none';
+    document.getElementById('preview-disclaimer').style.display    = (isConfirm || isReceipt) ? 'block' : 'none';
+
+    if (upsellOn) {
+      document.getElementById('preview-upsell-forgot').textContent = gv('inp-upsell-forgot') || 'Forgot something?';
+      document.getElementById('preview-upsell-add').textContent    = gv('inp-upsell-add') || 'You can add items until your shopper checks out.';
+    }
+
+    var itemsHeadingText = isCancel
+      ? (gv('cancel-items-heading') || 'Canceled Items')
+      : 'Order Details';
+    document.getElementById('preview-items-heading').textContent = itemsHeadingText;
+    document.getElementById('preview-order-id').textContent = 'Order ID: # ' + (isCancel ? '19013421676458620' : '18983848525411916');
+
+    var items = isCancel ? [
+      { img:'🍪', qty:'1', name:"Mother's Recipe Original Circus Animal Cookies, 1 Resealable Bag, 9 oz", meta:'9 oz', price:'$0.00' },
+      { img:'🥓', qty:'1', name:"Slim Jim Smoked Meat Sticks, Original Flavor",                          meta:'3.92 oz', price:'$0.00' },
+      { img:'🌭', qty:'1', name:"Zatarain's Cajun Style Smoked Sausage, 100% pork",                       meta:'14 oz', price:'$0.00' },
+      { img:'🥓', qty:'1', name:"Oscar Mayer Naturally Hardwood Smoked Thick Cut Bacon",                  meta:'16 oz', price:'$0.00' }
+    ] : [
+      { img:'🥔', qty:'2', name:"Lay's Potato Chips, Classic",                              meta:'Classic',     price:'$5.38', priceOld:'$10.78' },
+      { img:'🥛', qty:'2', name:"Chobani Yogurt, Greek, Nonfat, Zero Sugar, Mixed Berry",  meta:'mixed berry', price:'$2.18', priceOld:'$4.38' },
+      { img:'🍟', qty:'1', name:"Lay's Wavy Onion Potato Chips",                            meta:'Onion',       price:'$2.69', priceOld:'$5.39' }
+    ];
+
+    var itemsHtml = items.map(function(it) {
+      var priceCell = '<div>' + it.price + '</div>' +
+        (it.priceOld ? '<span class="pe-item-price-old">' + it.priceOld + '</span>' : '');
+      return '<div class="pe-item">' +
+        '<div class="pe-item-img">' + it.img + '</div>' +
+        '<div class="pe-item-body"><strong>' + it.qty + ' x</strong> ' + esc(it.name) + '<div class="pe-item-meta">' + esc(it.meta) + '</div></div>' +
+        '<div class="pe-item-price">' + priceCell + '</div>' +
+      '</div>';
+    }).join('');
+    document.getElementById('preview-items').innerHTML = itemsHtml;
+
+    var totalsHtml;
+    if (isCancel) {
+      totalsHtml =
+        '<div class="pe-total-row strong spacer"><span>Total:</span><span>$0.00</span></div>' +
+        '<div class="pe-total-row strong"><span>Name:</span><span>' + esc(previewFullName) + '</span></div>';
+    } else {
+      totalsHtml =
+        '<div class="pe-total-row strong"><span>Items Subtotal:</span><span>$10.25</span></div>' +
+        '<div class="pe-total-row strong"><span>Service Fee:</span><span>$2.49</span></div>' +
+        '<div class="pe-total-row strong spacer"><span>Total:</span><span>$12.74</span></div>' +
+        '<div class="pe-total-row strong"><span>$0 Delivery!</span><span></span></div>' +
+        '<div class="pe-total-row strong"><span>You saved:</span><span>$10.30</span></div>' +
+        '<div class="pe-total-row strong"><span>Name:</span><span>' + esc(previewFullName) + '</span></div>';
+    }
+    document.getElementById('preview-totals').innerHTML = totalsHtml;
+
+    document.getElementById('preview-disclaimer').textContent = previewDisclaimerText;
+
+    var bc = document.getElementById('breadcrumb-retailer');
+    if (bc) bc.textContent = (gv('slug') || 'untitled');
+  }
+
+  function setupPreviewListeners() {
+    var left = document.getElementById('studio-left');
+    if (left) {
+      left.addEventListener('input',  updatePreview);
+      left.addEventListener('change', updatePreview);
+    }
+    document.querySelectorAll('.preview-tab').forEach(function(el) {
+      el.addEventListener('click', function() { switchPreviewTab(el.dataset.tab); });
+    });
+    updatePreview();
+  }
+
+  window.addEventListener('DOMContentLoaded', setupPreviewListeners);
+
 </script>
 <script src="nav.js"></script>
 </body>
