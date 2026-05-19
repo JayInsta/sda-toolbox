@@ -105,6 +105,13 @@
 
   /* ── SECTION DIVIDERS (within Step cards) ── */
   .section-h { display: flex; align-items: center; gap: 10px; margin: 18px 0 12px; padding-top: 14px; border-top: 1px dashed var(--border); }
+  .section-h.acc-clickable { cursor: pointer; user-select: none; transition: opacity 0.15s; padding-bottom: 4px; margin-bottom: 8px; border-bottom: 1px solid transparent; }
+  .section-h.acc-clickable:hover { border-bottom-color: var(--border); }
+  .section-h.acc-clickable:hover .label { color: var(--text-1); }
+  .section-h .acc-chev { margin-left: auto; font-size: 10px; color: var(--text-3); transition: transform 0.2s; flex-shrink: 0; line-height: 1; padding: 0 2px; }
+  .section-h.acc-clickable:hover .acc-chev { color: var(--accent); }
+  .section-h.collapsed .acc-chev { transform: rotate(-90deg); }
+  .section-h.collapsed { margin-bottom: 0; padding-bottom: 6px; }
   .section-h:first-child { margin-top: 4px; padding-top: 0; border-top: none; }
   .section-h .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
   .section-h .label { font-size: 11.5px; font-weight: 600; color: var(--text-2); letter-spacing: 0.02em; text-transform: uppercase; font-size: 10.5px; }
@@ -255,6 +262,8 @@
   .img-upload-preview .remove-btn:hover { border-color: var(--danger); color: var(--danger); }
 
   .pe-hero-image { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+  .pe-top-logo-img { display: inline-block; max-width: 160px; max-height: 56px; height: auto; vertical-align: middle; }
+  .pe-foot-logo-img { display: block; max-width: 140px; max-height: 48px; height: auto; margin: 0 auto 14px; }
 
   /* ── BOTTOM SECTIONS ── */
   .studio-bottom { padding: 40px 32px 60px; max-width: 1100px; margin: 0 auto; }
@@ -460,6 +469,14 @@
               <div class="inline-toggle-desc">OFF: <span class="mono">The Piggly Wiggly Team</span> · ON: <span class="mono">The %{retailer_name} Team</span>. Affects body defaults, footer label, and doc import.</div>
             </div>
           </div>
+        </div>
+
+        <div class="inline-toggle" style="margin-bottom:0;margin-top:8px">
+          <div class="inline-toggle-title">Store admin logo <span style="color:var(--text-4);font-weight:400;font-size:11px;margin-left:4px">preview only · not emitted to YAML</span></div>
+          <div class="inline-toggle-desc">540×168 logo uploaded via Store Configurations Admin. Shared across confirmation, receipt &amp; cancellation emails — shows in header &amp; footer of all three previews.</div>
+          <input type="file" id="upload-storeLogo-img" accept="image/*" style="display:none" onchange="handleImageUpload(this,'storeLogo')">
+          <div class="img-upload-zone" id="upload-zone-storeLogo" onclick="document.getElementById('upload-storeLogo-img').click()" style="margin-top:10px">Drop store logo or <span class="img-upload-link">browse</span></div>
+          <div class="img-upload-preview" id="img-preview-storeLogo" style="display:none"></div>
         </div>
 
         <div class="derived-row">
@@ -775,6 +792,7 @@
 
             <div class="pe-top-bar">
               <div class="pe-top-logo" id="preview-logo-top">YOUR RETAILER</div>
+              <img class="pe-top-logo-img" id="preview-logo-top-img" alt="" style="display:none">
             </div>
 
             <div class="pe-hero" id="preview-hero" style="display:none">
@@ -829,6 +847,7 @@
 
             <div class="pe-foot">
               <div class="pe-foot-logo" id="preview-logo-bottom">YOUR RETAILER</div>
+              <img class="pe-foot-logo-img" id="preview-logo-bottom-img" alt="" style="display:none">
 
               <div class="pe-app-row">
                 <div class="pe-app-btn"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>App Store</div>
@@ -1906,6 +1925,23 @@
     }
     statusMsg += '. Review fields, fill Whitelabel domain, then click Generate.';
     setImportStatus(statusMsg, 'success');
+
+    // Auto-expand accordion sections that received data
+    if (data.confirmBody   && !data.defaults.confirmBody)    expandAccByLabel('Order information');
+    if (data.cancelBody    && !data.defaults.cancelBody)     expandAccByLabel('Order cancellation');
+    if (data.receiptBody   && !data.defaults.receiptBody)    expandAccByLabel('Order receipt');
+    if ((data.ratingHeading && !data.defaults.ratingHeading) ||
+        (data.ratingContent && !data.defaults.ratingContent)) expandAccByLabel('Order rating');
+    if (hasContentToFill)                                     expandAccByLabel('Fine print');
+    if (data.helpLink || data.privacyLink || data.tosLink)    expandAccByLabel('Footer — custom links');
+    if (data.appstoreLink || data.playstoreLink)              expandAccByLabel('Footer — app links');
+    if (data.upsellText && !data.defaults.upsellText)         expandAccByLabel('Order upsell');
+    if (data.flags && data.flags.confirmImage)                expandAccByLabel('Order confirmation');
+    if (data.flags && data.flags.cancelImage)                 expandAccByLabel('Order cancellation');
+    if (data.cancelHeading && !data.defaults.cancelHeading)   expandAccByLabel('Cancellation headings');
+    if (data.confirmHeading && !data.defaults.confirmHeading) expandAccByLabel('Confirmation headings');
+    if (data.receiptHeading && !data.defaults.receiptHeading) expandAccByLabel('Receipt headings');
+
     document.getElementById('slug').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -2570,6 +2606,7 @@
 
   var uploadedConfirmImage = null;
   var uploadedCancelImage  = null;
+  var uploadedStoreLogo    = null;
 
   function handleImageUpload(input, target) {
     var file = input.files && input.files[0];
@@ -2587,11 +2624,13 @@
         if (/order_confirmation/i.test(fname)) {
           document.getElementById('inp-confirm-img-path').value = fname;
         }
-      } else {
+      } else if (target === 'cancel') {
         uploadedCancelImage = dataUrl;
         if (/order_cancellation/i.test(fname)) {
           document.getElementById('inp-cancel-img-path').value = fname;
         }
+      } else if (target === 'storeLogo') {
+        uploadedStoreLogo = dataUrl;
       }
       var prev = document.getElementById('img-preview-' + target);
       prev.style.display = 'block';
@@ -2605,15 +2644,17 @@
   }
 
   function clearImage(target) {
-    if (target === 'confirm') uploadedConfirmImage = null;
-    else uploadedCancelImage = null;
+    if (target === 'confirm')        uploadedConfirmImage = null;
+    else if (target === 'cancel')    uploadedCancelImage  = null;
+    else if (target === 'storeLogo') uploadedStoreLogo    = null;
     document.getElementById('img-preview-' + target).style.display = 'none';
-    document.getElementById('upload-' + target + '-img').value = '';
+    var inp = document.getElementById('upload-' + target + '-img');
+    if (inp) inp.value = '';
     updatePreview();
   }
 
   function setupImageDragDrop() {
-    ['confirm', 'cancel'].forEach(function(target) {
+    ['confirm', 'cancel', 'storeLogo'].forEach(function(target) {
       var zone = document.getElementById('upload-zone-' + target);
       if (!zone) return;
       zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('drag-over'); });
@@ -2624,6 +2665,44 @@
         var file = e.dataTransfer.files && e.dataTransfer.files[0];
         if (file) processImageFile(file, target);
       });
+    });
+  }
+
+  function setupAccordions() {
+    document.querySelectorAll('#content-section .section-h, #headings-section .section-h').forEach(function(header) {
+      header.classList.add('acc-clickable');
+      var chev = document.createElement('span');
+      chev.className = 'acc-chev';
+      chev.textContent = '\u25BE';
+      header.appendChild(chev);
+
+      var siblings = [];
+      var next = header.nextElementSibling;
+      while (next && !next.classList.contains('section-h')) {
+        siblings.push(next);
+        next = next.nextElementSibling;
+      }
+
+      var setCollapsed = function(c) {
+        siblings.forEach(function(el) { el.style.display = c ? 'none' : ''; });
+        header.classList.toggle('collapsed', c);
+      };
+      setCollapsed(true);
+
+      header.addEventListener('click', function() {
+        setCollapsed(!header.classList.contains('collapsed'));
+      });
+
+      header._accSetCollapsed = setCollapsed;
+    });
+  }
+
+  function expandAccByLabel(label) {
+    document.querySelectorAll('.section-h').forEach(function(h) {
+      var lbl = h.querySelector('.label');
+      if (lbl && lbl.textContent.trim() === label && h._accSetCollapsed) {
+        h._accSetCollapsed(false);
+      }
     });
   }
 
@@ -2666,6 +2745,24 @@
     document.getElementById('preview-logo-bottom').textContent = rUpper;
     document.getElementById('preview-hero-name').textContent   = rUpper;
     document.getElementById('preview-footer-retailer').textContent = retailer;
+
+    var topPill = document.getElementById('preview-logo-top');
+    var botPill = document.getElementById('preview-logo-bottom');
+    var topImg  = document.getElementById('preview-logo-top-img');
+    var botImg  = document.getElementById('preview-logo-bottom-img');
+    if (uploadedStoreLogo) {
+      topPill.style.display = 'none';
+      botPill.style.display = 'none';
+      topImg.src = uploadedStoreLogo;
+      botImg.src = uploadedStoreLogo;
+      topImg.style.display = 'inline-block';
+      botImg.style.display = 'block';
+    } else {
+      topPill.style.display = 'inline-block';
+      botPill.style.display = 'inline-block';
+      topImg.style.display = 'none';
+      botImg.style.display = 'none';
+    }
 
     var isConfirm = (tab === 'confirmation');
     var isReceipt = (tab === 'receipt');
@@ -2809,6 +2906,7 @@
 
   window.addEventListener('DOMContentLoaded', setupPreviewListeners);
   window.addEventListener('DOMContentLoaded', setupImageDragDrop);
+  window.addEventListener('DOMContentLoaded', setupAccordions);
 
 </script>
 <script src="nav.js"></script>
