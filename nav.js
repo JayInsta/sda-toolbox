@@ -1,19 +1,18 @@
-/* ── SDA Toolbox — Shared Navigation ── */
+/* ── SDA Toolbox — Shared Navigation (Studio theme) ── */
 (function () {
 
   var TOOLS = [
-    { label: 'Offset Calculator',     file: 'index.html',                    icon: '⚙️' },
-    { label: 'Domain Checker',        file: 'domain-checker.html',           icon: '🌐' },
-    { label: 'Email Generator',       file: 'email-template-generator.html', icon: '✉️' },
-    { label: 'Image Resizer',         file: 'image-resizer.html',            icon: '🖼️' },
-    { label: 'Splash Previewer',      file: 'splash-preview.html',           icon: '📱' },
+    { label: 'Offset Calculator', file: 'index.html',                    icon: '⚙\uFE0F' },
+    { label: 'Domain Checker',    file: 'domain-checker.html',           icon: '🌐' },
+    { label: 'Email Generator',   file: 'email-template-generator.html', icon: '✉\uFE0F' },
+    { label: 'Image Resizer',     file: 'image-resizer.html',            icon: '🖼\uFE0F' },
+    { label: 'Splash Previewer',  file: 'splash-preview.html',           icon: '📱' },
   ];
 
   /* ── ACTIVE PAGE DETECTION ── */
   function getActivePage() {
     var path = window.location.pathname;
-    var file = path.split('/').pop() || 'index.html';
-    return file;
+    return path.split('/').pop() || 'index.html';
   }
 
   /* ── BUILD NAV ── */
@@ -23,54 +22,192 @@
     nav.id     = 'sda-nav';
     nav.innerHTML = [
       '<style>',
-      '#sda-nav{position:sticky;top:0;z-index:1000;background:#1a1d27;border-bottom:1px solid rgba(255,255,255,0.08);padding:0 1rem;}',
-      '#sda-nav-inner{max-width:820px;margin:0 auto;display:flex;align-items:center;height:52px;gap:4px;}',
-      '#sda-logo{font-size:13px;font-weight:700;color:#fff;text-decoration:none;white-space:nowrap;margin-right:8px;flex-shrink:0;display:flex;align-items:center;gap:6px;}',
-      '#sda-logo span{background:linear-gradient(135deg,#7c3aed,#2563eb);width:24px;height:24px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;}',
-      '#sda-links{display:flex;align-items:center;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;}',
-      '#sda-links::-webkit-scrollbar{display:none;}',
-      '.sda-link{padding:6px 10px;border-radius:8px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.55);text-decoration:none;white-space:nowrap;transition:all 0.15s;border:1px solid transparent;display:flex;align-items:center;gap:5px;flex-shrink:0;}',
-      '.sda-link:hover{color:rgba(255,255,255,0.9);background:rgba(255,255,255,0.07);}',
-      '.sda-link.active{color:#fff;background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.15);}',
-      '.sda-link-icon{font-size:13px;line-height:1;}',
-      '#sda-menu-btn{display:none;background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:16px;line-height:1;margin-left:auto;}',
-      '#sda-mobile-menu{display:none;position:fixed;top:52px;left:0;right:0;background:#1a1d27;border-bottom:1px solid rgba(255,255,255,0.08);padding:8px;z-index:999;}',
-      '#sda-mobile-menu.open{display:block;}',
-      '.sda-mobile-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.6);text-decoration:none;transition:all 0.15s;}',
-      '.sda-mobile-link:hover{background:rgba(255,255,255,0.07);color:#fff;}',
-      '.sda-mobile-link.active{background:rgba(255,255,255,0.12);color:#fff;}',
-      '@media(max-width:640px){',
-      '  #sda-links{display:none;}',
-      '  #sda-menu-btn{display:block;}',
+
+      /* Studio tokens are scoped via attribute selector so they don't leak */
+      '#sda-nav, #sda-mobile-menu {',
+      '  --sda-bg-page:    #0a0a0f;',
+      '  --sda-bg-card:    #14141a;',
+      '  --sda-bg-muted:   #1a1a22;',
+      '  --sda-border:     #26262e;',
+      '  --sda-border-hov: #3a3a44;',
+      '  --sda-text-1:     #fafafa;',
+      '  --sda-text-2:     #d4d4d8;',
+      '  --sda-text-3:     #a1a1aa;',
+      '  --sda-text-4:     #71717a;',
+      '  --sda-accent:     #d4ff3a;',
+      '  --sda-accent-bg:  rgba(212,255,58,0.10);',
+      '  --sda-accent-bd:  rgba(212,255,58,0.30);',
+      '  --sda-on-accent:  #0a0a0f;',
+      '  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;',
       '}',
+
+      /* Bar */
+      '#sda-nav {',
+      '  position: sticky; top: 0; z-index: 1000;',
+      '  background: rgba(10,10,15,0.78);',
+      '  backdrop-filter: blur(20px) saturate(180%);',
+      '  -webkit-backdrop-filter: blur(20px) saturate(180%);',
+      '  border-bottom: 1px solid var(--sda-border);',
+      '  padding: 0 22px;',
+      '  height: 52px;',
+      '}',
+      '#sda-nav-inner {',
+      '  display: flex; align-items: center;',
+      '  height: 52px;',
+      '  gap: 10px;',
+      '  max-width: 1400px;',
+      '  margin: 0 auto;',
+      '}',
+
+      /* Logo */
+      '#sda-logo {',
+      '  font-size: 13.5px; font-weight: 600;',
+      '  color: var(--sda-text-1);',
+      '  text-decoration: none;',
+      '  white-space: nowrap;',
+      '  margin-right: 8px;',
+      '  flex-shrink: 0;',
+      '  display: flex; align-items: center; gap: 8px;',
+      '  letter-spacing: -0.005em;',
+      '}',
+      '#sda-logo .sda-logo-mark {',
+      '  background: var(--sda-accent);',
+      '  width: 28px; height: 28px;',
+      '  border-radius: 7px;',
+      '  display: inline-flex; align-items: center; justify-content: center;',
+      '  color: var(--sda-on-accent);',
+      '  font-size: 13px; font-weight: 800;',
+      '  letter-spacing: -0.02em;',
+      '  box-shadow: 0 0 14px rgba(212,255,58,0.22);',
+      '  transition: box-shadow 0.18s;',
+      '}',
+      '#sda-logo:hover .sda-logo-mark { box-shadow: 0 0 22px rgba(212,255,58,0.40); }',
+
+      /* Link list */
+      '#sda-links {',
+      '  display: flex; align-items: center; gap: 2px;',
+      '  flex: 1;',
+      '  overflow-x: auto;',
+      '  scrollbar-width: none;',
+      '  -ms-overflow-style: none;',
+      '}',
+      '#sda-links::-webkit-scrollbar { display: none; }',
+
+      '.sda-link {',
+      '  padding: 6px 11px;',
+      '  border-radius: 7px;',
+      '  font-size: 12.5px; font-weight: 500;',
+      '  color: var(--sda-text-3);',
+      '  text-decoration: none;',
+      '  white-space: nowrap;',
+      '  transition: all 0.12s;',
+      '  border: 1px solid transparent;',
+      '  display: flex; align-items: center; gap: 6px;',
+      '  flex-shrink: 0;',
+      '  font-family: inherit;',
+      '}',
+      '.sda-link:hover {',
+      '  color: var(--sda-text-1);',
+      '  background: var(--sda-bg-muted);',
+      '}',
+      '.sda-link.active {',
+      '  color: var(--sda-accent);',
+      '  background: var(--sda-accent-bg);',
+      '  border-color: var(--sda-accent-bd);',
+      '}',
+      '.sda-link-icon { font-size: 13px; line-height: 1; opacity: 0.85; }',
+      '.sda-link.active .sda-link-icon { opacity: 1; }',
+
+      /* Mobile menu button */
+      '#sda-menu-btn {',
+      '  display: none;',
+      '  background: var(--sda-bg-card);',
+      '  border: 1px solid var(--sda-border);',
+      '  color: var(--sda-text-2);',
+      '  border-radius: 7px;',
+      '  padding: 6px 11px;',
+      '  cursor: pointer;',
+      '  font-size: 15px; line-height: 1;',
+      '  margin-left: auto;',
+      '  font-family: inherit;',
+      '  transition: all 0.12s;',
+      '}',
+      '#sda-menu-btn:hover { border-color: var(--sda-border-hov); background: var(--sda-bg-muted); color: var(--sda-text-1); }',
+
+      /* Mobile sheet */
+      '#sda-mobile-menu {',
+      '  display: none;',
+      '  position: fixed; top: 52px; left: 0; right: 0;',
+      '  background: rgba(10,10,15,0.95);',
+      '  backdrop-filter: blur(20px) saturate(180%);',
+      '  -webkit-backdrop-filter: blur(20px) saturate(180%);',
+      '  border-bottom: 1px solid var(--sda-border);',
+      '  padding: 8px;',
+      '  z-index: 999;',
+      '}',
+      '#sda-mobile-menu.open { display: block; }',
+      '.sda-mobile-link {',
+      '  display: flex; align-items: center; gap: 11px;',
+      '  padding: 11px 13px;',
+      '  border-radius: 8px;',
+      '  font-size: 13.5px; font-weight: 500;',
+      '  color: var(--sda-text-3);',
+      '  text-decoration: none;',
+      '  transition: all 0.12s;',
+      '  border: 1px solid transparent;',
+      '}',
+      '.sda-mobile-link:hover { background: var(--sda-bg-muted); color: var(--sda-text-1); }',
+      '.sda-mobile-link.active {',
+      '  background: var(--sda-accent-bg);',
+      '  color: var(--sda-accent);',
+      '  border-color: var(--sda-accent-bd);',
+      '}',
+      '.sda-mobile-link span { font-size: 15px; opacity: 0.9; }',
+
+      /* Mobile breakpoint */
+      '@media (max-width: 720px) {',
+      '  #sda-links { display: none; }',
+      '  #sda-menu-btn { display: block; }',
+      '}',
+
+      // Coordination with per-page .studio-toolbar (Image Resizer, DNS Checker, Email Generator):
+      // - Push studio-toolbar below this nav (top: 52px instead of 0)
+      // - Hide its duplicate S logo + "Studio" title since this nav already shows them
+      // - Adjust .studio-right sticky pane in split layouts to account for both bars stacked
+      '.studio-toolbar { top: 52px !important; }',
+      '.studio-toolbar > .studio-logo,',
+      '.studio-toolbar > .studio-toolbar-title { display: none !important; }',
+      '.studio-right { top: 106px !important; height: calc(100vh - 106px) !important; }',
+
       '</style>',
+
       '<div id="sda-nav-inner">',
-        '<a id="sda-logo" href="index.html"><span>🛠</span>SDA Toolbox</a>',
+        '<a id="sda-logo" href="index.html"><span class="sda-logo-mark">S</span>SDA Toolbox</a>',
         '<div id="sda-links">',
-          TOOLS.map(function(t) {
+          TOOLS.map(function (t) {
             var isActive = (t.file === active || (active === '' && t.file === 'index.html'));
             return '<a class="sda-link' + (isActive ? ' active' : '') + '" href="' + t.file + '">' +
               '<span class="sda-link-icon">' + t.icon + '</span>' + t.label + '</a>';
           }).join(''),
         '</div>',
-        '<button id="sda-menu-btn" onclick="SDANav.toggleMenu()" title="Menu">☰</button>',
+        '<button id="sda-menu-btn" onclick="SDANav.toggleMenu()" title="Menu" aria-label="Open menu">☰</button>',
       '</div>',
     ].join('');
 
-    /* Mobile menu */
+    /* Mobile menu sheet */
     var mobileMenu = document.createElement('div');
     mobileMenu.id  = 'sda-mobile-menu';
-    mobileMenu.innerHTML = TOOLS.map(function(t) {
+    mobileMenu.innerHTML = TOOLS.map(function (t) {
       var isActive = (t.file === active || (active === '' && t.file === 'index.html'));
       return '<a class="sda-mobile-link' + (isActive ? ' active' : '') + '" href="' + t.file + '">' +
-        '<span style="font-size:16px">' + t.icon + '</span>' + t.label + '</a>';
+        '<span>' + t.icon + '</span>' + t.label + '</a>';
     }).join('');
 
     document.body.insertBefore(mobileMenu, document.body.firstChild);
     document.body.insertBefore(nav, mobileMenu);
 
     /* Close mobile menu on outside click */
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
       var menu = document.getElementById('sda-mobile-menu');
       var btn  = document.getElementById('sda-menu-btn');
       if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
@@ -84,34 +221,51 @@
     if (menu) menu.classList.toggle('open');
   }
 
-  /* ── MOBILE RESPONSIVE GLOBALS ── */
+  /* ── MOBILE RESPONSIVE GLOBALS (kept from previous nav.js) ── */
   function injectMobileStyles() {
     var s = document.createElement('style');
-    s.id  = 'sda-mobile-global';
+    s.id = 'sda-mobile-global';
     s.textContent = [
-      '@media(max-width:540px){',
-      '  .two-col{grid-template-columns:1fr!important;}',
-      '  .input-grid{grid-template-columns:1fr 1fr!important;}',
-      '  .result-grid{grid-template-columns:1fr!important;}',
-      '  .toggle-group{flex-direction:column!important;}',
-      '  .derived-grid{grid-template-columns:1fr!important;}',
-      '  .qa-cols{grid-template-columns:1fr!important;}',
-      '  .country-btn{width:100%!important;justify-content:center!important;}',
-      '  .preview-wrap{gap:16px!important;}',
-      '  .android-frame,.ios-frame{width:140px!important;height:272px!important;}',
-      '  .prop-grid{grid-template-columns:1fr!important;}',
-      '  .redirect-entry-fields{grid-template-columns:1fr!important;}',
-      '  .output-block-header{flex-direction:column!important;align-items:flex-start!important;}',
-      '  .hero h1{font-size:21px!important;}',
-      '  .page{padding-left:0.75rem!important;padding-right:0.75rem!important;}',
+      '@media (max-width: 540px) {',
+      '  .two-col { grid-template-columns: 1fr !important; }',
+      '  .input-grid { grid-template-columns: 1fr 1fr !important; }',
+      '  .result-grid { grid-template-columns: 1fr !important; }',
+      '  .toggle-group { flex-direction: column !important; }',
+      '  .derived-grid { grid-template-columns: 1fr !important; }',
+      '  .qa-cols { grid-template-columns: 1fr !important; }',
+      '  .country-btn { width: 100% !important; justify-content: center !important; }',
+      '  .preview-wrap { gap: 16px !important; }',
+      '  .android-frame, .ios-frame { width: 140px !important; height: 272px !important; }',
+      '  .prop-grid { grid-template-columns: 1fr !important; }',
+      '  .redirect-entry-fields { grid-template-columns: 1fr !important; }',
+      '  .output-block-header { flex-direction: column !important; align-items: flex-start !important; }',
+      '  .hero h1 { font-size: 21px !important; }',
+      '  .page { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }',
       '}',
-      'html{scroll-behavior:smooth;}',
+      'html { scroll-behavior: smooth; }',
     ].join('');
     document.head.appendChild(s);
   }
 
+  /* ── FONT LOADER ── */
+  /* Load Inter + JetBrains Mono if the page hasn't already (some Studio pages preload these in <head>).
+     We check for an existing fonts.googleapis.com Inter link before adding our own to avoid duplicates. */
+  function ensureFonts() {
+    var has = false;
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+    for (var i = 0; i < links.length; i++) {
+      if ((links[i].href || '').indexOf('Inter') !== -1) { has = true; break; }
+    }
+    if (has) return;
+    var l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap';
+    document.head.appendChild(l);
+  }
+
   /* ── INIT ── */
   function init() {
+    ensureFonts();
     injectMobileStyles();
     buildNav();
   }
