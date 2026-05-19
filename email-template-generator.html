@@ -1926,22 +1926,6 @@
     statusMsg += '. Review fields, fill Whitelabel domain, then click Generate.';
     setImportStatus(statusMsg, 'success');
 
-    // Auto-expand accordion sections that received data
-    if (data.confirmBody   && !data.defaults.confirmBody)    expandAccByLabel('Order information');
-    if (data.cancelBody    && !data.defaults.cancelBody)     expandAccByLabel('Order cancellation');
-    if (data.receiptBody   && !data.defaults.receiptBody)    expandAccByLabel('Order receipt');
-    if ((data.ratingHeading && !data.defaults.ratingHeading) ||
-        (data.ratingContent && !data.defaults.ratingContent)) expandAccByLabel('Order rating');
-    if (hasContentToFill)                                     expandAccByLabel('Fine print');
-    if (data.helpLink || data.privacyLink || data.tosLink)    expandAccByLabel('Footer — custom links');
-    if (data.appstoreLink || data.playstoreLink)              expandAccByLabel('Footer — app links');
-    if (data.upsellText && !data.defaults.upsellText)         expandAccByLabel('Order upsell');
-    if (data.flags && data.flags.confirmImage)                expandAccByLabel('Order confirmation');
-    if (data.flags && data.flags.cancelImage)                 expandAccByLabel('Order cancellation');
-    if (data.cancelHeading && !data.defaults.cancelHeading)   expandAccByLabel('Cancellation headings');
-    if (data.confirmHeading && !data.defaults.confirmHeading) expandAccByLabel('Confirmation headings');
-    if (data.receiptHeading && !data.defaults.receiptHeading) expandAccByLabel('Receipt headings');
-
     document.getElementById('slug').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
