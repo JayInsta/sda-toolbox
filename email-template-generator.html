@@ -822,12 +822,12 @@
               </div>
 
               <div class="pe-links">
-                <a id="preview-footer-retailer">Your Retailer</a>
-                <a>Help</a>
-                <a>Privacy Policy</a>
+                <a id="preview-footer-retailer" target="_blank" rel="noopener noreferrer">Your Retailer</a>
+                <a id="preview-link-help" target="_blank" rel="noopener noreferrer">Help</a>
+                <a id="preview-link-privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
               </div>
               <div class="pe-tos">
-                <a>Terms &amp; Conditions</a>
+                <a id="preview-link-tos" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>
               </div>
             </div>
 
@@ -2506,6 +2506,24 @@
     }).join('<br>');
   }
 
+  function setPreviewLink(id, url) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    url = (url || '').trim();
+    if (url) {
+      if (!/^(https?:|mailto:|tel:|#)/i.test(url)) url = 'https://' + url;
+      el.setAttribute('href', url);
+      el.setAttribute('title', url);
+      el.style.opacity = '1';
+      el.style.cursor = 'pointer';
+    } else {
+      el.removeAttribute('href');
+      el.removeAttribute('title');
+      el.style.opacity = '0.55';
+      el.style.cursor = 'default';
+    }
+  }
+
   function updatePreview() {
     var retailer = gv('retailer-name') || 'Your Retailer';
     var ph = document.getElementById('use-retailer-placeholder');
@@ -2643,6 +2661,11 @@
     document.getElementById('preview-totals').innerHTML = totalsHtml;
 
     document.getElementById('preview-disclaimer').textContent = isReceipt ? previewReceiptDisclaimer : previewConfirmDisclaimer;
+
+    setPreviewLink('preview-footer-retailer', gv('retailer-url') || gv('whitelabel'));
+    setPreviewLink('preview-link-help',    gv('inp-help-link'));
+    setPreviewLink('preview-link-privacy', gv('inp-privacy-link'));
+    setPreviewLink('preview-link-tos',     gv('inp-tos-link'));
 
     var bc = document.getElementById('breadcrumb-retailer');
     if (bc) bc.textContent = (gv('slug') || 'untitled');
