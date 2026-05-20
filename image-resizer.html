@@ -755,8 +755,8 @@
 <body>
 
 <header class="studio-toolbar">
-  <div class="studio-logo">I</div>
-  <div class="studio-toolbar-title">Image Resizer</div>
+  <div class="studio-logo">S</div>
+  <div class="studio-toolbar-title">Studio</div>
   <div class="studio-breadcrumb">
     <span>Image resizer</span>
     <span class="crumb-sep">/</span>
@@ -964,8 +964,8 @@
     web: [
       { label: 'Light background (Dark Text)', w: 1360, h: null, note: 'Width locked — height scales', fmt: 'png' },
       { label: 'Dark background (Light Text)',  w: 1360, h: null, note: 'Width locked — height scales', fmt: 'png' },
-      { label: 'Light square background',       w: 54,   h: 54,  note: 'Exact 54×54 px',               fmt: 'png' },
-      { label: 'Favicon icon',                  w: 48,   h: 48,  note: 'Exact 48×48 px',               fmt: 'png' },
+      { label: 'Light square background',       w: 54,   h: 54,  note: 'Exact 54×54 px — letterboxed with BG fill', fmt: 'png', fit: 'letterbox' },
+      { label: 'Favicon icon',                  w: 48,   h: 48,  note: 'Exact 48×48 px — letterboxed with BG fill',  fmt: 'png', fit: 'letterbox' },
       { label: 'Store Config Logo',             w: 540,  h: 168, note: 'Max 540×168 px — aspect ratio locked', fmt: 'png', fit: 'contain' },
     ],
     android: [
@@ -1262,6 +1262,12 @@
     // SVG info panel mis-toggled relative to the active format.
     document.getElementById('quality-section').style.display = fmt === 'jpeg' ? 'block' : 'none';
     document.getElementById('svg-fmt-info').style.display    = fmt === 'svg'  ? 'block' : 'none';
+    // Show BG color picker for any letterbox preset (not just screenshot tabs).
+    // Lets the user choose the fill color for the padding when a rectangular
+    // source is letterboxed into a square target.
+    var isScreenshotTab = SCREENSHOT_TABS.indexOf(activeTab) > -1;
+    var isLetterboxPreset = activePreset && activePreset.fit === 'letterbox';
+    document.getElementById('screenshot-info-box').style.display = (isScreenshotTab || isLetterboxPreset) ? 'block' : 'none';
     updateBtn();
   }
 
@@ -1912,6 +1918,6 @@
   /* Initial state */
   updateBreadcrumb();
 </script>
-  <script src="nav.js"></script>
+  
 </body>
 </html>
