@@ -1487,9 +1487,21 @@
               var doc = parser.parseFromString(ev.target.result, 'image/svg+xml');
               var svgEl = doc.querySelector('svg');
               if (svgEl) {
+                // Read source's intrinsic dimensions BEFORE we overwrite width/height.
+                // When a source SVG has no viewBox, its width/height attributes
+                // implicitly define the coordinate space the path data lives in.
+                // We must preserve that coordinate space as the new viewBox, or
+                // path data drawn in (e.g.) 1024 units will overflow a 256-unit
+                // canvas and look cropped. The new width/height we set below
+                // then scales that coordinate space to the requested output size.
+                var srcSvgW = parseFloat(svgEl.getAttribute('width'))  || 0;
+                var srcSvgH = parseFloat(svgEl.getAttribute('height')) || 0;
+                var hadViewBox = !!svgEl.getAttribute('viewBox');
+                if (!srcSvgW) srcSvgW = tw;
+                if (!srcSvgH) srcSvgH = th;
                 svgEl.setAttribute('width', tw);
                 svgEl.setAttribute('height', th);
-                if (!svgEl.getAttribute('viewBox')) svgEl.setAttribute('viewBox', '0 0 '+tw+' '+th);
+                if (!hadViewBox) svgEl.setAttribute('viewBox', '0 0 ' + srcSvgW + ' ' + srcSvgH);
               }
               var serialized = new XMLSerializer().serializeToString(doc);
               var dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(serialized);
@@ -1918,6 +1930,5 @@
   /* Initial state */
   updateBreadcrumb();
 </script>
-  <script src="nav.js"></script>
 </body>
 </html>
