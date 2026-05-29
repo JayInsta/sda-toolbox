@@ -421,6 +421,44 @@
       color: var(--text-4);
     }
 
+    /* ───────── VALUE + COPY BUTTON ROW ───────── */
+    .rt-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .rt-row .rt-val { flex: 1; min-width: 0; }
+
+    .rt-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 9px;
+      border-radius: 6px;
+      background: var(--bg-input);
+      border: 1px solid var(--accent-bd);
+      color: var(--accent);
+      font-size: 10.5px;
+      font-weight: 600;
+      font-family: var(--mono);
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, transform 0.08s, color 0.12s;
+      flex-shrink: 0;
+    }
+    .rt-copy:hover {
+      background: var(--accent-bg);
+      border-color: var(--accent);
+    }
+    .rt-copy:active { transform: scale(0.96); }
+    .rt-copy svg { width: 11px; height: 11px; flex-shrink: 0; }
+    .rt-copy.copied {
+      background: var(--success-bg);
+      border-color: var(--success-bd);
+      color: var(--success);
+    }
+
     /* ───────── BADGES ───────── */
     .badge {
       display: inline-block;
@@ -431,19 +469,16 @@
       font-family: var(--mono);
       letter-spacing: 0.02em;
     }
-    /* Both "enter value" badges (originally green and purple) → lime */
     .b-green, .b-purple {
       background: var(--accent-bg);
       color: var(--accent);
       border: 1px solid var(--accent-bd);
     }
-    /* "Leave blank" badge (originally amber) → warning */
     .b-amber {
       background: var(--warning-bg);
       color: var(--warning);
       border: 1px solid var(--warning-bd);
     }
-    /* "New app" badge (originally blue) → info */
     .b-blue {
       background: var(--info-bg);
       color: var(--info-text);
@@ -474,10 +509,44 @@
       color: var(--text-4);
       border-top: 1px solid var(--border);
       margin-top: 28px;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
-    .studio-footer .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
+    .studio-footer .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
     .studio-footer strong { color: var(--text-3); font-weight: 600; }
+
+    /* ───────── COUNTER PILLS (footer) ───────── */
+    .counter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--text-3);
+      transition: opacity 0.35s ease-out, transform 0.35s ease-out,
+                  border-color 0.25s, box-shadow 0.25s;
+    }
+    .counter-pill.hidden {
+      opacity: 0;
+      transform: translateY(3px);
+      pointer-events: none;
+    }
+    .counter-pill .counter-icon { font-size: 11px; line-height: 1; }
+    .counter-pill .counter-num {
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .counter-pill .counter-label { color: var(--text-4); }
+    .counter-pill.bumped {
+      border-color: var(--accent);
+      box-shadow: 0 0 14px rgba(212,255,58,0.18);
+    }
 
     /* ───────── RESPONSIVE ───────── */
     @media (max-width: 540px) {
@@ -487,6 +556,9 @@
       .toggle-group { flex-direction: column; }
       .studio-toolbar-title { display: none; }
       .ic-result { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .rt-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .rt-copy { align-self: flex-end; }
+      .studio-footer { gap: 7px; }
     }
   </style>
 </head>
@@ -566,7 +638,13 @@
     <div class="result-grid">
       <div class="result-tile rt-major-ipp">
         <div class="rt-label"><span class="rt-pulse-dot"></span>Set in IPP</div>
-        <div class="rt-val" id="m-ipp-value"></div>
+        <div class="rt-row">
+          <div class="rt-val" id="m-ipp-value"></div>
+          <button class="rt-copy" id="m-copy-btn" type="button" onclick="copyIPP('m-ipp-value', 'm-copy-btn')" aria-label="Copy major version offset to clipboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span class="rt-copy-label">Copy</span>
+          </button>
+        </div>
         <div id="m-ipp-badge"></div>
         <div class="rt-sub" id="m-ipp-sub"></div>
       </div>
@@ -635,7 +713,13 @@
     <div class="result-grid">
       <div class="result-tile rt-ipp">
         <div class="rt-label"><span class="rt-pulse-dot"></span>Set in IPP</div>
-        <div class="rt-val" id="ipp-value"></div>
+        <div class="rt-row">
+          <div class="rt-val" id="ipp-value"></div>
+          <button class="rt-copy" id="v-copy-btn" type="button" onclick="copyIPP('ipp-value', 'v-copy-btn')" aria-label="Copy version code offset to clipboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span class="rt-copy-label">Copy</span>
+          </button>
+        </div>
         <div id="ipp-badge"></div>
         <div class="rt-sub" id="ipp-sub"></div>
       </div>
@@ -653,6 +737,17 @@
     <span>Offset calculator</span>
     <div class="dot"></div>
     <span>IPP Build Tooling</span>
+    <div class="dot"></div>
+    <span class="counter-pill hidden" id="visit-pill" title="Total page visits across all users">
+      <span class="counter-icon">👁</span>
+      <span class="counter-num" id="visit-count">—</span>
+      <span class="counter-label">visits</span>
+    </span>
+    <span class="counter-pill hidden" id="action-pill" title="Total values copied to clipboard across all users">
+      <span class="counter-icon">✨</span>
+      <span class="counter-num" id="action-count">—</span>
+      <span class="counter-label">copies</span>
+    </span>
   </div>
 
 </main>
@@ -695,6 +790,18 @@
     updateBreadcrumb();
     calcMajor();
     calcVC();
+  }
+
+  /* ── COPY BUTTON VISIBILITY ── */
+  // Show/hide copy button based on whether the IPP value is something
+  // actually copyable. "Leave blank" cases hide the button — nothing to
+  // paste into IPP, and it shouldn't count as an action.
+  function syncCopyVisibility(btnId, valueEl) {
+    var btn = document.getElementById(btnId);
+    if (!btn || !valueEl) return;
+    var text = (valueEl.textContent || '').trim();
+    var isCopyable = !!text && text !== 'Leave blank';
+    btn.style.display = isCopyable ? 'inline-flex' : 'none';
   }
 
   /* ── MAJOR VERSION OFFSET ── */
@@ -750,6 +857,7 @@
     }
 
     stepsEl.innerHTML = html;
+    syncCopyVisibility('m-copy-btn', ippEl);
   }
 
   /* ── VERSION CODE OFFSET ── */
@@ -788,6 +896,7 @@
       finalEl.textContent  = String(ic);
       finalSub.textContent = 'IC offset used as default';
       updateBranchBadge();
+      syncCopyVisibility('v-copy-btn', ippEl);
       return;
     }
 
@@ -814,12 +923,136 @@
 
     stepsEl.innerHTML = html;
     updateBranchBadge();
+    syncCopyVisibility('v-copy-btn', ippEl);
+  }
+
+  /* ═════════════════════════════════════════════════════════
+     USAGE COUNTERS — Abacus (https://abacus.jasoncameron.dev)
+     Free public counter API, no signup. Two counters per tool:
+       - visits: hit once on every page load
+       - copies: hit each time the user clicks a Copy button
+     If the API is unreachable, the pills stay hidden — no errors
+     surfaced to the user, just a quiet console warning.
+     ═════════════════════════════════════════════════════════ */
+  var COUNTER_NS  = 'instacart-sda-toolbox';
+  var KEY_VISITS  = 'offset-calc-visits';
+  var KEY_COPIES  = 'offset-calc-copies';
+  var ABACUS_BASE = 'https://abacus.jasoncameron.dev';
+
+  function fmtCount(n) { return (n == null) ? '—' : Number(n).toLocaleString(); }
+
+  function abacusFetch(endpoint, key) {
+    return fetch(ABACUS_BASE + '/' + endpoint + '/' + COUNTER_NS + '/' + key, { cache: 'no-store' })
+      .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+      .then(function(data) { return (data && typeof data.value === 'number') ? data.value : null; });
+  }
+
+  function abacusHit(key) { return abacusFetch('hit', key); } // increment + return new value
+  function abacusGet(key) { return abacusFetch('get', key); } // read without incrementing
+
+  function revealPill(pillId) {
+    var pill = document.getElementById(pillId);
+    if (pill) pill.classList.remove('hidden');
+  }
+  function bumpPill(pillId) {
+    var pill = document.getElementById(pillId);
+    if (!pill) return;
+    pill.classList.add('bumped');
+    setTimeout(function() { pill.classList.remove('bumped'); }, 900);
+  }
+
+  // On page load: hit visits (counts this view), get copies (just display current total)
+  function initCounters() {
+    abacusHit(KEY_VISITS)
+      .then(function(v) {
+        if (v == null) return;
+        document.getElementById('visit-count').textContent = fmtCount(v);
+        revealPill('visit-pill');
+      })
+      .catch(function(err) { console.warn('[counter] visits hit failed:', err && err.message); });
+
+    abacusGet(KEY_COPIES)
+      .then(function(v) {
+        if (v == null) return;
+        document.getElementById('action-count').textContent = fmtCount(v);
+        revealPill('action-pill');
+      })
+      .catch(function(err) { console.warn('[counter] copies get failed:', err && err.message); });
+  }
+
+  /* ═════════════════════════════════════════════════════════
+     COPY-TO-CLIPBOARD + ACTION COUNTER
+     Triggered from the Copy buttons next to the IPP values.
+     Copies the visible value, increments the global copies
+     counter, and briefly flashes "Copied!" feedback.
+     ═════════════════════════════════════════════════════════ */
+  function copyIPP(valueId, btnId) {
+    var valueEl = document.getElementById(valueId);
+    var btn     = document.getElementById(btnId);
+    if (!valueEl || !btn) return;
+    var text = (valueEl.textContent || '').trim();
+    if (!text || text === 'Leave blank') return; // safety: shouldn't fire when hidden
+
+    var setLabel = function(t, useCopiedStyle) {
+      var labelEl = btn.querySelector('.rt-copy-label');
+      if (labelEl) labelEl.textContent = t;
+      if (useCopiedStyle) btn.classList.add('copied');
+      else btn.classList.remove('copied');
+    };
+    var resetLabel = function() {
+      setTimeout(function() { setLabel('Copy', false); }, 1500);
+    };
+
+    var afterCopy = function() {
+      setLabel('Copied!', true);
+      resetLabel();
+      // Increment the global copies counter, update the pill
+      abacusHit(KEY_COPIES)
+        .then(function(v) {
+          if (v == null) return;
+          document.getElementById('action-count').textContent = fmtCount(v);
+          revealPill('action-pill');
+          bumpPill('action-pill');
+        })
+        .catch(function(err) { console.warn('[counter] copies hit failed:', err && err.message); });
+    };
+
+    // Prefer the Async Clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(afterCopy)
+        .catch(function() {
+          // Some non-secure contexts deny the modern API
+          if (fallbackCopy(text)) afterCopy();
+          else { setLabel('Press Ctrl+C', false); resetLabel(); }
+        });
+      return;
+    }
+    // Legacy fallback
+    if (fallbackCopy(text)) afterCopy();
+    else { setLabel('Press Ctrl+C', false); resetLabel(); }
+  }
+
+  function fallbackCopy(text) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    } catch (e) { return false; }
   }
 
   /* ── INIT ── */
   updateBreadcrumb();
   calcMajor();
   calcVC();
+  initCounters();
 
   /* ── AUTO-FETCH BRANCH FROM branches.json ── */
   (function fetchBranch() {
