@@ -868,43 +868,109 @@
     var baseUrl = window.location.href.split('#')[0];
     var bgHex = config.bg.replace('#', '');
     var hash = '#splash=' + platform + '&bg=' + bgHex;
-    var previewUrl = baseUrl + hash;
 
-    try {
-      var qr = qrcode(0, 'M');
-      qr.addData(previewUrl);
-      qr.make();
-      boxEl.innerHTML = qr.createSvgTag(4, 0);
-      var svg = boxEl.querySelector('svg');
-      if (svg) { svg.style.width = '100%'; svg.style.height = '100%'; svg.style.display = 'block'; }
-    } catch (e) {
-      boxEl.innerHTML = '<div class="qr-empty" style="color:#f87171">QR generation failed: ' + e.message + '</div>';
-      return;
-    }
-
-    var infoDesc = areaEl.querySelector('.qr-info-desc');
-    if (infoDesc) {
-      if (config.logo) {
-        infoDesc.innerHTML = 'Opens this page on your phone with a <strong>full-screen colour preview</strong> (' + config.bg + '). Logo can\'t travel via QR — use <strong>Download as HTML</strong> to share a preview with the logo included.';
-      } else {
-        infoDesc.innerHTML = 'Opens this page on your phone and shows a <strong>full-screen splash preview</strong> with background colour <strong>' + config.bg + '</strong>.';
+    /* If there's a logo, compress it to a tiny thumbnail and embed in the hash.
+       48×48 JPEG at quality 0.3 ≈ 400–800 bytes → ~550–1100 chars base64.
+       QR version 20 at error-correction L holds ~1800 bytes — plenty of room. */
+    var afterThumb = function(thumbData) {
+      if (thumbData) {
+        /* URL-safe base64: replace +→-, /→_, strip trailing = */
+        var safe = thumbData.split(',')[1]
+          .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        hash += '&img=' + safe;
       }
-    }
 
-    var noteEl = areaEl.querySelector('.qr-note');
-    if (noteEl) {
-      noteEl.innerHTML = '📱 Scan → opens <span style="color:var(--accent);word-break:break-all">' + previewUrl.substring(0, 60) + (previewUrl.length > 60 ? '…' : '') + '</span>';
-    }
+      var previewUrl = baseUrl + hash;
+      var hasLogoInQR = !!thumbData;
 
-    var titleEl = areaEl.querySelector('.qr-info-title');
-    if (titleEl) titleEl.textContent = 'Scan to preview on device';
+      try {
+        var qr = qrcode(0, 'L');
+        qr.addData(previewUrl);
+        qr.make();
+        boxEl.innerHTML = qr.createSvgTag(4, 0);
+        var svg = boxEl.querySelector('svg');
+        if (svg) { svg.style.width = '100%'; svg.style.height = '100%'; svg.style.display = 'block'; }
+      } catch (e) {
+        /* If URL is too long with the thumbnail, retry without it */
+        if (thumbData) {
+          hash = '#splash=' + platform + '&bg=' + bgHex;
+          previewUrl = baseUrl + hash;
+          hasLogoInQR = false;
+          try {
+            var qr2 = qrcode(0, 'M');
+            qr2.addData(previewUrl);
+            qr2.make();
+            boxEl.innerHTML = qr2.createSvgTag(4, 0);
+            var svg2 = boxEl.querySelector('svg');
+            if (svg2) { svg2.style.width = '100%'; svg2.style.height = '100%'; svg2.style.display = 'block'; }
+          } catch (e2) {
+            boxEl.innerHTML = '<div class="qr-empty" style="color:#f87171">QR generation failed</div>';
+            return;
+          }
+        } else {
+          boxEl.innerHTML = '<div class="qr-empty" style="color:#f87171">QR generation failed: ' + e.message + '</div>';
+          return;
+        }
+      }
+
+      var infoDesc = areaEl.querySelector('.qr-info-desc');
+      if (infoDesc) {
+        if (hasLogoInQR) {
+          infoDesc.innerHTML = 'Opens a <strong>full-screen splash preview</strong> with background colour + a <strong>compressed logo thumbnail</strong> embedded in the QR. For full-resolution logo, use Download as HTML.';
+        } else if (config.logo) {
+          infoDesc.innerHTML = 'Opens a <strong>colour-only preview</strong> (' + config.bg + '). Logo was too complex to compress into QR — use <strong>Download as HTML</strong> for full preview.';
+        } else {
+          infoDesc.innerHTML = 'Opens a <strong>full-screen splash preview</strong> with background colour <strong>' + config.bg + '</strong>. Upload a logo to include a thumbnail in the QR.';
+        }
+      }
+
+      var noteEl = areaEl.querySelector('.qr-note');
+      if (noteEl) {
+        var urlPreview = previewUrl.length > 70 ? previewUrl.substring(0, 70) + '…' : previewUrl;
+        noteEl.innerHTML = '📱 Scan → opens <span style="color:var(--accent);word-break:break-all">' + urlPreview + '</span>';
+      }
+
+      var titleEl = areaEl.querySelector('.qr-info-title');
+      if (titleEl) titleEl.textContent = hasLogoInQR ? 'Scan to preview (colour + logo)' : 'Scan to preview on device';
+    };
+
+    /* Generate thumbnail if logo exists */
+    if (config.logo) {
+      createLogoThumbnail(config.logo, function(thumbData) {
+        afterThumb(thumbData);
+      });
+    } else {
+      afterThumb(null);
+    }
+  }
+
+  /* Compress a logo to a tiny JPEG thumbnail for QR embedding */
+  function createLogoThumbnail(logoSrc, callback) {
+    var img = new Image();
+    img.onload = function() {
+      var size = 48;
+      var c = document.createElement('canvas');
+      c.width = size; c.height = size;
+      var ctx = c.getContext('2d');
+      /* White background (JPEG has no transparency) */
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, size, size);
+      /* Scale and center the logo */
+      var scale = Math.min(size / img.width, size / img.height) * 0.8;
+      var w = img.width * scale, h = img.height * scale;
+      var x = (size - w) / 2, y = (size - h) / 2;
+      ctx.drawImage(img, x, y, w, h);
+      var dataUrl = c.toDataURL('image/jpeg', 0.25);
+      callback(dataUrl);
+    };
+    img.onerror = function() { callback(null); };
+    img.src = logoSrc;
   }
 
   /* ── HASH PREVIEW MODE ──
-     If the URL has #splash=android&bg=FF0000, show a fullscreen
-     splash overlay immediately. This is what the phone sees after
-     scanning the QR code. Tap anywhere to dismiss and see the
-     normal tool underneath. */
+     If the URL has #splash=android&bg=FF0000&img=..., show a fullscreen
+     splash overlay with colour + logo. The img param is a URL-safe
+     base64 JPEG thumbnail. Tap anywhere to dismiss. */
 
   function checkHashPreview() {
     var hash = window.location.hash;
@@ -912,14 +978,23 @@
 
     var params = {};
     hash.substring(1).split('&').forEach(function(pair) {
-      var kv = pair.split('=');
-      if (kv.length === 2) params[kv[0]] = decodeURIComponent(kv[1]);
+      var idx = pair.indexOf('=');
+      if (idx > 0) params[pair.substring(0, idx)] = pair.substring(idx + 1);
     });
 
     if (!params.splash || !params.bg) return;
 
     var bgColor = '#' + params.bg;
     var platform = params.splash;
+
+    /* Decode logo thumbnail if present.
+       Reverse URL-safe base64: - → +, _ → /, re-pad with = */
+    var logoDataUrl = null;
+    if (params.img) {
+      var b64 = params.img.replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4 !== 0) b64 += '=';
+      logoDataUrl = 'data:image/jpeg;base64,' + b64;
+    }
 
     /* Create fullscreen overlay */
     var overlay = document.createElement('div');
@@ -932,13 +1007,27 @@
     badge.textContent = (platform === 'ios' ? 'iOS' : 'Android') + ' splash · ' + bgColor;
     overlay.appendChild(badge);
 
-    /* Center content area — show colour hex */
+    /* Center content — logo thumbnail or hex code */
     var center = document.createElement('div');
-    center.style.cssText = 'text-align:center;';
-    var hexLabel = document.createElement('div');
-    hexLabel.style.cssText = 'font:700 28px/1 "JetBrains Mono",monospace;color:rgba(0,0,0,0.08);margin-bottom:8px;';
-    hexLabel.textContent = bgColor;
-    center.appendChild(hexLabel);
+    center.style.cssText = 'text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;';
+
+    if (logoDataUrl) {
+      var logoImg = document.createElement('img');
+      logoImg.src = logoDataUrl;
+      logoImg.style.cssText = 'max-width:40%;max-height:30%;object-fit:contain;image-rendering:auto;filter:blur(0.5px);';
+      logoImg.alt = 'Logo preview';
+      center.appendChild(logoImg);
+
+      var thumbNote = document.createElement('div');
+      thumbNote.style.cssText = 'font:500 11px/1 system-ui;color:rgba(0,0,0,0.15);margin-top:4px;';
+      thumbNote.textContent = 'compressed preview — see Download HTML for full resolution';
+      center.appendChild(thumbNote);
+    } else {
+      var hexLabel = document.createElement('div');
+      hexLabel.style.cssText = 'font:700 28px/1 "JetBrains Mono",monospace;color:rgba(0,0,0,0.08);';
+      hexLabel.textContent = bgColor;
+      center.appendChild(hexLabel);
+    }
     overlay.appendChild(center);
 
     /* Dismiss hint at bottom */
@@ -947,26 +1036,21 @@
     hint.textContent = 'Tap anywhere to dismiss';
     overlay.appendChild(hint);
 
-    /* Fade-hint animation */
     var style = document.createElement('style');
     style.textContent = '@keyframes fade-hint{0%,100%{opacity:0.6}50%{opacity:1}}';
     document.head.appendChild(style);
 
-    /* Dismiss on tap */
     overlay.addEventListener('click', function() {
       overlay.style.opacity = '0';
       setTimeout(function() {
         overlay.remove();
         style.remove();
-        /* Clean the hash so refreshing doesn't re-trigger */
         history.replaceState(null, '', window.location.pathname + window.location.search);
       }, 300);
     });
 
     document.body.appendChild(overlay);
 
-    /* Also populate the form with the colour from the QR so it's
-       ready if the user dismisses and wants to use the tool */
     if (platform === 'android') {
       setTab('android');
       syncColor('as', bgColor);
