@@ -164,12 +164,14 @@
         <div class="step-sub">Handles: <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">"Last, First" email</code> · <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">First Last email</code> · <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">[email](mailto:email)</code> · <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">first.last@domain</code></div>
       </div>
     </div>
-    <textarea class="big-textarea" id="source-text" placeholder='Paste your ticket here. Examples the parser handles:
+    <textarea class="big-textarea" id="source-text" placeholder='Paste your Jira ticket, Slack message, or email thread here...
 
-"Cate, Billy" bcate@agne.com, Chris Chan chris.chan@instacart.com
-Anna Brady (anna.brady@instacart.com)
-[garry.brewer@fernet.io](mailto:garry.brewer@fernet.io)
-Please add kjsirstins@afstores.com as a tester'></textarea>
+Example formats the parser handles:
+"Smith, Jane" jane.smith@retailer.com, john.doe@retailer.com
+Alex Johnson alex.johnson@company.com
+Sarah Miller (sarah.miller@example.org)
+[mike.wilson@domain.com](mailto:mike.wilson@domain.com)
+Please add qa-tester@retailer.com as a tester'></textarea>
     <button class="extract-btn" onclick="extractEmails()">📧 Extract emails + names</button>
 
     <div class="section-h" style="margin-top:18px"><div class="dot"></div><div class="label">Manual add</div><div class="line"></div></div>
