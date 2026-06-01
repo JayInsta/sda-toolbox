@@ -243,15 +243,83 @@ Please add qa-tester@retailer.com as a tester'></textarea>
 </main>
 
 <script>
-  /* ═══════ COUNTERS ═══════ */
+  /* ═══════ COUNTERS (with password-protected reset) ═══════ */
   var COUNTER_NS='instacart-sda-toolbox',KEY_VISITS='tester-email-visits',KEY_ACTIONS='tester-email-exports',ABACUS_BASE='https://abacus.jasoncameron.dev';
+  var RESET_PASSWORD = '2507';
+
   function fmtCount(n){return(n==null)?'—':Number(n).toLocaleString()}
   function abacusFetch(ep,key){return fetch(ABACUS_BASE+'/'+ep+'/'+COUNTER_NS+'/'+key,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('');return r.json()}).then(function(d){return(d&&typeof d.value==='number')?d.value:null})}
-  function abacusHit(k){return abacusFetch('hit',k)}function abacusGet(k){return abacusFetch('get',k)}
+  function abacusHit(k){return abacusFetch('hit',k)}
+  function abacusGet(k){return abacusFetch('get',k)}
   function revealPill(id){var p=document.getElementById(id);if(p)p.classList.remove('hidden')}
   function bumpPill(id){var p=document.getElementById(id);if(!p)return;p.classList.add('bumped');setTimeout(function(){p.classList.remove('bumped')},900)}
-  function initCounters(){abacusHit(KEY_VISITS).then(function(v){if(v==null)return;document.getElementById('visit-count').textContent=fmtCount(v);revealPill('visit-pill')}).catch(function(){});abacusGet(KEY_ACTIONS).then(function(v){if(v==null)return;document.getElementById('action-count').textContent=fmtCount(v);revealPill('action-pill')}).catch(function(){})}
-  function bumpExportCounter(){abacusHit(KEY_ACTIONS).then(function(v){if(v==null)return;document.getElementById('action-count').textContent=fmtCount(v);revealPill('action-pill');bumpPill('action-pill')}).catch(function(){})}
+
+  /* ── Baseline offset: stored in localStorage, subtracted from display ── */
+  function getBaseline(key){
+    try{var v=localStorage.getItem('counter-baseline-'+key);return v?parseInt(v,10):0;}
+    catch(e){return 0;}
+  }
+  function setBaseline(key,val){
+    try{localStorage.setItem('counter-baseline-'+key,String(val));}catch(e){}
+  }
+  function displayCount(raw,key){
+    if(raw==null)return '—';
+    var adjusted=Math.max(0,raw-getBaseline(key));
+    return Number(adjusted).toLocaleString();
+  }
+
+  /* ── Triple-click reset ── */
+  var clickCounts={};
+  var clickTimers={};
+  function setupResetListener(pillId,counterKey,displayElId){
+    var pill=document.getElementById(pillId);
+    if(!pill)return;
+    pill.style.cursor='pointer';
+    pill.addEventListener('click',function(){
+      if(!clickCounts[pillId])clickCounts[pillId]=0;
+      clickCounts[pillId]++;
+      clearTimeout(clickTimers[pillId]);
+      if(clickCounts[pillId]>=3){
+        clickCounts[pillId]=0;
+        var pw=prompt('Enter reset password:');
+        if(pw===RESET_PASSWORD){
+          /* Read current raw value and store as baseline */
+          var getFunc=(counterKey===KEY_VISITS)?abacusGet:abacusGet;
+          abacusGet(counterKey).then(function(raw){
+            if(raw==null)raw=0;
+            setBaseline(counterKey,raw);
+            var el=document.getElementById(displayElId);
+            if(el)el.textContent='0';
+            bumpPill(pillId);
+          }).catch(function(){
+            alert('Could not reach counter server. Try again.');
+          });
+        } else if(pw!==null){
+          alert('Incorrect password.');
+        }
+        return;
+      }
+      /* Reset click count after 800ms of no clicks */
+      clickTimers[pillId]=setTimeout(function(){clickCounts[pillId]=0;},800);
+    });
+  }
+
+  function initCounters(){
+    abacusHit(KEY_VISITS).then(function(v){
+      if(v==null)return;
+      document.getElementById('visit-count').textContent=displayCount(v,KEY_VISITS);
+      revealPill('visit-pill');
+    }).catch(function(){});
+    abacusGet(KEY_ACTIONS).then(function(v){
+      if(v==null)return;
+      document.getElementById('action-count').textContent=displayCount(v,KEY_ACTIONS);
+      revealPill('action-pill');
+    }).catch(function(){});
+    /* Attach triple-click reset to both pills */
+    setupResetListener('visit-pill',KEY_VISITS,'visit-count');
+    setupResetListener('action-pill',KEY_ACTIONS,'action-count');
+  }
+  function bumpExportCounter(){abacusHit(KEY_ACTIONS).then(function(v){if(v==null)return;document.getElementById('action-count').textContent=displayCount(v,KEY_ACTIONS);revealPill('action-pill');bumpPill('action-pill')}).catch(function(){})}
   initCounters();
 
   /* ═══════ DATA ═══════ */
