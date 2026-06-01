@@ -494,6 +494,38 @@
     .studio-footer .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
     .studio-footer strong { color: var(--text-3); font-weight: 600; }
 
+    /* ── COUNTER PILLS (footer) ── */
+    .counter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--text-3);
+      transition: opacity 0.35s ease-out, transform 0.35s ease-out,
+                  border-color 0.25s, box-shadow 0.25s;
+    }
+    .counter-pill.hidden {
+      opacity: 0;
+      transform: translateY(3px);
+      pointer-events: none;
+    }
+    .counter-pill .counter-icon { font-size: 11px; line-height: 1; }
+    .counter-pill .counter-num {
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .counter-pill .counter-label { color: var(--text-4); }
+    .counter-pill.bumped {
+      border-color: var(--accent);
+      box-shadow: 0 0 14px rgba(212,255,58,0.18);
+    }
+    
     /* ───────── RESPONSIVE ───────── */
     @media (max-width: 720px) {
       .side-by-side { grid-template-columns: 1fr; }
@@ -744,11 +776,86 @@
     <span>Splash previewer</span>
     <div class="dot"></div>
     <span>IPP Build Tooling</span>
+    <div class="dot"></div>
+    <span class="counter-pill hidden" id="visit-pill" title="Total page visits across all users">
+      <span class="counter-icon">👁</span>
+      <span class="counter-num" id="visit-count">—</span>
+      <span class="counter-label">visits</span>
+    </span>
+    <span class="counter-pill hidden" id="action-pill" title="Total logos uploaded across all users">
+      <span class="counter-icon">🎨</span>
+      <span class="counter-num" id="action-count">—</span>
+      <span class="counter-label">uploads</span>
+    </span>
   </div>
 
 </main>
 
 <script>
+  /* ═════════════════════════════════════════════════════════
+     USAGE COUNTERS — Abacus (https://abacus.jasoncameron.dev)
+     Free public counter API, no signup. Two counters:
+       - visits:  hit once on every page load
+       - uploads: hit each time a logo is uploaded
+     If the API is unreachable, the pills stay hidden.
+     ═════════════════════════════════════════════════════════ */
+  var COUNTER_NS  = 'instacart-sda-toolbox';
+  var KEY_VISITS  = 'splash-previewer-visits';
+  var KEY_ACTIONS = 'splash-previewer-uploads';
+  var ABACUS_BASE = 'https://abacus.jasoncameron.dev';
+
+  function fmtCount(n) { return (n == null) ? '—' : Number(n).toLocaleString(); }
+
+  function abacusFetch(endpoint, key) {
+    return fetch(ABACUS_BASE + '/' + endpoint + '/' + COUNTER_NS + '/' + key, { cache: 'no-store' })
+      .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+      .then(function(data) { return (data && typeof data.value === 'number') ? data.value : null; });
+  }
+
+  function abacusHit(key) { return abacusFetch('hit', key); }
+  function abacusGet(key) { return abacusFetch('get', key); }
+
+  function revealPill(pillId) {
+    var pill = document.getElementById(pillId);
+    if (pill) pill.classList.remove('hidden');
+  }
+  function bumpPill(pillId) {
+    var pill = document.getElementById(pillId);
+    if (!pill) return;
+    pill.classList.add('bumped');
+    setTimeout(function() { pill.classList.remove('bumped'); }, 900);
+  }
+
+  function initCounters() {
+    abacusHit(KEY_VISITS)
+      .then(function(v) {
+        if (v == null) return;
+        document.getElementById('visit-count').textContent = fmtCount(v);
+        revealPill('visit-pill');
+      })
+      .catch(function(err) { console.warn('[counter] visits hit failed:', err && err.message); });
+
+    abacusGet(KEY_ACTIONS)
+      .then(function(v) {
+        if (v == null) return;
+        document.getElementById('action-count').textContent = fmtCount(v);
+        revealPill('action-pill');
+      })
+      .catch(function(err) { console.warn('[counter] uploads get failed:', err && err.message); });
+  }
+
+  function bumpUploadCounter() {
+    abacusHit(KEY_ACTIONS)
+      .then(function(v) {
+        if (v == null) return;
+        document.getElementById('action-count').textContent = fmtCount(v);
+        revealPill('action-pill');
+        bumpPill('action-pill');
+      })
+      .catch(function(err) { console.warn('[counter] uploads hit failed:', err && err.message); });
+  }
+
+  initCounters();
   var currentPlatform = 'android';
 
   /* ── TAB ── */
@@ -852,6 +959,7 @@
       var ph = document.getElementById(p+'-placeholder');
       if (ph) ph.style.display = 'none';
       updateLiveBadge();
+      bumpUploadCounter();
     };
     reader.readAsDataURL(file);
   }
