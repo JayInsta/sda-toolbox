@@ -7,6 +7,7 @@
     { label: 'Email Generator',   file: 'email-template-generator.html', icon: '✉\uFE0F' },
     { label: 'Image Resizer',     file: 'image-resizer.html',            icon: '🖼\uFE0F' },
     { label: 'Splash Previewer',  file: 'splash-preview.html',           icon: '📱' },
+    { label: 'Tester Emails',     file: 'tester-email-extractor.html',   icon: '📧' },
   ];
 
   /* ── ACTIVE PAGE DETECTION ── */
