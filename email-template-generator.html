@@ -2364,6 +2364,13 @@
       'Generated for "' + retailer + ' Team" · ' + COUNTRIES[selectedCountry].flag + ' ' + COUNTRIES[selectedCountry].locale + ' · locale: ' + localeVar + ' · folder: ' + folderName;
     document.getElementById('output-wrap').style.display = 'block';
     document.getElementById('output-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
+    document.getElementById('output-info').textContent =
+      'Generated for "' + retailer + ' Team" · ' + COUNTRIES[selectedCountry].flag + ' ' + COUNTRIES[selectedCountry].locale + ' · locale: ' + localeVar + ' · folder: ' + folderName;
+    document.getElementById('output-wrap').style.display = 'block';
+    document.getElementById('output-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
+
+    // Increment the global generates counter
+    bumpGenerateCounter();
   }
 
   /* ── RENDER HELPERS ── */
