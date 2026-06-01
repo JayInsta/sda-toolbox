@@ -149,7 +149,7 @@
     /* ───────── APP ICON FRAME ───────── */
     .icon-frame { width: 120px; height: 120px; border-radius: 26px; overflow: hidden; position: relative; box-shadow: 0 8px 26px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06); border: 2px solid var(--border-hov); flex-shrink: 0; z-index: 1; }
     .icon-bg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-    .icon-bg img { max-width: 60%; max-height: 60%; object-fit: contain; display: none; }
+    .icon-bg img { max-width: 60%; max-height: 60%; object-fit: contain; }
 
     /* ───────── ADAPTIVE ICON MASKS ───────── */
     .mask-grid {
@@ -182,9 +182,8 @@
       box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     }
     .mask-shape img {
-      max-width: 60%; max-height: 60%;
+      width: 60%; height: 60%;
       object-fit: contain;
-      display: none;
     }
     .mask-shape .mask-placeholder {
       font-size: 8px;
@@ -688,18 +687,18 @@
       var ph=document.getElementById(p+'-placeholder');if(ph)ph.style.display='none';
       updateLiveBadge();
       bumpUploadCounter();
-      if(p==='ai') updateMasks();
+      if(p==='ai'||p==='as') updateMasks();
     };
     reader.readAsDataURL(file);
   }
   function removeUpload(p){
     document.getElementById(p+'-preview').style.display='none';
     document.getElementById(p+'-preview-img').src='';
-    var logo=document.getElementById(p+'-logo');logo.style.display='none';logo.src='';
+    var logo=document.getElementById(p+'-logo');logo.style.display='none';logo.removeAttribute('src');
     var ph=document.getElementById(p+'-placeholder');if(ph)ph.style.display='block';
     document.getElementById(p+'-file').value='';
     updateLiveBadge();
-    if(p==='ai') updateMasks();
+    if(p==='ai'||p==='as') updateMasks();
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -739,8 +738,14 @@
 
   function updateMasks() {
     var bgColor = document.getElementById('ai-hex').value || '#FFFFFF';
-    var logoEl = document.getElementById('ai-logo');
+    /* Primary: use app icon logo. Fallback: use splash logo if no icon uploaded. */
+    var aiLogo = document.getElementById('ai-logo');
+    var asLogo = document.getElementById('as-logo');
+    var logoEl = (aiLogo && aiLogo.getAttribute('src')) ? aiLogo
+               : (asLogo && asLogo.getAttribute('src')) ? asLogo
+               : null;
     var hasLogo = logoEl && logoEl.getAttribute('src');
+
     MASKS.forEach(function(m) {
       var bg = document.getElementById('mask-bg-' + m.id);
       var img = document.getElementById('mask-img-' + m.id);
@@ -748,11 +753,11 @@
       if (bg) bg.style.background = bgColor;
       if (hasLogo && img) {
         img.src = logoEl.src;
-        img.style.display = 'block';
+        img.style.setProperty('display', 'block', 'important');
         if (ph) ph.style.display = 'none';
       } else if (img) {
-        img.style.display = 'none';
-        img.src = '';
+        img.style.setProperty('display', 'none', 'important');
+        img.removeAttribute('src');
         if (ph) ph.style.display = 'block';
       }
     });
