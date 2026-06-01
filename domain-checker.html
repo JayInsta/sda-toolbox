@@ -141,795 +141,216 @@
 
     /* ───────── SHELL + SPLIT ───────── */
     .studio-shell { width: 100%; }
-    .studio-split {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: start;
-    }
-    .studio-left {
-      padding: 24px 28px 60px;
-      border-right: 1px solid var(--border);
-      min-width: 0;
-    }
-    .studio-right {
-      position: sticky;
-      top: 54px;
-      height: calc(100vh - 54px);
-      display: flex;
-      flex-direction: column;
-      background:
-        radial-gradient(800px 400px at 70% -10%, rgba(212,255,58,0.04), transparent 60%),
-        var(--bg-page);
-      min-width: 0;
-    }
+    .studio-split { display: grid; grid-template-columns: 1fr 1fr; align-items: start; }
+    .studio-left { padding: 24px 28px 60px; border-right: 1px solid var(--border); min-width: 0; }
+    .studio-right { position: sticky; top: 54px; height: calc(100vh - 54px); display: flex; flex-direction: column; background: radial-gradient(800px 400px at 70% -10%, rgba(212,255,58,0.04), transparent 60%), var(--bg-page); min-width: 0; }
 
-    /* ───────── STEP CARDS (left pane) ───────── */
-    .step {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px 20px;
-      margin-bottom: 12px;
-      transition: border-color 0.15s;
-    }
+    /* ───────── STEP CARDS ───────── */
+    .step { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; transition: border-color 0.15s; }
     .step:hover { border-color: var(--border-hov); }
     .step-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
     .step-header.compact { margin-bottom: 0; }
-    .step-num {
-      width: 26px; height: 26px;
-      border-radius: 7px;
-      background: var(--accent-bg);
-      color: var(--accent);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 600;
-      flex-shrink: 0;
-      font-family: var(--mono);
-    }
+    .step-num { width: 26px; height: 26px; border-radius: 7px; background: var(--accent-bg); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; font-family: var(--mono); }
     .step-title { font-size: 14px; font-weight: 600; color: var(--text-1); }
     .step-sub { font-size: 12px; color: var(--text-3); margin-top: 2px; line-height: 1.45; }
     .step-meta { margin-left: auto; }
-    .step-badge {
-      padding: 2px 8px;
-      background: var(--bg-muted);
-      border-radius: 5px;
-      font-size: 11px; font-weight: 500;
-      color: var(--text-3);
-      font-family: var(--mono);
-      letter-spacing: 0.02em;
-    }
+    .step-badge { padding: 2px 8px; background: var(--bg-muted); border-radius: 5px; font-size: 11px; font-weight: 500; color: var(--text-3); font-family: var(--mono); letter-spacing: 0.02em; }
     .step-badge.optional { background: var(--bg-muted); color: var(--text-3); }
-
     .step-toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; }
 
-    /* ───────── INTRO CARD ───────── */
-    .intro-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 16px;
-      margin-bottom: 12px;
-      font-size: 13px;
-      color: var(--text-3);
-      line-height: 1.65;
-      display: flex; align-items: flex-start; gap: 10px;
-    }
+    .intro-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; font-size: 13px; color: var(--text-3); line-height: 1.65; display: flex; align-items: flex-start; gap: 10px; }
     .intro-card svg { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
     .intro-card strong { color: var(--text-1); font-weight: 600; }
 
-    /* ───────── FIELDS / INPUTS ───────── */
     .field { margin-bottom: 12px; }
     .field:last-child { margin-bottom: 0; }
-    .field label {
-      display: block;
-      font-size: 11.5px; font-weight: 500;
-      color: var(--text-2);
-      margin-bottom: 6px;
-    }
+    .field label { display: block; font-size: 11.5px; font-weight: 500; color: var(--text-2); margin-bottom: 6px; }
     .field label .hint { color: var(--text-4); font-weight: 400; font-size: 11px; margin-left: 4px; }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 9px 12px;
-      background: var(--bg-input);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 13px;
-      color: var(--text-1);
-      outline: none;
-      font-family: var(--mono);
-      transition: border-color 0.12s, box-shadow 0.12s;
-    }
-    input[type="text"]:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(212,255,58,0.18);
-    }
+    input[type="text"] { width: 100%; padding: 9px 12px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--text-1); outline: none; font-family: var(--mono); transition: border-color 0.12s, box-shadow 0.12s; }
+    input[type="text"]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(212,255,58,0.18); }
     input[type="text"]::placeholder { color: var(--text-mute); }
-
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-    /* ───────── TOGGLE SWITCH ───────── */
     .toggle-switch { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
-    .toggle-slider {
-      position: absolute; inset: 0;
-      background: var(--border);
-      border-radius: 99px;
-      cursor: pointer;
-      transition: background 0.18s;
-    }
-    .toggle-slider::before {
-      content: '';
-      position: absolute;
-      width: 16px; height: 16px;
-      left: 3px; top: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: transform 0.18s, background 0.18s;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-    }
+    .toggle-slider { position: absolute; inset: 0; background: var(--border); border-radius: 99px; cursor: pointer; transition: background 0.18s; }
+    .toggle-slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: transform 0.18s, background 0.18s; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
     .toggle-switch input:checked + .toggle-slider { background: var(--accent); }
     .toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); background: var(--on-accent); }
 
-    /* ───────── DNS PROVIDER BUTTONS ───────── */
     .dns-btn-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-    .dns-btn {
-      flex: 1; min-width: 0;
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 9px 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--bg-input);
-      color: var(--text-3);
-      font-size: 12.5px; font-weight: 500;
-      cursor: pointer;
-      transition: all 0.12s;
-      user-select: none;
-      font-family: inherit;
-    }
+    .dns-btn { flex: 1; min-width: 0; display: inline-flex; align-items: center; gap: 6px; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text-3); font-size: 12.5px; font-weight: 500; cursor: pointer; transition: all 0.12s; user-select: none; font-family: inherit; }
     .dns-btn:hover { border-color: var(--border-hov); color: var(--text-2); }
-    .dns-btn.active {
-      background: var(--accent-bg);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    .dns-btn .dns-host {
-      font-family: var(--mono);
-      font-size: 10.5px;
-      background: var(--bg-page);
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-left: auto;
-      color: var(--text-4);
-    }
+    .dns-btn.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+    .dns-btn .dns-host { font-family: var(--mono); font-size: 10.5px; background: var(--bg-page); padding: 2px 6px; border-radius: 4px; margin-left: auto; color: var(--text-4); }
     .dns-btn.active .dns-host { color: var(--accent); background: rgba(212,255,58,0.15); }
-    .dns-privacy {
-      font-size: 11.5px;
-      padding: 8px 12px;
-      border-radius: 7px;
-      background: var(--bg-sub);
-      border: 1px solid var(--border);
-      color: var(--text-3);
-      line-height: 1.55;
-    }
+    .dns-privacy { font-size: 11.5px; padding: 8px 12px; border-radius: 7px; background: var(--bg-sub); border: 1px solid var(--border); color: var(--text-3); line-height: 1.55; }
 
-    /* ───────── RECORD TYPE BUTTONS ───────── */
     .rec-group { display: flex; gap: 6px; flex-wrap: wrap; }
-    .rec-btn {
-      padding: 7px 14px;
-      border-radius: 7px;
-      border: 1px solid var(--border);
-      background: var(--bg-input);
-      color: var(--text-3);
-      font-size: 12px; font-weight: 600;
-      cursor: pointer;
-      transition: all 0.12s;
-      user-select: none;
-      font-family: var(--mono);
-    }
+    .rec-btn { padding: 7px 14px; border-radius: 7px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text-3); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.12s; user-select: none; font-family: var(--mono); }
     .rec-btn:hover { border-color: var(--border-hov); color: var(--text-2); }
-    .rec-btn.active {
-      background: var(--accent-bg);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
+    .rec-btn.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
 
-    /* ───────── DOMAIN ENTRY (split-host pairs) ───────── */
-    .domain-entry {
-      background: var(--bg-sub);
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 11px 13px;
-      margin-bottom: 8px;
-    }
-    .entry-num {
-      width: 22px; height: 22px;
-      border-radius: 6px;
-      background: var(--accent-bg);
-      color: var(--accent);
-      font-size: 10.5px; font-weight: 700;
-      display: inline-flex; align-items: center; justify-content: center;
-      margin-right: 8px;
-      font-family: var(--mono);
-    }
-    .domain-entry-fields {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      align-items: end;
-    }
-    .btn-remove {
-      padding: 8px 11px;
-      background: var(--bg-input);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      color: var(--danger);
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.12s;
-      font-family: inherit;
-      white-space: nowrap;
-    }
+    .domain-entry { background: var(--bg-sub); border: 1px solid var(--border); border-radius: 9px; padding: 11px 13px; margin-bottom: 8px; }
+    .entry-num { width: 22px; height: 22px; border-radius: 6px; background: var(--accent-bg); color: var(--accent); font-size: 10.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; margin-right: 8px; font-family: var(--mono); }
+    .domain-entry-fields { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
+    .btn-remove { padding: 8px 11px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 7px; color: var(--danger); font-size: 12px; cursor: pointer; transition: all 0.12s; font-family: inherit; white-space: nowrap; }
     .btn-remove:hover { background: var(--danger-bg); border-color: var(--danger-bd); }
-    .btn-add {
-      padding: 9px 14px;
-      background: var(--bg-sub);
-      border: 1px dashed var(--border);
-      border-radius: 8px;
-      color: var(--text-3);
-      font-size: 12.5px; font-weight: 500;
-      cursor: pointer;
-      width: 100%;
-      text-align: center;
-      transition: all 0.12s;
-      font-family: inherit;
-    }
+    .btn-add { padding: 9px 14px; background: var(--bg-sub); border: 1px dashed var(--border); border-radius: 8px; color: var(--text-3); font-size: 12.5px; font-weight: 500; cursor: pointer; width: 100%; text-align: center; transition: all 0.12s; font-family: inherit; }
     .btn-add:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
 
-    /* ───────── SAME-AS CHECKBOX ───────── */
-    .same-as-row {
-      display: flex; align-items: center; gap: 9px;
-      margin-bottom: 12px;
-      padding: 9px 12px;
-      background: var(--bg-sub);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.12s;
-    }
+    .same-as-row { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; padding: 9px 12px; background: var(--bg-sub); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; user-select: none; transition: all 0.12s; }
     .same-as-row:hover { border-color: var(--border-hov); }
-    .same-as-row.active {
-      border-color: var(--accent);
-      background: var(--accent-bg);
-    }
-    .same-as-cb {
-      width: 14px; height: 14px;
-      accent-color: var(--accent);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    .same-as-label {
-      font-size: 12.5px;
-      color: var(--text-3);
-      transition: color 0.12s;
-      line-height: 1.4;
-    }
+    .same-as-row.active { border-color: var(--accent); background: var(--accent-bg); }
+    .same-as-cb { width: 14px; height: 14px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+    .same-as-label { font-size: 12.5px; color: var(--text-3); transition: color 0.12s; line-height: 1.4; }
     .same-as-row.active .same-as-label { color: var(--accent); }
 
-    /* ───────── GENERATE BUTTON ───────── */
-    .generate-btn {
-      width: 100%;
-      padding: 13px;
-      background: var(--accent);
-      border: none;
-      border-radius: 10px;
-      color: var(--on-accent);
-      font-size: 14px; font-weight: 700;
-      cursor: pointer;
-      transition: all 0.18s;
-      letter-spacing: 0.01em;
-      margin-top: 8px;
-      font-family: inherit;
-      box-shadow: 0 0 24px rgba(212,255,58,0.18);
-    }
-    .generate-btn:hover:not(:disabled) {
-      background: var(--accent-h);
-      box-shadow: 0 0 36px rgba(212,255,58,0.32);
-      transform: translateY(-1px);
-    }
-    .generate-btn:disabled {
-      background: var(--bg-muted);
-      color: var(--text-mute);
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
+    .generate-btn { width: 100%; padding: 13px; background: var(--accent); border: none; border-radius: 10px; color: var(--on-accent); font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.18s; letter-spacing: 0.01em; margin-top: 8px; font-family: inherit; box-shadow: 0 0 24px rgba(212,255,58,0.18); }
+    .generate-btn:hover:not(:disabled) { background: var(--accent-h); box-shadow: 0 0 36px rgba(212,255,58,0.32); transform: translateY(-1px); }
+    .generate-btn:disabled { background: var(--bg-muted); color: var(--text-mute); cursor: not-allowed; box-shadow: none; transform: none; }
 
-    /* ───────── VALIDATION ERROR ───────── */
-    .validation-error {
-      background: var(--danger-bg);
-      border: 1px solid var(--danger-bd);
-      border-radius: 9px;
-      padding: 11px 13px;
-      font-size: 12.5px;
-      color: var(--danger);
-      line-height: 1.55;
-      margin-bottom: 10px;
-      animation: shake 0.3s ease-in-out;
-    }
+    .validation-error { background: var(--danger-bg); border: 1px solid var(--danger-bd); border-radius: 9px; padding: 11px 13px; font-size: 12.5px; color: var(--danger); line-height: 1.55; margin-bottom: 10px; animation: shake 0.3s ease-in-out; }
 
-    /* ───────── RIGHT PANE: TABS + LIVE ───────── */
-    .preview-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 11px 18px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(10,10,15,0.5);
-      backdrop-filter: blur(12px);
-      flex-shrink: 0;
-    }
-    .preview-tabs {
-      display: flex;
-      gap: 3px;
-      background: var(--bg-muted);
-      padding: 3px;
-      border-radius: 8px;
-    }
-    .preview-tab {
-      padding: 6px 14px;
-      border-radius: 6px;
-      background: transparent;
-      color: var(--text-3);
-      font-size: 12.5px; font-weight: 500;
-      cursor: pointer;
-      transition: all 0.12s;
-      font-family: inherit;
-      display: inline-flex; align-items: center; gap: 6px;
-    }
+    .preview-header { display: flex; align-items: center; gap: 12px; padding: 11px 18px; border-bottom: 1px solid var(--border); background: rgba(10,10,15,0.5); backdrop-filter: blur(12px); flex-shrink: 0; }
+    .preview-tabs { display: flex; gap: 3px; background: var(--bg-muted); padding: 3px; border-radius: 8px; }
+    .preview-tab { padding: 6px 14px; border-radius: 6px; background: transparent; color: var(--text-3); font-size: 12.5px; font-weight: 500; cursor: pointer; transition: all 0.12s; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; }
     .preview-tab:hover { color: var(--text-1); }
-    .preview-tab.active {
-      background: var(--bg-card);
-      color: var(--text-1);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    .preview-tab .count-bubble {
-      background: var(--bg-input);
-      color: var(--text-4);
-      font-family: var(--mono);
-      font-size: 10px;
-      padding: 1px 6px;
-      border-radius: 99px;
-      min-width: 18px;
-      text-align: center;
-    }
+    .preview-tab.active { background: var(--bg-card); color: var(--text-1); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .preview-tab .count-bubble { background: var(--bg-input); color: var(--text-4); font-family: var(--mono); font-size: 10px; padding: 1px 6px; border-radius: 99px; min-width: 18px; text-align: center; }
     .preview-tab.active .count-bubble { background: var(--accent-bg); color: var(--accent); }
     .preview-header-spacer { flex: 1; }
+    .preview-area { flex: 1; overflow-y: auto; padding: 20px 24px 30px; }
 
-    /* ───────── RIGHT PANE: AREA ───────── */
-    .preview-area {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 24px 30px;
-    }
-
-    /* ───────── EMPTY STATES ───────── */
-    .empty-state {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center;
-      padding: 60px 30px;
-      color: var(--text-4);
-    }
-    .empty-state svg {
-      width: 56px; height: 56px;
-      margin-bottom: 14px;
-      color: var(--text-mute);
-      opacity: 0.6;
-    }
-    .empty-state-title {
-      font-size: 14px;
-      color: var(--text-3);
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .empty-state-desc {
-      font-size: 12.5px;
-      color: var(--text-4);
-      line-height: 1.55;
-      max-width: 320px;
-    }
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 60px 30px; color: var(--text-4); }
+    .empty-state svg { width: 56px; height: 56px; margin-bottom: 14px; color: var(--text-mute); opacity: 0.6; }
+    .empty-state-title { font-size: 14px; color: var(--text-3); font-weight: 600; margin-bottom: 6px; }
+    .empty-state-desc { font-size: 12.5px; color: var(--text-4); line-height: 1.55; max-width: 320px; }
     .empty-state-desc code { background: var(--bg-muted); padding: 1px 5px; border-radius: 3px; font-family: var(--mono); color: var(--accent); font-size: 11px; }
 
-    /* ───────── RESULTS: OVERALL CARD ───────── */
-    .overall {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 18px;
-      margin-bottom: 12px;
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 12px;
-      background: var(--bg-card);
-      transition: border-color 0.3s;
-    }
+    .overall { border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--bg-card); transition: border-color 0.3s; }
     .overall.ok { border-color: var(--success-bd); background: linear-gradient(135deg, rgba(52,211,153,0.06), var(--bg-card)); }
     .overall.warn { border-color: var(--warning-bd); background: linear-gradient(135deg, rgba(251,191,36,0.06), var(--bg-card)); }
     .overall.fail { border-color: var(--danger-bd); background: linear-gradient(135deg, rgba(248,113,113,0.06), var(--bg-card)); }
-    .overall-label {
-      font-size: 10.5px; color: var(--text-4);
-      text-transform: uppercase; letter-spacing: 0.08em;
-      margin-bottom: 4px; font-family: var(--mono);
-    }
+    .overall-label { font-size: 10.5px; color: var(--text-4); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; font-family: var(--mono); }
     .overall-status { font-size: 16px; font-weight: 700; color: var(--text-1); }
 
-    /* ───────── REFRESH BAR ───────── */
-    .refresh-bar {
-      display: flex; align-items: center; justify-content: space-between;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 8px 14px;
-      margin-bottom: 12px;
-    }
+    .refresh-bar { display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); border: 1px solid var(--border); border-radius: 9px; padding: 8px 14px; margin-bottom: 12px; }
     .refresh-left { font-size: 12px; color: var(--text-3); }
     .refresh-right { display: flex; align-items: center; gap: 10px; }
-    .countdown {
-      font-family: var(--mono);
-      color: var(--info-text);
-      font-weight: 600;
-      font-size: 13px;
-      min-width: 36px;
-      text-align: right;
-    }
-    .btn-stop {
-      padding: 4px 10px;
-      background: var(--bg-input);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--danger);
-      font-size: 11px; font-weight: 600;
-      cursor: pointer; font-family: inherit;
-      transition: all 0.12s;
-    }
+    .countdown { font-family: var(--mono); color: var(--info-text); font-weight: 600; font-size: 13px; min-width: 36px; text-align: right; }
+    .btn-stop { padding: 4px 10px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 6px; color: var(--danger); font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.12s; }
     .btn-stop:hover { background: var(--danger-bg); border-color: var(--danger-bd); }
 
-    /* ───────── STATUS CARDS ───────── */
-    .status-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-      transition: border-color 0.3s;
-    }
-    .status-card.ok       { border-color: var(--success-bd); }
-    .status-card.fail     { border-color: var(--danger-bd); }
-    .status-card.pending  { border-color: var(--warning-bd); }
+    .status-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 11px; padding: 14px 16px; margin-bottom: 10px; transition: border-color 0.3s; }
+    .status-card.ok { border-color: var(--success-bd); }
+    .status-card.fail { border-color: var(--danger-bd); }
+    .status-card.pending { border-color: var(--warning-bd); }
     .status-card.checking { border-color: var(--info-bd); }
-
-    .status-top {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      gap: 12px; margin-bottom: 10px;
-    }
+    .status-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
     .status-title { font-size: 13.5px; font-weight: 600; color: var(--text-1); margin-bottom: 3px; }
-    .status-desc  { font-size: 12px; color: var(--text-3); line-height: 1.5; }
-
-    .status-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 11.5px; font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 99px;
-      white-space: nowrap;
-      flex-shrink: 0;
-      font-family: var(--mono);
-    }
-    .badge-ok       { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-bd); }
-    .badge-fail     { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-bd); }
-    .badge-pending  { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-bd); }
+    .status-desc { font-size: 12px; color: var(--text-3); line-height: 1.5; }
+    .status-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; font-family: var(--mono); }
+    .badge-ok { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-bd); }
+    .badge-fail { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-bd); }
+    .badge-pending { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-bd); }
     .badge-checking { background: var(--info-bg); color: var(--info-text); border: 1px solid var(--info-bd); }
-    .badge-idle     { background: var(--bg-muted); color: var(--text-4); border: 1px solid var(--border); }
-
+    .badge-idle { background: var(--bg-muted); color: var(--text-4); border: 1px solid var(--border); }
     .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-    .dot-ok       { background: var(--success); box-shadow: 0 0 5px var(--success); }
-    .dot-fail     { background: var(--danger); box-shadow: 0 0 5px var(--danger); }
-    .dot-pending  { background: var(--warning); animation: pulse 1.5s infinite; }
+    .dot-ok { background: var(--success); box-shadow: 0 0 5px var(--success); }
+    .dot-fail { background: var(--danger); box-shadow: 0 0 5px var(--danger); }
+    .dot-pending { background: var(--warning); animation: pulse 1.5s infinite; }
     .dot-checking { background: var(--info-text); animation: pulse 1s infinite; }
-    .dot-idle     { background: var(--text-mute); }
+    .dot-idle { background: var(--text-mute); }
 
-    /* ───────── DNS DETAIL ───────── */
-    .dns-detail {
-      margin-top: 10px;
-      background: var(--bg-input);
-      border-radius: 7px;
-      padding: 9px 12px;
-      font-size: 12px;
-      font-family: var(--mono);
-      color: var(--text-3);
-      line-height: 1.75;
-      border: 1px solid var(--border);
-      word-break: break-all;
-    }
-    .dk  { color: var(--text-mute); }
-    .dv  { color: var(--info-text); }
+    .dns-detail { margin-top: 10px; background: var(--bg-input); border-radius: 7px; padding: 9px 12px; font-size: 12px; font-family: var(--mono); color: var(--text-3); line-height: 1.75; border: 1px solid var(--border); word-break: break-all; }
+    .dk { color: var(--text-mute); }
+    .dv { color: var(--info-text); }
     .dok { color: var(--success); }
     .dno { color: var(--danger); }
 
-    /* ───────── ACTION HINTS ───────── */
-    .action-hint {
-      margin-top: 10px;
-      padding: 9px 12px;
-      border-radius: 7px;
-      font-size: 12.5px;
-      line-height: 1.6;
-    }
-    .ah-ok      { background: var(--success-bg); border: 1px solid var(--success-bd); color: var(--success); }
-    .ah-fail    { background: var(--danger-bg); border: 1px solid var(--danger-bd); color: var(--danger); }
+    .action-hint { margin-top: 10px; padding: 9px 12px; border-radius: 7px; font-size: 12.5px; line-height: 1.6; }
+    .ah-ok { background: var(--success-bg); border: 1px solid var(--success-bd); color: var(--success); }
+    .ah-fail { background: var(--danger-bg); border: 1px solid var(--danger-bd); color: var(--danger); }
     .ah-pending { background: var(--warning-bg); border: 1px solid var(--warning-bd); color: var(--warning); }
     .action-hint strong { color: inherit; font-weight: 700; }
-    .action-hint code {
-      background: rgba(0,0,0,0.3);
-      padding: 1px 6px;
-      border-radius: 3px;
-      font-family: var(--mono);
-      font-size: 11.5px;
-    }
+    .action-hint code { background: rgba(0,0,0,0.3); padding: 1px 6px; border-radius: 3px; font-family: var(--mono); font-size: 11.5px; }
 
-    /* ───────── SPLIT WARN ───────── */
-    .split-warn {
-      background: var(--warning-bg);
-      border: 1px solid var(--warning-bd);
-      border-radius: 9px;
-      padding: 12px 14px;
-      margin-top: 10px;
-    }
+    .split-warn { background: var(--warning-bg); border: 1px solid var(--warning-bd); border-radius: 9px; padding: 12px 14px; margin-top: 10px; }
     .split-warn-title { font-size: 13px; font-weight: 700; color: var(--warning); margin-bottom: 7px; }
-    .split-warn-body {
-      font-size: 12.5px;
-      color: var(--text-2);
-      line-height: 1.7;
-    }
-    .split-warn-body code {
-      background: var(--bg-input);
-      padding: 1px 5px;
-      border-radius: 3px;
-      font-family: var(--mono);
-      font-size: 11.5px;
-      color: var(--accent);
-    }
+    .split-warn-body { font-size: 12.5px; color: var(--text-2); line-height: 1.7; }
+    .split-warn-body code { background: var(--bg-input); padding: 1px 5px; border-radius: 3px; font-family: var(--mono); font-size: 11.5px; color: var(--accent); }
     .split-warn-body strong { color: var(--warning); font-weight: 700; }
 
-    /* ───────── PROP SUMMARY + GRID ───────── */
-    .prop-summary {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
-    }
-    .prop-stat {
-      background: var(--bg-input);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 9px 14px;
-      text-align: center;
-      flex: 1;
-      min-width: 70px;
-    }
+    .prop-summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .prop-stat { background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 9px 14px; text-align: center; flex: 1; min-width: 70px; }
     .prop-stat-num { font-size: 20px; font-weight: 700; margin-bottom: 2px; font-family: var(--mono); }
-    .prop-stat-label {
-      font-size: 10px; color: var(--text-4);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-family: var(--mono);
-    }
-    .prop-stat.ps-ok   .prop-stat-num { color: var(--success); }
+    .prop-stat-label { font-size: 10px; color: var(--text-4); text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--mono); }
+    .prop-stat.ps-ok .prop-stat-num { color: var(--success); }
     .prop-stat.ps-fail .prop-stat-num { color: var(--danger); }
     .prop-stat.ps-pend .prop-stat-num { color: var(--warning); }
-    .prop-stat.ps-pct  .prop-stat-num { color: var(--accent); }
-
-    .prop-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 6px;
-    }
-    .prop-row {
-      background: var(--bg-input);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 9px 11px;
-      display: flex; align-items: center; gap: 9px;
-      transition: border-color 0.3s;
-    }
-    .prop-row.pr-ok   { border-color: var(--success-bd); }
+    .prop-stat.ps-pct .prop-stat-num { color: var(--accent); }
+    .prop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px; }
+    .prop-row { background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; display: flex; align-items: center; gap: 9px; transition: border-color 0.3s; }
+    .prop-row.pr-ok { border-color: var(--success-bd); }
     .prop-row.pr-fail { border-color: var(--danger-bd); }
     .prop-row.pr-pend { border-color: var(--warning-bd); }
     .prop-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-    .pd-ok   { background: var(--success); box-shadow: 0 0 4px var(--success); }
+    .pd-ok { background: var(--success); box-shadow: 0 0 4px var(--success); }
     .pd-fail { background: var(--danger); box-shadow: 0 0 4px var(--danger); }
     .pd-pend { background: var(--warning); animation: pulse 1.5s infinite; }
     .prop-location { flex: 1; min-width: 0; }
     .prop-loc-name { font-size: 12.5px; font-weight: 500; color: var(--text-2); }
     .prop-loc-region { font-size: 10.5px; color: var(--text-4); margin-top: 1px; }
-    .prop-val {
-      font-family: var(--mono);
-      font-size: 10.5px;
-      color: var(--text-4);
-      text-align: right;
-      max-width: 120px;
-      word-break: break-all;
-    }
-    .prop-val.pv-ok   { color: var(--success); }
+    .prop-val { font-family: var(--mono); font-size: 10.5px; color: var(--text-4); text-align: right; max-width: 120px; word-break: break-all; }
+    .prop-val.pv-ok { color: var(--success); }
     .prop-val.pv-fail { color: var(--danger); }
 
-    /* ───────── CHAIN VISUALIZATION ───────── */
     .chain-wrap { margin-top: 10px; }
     .chain-hop { display: flex; align-items: stretch; gap: 0; margin-bottom: 0; }
-    .chain-connector {
-      width: 22px;
-      display: flex; flex-direction: column; align-items: center;
-      flex-shrink: 0;
-    }
-    .chain-dot-top {
-      width: 9px; height: 9px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      margin-top: 12px;
-    }
+    .chain-connector { width: 22px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+    .chain-dot-top { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 12px; }
     .chain-line { width: 2px; flex: 1; min-height: 14px; }
-
-    .cd-cname    { background: var(--info-text); box-shadow: 0 0 4px var(--info-text); }
-    .cl-cname    { background: var(--info-bd); }
-    .cd-a        { background: var(--success); box-shadow: 0 0 4px var(--success); }
-    .cl-a        { background: var(--success-bd); }
+    .cd-cname { background: var(--info-text); box-shadow: 0 0 4px var(--info-text); }
+    .cl-cname { background: var(--info-bd); }
+    .cd-a { background: var(--success); box-shadow: 0 0 4px var(--success); }
+    .cl-a { background: var(--success-bd); }
     .cd-redirect { background: var(--warning); box-shadow: 0 0 4px var(--warning); }
     .cl-redirect { background: var(--warning-bd); }
-    .cd-final    { background: var(--accent); box-shadow: 0 0 4px var(--accent); }
-
-    .chain-detail {
-      flex: 1;
-      padding: 8px 11px;
-      background: var(--bg-input);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      margin-bottom: 6px;
-      margin-left: 8px;
-    }
-    .chain-type {
-      font-size: 10px; font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 3px;
-      font-family: var(--mono);
-    }
-    .ct-cname    { color: var(--info-text); }
-    .ct-a        { color: var(--success); }
+    .cd-final { background: var(--accent); box-shadow: 0 0 4px var(--accent); }
+    .chain-detail { flex: 1; padding: 8px 11px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 7px; margin-bottom: 6px; margin-left: 8px; }
+    .chain-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; font-family: var(--mono); }
+    .ct-cname { color: var(--info-text); }
+    .ct-a { color: var(--success); }
     .ct-redirect { color: var(--warning); }
-    .ct-start    { color: var(--accent); }
-    .chain-value {
-      font-family: var(--mono);
-      font-size: 12.5px;
-      color: var(--text-1);
-      word-break: break-all;
-    }
-    .chain-ttl {
-      font-size: 10.5px;
-      color: var(--text-4);
-      margin-top: 2px;
-      font-family: var(--mono);
-    }
-
-    .chain-info-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 15px; height: 15px;
-      border-radius: 50%;
-      background: var(--bg-muted);
-      color: var(--text-3);
-      font-size: 9.5px; font-weight: 700;
-      cursor: pointer;
-      margin-left: 5px;
-      transition: all 0.12s;
-      vertical-align: middle;
-      border: none;
-      line-height: 1;
-      font-family: inherit;
-    }
+    .ct-start { color: var(--accent); }
+    .chain-value { font-family: var(--mono); font-size: 12.5px; color: var(--text-1); word-break: break-all; }
+    .chain-ttl { font-size: 10.5px; color: var(--text-4); margin-top: 2px; font-family: var(--mono); }
+    .chain-info-btn { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; background: var(--bg-muted); color: var(--text-3); font-size: 9.5px; font-weight: 700; cursor: pointer; margin-left: 5px; transition: all 0.12s; vertical-align: middle; border: none; line-height: 1; font-family: inherit; }
     .chain-info-btn:hover { background: var(--border-hov); color: var(--text-1); }
     .chain-info-btn.open { background: var(--accent); color: var(--on-accent); }
-    .chain-explain {
-      display: none;
-      margin-top: 6px;
-      padding: 8px 10px;
-      background: var(--bg-sub);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 11.5px;
-      color: var(--text-3);
-      line-height: 1.6;
-    }
+    .chain-explain { display: none; margin-top: 6px; padding: 8px 10px; background: var(--bg-sub); border: 1px solid var(--border); border-radius: 6px; font-size: 11.5px; color: var(--text-3); line-height: 1.6; }
     .chain-explain.visible { display: block; }
     .chain-explain strong { color: var(--text-1); }
-    .chain-explain code {
-      background: var(--bg-input);
-      padding: 1px 5px;
-      border-radius: 3px;
-      font-size: 11px;
-      color: var(--accent);
-      font-family: var(--mono);
-    }
+    .chain-explain code { background: var(--bg-input); padding: 1px 5px; border-radius: 3px; font-size: 11px; color: var(--accent); font-family: var(--mono); }
 
-    /* ───────── SECTION-H (in results) ───────── */
-    .results-section-h {
-      display: flex; align-items: center; gap: 10px;
-      margin: 18px 0 10px;
-    }
+    .results-section-h { display: flex; align-items: center; gap: 10px; margin: 18px 0 10px; }
     .results-section-h:first-child { margin-top: 4px; }
-    .results-section-h .dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--accent);
-      flex-shrink: 0;
-    }
-    .results-section-h .label {
-      font-size: 10.5px; font-weight: 600;
-      color: var(--text-2);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-family: var(--mono);
-    }
-    .results-section-h .line {
-      flex: 1; height: 1px;
-      background: var(--border);
-    }
+    .results-section-h .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .results-section-h .label { font-size: 10.5px; font-weight: 600; color: var(--text-2); letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--mono); }
+    .results-section-h .line { flex: 1; height: 1px; background: var(--border); }
 
-    /* ───────── NEXT STEPS ───────── */
-    .next-steps-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      padding: 14px 16px;
-    }
-    .next-step-item {
-      padding: 9px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 12.5px;
-      color: var(--text-2);
-      line-height: 1.65;
-    }
+    .next-steps-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 11px; padding: 14px 16px; }
+    .next-step-item { padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12.5px; color: var(--text-2); line-height: 1.65; }
     .next-step-item:last-child { border-bottom: none; }
-    .next-step-item code {
-      background: var(--bg-input);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: var(--mono);
-      font-size: 11.5px;
-      color: var(--info-text);
-    }
+    .next-step-item code { background: var(--bg-input); padding: 2px 6px; border-radius: 4px; font-family: var(--mono); font-size: 11.5px; color: var(--info-text); }
+    .last-checked { font-size: 10.5px; color: var(--text-4); text-align: center; margin-top: 12px; font-family: var(--mono); }
 
-    .last-checked {
-      font-size: 10.5px;
-      color: var(--text-4);
-      text-align: center;
-      margin-top: 12px;
-      font-family: var(--mono);
-    }
-
-    /* ───────── FOOTER ───────── */
-    .studio-footer {
-      padding: 18px 28px 22px;
-      text-align: center;
-      font-size: 11px;
-      color: var(--text-4);
-      border-top: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-    }
+    .studio-footer { padding: 18px 28px 22px; text-align: center; font-size: 11px; color: var(--text-4); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
     .studio-footer .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
     .studio-footer strong { color: var(--text-3); font-weight: 600; }
 
-    .ns-provider-tag {
-      background: var(--bg-input);
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-size: 10.5px;
-      color: var(--info-text);
-      margin-left: 4px;
-      font-family: var(--mono);
-    }
+    .ns-provider-tag { background: var(--bg-input); padding: 1px 6px; border-radius: 4px; font-size: 10.5px; color: var(--info-text); margin-left: 4px; font-family: var(--mono); }
 
     /* ── COUNTER PILLS (footer) ── */
     .counter-pill {
@@ -962,16 +383,12 @@
       border-color: var(--accent);
       box-shadow: 0 0 14px rgba(212,255,58,0.18);
     }
-    
+
     /* ───────── RESPONSIVE ───────── */
     @media (max-width: 980px) {
       .studio-split { grid-template-columns: 1fr; }
       .studio-left { border-right: none; border-bottom: 1px solid var(--border); padding: 20px 18px 40px; }
-      .studio-right {
-        position: static;
-        height: auto;
-        min-height: 600px;
-      }
+      .studio-right { position: static; height: auto; min-height: 600px; }
       .preview-area { padding: 16px 18px 30px; }
     }
     @media (max-width: 540px) {
@@ -997,7 +414,7 @@
   <div class="studio-toolbar-spacer"></div>
   <div class="studio-toolbar-actions">
     <div class="live-badge idle" id="live-badge"><div class="live-dot"></div><span id="live-badge-text">idle</span></div>
-    <button class="studio-toolbar-btn primary" id="toolbar-check-btn" onclick="runAllChecks()" disabled>🔍 Run checks</button>
+    <button class="studio-toolbar-btn primary" id="toolbar-check-btn" onclick="runAllChecks(true)" disabled>🔍 Run checks</button>
   </div>
 </header>
 
@@ -1011,7 +428,6 @@
     <div>All checks are <strong>optional</strong> — enable only what you need and run any combination independently.</div>
   </div>
 
-  <!-- DNS RESOLVER -->
   <div class="step">
     <div class="step-header">
       <div class="step-num">00</div>
@@ -1023,13 +439,11 @@
     <div class="dns-btn-row" id="dns-provider-group">
       <button class="dns-btn active" id="dns-google" onclick="setDNSProvider('google')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        Google DNS
-        <span class="dns-host">dns.google</span>
+        Google DNS <span class="dns-host">dns.google</span>
       </button>
       <button class="dns-btn" id="dns-cloudflare" onclick="setDNSProvider('cloudflare')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        Cloudflare DNS
-        <span class="dns-host">1.1.1.1</span>
+        Cloudflare DNS <span class="dns-host">1.1.1.1</span>
       </button>
     </div>
     <div class="dns-privacy" id="dns-privacy-note">
@@ -1037,7 +451,6 @@
     </div>
   </div>
 
-  <!-- CHECK 1 — DOMAIN POINTING -->
   <div class="step">
     <div class="step-header compact">
       <div class="step-num">01</div>
@@ -1060,7 +473,6 @@
     </div>
   </div>
 
-  <!-- CHECK 2 — SPLIT HOSTING -->
   <div class="step">
     <div class="step-header compact">
       <div class="step-num">02</div>
@@ -1076,15 +488,12 @@
       <div class="step-meta"><span class="step-badge optional">optional</span></div>
     </div>
     <div id="split-section" style="display:none;margin-top:14px">
-      <div style="font-size:12px;color:var(--text-3);margin-bottom:10px;line-height:1.55">
-        Add each domain pair to compare. A mismatch in NS records means split-hosting — DNS records must be added to both providers separately.
-      </div>
+      <div style="font-size:12px;color:var(--text-3);margin-bottom:10px;line-height:1.55">Add each domain pair to compare. A mismatch in NS records means split-hosting — DNS records must be added to both providers separately.</div>
       <div id="split-entries"></div>
       <button class="btn-add" onclick="addSplitEntry()">+ Add domain pair to compare</button>
     </div>
   </div>
 
-  <!-- CHECK 3 — GLOBAL PROPAGATION -->
   <div class="step">
     <div class="step-header compact">
       <div class="step-num">03</div>
@@ -1100,38 +509,29 @@
       <div class="step-meta"><span class="step-badge optional">optional</span></div>
     </div>
     <div id="prop-section" style="display:none;margin-top:14px">
-
       <div class="same-as-row" id="same-as-row" onclick="toggleSameAs(event)">
         <input type="checkbox" class="same-as-cb" id="same-as-cb" onclick="event.stopPropagation(); applySameAs()">
         <span class="same-as-label">Same as Domain pointing check (use retailer domain &amp; whitelabel target from Check 1)</span>
       </div>
-
       <div id="prop-fields">
         <div class="two-col">
-          <div class="field">
-            <label>Domain to check</label>
-            <input type="text" id="prop-domain" placeholder="www.abc.com">
-          </div>
-          <div class="field" style="margin-bottom:0">
-            <label>Expected value (CNAME or IP)</label>
-            <input type="text" id="prop-expected" placeholder="abc-whitelabel.instacart.com">
-          </div>
+          <div class="field"><label>Domain to check</label><input type="text" id="prop-domain" placeholder="www.abc.com"></div>
+          <div class="field" style="margin-bottom:0"><label>Expected value (CNAME or IP)</label><input type="text" id="prop-expected" placeholder="abc-whitelabel.instacart.com"></div>
         </div>
       </div>
       <div class="field" style="margin-bottom:0;margin-top:12px">
         <label>Record type</label>
         <div class="rec-group">
           <button class="rec-btn active" id="rt-CNAME" onclick="setRecType('CNAME')">CNAME</button>
-          <button class="rec-btn" id="rt-A"     onclick="setRecType('A')">A</button>
-          <button class="rec-btn" id="rt-NS"    onclick="setRecType('NS')">NS</button>
-          <button class="rec-btn" id="rt-MX"    onclick="setRecType('MX')">MX</button>
-          <button class="rec-btn" id="rt-TXT"   onclick="setRecType('TXT')">TXT</button>
+          <button class="rec-btn" id="rt-A" onclick="setRecType('A')">A</button>
+          <button class="rec-btn" id="rt-NS" onclick="setRecType('NS')">NS</button>
+          <button class="rec-btn" id="rt-MX" onclick="setRecType('MX')">MX</button>
+          <button class="rec-btn" id="rt-TXT" onclick="setRecType('TXT')">TXT</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- CHECK 4 — REDIRECT / REROUTE -->
   <div class="step">
     <div class="step-header compact">
       <div class="step-num">04</div>
@@ -1155,181 +555,94 @@
         <label>Domain to trace</label>
         <input type="text" id="reroute-domain" placeholder="www.abc.com">
       </div>
-      <div style="font-size:11.5px;color:var(--text-4);margin-top:9px;line-height:1.6">
-        Traces the full CNAME chain via DNS, resolves final A record, and attempts HTTP redirect detection (best-effort — may be blocked by CORS on some domains).
-      </div>
+      <div style="font-size:11.5px;color:var(--text-4);margin-top:9px;line-height:1.6">Traces the full CNAME chain via DNS, resolves final A record, and attempts HTTP redirect detection (best-effort — may be blocked by CORS on some domains).</div>
     </div>
   </div>
 
-  <button class="generate-btn" id="check-btn" onclick="runAllChecks()" disabled>🔍 Run DNS checks</button>
+  <button class="generate-btn" id="check-btn" onclick="runAllChecks(true)" disabled>🔍 Run DNS checks</button>
 
 </main>
 
-<!-- ──────────── RIGHT PANE: RESULTS ──────────── -->
 <aside class="studio-right">
   <div class="preview-header">
     <div class="preview-tabs">
-      <button class="preview-tab active" data-pane="summary" onclick="switchPane('summary')">
-        Summary
-        <span class="count-bubble" id="summary-bubble">—</span>
-      </button>
-      <button class="preview-tab" data-pane="details" onclick="switchPane('details')">
-        Details
-        <span class="count-bubble" id="details-bubble">0</span>
-      </button>
+      <button class="preview-tab active" data-pane="summary" onclick="switchPane('summary')">Summary <span class="count-bubble" id="summary-bubble">—</span></button>
+      <button class="preview-tab" data-pane="details" onclick="switchPane('details')">Details <span class="count-bubble" id="details-bubble">0</span></button>
     </div>
     <div class="preview-header-spacer"></div>
     <div class="live-badge idle" id="preview-live-badge"><div class="live-dot"></div><span id="preview-live-text">awaiting input</span></div>
   </div>
 
   <div class="preview-area" id="preview-area">
-
-    <!-- SUMMARY PANE -->
     <div id="pane-summary">
       <div class="empty-state" id="summary-empty">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <div class="empty-state-title">Awaiting checks</div>
         <div class="empty-state-desc">Enable one or more checks on the left and hit <code>Run DNS checks</code>. The overall verdict and next steps will appear here.</div>
       </div>
-
       <div id="summary-content" style="display:none">
         <div class="overall" id="overall-card">
-          <div>
-            <div class="overall-label">Overall launch status</div>
-            <div class="overall-status" id="overall-text">Checking…</div>
-          </div>
+          <div><div class="overall-label">Overall launch status</div><div class="overall-status" id="overall-text">Checking…</div></div>
           <div class="status-badge badge-checking" id="overall-badge"><div class="status-dot dot-checking"></div>…</div>
         </div>
-
         <div class="refresh-bar" id="refresh-bar" style="display:none">
           <span class="refresh-left">Auto-refreshing every 15s</span>
-          <div class="refresh-right">
-            <span class="countdown" id="countdown">15s</span>
-            <button class="btn-stop" onclick="stopRefresh()">■ Stop</button>
-          </div>
+          <div class="refresh-right"><span class="countdown" id="countdown">15s</span><button class="btn-stop" onclick="stopRefresh()">■ Stop</button></div>
         </div>
-
-        <div class="results-section-h">
-          <div class="dot"></div>
-          <div class="label">Next steps</div>
-          <div class="line"></div>
-        </div>
-        <div class="next-steps-card">
-          <div id="next-steps" style="font-size:13px;color:var(--text-3)">Running checks…</div>
-        </div>
-
+        <div class="results-section-h"><div class="dot"></div><div class="label">Next steps</div><div class="line"></div></div>
+        <div class="next-steps-card"><div id="next-steps" style="font-size:13px;color:var(--text-3)">Running checks…</div></div>
         <div class="last-checked" id="last-checked"></div>
       </div>
     </div>
-
-    <!-- DETAILS PANE -->
     <div id="pane-details" style="display:none">
       <div class="empty-state" id="details-empty">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
         <div class="empty-state-title">Per-check breakdown will appear here</div>
         <div class="empty-state-desc">Each enabled check gets its own card with the raw DNS data and a status badge.</div>
       </div>
-
       <div id="details-content" style="display:none">
-
         <div id="split-results" style="display:none">
-          <div class="results-section-h">
-            <div class="dot"></div>
-            <div class="label">Split-hosting detection</div>
-            <div class="line"></div>
-          </div>
+          <div class="results-section-h"><div class="dot"></div><div class="label">Split-hosting detection</div><div class="line"></div></div>
           <div id="split-cards"></div>
         </div>
-
         <div id="point-results-section" style="display:none">
-          <div class="results-section-h">
-            <div class="dot"></div>
-            <div class="label">Domain → whitelabel</div>
-            <div class="line"></div>
-          </div>
+          <div class="results-section-h"><div class="dot"></div><div class="label">Domain → whitelabel</div><div class="line"></div></div>
           <div class="status-card" id="card-point">
-            <div class="status-top">
-              <div>
-                <div class="status-title">Retailer domain → Whitelabel CNAME</div>
-                <div class="status-desc" id="desc-point">Checking domain pointing…</div>
-              </div>
-              <div class="status-badge badge-checking" id="badge-point"><div class="status-dot dot-checking"></div>Checking…</div>
-            </div>
+            <div class="status-top"><div><div class="status-title">Retailer domain → Whitelabel CNAME</div><div class="status-desc" id="desc-point">Checking domain pointing…</div></div><div class="status-badge badge-checking" id="badge-point"><div class="status-dot dot-checking"></div>Checking…</div></div>
             <div class="dns-detail" id="detail-point">Querying DNS…</div>
             <div id="hint-point"></div>
           </div>
         </div>
-
         <div id="ttl-results-section" style="display:none">
-          <div class="results-section-h">
-            <div class="dot"></div>
-            <div class="label">TTL &amp; propagation estimate</div>
-            <div class="line"></div>
-          </div>
+          <div class="results-section-h"><div class="dot"></div><div class="label">TTL &amp; propagation estimate</div><div class="line"></div></div>
           <div class="status-card" id="card-ttl">
-            <div class="status-top">
-              <div>
-                <div class="status-title">DNS propagation estimate</div>
-                <div class="status-desc">Based on TTL values from DNS responses</div>
-              </div>
-              <div class="status-badge badge-idle" id="badge-ttl"><div class="status-dot dot-idle"></div>Pending</div>
-            </div>
+            <div class="status-top"><div><div class="status-title">DNS propagation estimate</div><div class="status-desc">Based on TTL values from DNS responses</div></div><div class="status-badge badge-idle" id="badge-ttl"><div class="status-dot dot-idle"></div>Pending</div></div>
             <div class="dns-detail" id="detail-ttl">Waiting for DNS results…</div>
           </div>
         </div>
-
         <div id="prop-results-section" style="display:none">
-          <div class="results-section-h">
-            <div class="dot"></div>
-            <div class="label">🌍 Global DNS propagation</div>
-            <div class="line"></div>
-          </div>
+          <div class="results-section-h"><div class="dot"></div><div class="label">🌍 Global DNS propagation</div><div class="line"></div></div>
           <div class="status-card" id="card-prop-summary" style="margin-bottom:10px">
-            <div class="status-top">
-              <div>
-                <div class="status-title" id="prop-summary-title">Checking propagation…</div>
-                <div class="status-desc" id="prop-summary-desc">Querying DNS resolvers across multiple locations</div>
-              </div>
-              <div class="status-badge badge-checking" id="badge-prop"><div class="status-dot dot-checking"></div>Checking…</div>
-            </div>
+            <div class="status-top"><div><div class="status-title" id="prop-summary-title">Checking propagation…</div><div class="status-desc" id="prop-summary-desc">Querying DNS resolvers across multiple locations</div></div><div class="status-badge badge-checking" id="badge-prop"><div class="status-dot dot-checking"></div>Checking…</div></div>
             <div class="prop-summary" id="prop-stats" style="display:none"></div>
           </div>
           <div class="prop-grid" id="prop-grid"></div>
         </div>
-
         <div id="reroute-results-section" style="display:none">
-          <div class="results-section-h">
-            <div class="dot"></div>
-            <div class="label">🔀 Redirect / reroute trace</div>
-            <div class="line"></div>
-          </div>
+          <div class="results-section-h"><div class="dot"></div><div class="label">🔀 Redirect / reroute trace</div><div class="line"></div></div>
           <div class="status-card" id="card-reroute">
-            <div class="status-top">
-              <div>
-                <div class="status-title" id="reroute-title">Tracing route…</div>
-                <div class="status-desc" id="reroute-desc">Following DNS chain and checking HTTP redirects</div>
-              </div>
-              <div class="status-badge badge-checking" id="badge-reroute"><div class="status-dot dot-checking"></div>Tracing…</div>
-            </div>
+            <div class="status-top"><div><div class="status-title" id="reroute-title">Tracing route…</div><div class="status-desc" id="reroute-desc">Following DNS chain and checking HTTP redirects</div></div><div class="status-badge badge-checking" id="badge-reroute"><div class="status-dot dot-checking"></div>Tracing…</div></div>
             <div class="chain-wrap" id="chain-wrap"></div>
             <div id="reroute-http-section" style="display:none;margin-top:12px">
-              <div style="font-size:10.5px;font-weight:600;color:var(--text-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;font-family:var(--mono)">
-                HTTP redirect check
-                <button class="chain-info-btn" id="chain-btn-http" onclick="toggleChainInfo('http')" style="margin-left:4px">?</button>
-              </div>
-              <div class="chain-explain" id="chain-ex-http">
-                <strong>HTTP redirect detection</strong><br>
-                After DNS resolves the domain to an IP, the web server at that IP may send an HTTP redirect response (301 Moved Permanently, 302 Found, etc.) telling the browser to load a different URL instead. Common examples: <code>http://</code> → <code>https://</code>, <code>abc.com</code> → <code>www.abc.com</code>, or old domain → new domain. This check attempts to follow HTTP redirects — if CORS blocks the request, the server doesn't allow cross-origin checks from this page, but the redirect may still exist when accessed directly in a browser.
-              </div>
+              <div style="font-size:10.5px;font-weight:600;color:var(--text-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;font-family:var(--mono)">HTTP redirect check <button class="chain-info-btn" id="chain-btn-http" onclick="toggleChainInfo('http')" style="margin-left:4px">?</button></div>
+              <div class="chain-explain" id="chain-ex-http"><strong>HTTP redirect detection</strong><br>After DNS resolves the domain to an IP, the web server at that IP may send an HTTP redirect response (301 Moved Permanently, 302 Found, etc.) telling the browser to load a different URL instead. Common examples: <code>http://</code> → <code>https://</code>, <code>abc.com</code> → <code>www.abc.com</code>, or old domain → new domain. This check attempts to follow HTTP redirects — if CORS blocks the request, the server doesn't allow cross-origin checks from this page, but the redirect may still exist when accessed directly in a browser.</div>
               <div class="dns-detail" id="reroute-http-detail"></div>
             </div>
             <div id="reroute-summary" style="margin-top:10px"></div>
           </div>
         </div>
-
       </div>
     </div>
-
   </div>
 </aside>
 
@@ -1355,7 +668,6 @@
 </div>
 
 </div>
-
 <script>
   /* ═════════════════════════════════════════════════════════
      USAGE COUNTERS — Abacus (https://abacus.jasoncameron.dev)
@@ -1421,6 +733,7 @@
   }
 
   initCounters();
+
   var countdownTimer = null;
   var countdownSec   = 15;
   var splitCount     = 0;
@@ -1435,7 +748,7 @@
 
   function setDNSProvider(p) {
     dnsProvider = p;
-    document.getElementById('dns-google').classList.toggle('active',     p === 'google');
+    document.getElementById('dns-google').classList.toggle('active', p === 'google');
     document.getElementById('dns-cloudflare').classList.toggle('active', p === 'cloudflare');
     document.getElementById('dns-privacy-text').innerHTML = DNS_PROVIDERS[p].note;
     document.getElementById('footer-resolver').textContent = 'DNS via ' + DNS_PROVIDERS[p].name;
@@ -1444,191 +757,69 @@
   var recType = 'CNAME';
 
   var LOCATIONS = [
-    { name:'New York',      region:'US East'        },
-    { name:'Los Angeles',   region:'US West'        },
-    { name:'Chicago',       region:'US Central'     },
-    { name:'Dallas',        region:'US South'       },
-    { name:'Seattle',       region:'US Northwest'   },
-    { name:'Miami',         region:'US Southeast'   },
-    { name:'London',        region:'Europe West'    },
-    { name:'Frankfurt',     region:'Europe Central' },
-    { name:'Paris',         region:'Europe West'    },
-    { name:'Amsterdam',     region:'Europe West'    },
-    { name:'Toronto',       region:'Canada'         },
-    { name:'São Paulo',     region:'South America'  },
-    { name:'Sydney',        region:'Asia Pacific'   },
-    { name:'Tokyo',         region:'Asia Pacific'   },
-    { name:'Singapore',     region:'Asia Pacific'   },
-    { name:'Mumbai',        region:'Asia South'     },
-    { name:'Dubai',         region:'Middle East'    },
-    { name:'Johannesburg',  region:'Africa'         },
-    { name:'Mexico City',   region:'Latin America'  },
-    { name:'Seoul',         region:'Asia Pacific'   },
+    { name:'New York', region:'US East' }, { name:'Los Angeles', region:'US West' },
+    { name:'Chicago', region:'US Central' }, { name:'Dallas', region:'US South' },
+    { name:'Seattle', region:'US Northwest' }, { name:'Miami', region:'US Southeast' },
+    { name:'London', region:'Europe West' }, { name:'Frankfurt', region:'Europe Central' },
+    { name:'Paris', region:'Europe West' }, { name:'Amsterdam', region:'Europe West' },
+    { name:'Toronto', region:'Canada' }, { name:'São Paulo', region:'South America' },
+    { name:'Sydney', region:'Asia Pacific' }, { name:'Tokyo', region:'Asia Pacific' },
+    { name:'Singapore', region:'Asia Pacific' }, { name:'Mumbai', region:'Asia South' },
+    { name:'Dubai', region:'Middle East' }, { name:'Johannesburg', region:'Africa' },
+    { name:'Mexico City', region:'Latin America' }, { name:'Seoul', region:'Asia Pacific' }
   ];
 
   function clean(v) { return (v||'').trim().replace(/^https?:\/\//,'').replace(/\/+$/,'').toLowerCase(); }
 
-  function onPointingToggle() {
-    document.getElementById('pointing-section').style.display =
-      document.getElementById('pointing-toggle').checked ? 'block' : 'none';
-    syncSameAs();
-    updateChecksEnabled();
-  }
-  function onSplitToggle() {
-    var on = document.getElementById('split-toggle').checked;
-    document.getElementById('split-section').style.display = on ? 'block' : 'none';
-    if (on && !document.getElementById('split-entries').children.length) addSplitEntry();
-    updateChecksEnabled();
-  }
-  function onPropToggle() {
-    document.getElementById('prop-section').style.display =
-      document.getElementById('prop-toggle').checked ? 'block' : 'none';
-    updateChecksEnabled();
-  }
-  function onRerouteToggle() {
-    document.getElementById('reroute-section').style.display =
-      document.getElementById('reroute-toggle').checked ? 'block' : 'none';
-    updateChecksEnabled();
-  }
-  function setRecType(t) {
-    recType = t;
-    document.querySelectorAll('.rec-btn').forEach(function(b){ b.classList.remove('active'); });
-    document.getElementById('rt-'+t).classList.add('active');
-  }
+  function onPointingToggle() { document.getElementById('pointing-section').style.display = document.getElementById('pointing-toggle').checked ? 'block' : 'none'; syncSameAs(); updateChecksEnabled(); }
+  function onSplitToggle() { var on = document.getElementById('split-toggle').checked; document.getElementById('split-section').style.display = on ? 'block' : 'none'; if (on && !document.getElementById('split-entries').children.length) addSplitEntry(); updateChecksEnabled(); }
+  function onPropToggle() { document.getElementById('prop-section').style.display = document.getElementById('prop-toggle').checked ? 'block' : 'none'; updateChecksEnabled(); }
+  function onRerouteToggle() { document.getElementById('reroute-section').style.display = document.getElementById('reroute-toggle').checked ? 'block' : 'none'; updateChecksEnabled(); }
+  function setRecType(t) { recType = t; document.querySelectorAll('.rec-btn').forEach(function(b){ b.classList.remove('active'); }); document.getElementById('rt-'+t).classList.add('active'); }
 
-  /* ── SAME-AS CHECKBOXES ── */
-  function toggleSameAs(e) {
-    if (e && e.target && e.target.id === 'same-as-cb') return;
-    var cb = document.getElementById('same-as-cb');
-    cb.checked = !cb.checked;
-    applySameAs();
-  }
+  function toggleSameAs(e) { if (e && e.target && e.target.id === 'same-as-cb') return; var cb = document.getElementById('same-as-cb'); cb.checked = !cb.checked; applySameAs(); }
   function applySameAs() {
-    var cb = document.getElementById('same-as-cb');
-    var row = document.getElementById('same-as-row');
-    var domainField = document.getElementById('prop-domain');
-    var expectedField = document.getElementById('prop-expected');
-    if (cb.checked) {
-      row.classList.add('active');
-      domainField.value = document.getElementById('retailer-domain').value;
-      expectedField.value = document.getElementById('whitelabel-domain').value;
-      domainField.readOnly = true;
-      expectedField.readOnly = true;
-      domainField.style.opacity = '0.6';
-      domainField.style.cursor = 'not-allowed';
-      expectedField.style.opacity = '0.6';
-      expectedField.style.cursor = 'not-allowed';
-    } else {
-      row.classList.remove('active');
-      domainField.readOnly = false;
-      expectedField.readOnly = false;
-      domainField.style.opacity = '1';
-      domainField.style.cursor = 'text';
-      expectedField.style.opacity = '1';
-      expectedField.style.cursor = 'text';
-    }
+    var cb = document.getElementById('same-as-cb'); var row = document.getElementById('same-as-row');
+    var df = document.getElementById('prop-domain'); var ef = document.getElementById('prop-expected');
+    if (cb.checked) { row.classList.add('active'); df.value = document.getElementById('retailer-domain').value; ef.value = document.getElementById('whitelabel-domain').value; df.readOnly = true; ef.readOnly = true; df.style.opacity = '0.6'; df.style.cursor = 'not-allowed'; ef.style.opacity = '0.6'; ef.style.cursor = 'not-allowed'; }
+    else { row.classList.remove('active'); df.readOnly = false; ef.readOnly = false; df.style.opacity = '1'; df.style.cursor = 'text'; ef.style.opacity = '1'; ef.style.cursor = 'text'; }
   }
   function syncSameAs() {
-    if (document.getElementById('same-as-cb').checked) {
-      document.getElementById('prop-domain').value = document.getElementById('retailer-domain').value;
-      document.getElementById('prop-expected').value = document.getElementById('whitelabel-domain').value;
-    }
-    if (document.getElementById('reroute-same-as-cb').checked) {
-      document.getElementById('reroute-domain').value = document.getElementById('retailer-domain').value;
-    }
+    if (document.getElementById('same-as-cb').checked) { document.getElementById('prop-domain').value = document.getElementById('retailer-domain').value; document.getElementById('prop-expected').value = document.getElementById('whitelabel-domain').value; }
+    if (document.getElementById('reroute-same-as-cb').checked) { document.getElementById('reroute-domain').value = document.getElementById('retailer-domain').value; }
   }
-  function toggleRerouteSameAs(e) {
-    if (e && e.target && e.target.id === 'reroute-same-as-cb') return;
-    var cb = document.getElementById('reroute-same-as-cb');
-    cb.checked = !cb.checked;
-    applyRerouteSameAs();
-  }
+  function toggleRerouteSameAs(e) { if (e && e.target && e.target.id === 'reroute-same-as-cb') return; var cb = document.getElementById('reroute-same-as-cb'); cb.checked = !cb.checked; applyRerouteSameAs(); }
   function applyRerouteSameAs() {
-    var cb = document.getElementById('reroute-same-as-cb');
-    var row = document.getElementById('reroute-same-as-row');
-    var field = document.getElementById('reroute-domain');
-    if (cb.checked) {
-      row.classList.add('active');
-      field.value = document.getElementById('retailer-domain').value;
-      field.readOnly = true;
-      field.style.opacity = '0.6';
-      field.style.cursor = 'not-allowed';
-    } else {
-      row.classList.remove('active');
-      field.readOnly = false;
-      field.style.opacity = '1';
-      field.style.cursor = 'text';
-    }
+    var cb = document.getElementById('reroute-same-as-cb'); var row = document.getElementById('reroute-same-as-row'); var field = document.getElementById('reroute-domain');
+    if (cb.checked) { row.classList.add('active'); field.value = document.getElementById('retailer-domain').value; field.readOnly = true; field.style.opacity = '0.6'; field.style.cursor = 'not-allowed'; }
+    else { row.classList.remove('active'); field.readOnly = false; field.style.opacity = '1'; field.style.cursor = 'text'; }
   }
 
   function addSplitEntry() {
-    splitCount++;
-    var n = splitCount;
-    var d = document.createElement('div');
-    d.className='domain-entry'; d.id='se-'+n;
-    d.innerHTML =
-      '<div style="display:flex;align-items:center;gap:6px;margin-bottom:9px"><div class="entry-num">'+n+'</div><span style="font-size:12px;color:var(--text-3)">Domain pair '+n+'</span></div>' +
-      '<div class="domain-entry-fields">' +
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">' +
-          '<div class="field" style="margin:0"><label>Domain A</label><input type="text" id="spa-'+n+'" placeholder="www.abc.com"></div>' +
-          '<div class="field" style="margin:0"><label>Domain B</label><input type="text" id="spb-'+n+'" placeholder="abc.com"></div>' +
-        '</div>' +
-        '<button class="btn-remove" onclick="document.getElementById(\'se-'+n+'\').remove()" style="margin-top:18px">✕</button>' +
-      '</div>';
+    splitCount++; var n = splitCount;
+    var d = document.createElement('div'); d.className='domain-entry'; d.id='se-'+n;
+    d.innerHTML = '<div style="display:flex;align-items:center;gap:6px;margin-bottom:9px"><div class="entry-num">'+n+'</div><span style="font-size:12px;color:var(--text-3)">Domain pair '+n+'</span></div><div class="domain-entry-fields"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="field" style="margin:0"><label>Domain A</label><input type="text" id="spa-'+n+'" placeholder="www.abc.com"></div><div class="field" style="margin:0"><label>Domain B</label><input type="text" id="spb-'+n+'" placeholder="abc.com"></div></div><button class="btn-remove" onclick="document.getElementById(\'se-'+n+'\').remove()" style="margin-top:18px">✕</button></div>';
     document.getElementById('split-entries').appendChild(d);
   }
 
-  /* ── BREADCRUMB + LIVE BADGE + BUTTONS ── */
-  function getEnabledCount() {
-    return ['pointing-toggle','split-toggle','prop-toggle','reroute-toggle'].reduce(function(acc,id){
-      return acc + (document.getElementById(id).checked ? 1 : 0);
-    }, 0);
-  }
+  function getEnabledCount() { return ['pointing-toggle','split-toggle','prop-toggle','reroute-toggle'].reduce(function(acc,id){ return acc + (document.getElementById(id).checked ? 1 : 0); }, 0); }
 
   function updateChecksEnabled() {
     var n = getEnabledCount();
-    var crumb = document.getElementById('breadcrumb-status');
-    var tBtn = document.getElementById('toolbar-check-btn');
-    var mBtn = document.getElementById('check-btn');
-    var liveT = document.getElementById('live-badge-text');
-    var liveB = document.getElementById('live-badge');
-    var pLive = document.getElementById('preview-live-badge');
-    var pLiveT = document.getElementById('preview-live-text');
-
-    if (n === 0) {
-      crumb.textContent = 'no checks enabled';
-      tBtn.disabled = true;
-      mBtn.disabled = true;
-      liveB.className = 'live-badge idle';
-      liveT.textContent = 'idle';
-      pLive.className = 'live-badge idle';
-      pLiveT.textContent = 'awaiting input';
-    } else {
-      crumb.textContent = n + ' check' + (n>1?'s':'') + ' enabled';
-      if (!isRunning) {
-        tBtn.disabled = false;
-        mBtn.disabled = false;
-        liveB.className = 'live-badge';
-        liveT.textContent = 'ready';
-        if (!hasRun) {
-          pLive.className = 'live-badge idle';
-          pLiveT.textContent = n + ' queued';
-        }
-      }
-    }
+    var crumb = document.getElementById('breadcrumb-status'); var tBtn = document.getElementById('toolbar-check-btn'); var mBtn = document.getElementById('check-btn');
+    var liveT = document.getElementById('live-badge-text'); var liveB = document.getElementById('live-badge');
+    var pLive = document.getElementById('preview-live-badge'); var pLiveT = document.getElementById('preview-live-text');
+    if (n === 0) { crumb.textContent = 'no checks enabled'; tBtn.disabled = true; mBtn.disabled = true; liveB.className = 'live-badge idle'; liveT.textContent = 'idle'; pLive.className = 'live-badge idle'; pLiveT.textContent = 'awaiting input'; }
+    else { crumb.textContent = n + ' check' + (n>1?'s':'') + ' enabled'; if (!isRunning) { tBtn.disabled = false; mBtn.disabled = false; liveB.className = 'live-badge'; liveT.textContent = 'ready'; if (!hasRun) { pLive.className = 'live-badge idle'; pLiveT.textContent = n + ' queued'; } } }
   }
 
-  /* ── PANE SWITCHING ── */
   function switchPane(name) {
-    document.querySelectorAll('.preview-tab').forEach(function(t) {
-      t.classList.toggle('active', t.dataset.pane === name);
-    });
+    document.querySelectorAll('.preview-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.pane === name); });
     document.getElementById('pane-summary').style.display = name === 'summary' ? 'block' : 'none';
     document.getElementById('pane-details').style.display = name === 'details' ? 'block' : 'none';
     document.getElementById('preview-area').scrollTop = 0;
   }
 
-  /* ── DNS QUERY ── */
   async function doh(name, type) {
     try {
       var provider = DNS_PROVIDERS[dnsProvider];
@@ -1640,14 +831,7 @@
     } catch(e) { return { error: e.message }; }
   }
 
-  var BADGE = {
-    ok:       { cls:'badge-ok',       dot:'dot-ok',       lbl:'✓ Validated' },
-    fail:     { cls:'badge-fail',     dot:'dot-fail',     lbl:'✕ Not found' },
-    pending:  { cls:'badge-pending',  dot:'dot-pending',  lbl:'⚠ Mismatch' },
-    checking: { cls:'badge-checking', dot:'dot-checking', lbl:'Checking…'   },
-    idle:     { cls:'badge-idle',     dot:'dot-idle',     lbl:'Pending'     },
-    warn:     { cls:'badge-pending',  dot:'dot-pending',  lbl:'⚠ Warning'  }
-  };
+  var BADGE = { ok: { cls:'badge-ok', dot:'dot-ok', lbl:'✓ Validated' }, fail: { cls:'badge-fail', dot:'dot-fail', lbl:'✕ Not found' }, pending: { cls:'badge-pending', dot:'dot-pending', lbl:'⚠ Mismatch' }, checking: { cls:'badge-checking', dot:'dot-checking', lbl:'Checking…' }, idle: { cls:'badge-idle', dot:'dot-idle', lbl:'Pending' }, warn: { cls:'badge-pending', dot:'dot-pending', lbl:'⚠ Warning' } };
   function setBadge(id,state,lbl){ var el=document.getElementById(id); if(!el)return; var c=BADGE[state]||BADGE.idle; el.className='status-badge '+c.cls; el.innerHTML='<div class="status-dot '+c.dot+'"></div>'+(lbl||c.lbl); }
   function setCard(id,state){ var el=document.getElementById(id); if(el) el.className='status-card '+state; }
   function setDetail(id,html){ var el=document.getElementById(id); if(el) el.innerHTML=html; }
@@ -1662,44 +846,21 @@
 
   async function checkPropagation(domain, expected, type) {
     var typeNum = { CNAME:5, A:1, NS:2, MX:15, TXT:16 }[type] || 5;
-    var grid    = document.getElementById('prop-grid');
-    var stats   = document.getElementById('prop-stats');
+    var grid = document.getElementById('prop-grid'); var stats = document.getElementById('prop-stats');
     grid.innerHTML = ''; stats.style.display = 'none';
-
-    LOCATIONS.forEach(function(loc) {
-      var card = document.createElement('div');
-      card.className = 'prop-row pr-pend';
-      card.id = 'pr-'+loc.name.replace(/\s/g,'_');
-      card.innerHTML =
-        '<div class="prop-dot pd-pend"></div>' +
-        '<div class="prop-location"><div class="prop-loc-name">'+esc(loc.name)+'</div><div class="prop-loc-region">'+esc(loc.region)+'</div></div>' +
-        '<div class="prop-val">Checking…</div>';
-      grid.appendChild(card);
-    });
-
+    LOCATIONS.forEach(function(loc) { var card = document.createElement('div'); card.className = 'prop-row pr-pend'; card.id = 'pr-'+loc.name.replace(/\s/g,'_'); card.innerHTML = '<div class="prop-dot pd-pend"></div><div class="prop-location"><div class="prop-loc-name">'+esc(loc.name)+'</div><div class="prop-loc-region">'+esc(loc.region)+'</div></div><div class="prop-val">Checking…</div>'; grid.appendChild(card); });
     var okCount=0, failCount=0, pendCount=0;
     var results = await Promise.all(LOCATIONS.map(function(){ return doh(domain, type); }));
-
     results.forEach(function(res, i) {
-      var loc  = LOCATIONS[i];
-      var card = document.getElementById('pr-'+loc.name.replace(/\s/g,'_'));
-      if (!card) return;
+      var loc = LOCATIONS[i]; var card = document.getElementById('pr-'+loc.name.replace(/\s/g,'_')); if (!card) return;
       var found='', matched=false;
       if (res.error) { found='Error'; }
-      else {
-        var recs=(res.Answer||[]).filter(function(a){return a.type===typeNum;});
-        if (recs.length) {
-          found=recs[0].data.replace(/\.$/,'').toLowerCase();
-          if (expected) { var e=expected.toLowerCase().replace(/\.$/,''); matched=found===e||found.includes(e)||e.includes(found); }
-          else { matched=true; }
-        }
-      }
+      else { var recs=(res.Answer||[]).filter(function(a){return a.type===typeNum;}); if (recs.length) { found=recs[0].data.replace(/\.$/,'').toLowerCase(); if (expected) { var e=expected.toLowerCase().replace(/\.$/,''); matched=found===e||found.includes(e)||e.includes(found); } else { matched=true; } } }
       var state=res.error||!found?'fail':matched?'ok':'pending';
       if(state==='ok')okCount++; else if(state==='fail')failCount++; else pendCount++;
       card.className='prop-row pr-'+state;
       card.innerHTML='<div class="prop-dot pd-'+state+'"></div><div class="prop-location"><div class="prop-loc-name">'+esc(loc.name)+'</div><div class="prop-loc-region">'+esc(loc.region)+'</div></div><div class="prop-val pv-'+(state==='ok'?'ok':'fail')+'">'+esc(found||'Not resolved')+'</div>';
     });
-
     var total=LOCATIONS.length, pct=Math.round((okCount/total)*100);
     var propState=pct===100?'ok':pct>=50?'pending':'fail';
     document.getElementById('prop-summary-title').textContent=pct+'% propagated — '+okCount+' of '+total+' locations resolving correctly';
@@ -1711,119 +872,60 @@
     return { okCount:okCount, total:total, pct:pct };
   }
 
-  /* ── CNAME CHAIN TRACER ── */
   async function traceCnameChain(domain, maxHops) {
-    maxHops = maxHops || 10;
-    var chain = [{ type: 'start', value: domain }];
-    var current = domain;
-
+    maxHops = maxHops || 10; var chain = [{ type: 'start', value: domain }]; var current = domain;
     for (var i = 0; i < maxHops; i++) {
       var res = await doh(current, 'CNAME');
-      if (res && res.error) {
-        chain.push({ type: 'error', value: 'DNS query failed: ' + res.error, from: current });
-        break;
-      }
+      if (res && res.error) { chain.push({ type: 'error', value: 'DNS query failed: ' + res.error, from: current }); break; }
       var cnames = (res && res.Answer || []).filter(function(a) { return a.type === 5; });
-      if (cnames.length) {
-        var target = cnames[0].data.replace(/\.$/, '').toLowerCase();
-        chain.push({ type: 'cname', value: target, ttl: cnames[0].TTL, from: current });
-        current = target;
-        continue;
-      }
+      if (cnames.length) { var target = cnames[0].data.replace(/\.$/, '').toLowerCase(); chain.push({ type: 'cname', value: target, ttl: cnames[0].TTL, from: current }); current = target; continue; }
       var aRes = await doh(current, 'A');
-      if (aRes && aRes.error) {
-        chain.push({ type: 'error', value: 'A record query failed: ' + aRes.error, from: current });
-        break;
-      }
+      if (aRes && aRes.error) { chain.push({ type: 'error', value: 'A record query failed: ' + aRes.error, from: current }); break; }
       var aRecs = (aRes && aRes.Answer || []).filter(function(a) { return a.type === 1; });
-      if (aRecs.length) {
-        aRecs.forEach(function(a) {
-          chain.push({ type: 'a', value: a.data, ttl: a.TTL, from: current });
-        });
-      } else {
-        var aaaaRes = await doh(current, 'AAAA');
-        var aaaaRecs = (aaaaRes && aaaaRes.Answer || []).filter(function(a) { return a.type === 28; });
-        if (aaaaRecs.length) {
-          aaaaRecs.forEach(function(a) {
-            chain.push({ type: 'a', value: a.data + ' (IPv6)', ttl: a.TTL, from: current });
-          });
-        } else {
-          chain.push({ type: 'norecord', value: 'No A/AAAA records found for ' + current, from: current });
-        }
-      }
+      if (aRecs.length) { aRecs.forEach(function(a) { chain.push({ type: 'a', value: a.data, ttl: a.TTL, from: current }); }); }
+      else { var aaaaRes = await doh(current, 'AAAA'); var aaaaRecs = (aaaaRes && aaaaRes.Answer || []).filter(function(a) { return a.type === 28; }); if (aaaaRecs.length) { aaaaRecs.forEach(function(a) { chain.push({ type: 'a', value: a.data + ' (IPv6)', ttl: a.TTL, from: current }); }); } else { chain.push({ type: 'norecord', value: 'No A/AAAA records found for ' + current, from: current }); } }
       break;
     }
     return chain;
   }
 
   async function checkHttpRedirect(domain) {
-    var results = [];
-    var protocols = ['https://', 'http://'];
+    var results = []; var protocols = ['https://', 'http://'];
     for (var p = 0; p < protocols.length; p++) {
       var url = protocols[p] + domain;
-      try {
-        var res = await fetch(url, { method: 'HEAD', mode: 'cors', redirect: 'follow', signal: AbortSignal.timeout(5000) });
-        if (res.redirected && res.url && res.url !== url) {
-          results.push({ from: url, to: res.url, status: 'redirected' });
-        } else {
-          results.push({ from: url, to: res.url || url, status: 'ok', code: res.status });
-        }
-      } catch (e) {
-        results.push({ from: url, status: 'blocked', error: e.message || 'CORS or network error' });
-      }
+      try { var res = await fetch(url, { method: 'HEAD', mode: 'cors', redirect: 'follow', signal: AbortSignal.timeout(5000) }); if (res.redirected && res.url && res.url !== url) { results.push({ from: url, to: res.url, status: 'redirected' }); } else { results.push({ from: url, to: res.url || url, status: 'ok', code: res.status }); } }
+      catch (e) { results.push({ from: url, status: 'blocked', error: e.message || 'CORS or network error' }); }
     }
     return results;
   }
 
   var CHAIN_EXPLAIN = {
-    start: '<strong>Start — query origin</strong><br>This is the domain you entered. The trace begins here and follows all DNS records hop-by-hop to discover where the domain ultimately resolves to. Think of it as asking "where does this address actually lead?"',
-    cname: '<strong>CNAME — canonical name redirect</strong><br>A CNAME record says "this domain is an alias for another domain." Instead of resolving to an IP directly, the DNS resolver follows the chain to the target domain. This is how whitelabel domains work — e.g. <code>shop.retailer.com</code> → <code>retailer-whitelabel.instacart.com</code>. The browser keeps following until it reaches a final IP address.',
-    a: '<strong>A Record — final IPv4 address</strong><br>This is the destination IP address where web traffic for this domain is ultimately sent. When your browser reaches an A record, the DNS chain ends and the browser connects to this IP to load the website. Multiple A records mean the domain uses load balancing across servers.',
-    aaaa: '<strong>AAAA Record — final IPv6 address</strong><br>Same as an A record but for IPv6 addresses (the newer, longer format). The domain resolves to this IPv6 address for browsers and networks that support it.',
-    error: '<strong>DNS query error</strong><br>The DNS lookup failed at this point in the chain. Common causes: network connectivity issues, the DNS resolver is unreachable, CORS restrictions in the browser preview, or the domain\'s DNS server is not responding. Try again or test on the deployed page.',
-    norecord: '<strong>No DNS record found</strong><br>The domain exists in DNS but has no A, AAAA, or CNAME records configured at this point. This could mean: the domain hasn\'t been fully set up yet, records were recently deleted, or the domain is parked without being pointed anywhere.',
-    redirect: '<strong>HTTP redirect</strong><br>The web server responded with a redirect (301 or 302 status code), telling the browser to go to a different URL. This happens at the application layer, after DNS has already resolved. Common for: non-www → www redirects, HTTP → HTTPS upgrades, or domain migrations.'
+    start: '<strong>Start — query origin</strong><br>This is the domain you entered. The trace begins here and follows all DNS records hop-by-hop to discover where the domain ultimately resolves to.',
+    cname: '<strong>CNAME — canonical name redirect</strong><br>A CNAME record says "this domain is an alias for another domain." Instead of resolving to an IP directly, the DNS resolver follows the chain to the target domain. This is how whitelabel domains work — e.g. <code>shop.retailer.com</code> → <code>retailer-whitelabel.instacart.com</code>.',
+    a: '<strong>A Record — final IPv4 address</strong><br>This is the destination IP address where web traffic for this domain is ultimately sent. Multiple A records mean the domain uses load balancing across servers.',
+    aaaa: '<strong>AAAA Record — final IPv6 address</strong><br>Same as an A record but for IPv6 addresses (the newer, longer format).',
+    error: '<strong>DNS query error</strong><br>The DNS lookup failed at this point in the chain. Common causes: network connectivity issues, the DNS resolver is unreachable, or CORS restrictions.',
+    norecord: '<strong>No DNS record found</strong><br>The domain exists in DNS but has no A, AAAA, or CNAME records configured at this point.',
+    redirect: '<strong>HTTP redirect</strong><br>The web server responded with a redirect (301 or 302 status code), telling the browser to go to a different URL.'
   };
 
   var chainInfoCounter = 0;
-
-  function toggleChainInfo(id) {
-    var el = document.getElementById('chain-ex-' + id);
-    var btn = document.getElementById('chain-btn-' + id);
-    if (!el) return;
-    el.classList.toggle('visible');
-    if (btn) btn.classList.toggle('open');
-  }
+  function toggleChainInfo(id) { var el = document.getElementById('chain-ex-' + id); var btn = document.getElementById('chain-btn-' + id); if (!el) return; el.classList.toggle('visible'); if (btn) btn.classList.toggle('open'); }
 
   function renderChain(chain) {
-    chainInfoCounter = 0;
-    var html = '';
+    chainInfoCounter = 0; var html = '';
     chain.forEach(function(hop, i) {
-      var isLast = i === chain.length - 1;
-      var dotClass, lineClass, typeClass, typeLabel, explainKey;
-      if (hop.type === 'start') { dotClass = 'cd-final'; lineClass = 'cl-cname'; typeClass = 'ct-start'; typeLabel = 'Start'; explainKey = 'start'; }
-      else if (hop.type === 'cname') { dotClass = 'cd-cname'; lineClass = 'cl-cname'; typeClass = 'ct-cname'; typeLabel = 'CNAME →'; explainKey = 'cname'; }
-      else if (hop.type === 'a') {
-        var isIPv6 = hop.value.indexOf('(IPv6)') > -1;
-        dotClass = 'cd-a'; lineClass = 'cl-a'; typeClass = 'ct-a';
-        typeLabel = isIPv6 ? 'AAAA Record (Final IPv6)' : 'A Record (Final IP)';
-        explainKey = isIPv6 ? 'aaaa' : 'a';
-      }
-      else if (hop.type === 'error') { dotClass = 'cd-redirect'; lineClass = 'cl-redirect'; typeClass = 'ct-redirect'; typeLabel = '⚠ Error'; explainKey = 'error'; }
-      else if (hop.type === 'norecord') { dotClass = 'cd-redirect'; lineClass = 'cl-redirect'; typeClass = 'ct-redirect'; typeLabel = '⚠ No Record'; explainKey = 'norecord'; }
-      else { dotClass = 'cd-redirect'; lineClass = 'cl-redirect'; typeClass = 'ct-redirect'; typeLabel = 'Redirect'; explainKey = 'redirect'; }
-
-      chainInfoCounter++;
-      var cid = chainInfoCounter;
-
-      html += '<div class="chain-hop">';
-      html += '<div class="chain-connector"><div class="chain-dot-top ' + dotClass + '"></div>';
+      var isLast = i === chain.length - 1; var dotClass, lineClass, typeClass, typeLabel, explainKey;
+      if (hop.type === 'start') { dotClass='cd-final'; lineClass='cl-cname'; typeClass='ct-start'; typeLabel='Start'; explainKey='start'; }
+      else if (hop.type === 'cname') { dotClass='cd-cname'; lineClass='cl-cname'; typeClass='ct-cname'; typeLabel='CNAME →'; explainKey='cname'; }
+      else if (hop.type === 'a') { var isIPv6=hop.value.indexOf('(IPv6)')>-1; dotClass='cd-a'; lineClass='cl-a'; typeClass='ct-a'; typeLabel=isIPv6?'AAAA Record (Final IPv6)':'A Record (Final IP)'; explainKey=isIPv6?'aaaa':'a'; }
+      else if (hop.type === 'error') { dotClass='cd-redirect'; lineClass='cl-redirect'; typeClass='ct-redirect'; typeLabel='⚠ Error'; explainKey='error'; }
+      else if (hop.type === 'norecord') { dotClass='cd-redirect'; lineClass='cl-redirect'; typeClass='ct-redirect'; typeLabel='⚠ No Record'; explainKey='norecord'; }
+      else { dotClass='cd-redirect'; lineClass='cl-redirect'; typeClass='ct-redirect'; typeLabel='Redirect'; explainKey='redirect'; }
+      chainInfoCounter++; var cid = chainInfoCounter;
+      html += '<div class="chain-hop"><div class="chain-connector"><div class="chain-dot-top ' + dotClass + '"></div>';
       if (!isLast) html += '<div class="chain-line ' + lineClass + '"></div>';
-      html += '</div>';
-      html += '<div class="chain-detail">';
-      html += '<div class="chain-type ' + typeClass + '">' + typeLabel + ' <button class="chain-info-btn" id="chain-btn-' + cid + '" onclick="toggleChainInfo(' + cid + ')">?</button></div>';
-      html += '<div class="chain-explain" id="chain-ex-' + cid + '">' + (CHAIN_EXPLAIN[explainKey] || '') + '</div>';
-      html += '<div class="chain-value">' + esc(hop.value) + '</div>';
+      html += '</div><div class="chain-detail"><div class="chain-type ' + typeClass + '">' + typeLabel + ' <button class="chain-info-btn" id="chain-btn-' + cid + '" onclick="toggleChainInfo(' + cid + ')">?</button></div><div class="chain-explain" id="chain-ex-' + cid + '">' + (CHAIN_EXPLAIN[explainKey] || '') + '</div><div class="chain-value">' + esc(hop.value) + '</div>';
       if (hop.ttl !== undefined) html += '<div class="chain-ttl">TTL: ' + hop.ttl + 's (' + fmtTTL(hop.ttl) + ')</div>';
       if (hop.from && hop.type !== 'start') html += '<div class="chain-ttl">from: ' + esc(hop.from) + '</div>';
       html += '</div></div>';
@@ -1832,74 +934,47 @@
   }
 
   function showValidationError(msg) {
-    var existing = document.getElementById('validation-error');
-    if (existing) existing.remove();
-    var el = document.createElement('div');
-    el.id = 'validation-error';
-    el.className = 'validation-error';
-    el.innerHTML = '⚠ ' + msg;
+    var existing = document.getElementById('validation-error'); if (existing) existing.remove();
+    var el = document.createElement('div'); el.id = 'validation-error'; el.className = 'validation-error'; el.innerHTML = '⚠ ' + msg;
     document.getElementById('check-btn').insertAdjacentElement('beforebegin', el);
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(function(){ if (el.parentNode) el.style.opacity = '0.7'; }, 5000);
   }
 
-  async function runAllChecks() {
+  async function runAllChecks(isUserInitiated) {
     if (isRunning) return;
-    var prevErr = document.getElementById('validation-error');
-    if (prevErr) prevErr.remove();
+    var prevErr = document.getElementById('validation-error'); if (prevErr) prevErr.remove();
 
     var pointingOn=document.getElementById('pointing-toggle').checked;
-    var splitOn   =document.getElementById('split-toggle').checked;
-    var propOn    =document.getElementById('prop-toggle').checked;
-    var rerouteOn =document.getElementById('reroute-toggle').checked;
+    var splitOn=document.getElementById('split-toggle').checked;
+    var propOn=document.getElementById('prop-toggle').checked;
+    var rerouteOn=document.getElementById('reroute-toggle').checked;
     if (!pointingOn && !splitOn && !propOn && !rerouteOn) { showValidationError('Please enable at least one check before running.'); return; }
-    var retailer  =pointingOn?clean(document.getElementById('retailer-domain').value):'';
+    var retailer=pointingOn?clean(document.getElementById('retailer-domain').value):'';
     var whitelabel=pointingOn?clean(document.getElementById('whitelabel-domain').value):'';
     var propDomain=propOn?clean(document.getElementById('prop-domain').value):'';
     var propExpect=propOn?clean(document.getElementById('prop-expected').value):'';
     var rerouteDomain=rerouteOn?clean(document.getElementById('reroute-domain').value):'';
     if (pointingOn&&(!retailer||!whitelabel)) { showValidationError('Domain pointing check is enabled — please fill in Retailer domain and Whitelabel target.'); return; }
-    if (splitOn) {
-      var hasValidPair = false;
-      document.querySelectorAll('.domain-entry').forEach(function(e){
-        var id = e.id.replace('se-','');
-        var a = clean((document.getElementById('spa-'+id)||{}).value||'');
-        var b = clean((document.getElementById('spb-'+id)||{}).value||'');
-        if (a && b) hasValidPair = true;
-      });
-      if (!hasValidPair) { showValidationError('Split-hosting detection is enabled — please fill in at least one domain pair (both Domain A and Domain B).'); return; }
-    }
+    if (splitOn) { var hasValidPair = false; document.querySelectorAll('.domain-entry').forEach(function(e){ var id = e.id.replace('se-',''); var a = clean((document.getElementById('spa-'+id)||{}).value||''); var b = clean((document.getElementById('spb-'+id)||{}).value||''); if (a && b) hasValidPair = true; }); if (!hasValidPair) { showValidationError('Split-hosting detection is enabled — please fill in at least one domain pair (both Domain A and Domain B).'); return; } }
     if (propOn&&!propDomain) { showValidationError('Global propagation check is enabled — please fill in a domain to check.'); return; }
     if (rerouteOn&&!rerouteDomain) { showValidationError('Redirect/reroute detection is enabled — please fill in a domain to trace.'); return; }
 
-    isRunning=true;
-    hasRun=true;
-
-    // Show content panes, hide empty states
+    isRunning=true; hasRun=true;
     document.getElementById('summary-empty').style.display = 'none';
     document.getElementById('summary-content').style.display = 'block';
     document.getElementById('details-empty').style.display = 'none';
     document.getElementById('details-content').style.display = 'block';
     document.getElementById('refresh-bar').style.display = 'flex';
 
-    // Update live badges
-    var pLive = document.getElementById('preview-live-badge');
-    var pLiveT = document.getElementById('preview-live-text');
-    pLive.className = 'live-badge checking';
-    pLiveT.textContent = 'running…';
-    var liveB = document.getElementById('live-badge');
-    var liveT = document.getElementById('live-badge-text');
-    liveB.className = 'live-badge checking';
-    liveT.textContent = 'checking';
-
-    // Auto-switch to Summary tab so user sees overall status as it updates
+    var pLive = document.getElementById('preview-live-badge'); var pLiveT = document.getElementById('preview-live-text');
+    pLive.className = 'live-badge checking'; pLiveT.textContent = 'running…';
+    var liveB = document.getElementById('live-badge'); var liveT = document.getElementById('live-badge-text');
+    liveB.className = 'live-badge checking'; liveT.textContent = 'checking';
     switchPane('summary');
 
-    // Disable buttons
-    document.getElementById('check-btn').disabled=true;
-    document.getElementById('check-btn').textContent='⏳ Checking…';
-    document.getElementById('toolbar-check-btn').disabled=true;
-    document.getElementById('toolbar-check-btn').textContent='⏳ Checking…';
+    document.getElementById('check-btn').disabled=true; document.getElementById('check-btn').textContent='⏳ Checking…';
+    document.getElementById('toolbar-check-btn').disabled=true; document.getElementById('toolbar-check-btn').textContent='⏳ Checking…';
 
     document.getElementById('overall-text').textContent='Checking…';
     document.getElementById('overall-card').className='overall';
@@ -1914,35 +989,14 @@
     if (pointingOn) {
       document.getElementById('desc-point').textContent='Checking if '+retailer+' → '+whitelabel;
       setCard('card-point','checking'); setBadge('badge-point','checking');
-      setDetail('detail-point','Querying DNS…');
-      document.getElementById('hint-point').innerHTML='';
-      setCard('card-ttl','checking'); setBadge('badge-ttl','checking','Checking…');
-      setDetail('detail-ttl','Waiting…');
+      setDetail('detail-point','Querying DNS…'); document.getElementById('hint-point').innerHTML='';
+      setCard('card-ttl','checking'); setBadge('badge-ttl','checking','Checking…'); setDetail('detail-ttl','Waiting…');
     }
-    if (propOn) {
-      setBadge('badge-prop','checking');
-      document.getElementById('prop-summary-title').textContent='Checking propagation across '+LOCATIONS.length+' locations…';
-      document.getElementById('prop-summary-desc').textContent=propDomain+' ('+recType+')';
-      document.getElementById('prop-stats').style.display='none';
-    }
-    if (rerouteOn) {
-      setBadge('badge-reroute','checking','Tracing…');
-      setCard('card-reroute','checking');
-      document.getElementById('reroute-title').textContent='Tracing route for ' + rerouteDomain + '…';
-      document.getElementById('chain-wrap').innerHTML='<div style="color:var(--text-3);font-size:12.5px">Tracing DNS chain…</div>';
-      document.getElementById('reroute-http-section').style.display='none';
-      document.getElementById('reroute-summary').innerHTML='';
-    }
+    if (propOn) { setBadge('badge-prop','checking'); document.getElementById('prop-summary-title').textContent='Checking propagation across '+LOCATIONS.length+' locations…'; document.getElementById('prop-summary-desc').textContent=propDomain+' ('+recType+')'; document.getElementById('prop-stats').style.display='none'; }
+    if (rerouteOn) { setBadge('badge-reroute','checking','Tracing…'); setCard('card-reroute','checking'); document.getElementById('reroute-title').textContent='Tracing route for ' + rerouteDomain + '…'; document.getElementById('chain-wrap').innerHTML='<div style="color:var(--text-3);font-size:12.5px">Tracing DNS chain…</div>'; document.getElementById('reroute-http-section').style.display='none'; document.getElementById('reroute-summary').innerHTML=''; }
 
     var splitPairs=[];
-    if (splitOn) {
-      document.querySelectorAll('.domain-entry').forEach(function(e){
-        var id=e.id.replace('se-','');
-        var a=clean((document.getElementById('spa-'+id)||{}).value||'');
-        var b=clean((document.getElementById('spb-'+id)||{}).value||'');
-        if(a&&b&&a!==b) splitPairs.push({id:id,a:a,b:b});
-      });
-    }
+    if (splitOn) { document.querySelectorAll('.domain-entry').forEach(function(e){ var id=e.id.replace('se-',''); var a=clean((document.getElementById('spa-'+id)||{}).value||''); var b=clean((document.getElementById('spb-'+id)||{}).value||''); if(a&&b&&a!==b) splitPairs.push({id:id,a:a,b:b}); }); }
 
     var queries=pointingOn?[doh(retailer,'CNAME')]:[Promise.resolve(null)];
     splitPairs.forEach(function(p){queries.push(doh(p.a,'NS'));queries.push(doh(p.b,'NS'));});
@@ -1968,26 +1022,11 @@
     if (pointingOn&&pointRes) {
       var ptRecs=getRecs(pointRes,5),aRecs=getRecs(pointRes,1);
       if(pointRes.error){setCard('card-point','fail');setBadge('badge-point','fail');setDetail('detail-point','<span class="dno">Error: '+pointRes.error+'</span>');setHint('hint-point','fail','DNS query failed. Check your network.');}
-      else if(ptRecs.length){
-        var ptF=ptRecs[0].data.replace(/\.$/,'');pointTTL=ptRecs[0].TTL;
-        pointOk=ptF.toLowerCase().replace(/\.$/,'')==whitelabel||ptF.toLowerCase().includes(whitelabel)||whitelabel.includes(ptF.toLowerCase().replace(/\.$/,''));
-        setCard('card-point',pointOk?'ok':'pending');setBadge('badge-point',pointOk?'ok':'pending');
-        setDetail('detail-point','<span class="dk">'+retailer+' → </span><span class="'+(pointOk?'dok':'dno')+'">'+ptF+'</span><br><span class="dk">Expected →  </span><span class="dv">'+whitelabel+'</span><br><span class="dk">TTL:        </span><span class="dv">'+pointTTL+'s ('+fmtTTL(pointTTL)+')</span>');
-        setHint('hint-point',pointOk?'ok':'pending',pointOk?'✓ '+retailer+' is correctly pointed to the Instacart whitelabel.':'⚠ Domain CNAMEd to a different target. Ask retailer to update to <strong>'+whitelabel+'</strong>.');
-      } else if(aRecs.length){
-        setCard('card-point','fail');setBadge('badge-point','fail','✕ A record');
-        setDetail('detail-point','<span class="dk">'+retailer+' → </span><span class="dno">A record(s): '+aRecs.map(function(a){return a.data;}).join(', ')+'</span><br><span class="dno">A records instead of CNAME.</span>');
-        setHint('hint-point','fail','✕ Domain has A records. Ask retailer to remove and add a CNAME pointing to <strong>'+whitelabel+'</strong>.');
-      } else {
-        setCard('card-point','fail');setBadge('badge-point','fail','✕ Not configured');
-        setDetail('detail-point','<span class="dno">No DNS records found for '+retailer+'.</span>');
-        setHint('hint-point','fail','✕ No records found. Retailer has not yet configured this domain.');
-      }
-      if(pointTTL!==null){
-        var prop=pointTTL<=60?'Very fast (~1 min)':pointTTL<=300?'Fast (~5 min)':pointTTL<=900?'Moderate (~15 min)':pointTTL<=3600?'Standard (~1 hour)':'Slow (~'+fmtTTL(pointTTL)+') — ask retailer to lower TTL';
-        setCard('card-ttl',pointTTL>3600?'pending':'ok');setBadge('badge-ttl',pointTTL>3600?'pending':'ok',pointTTL>3600?'⚠ High TTL':'✓ Good TTL');
-        setDetail('detail-ttl','<span class="dk">Domain CNAME TTL: </span><span class="dv">'+pointTTL+'s ('+fmtTTL(pointTTL)+')</span><br><span class="dk">Propagation est: </span><span class="dok">'+prop+'</span>');
-      } else { setCard('card-ttl','idle');setBadge('badge-ttl','idle');setDetail('detail-ttl','No TTL data — no DNS records found yet.'); }
+      else if(ptRecs.length){ var ptF=ptRecs[0].data.replace(/\.$/,'');pointTTL=ptRecs[0].TTL; pointOk=ptF.toLowerCase().replace(/\.$/,'')==whitelabel||ptF.toLowerCase().includes(whitelabel)||whitelabel.includes(ptF.toLowerCase().replace(/\.$/,'')); setCard('card-point',pointOk?'ok':'pending');setBadge('badge-point',pointOk?'ok':'pending'); setDetail('detail-point','<span class="dk">'+retailer+' → </span><span class="'+(pointOk?'dok':'dno')+'">'+ptF+'</span><br><span class="dk">Expected →  </span><span class="dv">'+whitelabel+'</span><br><span class="dk">TTL:        </span><span class="dv">'+pointTTL+'s ('+fmtTTL(pointTTL)+')</span>'); setHint('hint-point',pointOk?'ok':'pending',pointOk?'✓ '+retailer+' is correctly pointed to the Instacart whitelabel.':'⚠ Domain CNAMEd to a different target. Ask retailer to update to <strong>'+whitelabel+'</strong>.'); }
+      else if(aRecs.length){ setCard('card-point','fail');setBadge('badge-point','fail','✕ A record'); setDetail('detail-point','<span class="dk">'+retailer+' → </span><span class="dno">A record(s): '+aRecs.map(function(a){return a.data;}).join(', ')+'</span><br><span class="dno">A records instead of CNAME.</span>'); setHint('hint-point','fail','✕ Domain has A records. Ask retailer to remove and add a CNAME pointing to <strong>'+whitelabel+'</strong>.'); }
+      else { setCard('card-point','fail');setBadge('badge-point','fail','✕ Not configured'); setDetail('detail-point','<span class="dno">No DNS records found for '+retailer+'.</span>'); setHint('hint-point','fail','✕ No records found. Retailer has not yet configured this domain.'); }
+      if(pointTTL!==null){ var prop=pointTTL<=60?'Very fast (~1 min)':pointTTL<=300?'Fast (~5 min)':pointTTL<=900?'Moderate (~15 min)':pointTTL<=3600?'Standard (~1 hour)':'Slow (~'+fmtTTL(pointTTL)+') — ask retailer to lower TTL'; setCard('card-ttl',pointTTL>3600?'pending':'ok');setBadge('badge-ttl',pointTTL>3600?'pending':'ok',pointTTL>3600?'⚠ High TTL':'✓ Good TTL'); setDetail('detail-ttl','<span class="dk">Domain CNAME TTL: </span><span class="dv">'+pointTTL+'s ('+fmtTTL(pointTTL)+')</span><br><span class="dk">Propagation est: </span><span class="dok">'+prop+'</span>'); }
+      else { setCard('card-ttl','idle');setBadge('badge-ttl','idle');setDetail('detail-ttl','No TTL data — no DNS records found yet.'); }
     }
 
     var propResult=null;
@@ -1997,151 +1036,77 @@
     if (rerouteOn) {
       var chain = await traceCnameChain(rerouteDomain);
       document.getElementById('chain-wrap').innerHTML = renderChain(chain);
-      var hasChain = chain.length > 1;
-      var hasError = chain.some(function(h) { return h.type === 'error'; });
-      var hasNoRecord = chain.some(function(h) { return h.type === 'norecord'; });
-      var finalHop = chain[chain.length - 1];
-      var finalDest = finalHop ? finalHop.value : rerouteDomain;
-
+      var hasChain = chain.length > 1; var hasError = chain.some(function(h) { return h.type === 'error'; }); var hasNoRecord = chain.some(function(h) { return h.type === 'norecord'; });
+      var finalHop = chain[chain.length - 1]; var finalDest = finalHop ? finalHop.value : rerouteDomain;
       document.getElementById('reroute-http-section').style.display = 'block';
       document.getElementById('reroute-http-detail').innerHTML = '<span class="dv">Checking HTTP redirects…</span>';
       var httpResults = await checkHttpRedirect(rerouteDomain);
-
-      var httpHtml = '';
-      var httpRedirected = false;
-      var httpDest = '';
+      var httpHtml = ''; var httpRedirected = false; var httpDest = '';
       httpResults.forEach(function(r) {
-        if (r.status === 'redirected') {
-          httpRedirected = true;
-          httpDest = r.to;
-          httpHtml += '<span class="dk">' + esc(r.from) + ' → </span><span class="dno">' + esc(r.to) + '</span> <span style="color:var(--warning);font-size:11px">(HTTP redirect)</span><br>';
-        } else if (r.status === 'ok') {
-          httpHtml += '<span class="dk">' + esc(r.from) + ' → </span><span class="dok">' + esc(r.to) + '</span> <span style="color:var(--success);font-size:11px">(Status ' + r.code + ' — no redirect)</span><br>';
-        } else {
-          httpHtml += '<span class="dk">' + esc(r.from) + ' → </span><span style="color:var(--text-mute)">' + esc(r.error) + '</span> <span style="color:var(--text-mute);font-size:11px">(CORS blocked — check manually)</span><br>';
-        }
+        if (r.status === 'redirected') { httpRedirected = true; httpDest = r.to; httpHtml += '<span class="dk">' + esc(r.from) + ' → </span><span class="dno">' + esc(r.to) + '</span> <span style="color:var(--warning);font-size:11px">(HTTP redirect)</span><br>'; }
+        else if (r.status === 'ok') { httpHtml += '<span class="dk">' + esc(r.from) + ' → </span><span class="dok">' + esc(r.to) + '</span> <span style="color:var(--success);font-size:11px">(Status ' + r.code + ' — no redirect)</span><br>'; }
+        else { httpHtml += '<span class="dk">' + esc(r.from) + ' → </span><span style="color:var(--text-mute)">' + esc(r.error) + '</span> <span style="color:var(--text-mute);font-size:11px">(CORS blocked — check manually)</span><br>'; }
       });
       document.getElementById('reroute-http-detail').innerHTML = httpHtml;
-
       document.getElementById('reroute-title').textContent = rerouteDomain + ' — route trace complete';
-
       var summaryHtml = '';
-      if (hasError) {
-        setCard('card-reroute', 'fail');
-        setBadge('badge-reroute', 'fail', '⚠ DNS query failed');
-        summaryHtml += '<div class="action-hint ah-fail">⚠ DNS query failed for <strong>' + esc(rerouteDomain) + '</strong>. This may be a network issue or CORS restriction in the preview. Try deploying the page or check the domain in your browser DevTools.</div>';
-      } else if (hasNoRecord && !hasChain) {
-        setCard('card-reroute', 'fail');
-        setBadge('badge-reroute', 'fail', '✕ No records');
-        summaryHtml += '<div class="action-hint ah-fail">✕ No DNS records found for <strong>' + esc(rerouteDomain) + '</strong>. The domain may not exist or has no A/AAAA/CNAME records configured.</div>';
-      } else if (hasChain && chain.filter(function(h){return h.type==='cname';}).length > 0) {
-        var cnameCount = chain.filter(function(h){return h.type==='cname';}).length;
-        setCard('card-reroute', 'pending');
-        setBadge('badge-reroute', 'pending', '🔀 Rerouted (' + cnameCount + ' CNAME hop' + (cnameCount > 1 ? 's' : '') + ')');
-        summaryHtml += '<div class="action-hint ah-pending">🔀 <strong>' + esc(rerouteDomain) + '</strong> is rerouted through <strong>' + cnameCount + ' CNAME hop(s)</strong> before reaching <strong>' + esc(finalDest) + '</strong>.</div>';
-      } else if (hasChain) {
-        setCard('card-reroute', 'ok');
-        setBadge('badge-reroute', 'ok', '✓ Direct');
-        summaryHtml += '<div class="action-hint ah-ok">✓ <strong>' + esc(rerouteDomain) + '</strong> resolves directly to <strong>' + esc(finalDest) + '</strong> — no DNS rerouting.</div>';
-      } else {
-        setCard('card-reroute', 'fail');
-        setBadge('badge-reroute', 'fail', '✕ No records');
-        summaryHtml += '<div class="action-hint ah-fail">✕ No DNS records found for <strong>' + esc(rerouteDomain) + '</strong>.</div>';
-      }
-      if (httpRedirected) {
-        summaryHtml += '<div class="action-hint ah-pending" style="margin-top:8px">⚠ <strong>HTTP redirect detected:</strong> ' + esc(rerouteDomain) + ' redirects to <strong>' + esc(httpDest) + '</strong> at the HTTP layer.</div>';
-      }
+      if (hasError) { setCard('card-reroute', 'fail'); setBadge('badge-reroute', 'fail', '⚠ DNS query failed'); summaryHtml += '<div class="action-hint ah-fail">⚠ DNS query failed for <strong>' + esc(rerouteDomain) + '</strong>. This may be a network issue or CORS restriction.</div>'; }
+      else if (hasNoRecord && !hasChain) { setCard('card-reroute', 'fail'); setBadge('badge-reroute', 'fail', '✕ No records'); summaryHtml += '<div class="action-hint ah-fail">✕ No DNS records found for <strong>' + esc(rerouteDomain) + '</strong>.</div>'; }
+      else if (hasChain && chain.filter(function(h){return h.type==='cname';}).length > 0) { var cnameCount = chain.filter(function(h){return h.type==='cname';}).length; setCard('card-reroute', 'pending'); setBadge('badge-reroute', 'pending', '🔀 Rerouted (' + cnameCount + ' CNAME hop' + (cnameCount > 1 ? 's' : '') + ')'); summaryHtml += '<div class="action-hint ah-pending">🔀 <strong>' + esc(rerouteDomain) + '</strong> is rerouted through <strong>' + cnameCount + ' CNAME hop(s)</strong> before reaching <strong>' + esc(finalDest) + '</strong>.</div>'; }
+      else if (hasChain) { setCard('card-reroute', 'ok'); setBadge('badge-reroute', 'ok', '✓ Direct'); summaryHtml += '<div class="action-hint ah-ok">✓ <strong>' + esc(rerouteDomain) + '</strong> resolves directly to <strong>' + esc(finalDest) + '</strong> — no DNS rerouting.</div>'; }
+      else { setCard('card-reroute', 'fail'); setBadge('badge-reroute', 'fail', '✕ No records'); summaryHtml += '<div class="action-hint ah-fail">✕ No DNS records found for <strong>' + esc(rerouteDomain) + '</strong>.</div>'; }
+      if (httpRedirected) { summaryHtml += '<div class="action-hint ah-pending" style="margin-top:8px">⚠ <strong>HTTP redirect detected:</strong> ' + esc(rerouteDomain) + ' redirects to <strong>' + esc(httpDest) + '</strong> at the HTTP layer.</div>'; }
       document.getElementById('reroute-summary').innerHTML = summaryHtml;
       rerouteResult = { chain: chain, httpRedirected: httpRedirected, httpDest: httpDest, hops: chain.length - 1 };
     }
 
-    // Overall
     var oc=document.getElementById('overall-card'),ob=document.getElementById('overall-badge'),ot=document.getElementById('overall-text');
-    if(pointingOn&&pointOk&&(!propOn||(propResult&&propResult.pct===100))){
-      oc.className='overall ok';
-      ot.textContent='✓ All checks passed';
-      ob.className='status-badge badge-ok';
-      ob.innerHTML='<div class="status-dot dot-ok"></div>Ready';
-    }
-    else if(!pointingOn&&propOn&&propResult&&propResult.pct===100){
-      oc.className='overall ok';
-      ot.textContent='✓ Fully propagated globally';
-      ob.className='status-badge badge-ok';
-      ob.innerHTML='<div class="status-dot dot-ok"></div>Ready';
-    }
-    else{
-      oc.className='overall warn';
-      ot.textContent='⏳ Checks in progress';
-      ob.className='status-badge badge-pending';
-      ob.innerHTML='<div class="status-dot dot-pending"></div>In progress';
-    }
+    if(pointingOn&&pointOk&&(!propOn||(propResult&&propResult.pct===100))){ oc.className='overall ok'; ot.textContent='✓ All checks passed'; ob.className='status-badge badge-ok'; ob.innerHTML='<div class="status-dot dot-ok"></div>Ready'; }
+    else if(!pointingOn&&propOn&&propResult&&propResult.pct===100){ oc.className='overall ok'; ot.textContent='✓ Fully propagated globally'; ob.className='status-badge badge-ok'; ob.innerHTML='<div class="status-dot dot-ok"></div>Ready'; }
+    else{ oc.className='overall warn'; ot.textContent='⏳ Checks in progress'; ob.className='status-badge badge-pending'; ob.innerHTML='<div class="status-dot dot-pending"></div>In progress'; }
 
-    // Next steps
     var steps=[];
-    if(pointingOn){
-      if(!pointOk) steps.push('<div class="next-step-item"><strong style="color:var(--danger)">Action needed:</strong> Ask retailer to add a CNAME:<br><code>Name: '+retailer+'</code><br><code>Value: '+whitelabel+'</code></div>');
-      else steps.push('<div class="next-step-item"><span style="color:var(--success)">✓ Domain correctly pointed.</span> Content from '+whitelabel+' should now be live at '+retailer+'.</div>');
-    }
-    if(propOn&&propResult){
-      if(propResult.pct===100) steps.push('<div class="next-step-item"><span style="color:var(--success)">✓ Fully propagated</span> across all '+propResult.total+' locations checked.</div>');
-      else steps.push('<div class="next-step-item"><span style="color:var(--warning)">⏳ '+propResult.pct+'% propagated</span> — '+propResult.okCount+' of '+propResult.total+' locations resolving. DNS is still spreading globally, check again in a few minutes.</div>');
-    }
-    if(rerouteOn&&rerouteResult){
-      if(rerouteResult.httpRedirected) steps.push('<div class="next-step-item"><span style="color:var(--warning)">⚠ HTTP redirect detected:</span> <strong>'+esc(rerouteDomain)+'</strong> redirects to <strong>'+esc(rerouteResult.httpDest)+'</strong>. Verify this is the intended destination.</div>');
-      else if(rerouteResult.hops>1) steps.push('<div class="next-step-item"><span style="color:var(--warning)">🔀 DNS rerouting:</span> <strong>'+esc(rerouteDomain)+'</strong> goes through '+rerouteResult.hops+' hop(s) in the DNS chain.</div>');
-      else if(rerouteResult.hops>=1) steps.push('<div class="next-step-item"><span style="color:var(--success)">✓ Route trace:</span> <strong>'+esc(rerouteDomain)+'</strong> resolves directly — no unexpected rerouting.</div>');
-      else steps.push('<div class="next-step-item"><span style="color:var(--danger)">✕ No DNS records found for '+esc(rerouteDomain)+'.</span></div>');
-    }
+    if(pointingOn){ if(!pointOk) steps.push('<div class="next-step-item"><strong style="color:var(--danger)">Action needed:</strong> Ask retailer to add a CNAME:<br><code>Name: '+retailer+'</code><br><code>Value: '+whitelabel+'</code></div>'); else steps.push('<div class="next-step-item"><span style="color:var(--success)">✓ Domain correctly pointed.</span> Content from '+whitelabel+' should now be live at '+retailer+'.</div>'); }
+    if(propOn&&propResult){ if(propResult.pct===100) steps.push('<div class="next-step-item"><span style="color:var(--success)">✓ Fully propagated</span> across all '+propResult.total+' locations checked.</div>'); else steps.push('<div class="next-step-item"><span style="color:var(--warning)">⏳ '+propResult.pct+'% propagated</span> — '+propResult.okCount+' of '+propResult.total+' locations resolving. DNS is still spreading globally, check again in a few minutes.</div>'); }
+    if(rerouteOn&&rerouteResult){ if(rerouteResult.httpRedirected) steps.push('<div class="next-step-item"><span style="color:var(--warning)">⚠ HTTP redirect detected:</span> <strong>'+esc(rerouteDomain)+'</strong> redirects to <strong>'+esc(rerouteResult.httpDest)+'</strong>. Verify this is the intended destination.</div>'); else if(rerouteResult.hops>1) steps.push('<div class="next-step-item"><span style="color:var(--warning)">🔀 DNS rerouting:</span> <strong>'+esc(rerouteDomain)+'</strong> goes through '+rerouteResult.hops+' hop(s) in the DNS chain.</div>'); else if(rerouteResult.hops>=1) steps.push('<div class="next-step-item"><span style="color:var(--success)">✓ Route trace:</span> <strong>'+esc(rerouteDomain)+'</strong> resolves directly — no unexpected rerouting.</div>'); else steps.push('<div class="next-step-item"><span style="color:var(--danger)">✕ No DNS records found for '+esc(rerouteDomain)+'.</span></div>'); }
     if(!steps.length) steps.push('<div class="next-step-item"><span style="color:var(--text-4)">Enable a check above for next steps.</span></div>');
     document.getElementById('next-steps').innerHTML=steps.join('');
 
-    // Update details bubble count
     var detailsCount = (pointingOn?2:0) + (propOn?1:0) + (rerouteOn?1:0) + (splitOn&&splitPairs.length>0?1:0);
     document.getElementById('details-bubble').textContent = detailsCount;
     document.getElementById('summary-bubble').textContent = steps.length;
 
-    document.getElementById('check-btn').disabled=false;
-    document.getElementById('check-btn').textContent='🔍 Run DNS checks';
-    document.getElementById('toolbar-check-btn').disabled=false;
-    document.getElementById('toolbar-check-btn').textContent='🔍 Run checks';
+    document.getElementById('check-btn').disabled=false; document.getElementById('check-btn').textContent='🔍 Run DNS checks';
+    document.getElementById('toolbar-check-btn').disabled=false; document.getElementById('toolbar-check-btn').textContent='🔍 Run checks';
     document.getElementById('last-checked').textContent='Last checked: '+new Date().toLocaleTimeString();
     isRunning=false;
 
-    // Final live badge state
-    var pLive2 = document.getElementById('preview-live-badge');
-    var pLiveT2 = document.getElementById('preview-live-text');
-    pLive2.className = 'live-badge';
-    pLiveT2.textContent = 'complete';
-    var liveB2 = document.getElementById('live-badge');
-    var liveT2 = document.getElementById('live-badge-text');
-    liveB2.className = 'live-badge';
-    liveT2.textContent = 'complete';
+    var pLive2 = document.getElementById('preview-live-badge'); var pLiveT2 = document.getElementById('preview-live-text');
+    pLive2.className = 'live-badge'; pLiveT2.textContent = 'complete';
+    var liveB2 = document.getElementById('live-badge'); var liveT2 = document.getElementById('live-badge-text');
+    liveB2.className = 'live-badge'; liveT2.textContent = 'complete';
 
-    // Increment the global checks counter
-    bumpCheckCounter();
+    // Increment the global checks counter (only on manual clicks, not auto-refresh)
+    if (isUserInitiated) bumpCheckCounter();
 
     startCountdown();
   }
 
   function startCountdown() {
-    stopRefresh();
-    countdownSec = 15;
+    stopRefresh(); countdownSec = 15;
     document.getElementById('countdown').textContent = countdownSec + 's';
     countdownTimer = setInterval(function() {
       countdownSec--;
-      var el = document.getElementById('countdown');
-      if (el) el.textContent = countdownSec + 's';
+      var el = document.getElementById('countdown'); if (el) el.textContent = countdownSec + 's';
       if (countdownSec <= 0) { stopRefresh(); runAllChecks(); }
     }, 1000);
   }
 
   function stopRefresh() {
     if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
-    var el = document.getElementById('countdown');
-    if (el) el.textContent = 'Stopped';
+    var el = document.getElementById('countdown'); if (el) el.textContent = 'Stopped';
   }
 
-  // Initial state
   updateChecksEnabled();
 </script>
 <script src="nav.js"></script>
