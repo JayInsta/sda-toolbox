@@ -127,21 +127,7 @@
 
   <div class="nutrition">
     <div class="nutrition-title">🍎 Product Page Preview — what users see</div>
-    <div class="nut-section">
-      <div class="nut-header">🔍 Data Used to Track You</div>
-      <div class="nut-desc">The following data may be used to track you across apps and websites owned by other companies:</div>
-      <div class="nut-items"><span class="nut-item">Identifiers</span></div>
-    </div>
-    <div class="nut-section">
-      <div class="nut-header">👤 Data Linked to You</div>
-      <div class="nut-desc">The following data may be collected and linked to your identity:</div>
-      <div class="nut-items" id="linked-items"></div>
-    </div>
-    <div class="nut-section">
-      <div class="nut-header">🔒 Data Not Linked to You</div>
-      <div class="nut-desc">The following data may be collected but is not linked to your identity:</div>
-      <div class="nut-items"><span class="nut-item">Contact Info</span><span class="nut-item">Diagnostics</span><span class="nut-item">Other Data</span><span class="nut-item">Purchases</span><span class="nut-item">Contacts</span></div>
-    </div>
+    <div id="nutrition-content"></div>
   </div>
 
   <div class="studio-footer">
@@ -210,14 +196,21 @@
   function render() {
     var container = document.getElementById('data-types');
     var html = '';
-    var linkedCategories = [];
-    var total = 0;
+
+    /* Track categories for nutrition label */
+    var trackingCats = {};
+    var linkedCats = {};
+    var notLinkedCats = {};
 
     DATA.forEach(function(cat) {
       html += '<div class="cat-header"><div class="dot"></div><div class="label">' + cat.icon + ' ' + cat.cat + '</div><div class="line"></div><div class="cat-count">' + cat.types.length + ' type' + (cat.types.length > 1 ? 's' : '') + '</div></div>';
 
       cat.types.forEach(function(dt) {
-        total++;
+        /* Nutrition label: Apple groups by CATEGORY, not individual data type */
+        if (dt.tracking) trackingCats[cat.cat] = true;
+        if (dt.linked) linkedCats[cat.cat] = true;
+        if (!dt.linked) notLinkedCats[cat.cat] = true;
+
         html += '<div class="dt-row">';
         html += '<div class="dt-top">';
         html += '<div class="dt-name">' + dt.name + '</div>';
@@ -232,26 +225,36 @@
         });
         html += '</div></div>';
       });
-
-      if (cat.types.some(function(dt) { return dt.linked; })) {
-        linkedCategories.push(cat.cat);
-      }
     });
 
     container.innerHTML = html;
 
-    /* Linked items in nutrition label */
-    var linkedHtml = '';
-    var seen = {};
-    DATA.forEach(function(cat) {
-      cat.types.forEach(function(dt) {
-        if (dt.linked && !seen[cat.cat]) {
-          seen[cat.cat] = true;
-          linkedHtml += '<span class="nut-item">' + cat.cat + '</span>';
-        }
-      });
-    });
-    document.getElementById('linked-items').innerHTML = linkedHtml;
+    /* Build nutrition label from actual config */
+    var nutHtml = '';
+
+    var trackingList = Object.keys(trackingCats);
+    if (trackingList.length) {
+      nutHtml += '<div class="nut-section"><div class="nut-header">🔍 Data Used to Track You</div>';
+      nutHtml += '<div class="nut-desc">The following data may be used to track you across apps and websites owned by other companies:</div>';
+      nutHtml += '<div class="nut-items">' + trackingList.map(function(c) { return '<span class="nut-item">' + c + '</span>'; }).join('') + '</div></div>';
+    }
+
+    var linkedList = Object.keys(linkedCats);
+    if (linkedList.length) {
+      nutHtml += '<div class="nut-section"><div class="nut-header">👤 Data Linked to You</div>';
+      nutHtml += '<div class="nut-desc">The following data may be collected and linked to your identity:</div>';
+      nutHtml += '<div class="nut-items">' + linkedList.map(function(c) { return '<span class="nut-item">' + c + '</span>'; }).join('') + '</div></div>';
+    }
+
+    var notLinkedList = Object.keys(notLinkedCats);
+    if (notLinkedList.length) {
+      nutHtml += '<div class="nut-section"><div class="nut-header">🔒 Data Not Linked to You</div>';
+      nutHtml += '<div class="nut-desc">The following data may be collected but is not linked to your identity:</div>';
+      nutHtml += '<div class="nut-items">' + notLinkedList.map(function(c) { return '<span class="nut-item">' + c + '</span>'; }).join('') + '</div></div>';
+    }
+
+    if (!nutHtml) nutHtml = '<div style="text-align:center;padding:20px;color:var(--text-mute);font-size:12px">No data collected</div>';
+    document.getElementById('nutrition-content').innerHTML = nutHtml;
   }
 
   /* ═══════ COPY AS TEXT ═══════ */
