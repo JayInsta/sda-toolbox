@@ -8,6 +8,7 @@
     { label: 'Image Resizer',     file: 'image-resizer.html',            icon: '🖼\uFE0F' },
     { label: 'Splash Previewer',  file: 'splash-preview.html',           icon: '📱' },
     { label: 'Tester Emails',     file: 'tester-email-extractor.html',   icon: '📧' },
+    { label: 'App Privacy', file: 'app-privacy-configurator.html', icon: '🔒' },
   ];
 
   /* ── ACTIVE PAGE DETECTION ── */
