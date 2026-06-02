@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Studio · App Privacy Configurator</title>
+  <title>Studio · App Privacy Reference</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{--bg-page:#0a0a0f;--bg-card:#14141a;--bg-sub:#0f0f15;--bg-input:#08080d;--bg-muted:#1a1a22;--border:#26262e;--border-hov:#3a3a44;--text-1:#fafafa;--text-2:#d4d4d8;--text-3:#a1a1aa;--text-4:#71717a;--text-mute:#52525b;--accent:#d4ff3a;--accent-h:#c5f028;--accent-bg:rgba(212,255,58,0.10);--accent-bd:rgba(212,255,58,0.30);--on-accent:#0a0a0f;--success:#34d399;--success-bg:rgba(52,211,153,0.12);--success-bd:rgba(52,211,153,0.30);--warning:#fbbf24;--warning-bg:rgba(251,191,36,0.12);--danger:#f87171;--danger-bg:rgba(248,113,113,0.12);--info-bg:rgba(96,165,250,0.12);--info-bd:rgba(96,165,250,0.30);--info-text:#93c5fd;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--mono:'JetBrains Mono','SF Mono',Menlo,Consolas,monospace}
+    :root{--bg-page:#0a0a0f;--bg-card:#14141a;--bg-sub:#0f0f15;--bg-input:#08080d;--bg-muted:#1a1a22;--border:#26262e;--border-hov:#3a3a44;--text-1:#fafafa;--text-2:#d4d4d8;--text-3:#a1a1aa;--text-4:#71717a;--text-mute:#52525b;--accent:#d4ff3a;--accent-h:#c5f028;--accent-bg:rgba(212,255,58,0.10);--accent-bd:rgba(212,255,58,0.30);--on-accent:#0a0a0f;--success:#34d399;--success-bg:rgba(52,211,153,0.12);--success-bd:rgba(52,211,153,0.30);--warning:#fbbf24;--warning-bg:rgba(251,191,36,0.12);--danger:#f87171;--info-bg:rgba(96,165,250,0.12);--info-bd:rgba(96,165,250,0.30);--info-text:#93c5fd;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--mono:'JetBrains Mono','SF Mono',Menlo,Consolas,monospace}
     html,body{background:var(--bg-page);color:var(--text-1)}
     body{font-family:var(--font);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5;min-height:100vh}
     button{font:inherit;color:inherit;cursor:pointer;background:none;border:none}
@@ -20,158 +20,132 @@
     .studio-toolbar{position:sticky;top:0;z-index:50;background:rgba(10,10,15,0.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);padding:11px 22px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);height:54px}
     .studio-logo{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--on-accent);font-size:14px;font-weight:800;flex-shrink:0;box-shadow:0 0 16px rgba(212,255,58,0.25)}
     .studio-toolbar-title{font-size:14px;font-weight:600;color:var(--text-1)}
-    .studio-breadcrumb{font-size:12px;color:var(--text-3);display:flex;align-items:center;gap:6px}
-    .studio-breadcrumb .crumb-sep{color:var(--text-mute)}
     .studio-toolbar-spacer{flex:1}
-    .toolbar-actions{display:flex;gap:8px;align-items:center}
-    .toolbar-btn{padding:7px 14px;background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all 0.12s;display:inline-flex;align-items:center;gap:6px;box-shadow:0 0 14px rgba(212,255,58,0.18)}
-    .toolbar-btn:hover{background:var(--accent-h);box-shadow:0 0 22px rgba(212,255,58,0.30)}
+    .toolbar-btn{padding:7px 14px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all 0.12s;display:inline-flex;align-items:center;gap:6px}
+    .toolbar-btn.primary{background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);box-shadow:0 0 14px rgba(212,255,58,0.18)}
+    .toolbar-btn.primary:hover{background:var(--accent-h);box-shadow:0 0 22px rgba(212,255,58,0.30)}
+    .toolbar-btn.secondary{background:var(--bg-card);color:var(--text-2);border:1px solid var(--border)}
+    .toolbar-btn.secondary:hover{background:var(--bg-muted);border-color:var(--border-hov);color:var(--text-1)}
 
-    .studio-shell{max-width:1000px;margin:0 auto;padding:26px 28px 60px}
-    .split{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
-    .left{min-width:0}.right{position:sticky;top:74px}
+    .studio-shell{max-width:820px;margin:0 auto;padding:26px 28px 60px}
 
     .intro-card{background:var(--bg-card);border:1px solid var(--border);border-radius:11px;padding:11px 15px;margin-bottom:14px;font-size:12.5px;color:var(--text-3);line-height:1.6;display:flex;align-items:flex-start;gap:10px}
     .intro-card svg{color:var(--accent);flex-shrink:0;margin-top:1px}
     .intro-card strong{color:var(--text-1);font-weight:600}
 
-    .step{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px;transition:border-color 0.15s}
-    .step:hover{border-color:var(--border-hov)}
+    .field{margin-bottom:10px}
+    .field label{display:block;font-size:11.5px;font-weight:500;color:var(--text-2);margin-bottom:6px}
+    .field input[type="text"]{width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text-1);outline:none;font-family:var(--mono);transition:border-color 0.12s}
+    .field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(212,255,58,0.18)}
+    .field input::placeholder{color:var(--text-mute)}
+
+    .step{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
     .step-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
     .step-num{width:26px;height:26px;border-radius:7px;background:var(--accent-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;font-family:var(--mono)}
     .step-title{font-size:14px;font-weight:600;color:var(--text-1)}
-    .step-sub{font-size:12px;color:var(--text-3);margin-top:2px;line-height:1.45}
+    .step-sub{font-size:12px;color:var(--text-3);margin-top:2px}
 
-    .section-h{display:flex;align-items:center;gap:10px;margin:20px 0 10px}
-    .section-h .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0}
-    .section-h .label{font-size:10.5px;font-weight:600;color:var(--text-2);letter-spacing:0.06em;text-transform:uppercase;font-family:var(--mono)}
-    .section-h .line{flex:1;height:1px;background:var(--border)}
-    .section-h .count-badge{padding:2px 8px;background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:99px;font-size:10px;font-weight:600;color:var(--accent);font-family:var(--mono)}
+    /* Section headers */
+    .cat-header{display:flex;align-items:center;gap:10px;margin:22px 0 10px}
+    .cat-header:first-child{margin-top:4px}
+    .cat-header .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0}
+    .cat-header .label{font-size:10.5px;font-weight:600;color:var(--text-2);letter-spacing:0.06em;text-transform:uppercase;font-family:var(--mono)}
+    .cat-header .line{flex:1;height:1px;background:var(--border)}
+    .cat-header .cat-count{font-size:10px;color:var(--text-4);font-family:var(--mono)}
 
-    .field{margin-bottom:10px}
-    .field:last-child{margin-bottom:0}
-    .field label{display:block;font-size:11.5px;font-weight:500;color:var(--text-2);margin-bottom:6px}
-    .field input[type="text"]{width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text-1);outline:none;font-family:var(--mono);transition:border-color 0.12s}
-    .field input[type="text"]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(212,255,58,0.18)}
-    .field input::placeholder{color:var(--text-mute)}
+    /* Data type rows */
+    .dt-row{background:var(--bg-sub);border:1px solid var(--border);border-radius:9px;padding:12px 14px;margin-bottom:6px}
+    .dt-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .dt-name{font-size:13px;font-weight:600;color:var(--text-1);flex:1}
+    .dt-badges{display:flex;gap:5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+    .dt-badge{padding:2px 8px;border-radius:99px;font-size:9.5px;font-weight:600;font-family:var(--mono);letter-spacing:0.02em;white-space:nowrap}
+    .badge-linked{background:var(--success-bg);color:var(--success);border:1px solid var(--success-bd)}
+    .badge-tracking{background:var(--warning-bg);color:var(--warning);border:1px solid rgba(251,191,36,0.3)}
+    .badge-not-linked{background:var(--bg-muted);color:var(--text-4);border:1px solid var(--border)}
 
-    /* Data type cards */
-    .dt-card{background:var(--bg-sub);border:1px solid var(--border);border-radius:9px;padding:12px 14px;margin-bottom:8px;transition:border-color 0.12s}
-    .dt-card:hover{border-color:var(--border-hov)}
-    .dt-card.active{border-color:var(--accent-bd)}
-    .dt-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
-    .dt-cb{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
-    .dt-name{font-size:13px;font-weight:600;color:var(--text-2);flex:1}
-    .dt-card.active .dt-name{color:var(--text-1)}
-    .dt-status{font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;font-family:var(--mono)}
-    .dt-on{background:var(--success-bg);color:var(--success);border:1px solid var(--success-bd)}
-    .dt-off{background:var(--bg-muted);color:var(--text-mute);border:1px solid var(--border)}
-    .dt-body{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
-    .dt-card.active .dt-body{display:block}
+    .dt-purposes{display:flex;flex-wrap:wrap;gap:4px}
+    .purpose-tag{padding:3px 9px;background:var(--bg-input);border:1px solid var(--border);border-radius:5px;font-size:10.5px;color:var(--text-3);font-family:var(--mono)}
 
-    .purpose-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-    .purpose-btn{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-input);color:var(--text-4);font-size:11px;font-weight:500;cursor:pointer;transition:all 0.12s;user-select:none}
-    .purpose-btn:hover{border-color:var(--border-hov);color:var(--text-2)}
-    .purpose-btn.on{background:var(--accent-bg);border-color:var(--accent-bd);color:var(--accent)}
+    /* Nutrition summary */
+    .nutrition{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+    .nutrition-title{font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .nut-section{margin-bottom:14px}
+    .nut-section:last-child{margin-bottom:0}
+    .nut-header{font-size:11.5px;font-weight:700;color:var(--text-2);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
+    .nut-desc{font-size:10.5px;color:var(--text-4);margin-bottom:8px;line-height:1.5}
+    .nut-items{display:flex;flex-wrap:wrap;gap:4px}
+    .nut-item{padding:3px 9px;background:var(--bg-sub);border:1px solid var(--border);border-radius:5px;font-size:10.5px;color:var(--text-3)}
 
-    .toggle-row{display:flex;align-items:center;gap:10px;padding:8px 0}
-    .toggle-row+.toggle-row{border-top:1px solid var(--border)}
-    .toggle-label{flex:1;font-size:12px;color:var(--text-3)}
-    .toggle-label strong{color:var(--text-2);font-weight:600}
-    .mini-toggle{position:relative;width:34px;height:20px;flex-shrink:0}
-    .mini-toggle input{opacity:0;width:0;height:0;position:absolute}
-    .mini-slider{position:absolute;inset:0;background:var(--border);border-radius:99px;cursor:pointer;transition:background 0.18s}
-    .mini-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform 0.18s}
-    .mini-toggle input:checked+.mini-slider{background:var(--accent)}
-    .mini-toggle input:checked+.mini-slider::before{transform:translateX(14px);background:var(--on-accent)}
-
-    .tracking-warn{margin-top:8px;padding:7px 10px;background:var(--warning-bg);border:1px solid rgba(251,191,36,0.3);border-radius:6px;font-size:11px;color:var(--warning);line-height:1.5}
-
-    /* Summary panel */
-    .summary-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:12px}
-    .summary-title{font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-    .summary-title .apple-icon{font-size:15px}
-    .nutrition-col{margin-bottom:14px}
-    .nc-header{font-size:11px;font-weight:700;color:var(--text-2);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border)}
-    .nc-desc{font-size:10px;color:var(--text-4);margin-bottom:6px;line-height:1.5}
-    .nc-item{display:inline-block;padding:3px 8px;margin:2px;background:var(--bg-sub);border:1px solid var(--border);border-radius:5px;font-size:10.5px;color:var(--text-3);font-family:var(--mono)}
-
-    .stats-row{display:flex;gap:8px;margin-bottom:12px}
-    .stat-mini{flex:1;background:var(--bg-sub);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
-    .stat-mini-num{font-size:20px;font-weight:700;font-family:var(--mono);margin-bottom:2px}
-    .stat-mini-label{font-size:9px;color:var(--text-4);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono)}
-    .sm-accent .stat-mini-num{color:var(--accent)}
-    .sm-success .stat-mini-num{color:var(--success)}
-    .sm-warning .stat-mini-num{color:var(--warning)}
-    .sm-info .stat-mini-num{color:var(--info-text)}
-
-    .print-btn{width:100%;padding:10px;background:var(--bg-sub);border:1px solid var(--border);border-radius:8px;color:var(--text-2);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.12s;display:flex;align-items:center;justify-content:center;gap:7px}
-    .print-btn:hover{background:var(--bg-muted);border-color:var(--border-hov);color:var(--text-1)}
-
-    .counter-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:var(--bg-card);border:1px solid var(--border);border-radius:99px;font-family:var(--mono);font-size:10.5px;color:var(--text-3);transition:opacity 0.35s,transform 0.35s,border-color 0.25s,box-shadow 0.25s}
+    .counter-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:var(--bg-card);border:1px solid var(--border);border-radius:99px;font-family:var(--mono);font-size:10.5px;color:var(--text-3);transition:opacity 0.35s,transform 0.35s}
     .counter-pill.hidden{opacity:0;transform:translateY(3px);pointer-events:none}
     .counter-pill .counter-num{color:var(--accent);font-weight:700}
     .counter-pill .counter-label{color:var(--text-4)}
-    .counter-pill.bumped{border-color:var(--accent);box-shadow:0 0 14px rgba(212,255,58,0.18)}
 
     .studio-footer{padding:18px 28px 22px;text-align:center;font-size:11px;color:var(--text-4);border-top:1px solid var(--border);margin-top:32px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
     .studio-footer .dot{width:3px;height:3px;border-radius:50%;background:var(--border)}
     .studio-footer strong{color:var(--text-3);font-weight:600}
 
-    @media(max-width:860px){.split{grid-template-columns:1fr}.right{position:static}}
-    @media(max-width:540px){.studio-shell{padding:18px 14px 40px}.studio-toolbar-title{display:none}.stats-row{flex-wrap:wrap}}
-    @media print{.studio-toolbar,.intro-card,.step-header,.toolbar-actions,.studio-footer{display:none!important}.split{grid-template-columns:1fr!important}.right{position:static!important}.summary-card{break-inside:avoid}body{background:#fff;color:#000}.summary-card,.dt-card{border-color:#ddd}*{color-adjust:exact;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+    @media(max-width:540px){.studio-shell{padding:18px 14px 40px}.studio-toolbar-title{display:none}.dt-top{flex-direction:column;align-items:flex-start;gap:6px}.dt-badges{justify-content:flex-start}}
+    @media print{
+      .studio-toolbar,.intro-card,.studio-footer,[data-no-print]{display:none!important}
+      body{background:#fff;color:#000;font-size:11px}
+      .studio-shell{max-width:100%;padding:10px}
+      .step,.nutrition,.dt-row{border-color:#ddd;break-inside:avoid}
+      .dt-row{padding:8px 10px;margin-bottom:4px}
+      .cat-header{margin:14px 0 6px}
+      *{color-adjust:exact;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    }
   </style>
 </head>
 <body>
 
 <header class="studio-toolbar">
   <div class="studio-logo">P</div>
-  <div class="studio-toolbar-title">App Privacy Configurator</div>
-  <div class="studio-breadcrumb"><span>App privacy</span><span class="crumb-sep">/</span><span id="breadcrumb-name" class="mono">untitled</span></div>
+  <div class="studio-toolbar-title">App Privacy Reference</div>
   <div class="studio-toolbar-spacer"></div>
-  <div class="toolbar-actions">
-    <button class="toolbar-btn" onclick="printSummary()">🖨 Print checklist</button>
-  </div>
+  <button class="toolbar-btn secondary" onclick="copySummary()" id="copy-btn">📋 Copy as text</button>
+  <button class="toolbar-btn primary" onclick="window.print()">🖨 Print</button>
 </header>
 
 <main class="studio-shell">
 
-  <div class="intro-card">
+  <div class="intro-card" data-no-print>
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <div>Configure <strong>App Store Connect App Privacy</strong> for a new retailer app. Pre-filled with the standard Instacart configuration — adjust as needed, then use the summary panel as a reference while filling out App Store Connect.</div>
+    <div>Open this page side-by-side with <strong>App Store Connect → App Privacy</strong>. Follow each section in order — all 21 data types are pre-configured with the standard Instacart values.</div>
   </div>
 
-  <div class="split">
-    <div class="left">
+  <div class="step">
+    <div class="step-header"><div class="step-num">01</div><div><div class="step-title">Privacy URLs</div><div class="step-sub">Enter these in App Store Connect → App Privacy → Privacy Policy</div></div></div>
+    <div class="field"><label>Privacy Policy URL</label><input type="text" id="privacy-url" placeholder="https://shop.retailer.com/store/.../pages/privacypolicy"></div>
+    <div class="field"><label>User Privacy Choices URL (optional)</label><input type="text" id="choices-url" placeholder="https://docs.google.com/forms/..."></div>
+  </div>
 
-      <div class="step">
-        <div class="step-header"><div class="step-num">01</div><div><div class="step-title">Retailer details</div><div class="step-sub">Privacy policy &amp; user choices URLs</div></div></div>
-        <div class="field"><label>Retailer / app name</label><input type="text" id="retailer-name" placeholder="e.g. Bigley Piggly Wiggly" oninput="updateSummary()"></div>
-        <div class="field"><label>Privacy Policy URL</label><input type="text" id="privacy-url" placeholder="https://shop.retailer.com/store/.../pages/privacypolicy" oninput="updateSummary()"></div>
-        <div class="field"><label>User Privacy Choices URL (optional)</label><input type="text" id="privacy-choices-url" placeholder="https://docs.google.com/forms/..." oninput="updateSummary()"></div>
-      </div>
+  <div class="step">
+    <div class="step-header"><div class="step-num">02</div><div><div class="step-title">Data types — 21 collected</div><div class="step-sub">Go through each one in App Store Connect in order. All are "Collected" with the purposes and settings shown below.</div></div></div>
+    <div id="data-types"></div>
+  </div>
 
-      <div class="step">
-        <div class="step-header"><div class="step-num">02</div><div><div class="step-title">Data types collected</div><div class="step-sub">Toggle each data type, set purposes, and configure linking/tracking. Pre-filled with IC standard config.</div></div></div>
-        <div id="data-types-container"></div>
-      </div>
-
+  <div class="nutrition">
+    <div class="nutrition-title">🍎 Product Page Preview — what users see</div>
+    <div class="nut-section">
+      <div class="nut-header">🔍 Data Used to Track You</div>
+      <div class="nut-desc">The following data may be used to track you across apps and websites owned by other companies:</div>
+      <div class="nut-items"><span class="nut-item">Identifiers</span></div>
     </div>
-
-    <div class="right">
-      <div class="summary-card">
-        <div class="summary-title"><span class="apple-icon">🍎</span> App Privacy Label Preview</div>
-        <div class="stats-row" id="summary-stats"></div>
-        <div id="summary-nutrition"></div>
-        <button class="print-btn" onclick="printSummary()" style="margin-top:12px">🖨 Print as checklist</button>
-        <button class="print-btn" onclick="copySummary()" style="margin-top:6px" id="copy-summary-btn">📋 Copy as text</button>
-      </div>
+    <div class="nut-section">
+      <div class="nut-header">👤 Data Linked to You</div>
+      <div class="nut-desc">The following data may be collected and linked to your identity:</div>
+      <div class="nut-items" id="linked-items"></div>
+    </div>
+    <div class="nut-section">
+      <div class="nut-header">🔒 Data Not Linked to You</div>
+      <div class="nut-desc">The following data may be collected but is not linked to your identity:</div>
+      <div class="nut-items"><span class="nut-item">Contact Info</span><span class="nut-item">Diagnostics</span><span class="nut-item">Other Data</span><span class="nut-item">Purchases</span><span class="nut-item">Contacts</span></div>
     </div>
   </div>
 
   <div class="studio-footer">
-    <strong>Studio</strong><div class="dot"></div><span>App Privacy Configurator</span><div class="dot"></div><span>App Store Connect helper</span>
+    <strong>Studio</strong><div class="dot"></div><span>App Privacy Reference</span><div class="dot"></div><span>App Store Connect</span>
     <div class="dot"></div>
     <span class="counter-pill hidden" id="visit-pill"><span>👁</span><span class="counter-num" id="visit-count">—</span><span class="counter-label">visits</span></span>
   </div>
@@ -179,182 +153,138 @@
 </main>
 
 <script>
-  /* ═══════ COUNTERS ═══════ */
-  var COUNTER_NS='instacart-sda-toolbox',KEY_VISITS='app-privacy-visits',ABACUS_BASE='https://abacus.jasoncameron.dev';
-  function abacusFetch(ep,key){return fetch(ABACUS_BASE+'/'+ep+'/'+COUNTER_NS+'/'+key,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('');return r.json()}).then(function(d){return(d&&typeof d.value==='number')?d.value:null})}
-  function initCounters(){abacusFetch('hit',KEY_VISITS).then(function(v){if(v==null)return;var el=document.getElementById('visit-count');el.textContent=Number(v).toLocaleString();document.getElementById('visit-pill').classList.remove('hidden')}).catch(function(){})}
-  initCounters();
+  /* ═══════ COUNTER ═══════ */
+  var ABACUS_BASE='https://abacus.jasoncameron.dev';
+  (function(){fetch(ABACUS_BASE+'/hit/instacart-sda-toolbox/app-privacy-visits',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){if(d&&typeof d.value==='number'){document.getElementById('visit-count').textContent=Number(d.value).toLocaleString();document.getElementById('visit-pill').classList.remove('hidden')}}).catch(function(){})})();
 
-  /* ═══════ DATA MODEL ═══════ */
-  var PURPOSES = ['App Functionality','Analytics',"Developer's Advertising or Marketing",'Third-Party Advertising','Product Personalization'];
-  var PURPOSE_SHORT = ['Functionality','Analytics','Dev Marketing','3rd-Party Ads','Personalization'];
-
-  var CATEGORIES = [
-    { name:'Contact Info', icon:'👤', types:[
-      {id:'name',label:'Name',defaults:{on:true,purposes:[0,1],linked:true,tracking:false}},
-      {id:'email',label:'Email Address',defaults:{on:true,purposes:[0,1,3],linked:true,tracking:false}},
-      {id:'phone',label:'Phone Number',defaults:{on:true,purposes:[0,1],linked:true,tracking:false}},
-      {id:'address',label:'Physical Address',defaults:{on:true,purposes:[0,1,2,3],linked:true,tracking:false}},
+  /* ═══════ DATA — fixed Instacart standard config ═══════ */
+  var DATA = [
+    { cat:'Contact Info', icon:'👤', types:[
+      { name:'Name',             purposes:['App Functionality',"Developer's Advertising or Marketing"], linked:true, tracking:false },
+      { name:'Email Address',    purposes:['App Functionality',"Developer's Advertising or Marketing",'Third-Party Advertising'], linked:true, tracking:false },
+      { name:'Phone Number',     purposes:['App Functionality',"Developer's Advertising or Marketing"], linked:true, tracking:false },
+      { name:'Physical Address', purposes:['App Functionality','Analytics',"Developer's Advertising or Marketing",'Third-Party Advertising'], linked:true, tracking:false },
     ]},
-    { name:'Financial Info', icon:'💳', types:[
-      {id:'payment',label:'Payment Info',defaults:{on:true,purposes:[0,1],linked:true,tracking:false}},
+    { cat:'Financial Info', icon:'💳', types:[
+      { name:'Payment Info', purposes:['App Functionality','Analytics'], linked:true, tracking:false },
     ]},
-    { name:'Location', icon:'📍', types:[
-      {id:'precise_loc',label:'Precise Location',defaults:{on:true,purposes:[0,1,4],linked:true,tracking:false}},
-      {id:'coarse_loc',label:'Coarse Location',defaults:{on:true,purposes:[0,1,2,4],linked:true,tracking:false}},
+    { cat:'Location', icon:'📍', types:[
+      { name:'Precise Location', purposes:['App Functionality','Analytics','Product Personalization'], linked:true, tracking:false },
+      { name:'Coarse Location',  purposes:['App Functionality',"Developer's Advertising or Marketing",'Product Personalization','Analytics'], linked:true, tracking:false },
     ]},
-    { name:'Contacts', icon:'📇', types:[
-      {id:'contacts',label:'Contacts',defaults:{on:true,purposes:[0,2],linked:true,tracking:false}},
+    { cat:'Contacts', icon:'📇', types:[
+      { name:'Contacts', purposes:["Developer's Advertising or Marketing",'App Functionality'], linked:true, tracking:false },
     ]},
-    { name:'User Content', icon:'📝', types:[
-      {id:'photos',label:'Photos or Videos',defaults:{on:true,purposes:[0,1],linked:true,tracking:false}},
-      {id:'support',label:'Customer Support',defaults:{on:true,purposes:[1],linked:true,tracking:false}},
-      {id:'other_content',label:'Other User Content',defaults:{on:true,purposes:[0,1],linked:true,tracking:false}},
+    { cat:'User Content', icon:'📝', types:[
+      { name:'Photos or Videos',   purposes:['Analytics','App Functionality'], linked:true, tracking:false },
+      { name:'Customer Support',   purposes:['Analytics'], linked:true, tracking:false },
+      { name:'Other User Content', purposes:['App Functionality','Analytics'], linked:true, tracking:false },
     ]},
-    { name:'Browsing History', icon:'🌐', types:[
-      {id:'browsing',label:'Browsing History',defaults:{on:true,purposes:[1],linked:true,tracking:false}},
+    { cat:'Browsing History', icon:'🌐', types:[
+      { name:'Browsing History', purposes:['Analytics'], linked:true, tracking:false },
     ]},
-    { name:'Search History', icon:'🔍', types:[
-      {id:'search',label:'Search History',defaults:{on:true,purposes:[0,1,2,4],linked:true,tracking:false}},
+    { cat:'Search History', icon:'🔍', types:[
+      { name:'Search History', purposes:['Analytics','Product Personalization',"Developer's Advertising or Marketing",'App Functionality'], linked:true, tracking:false },
     ]},
-    { name:'Identifiers', icon:'🪪', types:[
-      {id:'user_id',label:'User ID',defaults:{on:true,purposes:[0,1,4],linked:true,tracking:false}},
-      {id:'device_id',label:'Device ID',defaults:{on:true,purposes:[0,2],linked:true,tracking:true}},
+    { cat:'Identifiers', icon:'🪪', types:[
+      { name:'User ID',   purposes:['Product Personalization','Analytics','App Functionality'], linked:true, tracking:false },
+      { name:'Device ID',  purposes:['App Functionality',"Developer's Advertising or Marketing"], linked:true, tracking:true },
     ]},
-    { name:'Purchases', icon:'🛒', types:[
-      {id:'purchases',label:'Purchase History',defaults:{on:true,purposes:[0,1,2,3,4],linked:true,tracking:false}},
+    { cat:'Purchases', icon:'🛒', types:[
+      { name:'Purchase History', purposes:['App Functionality','Product Personalization','Third-Party Advertising',"Developer's Advertising or Marketing",'Analytics'], linked:true, tracking:false },
     ]},
-    { name:'Usage Data', icon:'📊', types:[
-      {id:'product_interaction',label:'Product Interaction',defaults:{on:true,purposes:[0,1],linked:true,tracking:false}},
-      {id:'ad_data',label:'Advertising Data',defaults:{on:true,purposes:[0,1,3],linked:true,tracking:false}},
+    { cat:'Usage Data', icon:'📊', types:[
+      { name:'Product Interaction', purposes:['Analytics','App Functionality'], linked:true, tracking:false },
+      { name:'Advertising Data',    purposes:['Third-Party Advertising','App Functionality','Analytics'], linked:true, tracking:false },
     ]},
-    { name:'Diagnostics', icon:'🔧', types:[
-      {id:'crash',label:'Crash Data',defaults:{on:true,purposes:[0,1],linked:true,tracking:false}},
-      {id:'other_diag',label:'Other Diagnostic Data',defaults:{on:true,purposes:[0,1],linked:true,tracking:false}},
+    { cat:'Diagnostics', icon:'🔧', types:[
+      { name:'Crash Data',            purposes:['App Functionality','Analytics'], linked:true, tracking:false },
+      { name:'Other Diagnostic Data',  purposes:['App Functionality','Analytics'], linked:true, tracking:false },
     ]},
-    { name:'Other Data', icon:'📦', types:[
-      {id:'other',label:'Other Data Types',defaults:{on:true,purposes:[0,1],linked:true,tracking:false}},
+    { cat:'Other Data', icon:'📦', types:[
+      { name:'Other Data Types', purposes:['Analytics','App Functionality'], linked:true, tracking:false },
     ]},
   ];
 
-  /* Runtime state: cloned from defaults */
-  var state = {};
-  CATEGORIES.forEach(function(cat){cat.types.forEach(function(dt){
-    var d=dt.defaults;
-    state[dt.id]={on:d.on,purposes:d.purposes.slice(),linked:d.linked,tracking:d.tracking};
-  })});
+  /* ═══════ RENDER ═══════ */
+  function render() {
+    var container = document.getElementById('data-types');
+    var html = '';
+    var linkedCategories = [];
+    var total = 0;
 
-  /* ═══════ BUILD UI ═══════ */
-  function buildUI(){
-    var container=document.getElementById('data-types-container');
-    var html='';
-    CATEGORIES.forEach(function(cat){
-      var activeCount=cat.types.filter(function(dt){return state[dt.id].on}).length;
-      html+='<div class="section-h"><div class="dot"></div><div class="label">'+cat.icon+' '+cat.name+'</div><div class="line"></div><div class="count-badge">'+activeCount+'/'+cat.types.length+'</div></div>';
-      cat.types.forEach(function(dt){
-        var s=state[dt.id];
-        html+='<div class="dt-card'+(s.on?' active':'')+'" id="card-'+dt.id+'">';
-        html+='<div class="dt-header" onclick="toggleDT(\''+dt.id+'\')">';
-        html+='<input type="checkbox" class="dt-cb" '+(s.on?'checked':'')+' onclick="event.stopPropagation();toggleDT(\''+dt.id+'\')">';
-        html+='<span class="dt-name">'+dt.label+'</span>';
-        html+='<span class="dt-status '+(s.on?'dt-on':'dt-off')+'">'+(s.on?'Collected':'Not collected')+'</span>';
-        html+='</div>';
-        html+='<div class="dt-body">';
-        html+='<div style="font-size:10.5px;color:var(--text-4);margin-bottom:6px;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.05em;font-weight:600">Purposes</div>';
-        html+='<div class="purpose-grid">';
-        PURPOSES.forEach(function(p,pi){
-          var isOn=s.purposes.indexOf(pi)>-1;
-          html+='<button class="purpose-btn'+(isOn?' on':'')+'" onclick="togglePurpose(\''+dt.id+'\','+pi+')">'+PURPOSE_SHORT[pi]+'</button>';
+    DATA.forEach(function(cat) {
+      html += '<div class="cat-header"><div class="dot"></div><div class="label">' + cat.icon + ' ' + cat.cat + '</div><div class="line"></div><div class="cat-count">' + cat.types.length + ' type' + (cat.types.length > 1 ? 's' : '') + '</div></div>';
+
+      cat.types.forEach(function(dt) {
+        total++;
+        html += '<div class="dt-row">';
+        html += '<div class="dt-top">';
+        html += '<div class="dt-name">' + dt.name + '</div>';
+        html += '<div class="dt-badges">';
+        if (dt.linked) html += '<span class="dt-badge badge-linked">Linked</span>';
+        else html += '<span class="dt-badge badge-not-linked">Not linked</span>';
+        if (dt.tracking) html += '<span class="dt-badge badge-tracking">⚠ Tracking</span>';
+        html += '</div></div>';
+        html += '<div class="dt-purposes">';
+        dt.purposes.forEach(function(p) {
+          html += '<span class="purpose-tag">' + p + '</span>';
         });
-        html+='</div>';
-        html+='<div class="toggle-row"><span class="toggle-label"><strong>Linked</strong> to user\'s identity</span><label class="mini-toggle"><input type="checkbox" '+(s.linked?'checked':'')+' onchange="toggleLinked(\''+dt.id+'\',this.checked)"><span class="mini-slider"></span></label></div>';
-        html+='<div class="toggle-row"><span class="toggle-label"><strong>Used for tracking</strong> purposes</span><label class="mini-toggle"><input type="checkbox" '+(s.tracking?'checked':'')+' onchange="toggleTracking(\''+dt.id+'\',this.checked)"><span class="mini-slider"></span></label></div>';
-        if(s.tracking) html+='<div class="tracking-warn">⚠ This data type is flagged for tracking. It will appear under "Data Used to Track You" on the App Store.</div>';
-        html+='</div></div>';
+        html += '</div></div>';
+      });
+
+      if (cat.types.some(function(dt) { return dt.linked; })) {
+        linkedCategories.push(cat.cat);
+      }
+    });
+
+    container.innerHTML = html;
+
+    /* Linked items in nutrition label */
+    var linkedHtml = '';
+    var seen = {};
+    DATA.forEach(function(cat) {
+      cat.types.forEach(function(dt) {
+        if (dt.linked && !seen[cat.cat]) {
+          seen[cat.cat] = true;
+          linkedHtml += '<span class="nut-item">' + cat.cat + '</span>';
+        }
       });
     });
-    container.innerHTML=html;
-    updateSummary();
+    document.getElementById('linked-items').innerHTML = linkedHtml;
   }
 
-  function toggleDT(id){state[id].on=!state[id].on;buildUI()}
-  function togglePurpose(id,pi){var arr=state[id].purposes;var idx=arr.indexOf(pi);if(idx>-1)arr.splice(idx,1);else arr.push(pi);buildUI()}
-  function toggleLinked(id,val){state[id].linked=val;buildUI()}
-  function toggleTracking(id,val){state[id].tracking=val;buildUI()}
+  /* ═══════ COPY AS TEXT ═══════ */
+  function copySummary() {
+    var lines = ['APP STORE CONNECT — APP PRIVACY REFERENCE', '(Standard Instacart configuration — 21 data types)', ''];
+    var privUrl = document.getElementById('privacy-url').value;
+    var choicesUrl = document.getElementById('choices-url').value;
+    if (privUrl) lines.push('Privacy Policy URL: ' + privUrl);
+    if (choicesUrl) lines.push('User Privacy Choices URL: ' + choicesUrl);
+    if (privUrl || choicesUrl) lines.push('');
 
-  /* ═══════ SUMMARY ═══════ */
-  function updateSummary(){
-    var name=document.getElementById('retailer-name').value||'Untitled';
-    document.getElementById('breadcrumb-name').textContent=name;
-
-    var collected=[],tracking=[],linked=[],notLinked=[];
-    CATEGORIES.forEach(function(cat){cat.types.forEach(function(dt){
-      var s=state[dt.id];
-      if(!s.on)return;
-      collected.push({label:dt.label,cat:cat.name});
-      if(s.tracking) tracking.push(dt.label);
-      if(s.linked) linked.push(dt.label);
-      else notLinked.push(dt.label);
-    })});
-
-    document.getElementById('summary-stats').innerHTML=
-      '<div class="stat-mini sm-accent"><div class="stat-mini-num">'+collected.length+'</div><div class="stat-mini-label">Collected</div></div>'+
-      '<div class="stat-mini sm-success"><div class="stat-mini-num">'+linked.length+'</div><div class="stat-mini-label">Linked</div></div>'+
-      '<div class="stat-mini sm-warning"><div class="stat-mini-num">'+tracking.length+'</div><div class="stat-mini-label">Tracking</div></div>'+
-      '<div class="stat-mini sm-info"><div class="stat-mini-num">'+notLinked.length+'</div><div class="stat-mini-label">Not linked</div></div>';
-
-    var html='';
-    if(tracking.length){
-      html+='<div class="nutrition-col"><div class="nc-header">🔍 Data Used to Track You</div><div class="nc-desc">May be used to track you across apps and websites owned by other companies</div>';
-      tracking.forEach(function(t){html+='<span class="nc-item">'+t+'</span>'});
-      html+='</div>';
-    }
-    if(linked.length){
-      html+='<div class="nutrition-col"><div class="nc-header">👤 Data Linked to You</div><div class="nc-desc">May be collected and linked to your identity</div>';
-      linked.forEach(function(t){html+='<span class="nc-item">'+t+'</span>'});
-      html+='</div>';
-    }
-    if(notLinked.length){
-      html+='<div class="nutrition-col"><div class="nc-header">🔒 Data Not Linked to You</div><div class="nc-desc">May be collected but not linked to your identity</div>';
-      notLinked.forEach(function(t){html+='<span class="nc-item">'+t+'</span>'});
-      html+='</div>';
-    }
-    if(!collected.length) html='<div style="text-align:center;padding:20px;color:var(--text-mute);font-size:12.5px">No data types selected</div>';
-    document.getElementById('summary-nutrition').innerHTML=html;
-  }
-
-  function printSummary(){window.print()}
-
-  function copySummary(){
-    var name=document.getElementById('retailer-name').value||'Untitled';
-    var lines=['APP PRIVACY CONFIGURATION — '+name.toUpperCase(),''];
-    var privUrl=document.getElementById('privacy-url').value;
-    var choicesUrl=document.getElementById('privacy-choices-url').value;
-    if(privUrl)lines.push('Privacy Policy URL: '+privUrl);
-    if(choicesUrl)lines.push('User Privacy Choices URL: '+choicesUrl);
-    lines.push('','COLLECTED DATA TYPES ('+Object.keys(state).filter(function(k){return state[k].on}).length+' total)','');
-    CATEGORIES.forEach(function(cat){
-      var active=cat.types.filter(function(dt){return state[dt.id].on});
-      if(!active.length)return;
-      lines.push('━ '+cat.name.toUpperCase()+' ━');
-      active.forEach(function(dt){
-        var s=state[dt.id];
-        var purposes=s.purposes.map(function(pi){return PURPOSES[pi]}).join(', ');
-        lines.push('  ✓ '+dt.label);
-        lines.push('    Purposes: '+purposes);
-        lines.push('    Linked: '+(s.linked?'Yes':'No')+'  |  Tracking: '+(s.tracking?'Yes':'No'));
+    DATA.forEach(function(cat) {
+      lines.push('━━ ' + cat.cat.toUpperCase() + ' ━━');
+      cat.types.forEach(function(dt) {
+        lines.push('');
+        lines.push('  ' + dt.name);
+        lines.push('  Purposes: ' + dt.purposes.join(', '));
+        lines.push('  Linked: ' + (dt.linked ? 'Yes' : 'No') + '  |  Tracking: ' + (dt.tracking ? 'Yes' : 'No'));
       });
       lines.push('');
     });
-    var text=lines.join('\n');
-    navigator.clipboard.writeText(text).then(function(){
-      var btn=document.getElementById('copy-summary-btn');
-      btn.textContent='✅ Copied!';btn.style.color='var(--success)';btn.style.borderColor='var(--success)';
-      setTimeout(function(){btn.textContent='📋 Copy as text';btn.style.color='';btn.style.borderColor=''},2000);
+
+    navigator.clipboard.writeText(lines.join('\n')).then(function() {
+      var btn = document.getElementById('copy-btn');
+      var orig = btn.innerHTML;
+      btn.innerHTML = '✅ Copied!';
+      btn.style.color = 'var(--success)';
+      btn.style.borderColor = 'var(--success)';
+      setTimeout(function() { btn.innerHTML = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
     });
   }
 
-  buildUI();
+  render();
 </script>
 <script src="nav.js"></script>
 </body>
