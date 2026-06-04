@@ -347,13 +347,71 @@ Please add qa-tester@retailer.com as a tester'></textarea>
     /* Also handle (email) parenthetical */
     text = text.replace(/\(mailto:[^)]+\)/g, '');
 
-    /* Strategy: process line by line, then also comma-separated chunks */
+    /* ── Pre-process: detect multi-line columnar format ──
+       Pattern:  FirstName\nLastName\nemail@domain.com
+       We scan lines and when we find an email-only line,
+       look backwards 1-2 lines for name-only text and merge them. */
+    var rawLines = text.split('\n').map(function(l) { return l.trim(); });
+
+    /* Filter out common header rows */
+    var headerWords = ['first name','last name','email','email address','first','last'];
+    var lines = rawLines.filter(function(l) {
+      return headerWords.indexOf(l.toLowerCase()) === -1;
+    });
+
+    var merged = [];
+    var consumed = {}; /* track lines already merged upward */
+
+    for (var i = 0; i < lines.length; i++) {
+      if (consumed[i]) continue;
+      var line = lines[i];
+      /* Is this line ONLY an email (no other text)? */
+      var emailOnly = line.match(/^\s*([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})\s*$/);
+      if (emailOnly) {
+        /* Look back for name-only lines (no email, no noise) */
+        var firstName = '', lastName = '';
+        var isNameLine = function(idx) {
+          if (idx < 0 || consumed[idx]) return false;
+          var t = lines[idx].trim();
+          if (!t || t.length > 40) return false;
+          if (EMAIL_RE.test(t)) return false;
+          /* Must look like a name: letters, hyphens, apostrophes, spaces */
+          if (!/^[A-Za-z\s\-'\.]+$/.test(t)) return false;
+          return true;
+        };
+
+        if (isNameLine(i - 2) && isNameLine(i - 1)) {
+          /* Two lines above: first name, then last name */
+          firstName = lines[i - 2].trim();
+          lastName = lines[i - 1].trim();
+          consumed[i - 2] = true;
+          consumed[i - 1] = true;
+        } else if (isNameLine(i - 1)) {
+          /* One line above: could be "First Last" on one line */
+          var parts = lines[i - 1].trim().split(/\s+/);
+          if (parts.length >= 2) {
+            firstName = parts[0];
+            lastName = parts.slice(1).join(' ');
+          } else {
+            firstName = parts[0];
+          }
+          consumed[i - 1] = true;
+        }
+
+        if (firstName || lastName) {
+          merged.push(firstName + ' ' + lastName + ' ' + line);
+        } else {
+          merged.push(line);
+        }
+        consumed[i] = true;
+      } else {
+        merged.push(line);
+      }
+    }
+
+    /* Strategy: process merged lines, then also comma-separated chunks */
     var chunks = [];
-    text.split('\n').forEach(function(line) {
-      /* Split on commas that separate different testers.
-         But NOT commas inside "Last, First" patterns.
-         Heuristic: split on comma followed by space and then a name/email pattern,
-         but preserve "Quoted, Name" blocks. */
+    merged.forEach(function(line) {
       var parts = splitTesterChunks(line);
       parts.forEach(function(p) { if (p.trim()) chunks.push(p.trim()); });
     });
@@ -369,7 +427,6 @@ Please add qa-tester@retailer.com as a tester'></textarea>
         } else {
           dupCount++;
           if (parsed.first && !existing.first) {
-            /* Upgrade: had email-only, now found a name */
             existing.first = parsed.first;
             existing.last = parsed.last;
             existing.nameSource = parsed.nameSource;
