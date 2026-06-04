@@ -1513,11 +1513,13 @@
         if (isMarker) {
           if (fieldKey === 'confirmImage') retailersByName[col.key].flags.confirmImage = true;
           if (fieldKey === 'cancelImage')  retailersByName[col.key].flags.cancelImage  = true;
+          if (fieldKey === 'receiptImage') retailersByName[col.key].flags.receiptImage = true;
           return;
         }
-        if (fieldKey === 'confirmImage' || fieldKey === 'cancelImage') {
+        if (fieldKey === 'confirmImage' || fieldKey === 'cancelImage' || fieldKey === 'receiptImage') {
           if (fieldKey === 'confirmImage') retailersByName[col.key].flags.confirmImage = true;
           if (fieldKey === 'cancelImage')  retailersByName[col.key].flags.cancelImage  = true;
+          if (fieldKey === 'receiptImage') retailersByName[col.key].flags.receiptImage = true;
           return;
         }
         if (fieldKey === 'appLinks') {
@@ -1561,7 +1563,7 @@
     }
     if (section === 'CONFIRMATION') {
       if (/^email heading$/.test(c)) return 'confirmHeading';
-      if (/background\s*image/.test(c)) return 'confirmImage';
+      if (/background\s*image/.test(c) || /^image\b/.test(c)) return 'confirmImage';
       if (/order confirmation body text/.test(c)) return 'confirmBody';
       if (/order upsell text/.test(c))  return 'upsellText';
       if (/order confirmation fine print/.test(c)) return 'finePrint';
@@ -1569,11 +1571,12 @@
     if (section === 'RECEIPT') {
       if (/^email heading$/.test(c)) return 'receiptHeading';
       if (/^body text$/.test(c))     return 'receiptBody';
+      if (/^image\b/.test(c))        return 'receiptImage';
       if (/^rating heading$/.test(c)) return 'ratingHeading';
       if (/^rating text$/.test(c))    return 'ratingContent';
     }
     if (section === 'CANCELLATION') {
-      if (/marketing\s*image/.test(c)) return 'cancelImage';
+      if (/marketing\s*image/.test(c) || /^image\b/.test(c)) return 'cancelImage';
       if (/^email heading$/.test(c)) return 'cancelHeading';
       if (/^body text$/.test(c))     return 'cancelBody';
     }
@@ -1872,7 +1875,7 @@
     var def = defaultValueFor(field, retailerName);
     if (def === null) return false;
     if (def === '' && rawDocText === '') return true;
-    var converted = convertPlaceholders(rawDocText);
+    var converted = convertPlaceholders(rawDocText, retailerName);
     return normalizeForCompare(converted) === normalizeForCompare(def);
   }
 
@@ -1929,7 +1932,7 @@
 
   /* ── Placeholder mapping: {customer name}→%{first_name}, {amount}→%{amount},
         {anything else}→%{retailer_name} OR literal name depending on toggle ── */
-  function convertPlaceholders(text) {
+  function convertPlaceholders(text, retailerName) {
     if (!text) return text;
     var ph = document.getElementById('use-retailer-placeholder');
     var usePlaceholder = ph && ph.checked;
@@ -1937,8 +1940,11 @@
       var c = content.trim().toLowerCase().replace(/_/g, ' ');
       if (/^customer ?name$|^first ?name$/.test(c)) return '%{first_name}';
       if (/^amount$/.test(c)) return '%{amount}';
-      // Retailer name reference: placeholder OR strip braces to keep the literal name from the doc
-      return usePlaceholder ? '%{retailer_name}' : content.trim();
+      if (/^owner ?name$/.test(c)) return '%{owner_name}';
+      if (/^warehouse ?name$/.test(c)) return '%{warehouse_name}';
+      // Retailer name reference: use placeholder token, actual name, or raw content
+      if (usePlaceholder) return '%{retailer_name}';
+      return retailerName || content.trim();
     });
   }
 
@@ -1983,14 +1989,14 @@
       contentToggle.checked = true;
       toggleSection('content-section', contentToggle);
 
-      if (data.confirmBody   && !data.defaults.confirmBody)   document.getElementById('order-desc').value   = convertPlaceholders(data.confirmBody);
-      if (data.cancelBody    && !data.defaults.cancelBody)    document.getElementById('cancel-body').value  = convertPlaceholders(data.cancelBody);
-      if (data.receiptBody   && !data.defaults.receiptBody)   document.getElementById('receipt-body').value = convertPlaceholders(data.receiptBody);
-      if (data.ratingHeading && !data.defaults.ratingHeading) document.getElementById('rate-heading').value = convertPlaceholders(data.ratingHeading);
-      if (data.ratingContent && !data.defaults.ratingContent) document.getElementById('rate-content').value = convertPlaceholders(data.ratingContent);
+      if (data.confirmBody   && !data.defaults.confirmBody)   document.getElementById('order-desc').value   = convertPlaceholders(data.confirmBody, data.retailerName);
+      if (data.cancelBody    && !data.defaults.cancelBody)    document.getElementById('cancel-body').value  = convertPlaceholders(data.cancelBody, data.retailerName);
+      if (data.receiptBody   && !data.defaults.receiptBody)   document.getElementById('receipt-body').value = convertPlaceholders(data.receiptBody, data.retailerName);
+      if (data.ratingHeading && !data.defaults.ratingHeading) document.getElementById('rate-heading').value = convertPlaceholders(data.ratingHeading, data.retailerName);
+      if (data.ratingContent && !data.defaults.ratingContent) document.getElementById('rate-content').value = convertPlaceholders(data.ratingContent, data.retailerName);
 
       enableOpt('cb-fine-print', 'opts-fine-print');
-      if (data.finePrint && !data.defaults.finePrint) document.getElementById('inp-fine-print').value = convertPlaceholders(data.finePrint);
+      if (data.finePrint && !data.defaults.finePrint) document.getElementById('inp-fine-print').value = convertPlaceholders(data.finePrint, data.retailerName);
 
       if (data.helpLink || data.privacyLink || data.tosLink) {
         enableOpt('cb-footer-links', 'opts-footer-links');
@@ -2036,17 +2042,17 @@
       toggleSection('headings-section', headingsToggle);
 
       if (data.confirmHeading && !data.defaults.confirmHeading) {
-        var h = convertPlaceholders(data.confirmHeading);
+        var h = convertPlaceholders(data.confirmHeading, data.retailerName);
         document.getElementById('confirm-heading-delivery').value = h;
         document.getElementById('confirm-heading-pickup').value   = h;
       }
       if (data.receiptHeading && !data.defaults.receiptHeading) {
-        var h = convertPlaceholders(data.receiptHeading);
+        var h = convertPlaceholders(data.receiptHeading, data.retailerName);
         document.getElementById('receipt-heading-delivery').value = h;
         document.getElementById('receipt-heading-pickup').value   = h;
       }
       if (data.cancelHeading && !data.defaults.cancelHeading) {
-        var h = convertPlaceholders(data.cancelHeading);
+        var h = convertPlaceholders(data.cancelHeading, data.retailerName);
         document.getElementById('cancel-heading-delivery').value = h;
         document.getElementById('cancel-heading-pickup').value   = h;
       }
