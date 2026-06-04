@@ -1882,6 +1882,9 @@
     clone.querySelectorAll('br').forEach(function(br) {
       br.replaceWith(document.createTextNode('\n'));
     });
+    clone.querySelectorAll('p').forEach(function(p, i) {
+      if (i > 0) p.insertBefore(document.createTextNode('\n'), p.firstChild);
+    });
     return clone.textContent;
   }
 
