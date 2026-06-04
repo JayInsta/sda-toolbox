@@ -1503,7 +1503,7 @@
       if (!fieldKey) continue;
       retailerCols.forEach(function(col) {
         if (cells.length <= col.idx) return;
-        var rawValue = paragraphText(cells[col.idx]).trim();
+        var rawValue = normalizeBodySpacing(paragraphText(cells[col.idx]).trim());
         var value = normalizeTableValue(rawValue);
         var isMarker = !value && isUserProvidedMarker(rawValue);
         if (!value && !isMarker) return;
@@ -1544,6 +1544,23 @@
     if (/^retailer\s+logo$/i.test(t)) return '';
     if (/^inherited\s+from\s+pre[-\s]?existing/i.test(t)) return '';
     return t;
+  }
+
+  /* ── Normalize Word table cell spacing artifacts ──
+     Word tables often render multi-line content as a single paragraph
+     with 30-50+ spaces between lines instead of actual line breaks.
+     E.g.: "Thanks,                                    Fresh Thyme Market"
+     This function converts 3+ consecutive spaces into line breaks,
+     trims each line, and drops empty lines.
+     Safe for all fields — URLs and headings never have 3+ consecutive spaces. */
+  function normalizeBodySpacing(text) {
+    if (!text) return text;
+    return text
+      .replace(/ {3,}/g, '\n')                                       // 3+ spaces → newline
+      .split('\n')
+      .map(function(l) { return l.trim(); })                         // trim each line
+      .filter(function(l) { return l.length > 0; })                  // drop empty lines
+      .join('\n');
   }
 
   function isUserProvidedMarker(text) {
