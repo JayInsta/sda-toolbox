@@ -1495,7 +1495,7 @@
       retailerCols.push({ idx: idx, name: name, key: canonical });
     });
     for (var i = 1; i < rows.length; i++) {
-      var cells = Array.from(rows[i].querySelectorAll('td'));
+      var cells = Array.from(rows[i].querySelectorAll('td, th'));
       if (cells.length <= configCol) continue;
       var configName = paragraphText(cells[configCol]).trim();
       if (!configName) continue;
