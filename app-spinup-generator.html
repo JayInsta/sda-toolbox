@@ -138,6 +138,7 @@
       <div class="field"><label>Slug <span class="hint">e.g. foodstorm-sfp</span></label><input type="text" id="slug" placeholder="foodstorm-sfp" oninput="onSlugChange()"></div>
       <div class="field"><label>App name <span class="hint">e.g. FoodStorm</span></label><input type="text" id="app-name" placeholder="FoodStorm" oninput="onNameChange()"></div>
     </div>
+    <div class="field"><label>Whitelabel domain <span class="hint">used only for AASA verification URL · from Store Configuration</span></label><input type="text" id="whitelabel-domain" placeholder="e.g. foodstorm-whitelabel.instacart.com"></div>
     <div id="takeover-fields" style="display:none">
       <div class="two-col">
         <div class="field"><label>Current iOS version <span class="hint">current production version</span></label><input type="number" id="ios-current-version" placeholder="e.g. 10" min="1"></div>
@@ -368,7 +369,8 @@
     var newVer=isNew?1:curVer+1;
     var airship=document.getElementById('ios-airship').checked;
     var deeplink=toDeeplink(name);
-    var whitelabelUrl='https://'+slug+'.instacart.com';
+    var wlDomain=gv('whitelabel-domain');
+    var whitelabelUrl=wlDomain?('https://'+wlDomain.replace(/^https?:\/\//,'')):'';
 
     // Android version offset calculations
     var ab=anBranch||gv('build-an-branch')||'9.14';
@@ -388,7 +390,10 @@
     rp('i1',[bundleId]);
 
     /* 2: AASA + verification */
-    rp('i2',[tid+'.'+bundleId,'','# Verify at:','# '+whitelabelUrl+'/.well-known/apple-app-site-association']);
+    var aasaLines=[tid+'.'+bundleId,'','# Add to Store Configuration → "Apple app site association ids"'];
+    if(whitelabelUrl){aasaLines.push('','# Verify universal links at:','# '+whitelabelUrl+'/.well-known/apple-app-site-association');}
+    else{aasaLines.push('','# Enter whitelabel domain above to generate verification URL');}
+    rp('i2',aasaLines);
 
     /* 3: Version */
     if(isNew)rp('i3',['1','','# New app — starts at 1']);
@@ -453,7 +458,7 @@
       'slug            = "'+slug+'"',
       'app_name        = "'+name+'"',
       'package_name    = "'+pkg+'"',
-      'base_url        = "'+whitelabelUrl+'"',
+      'base_url        = "'+(whitelabelUrl||'<enter whitelabel domain above>')+'"',
       'deeplink_scheme = "'+deeplink+'"',
       'app_type        = "sfx"',
       'app_bundle      = "Yes"',
