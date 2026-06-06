@@ -16,22 +16,16 @@
     code,.mono{font-family:var(--mono)}
     ::selection{background:var(--accent-bg);color:var(--accent)}
     ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--bg-page)}::-webkit-scrollbar-thumb{background:var(--bg-muted);border-radius:4px}
-
-    /* ── TOOLBAR ── */
     .studio-toolbar{position:sticky;top:0;z-index:50;background:rgba(10,10,15,0.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);padding:11px 22px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);height:54px}
     .studio-logo{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--on-accent);font-size:14px;font-weight:800;flex-shrink:0;box-shadow:0 0 16px rgba(212,255,58,0.25)}
     .studio-toolbar-title{font-size:14px;font-weight:600;color:var(--text-1)}
     .studio-breadcrumb{font-size:12px;color:var(--text-3);display:flex;align-items:center;gap:6px}
     .studio-breadcrumb .crumb-sep{color:var(--text-mute)}
     .studio-toolbar-spacer{flex:1}
-
     .studio-shell{max-width:1200px;margin:0 auto;padding:26px 28px 60px}
-
     .intro-card{background:var(--bg-card);border:1px solid var(--border);border-radius:11px;padding:11px 15px;margin-bottom:14px;font-size:12.5px;color:var(--text-3);line-height:1.6;display:flex;align-items:flex-start;gap:10px}
     .intro-card svg{color:var(--accent);flex-shrink:0;margin-top:1px}
     .intro-card strong{color:var(--text-1);font-weight:600}
-
-    /* ── STEP CARDS ── */
     .step{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
     .step-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
     .step-header:last-child{margin-bottom:0}
@@ -40,7 +34,6 @@
     .step-num.android{background:var(--android-bg);color:var(--android)}
     .step-title{font-size:14px;font-weight:600;color:var(--text-1)}
     .step-sub{font-size:12px;color:var(--text-3);margin-top:2px}
-
     .field{margin-bottom:12px}.field:last-child{margin-bottom:0}
     .field label{display:block;font-size:11.5px;font-weight:500;color:var(--text-2);margin-bottom:6px}
     .field label .hint{color:var(--text-4);font-weight:400;font-size:10.5px;margin-left:4px}
@@ -49,15 +42,10 @@
     .field input::placeholder{color:var(--text-mute)}
     .field input:read-only{opacity:0.5;cursor:not-allowed}
     .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-
-    /* ── TYPE TOGGLE ── */
     .type-toggle{display:flex;gap:6px;margin-bottom:14px}
     .type-btn{flex:1;padding:10px;border-radius:9px;border:1px solid var(--border);background:var(--bg-sub);color:var(--text-3);font-size:12.5px;font-weight:500;cursor:pointer;text-align:center;transition:all 0.12s;user-select:none;font-family:inherit}
     .type-btn:hover{border-color:var(--border-hov);color:var(--text-2)}
     .type-btn.active{background:var(--accent-bg);border-color:var(--accent-bd);color:var(--accent)}
-
-    /* ── TOGGLE SWITCH ── */
     .toggle-row{display:flex;align-items:center;gap:12px}
     .mini-toggle{position:relative;width:38px;height:22px;flex-shrink:0}
     .mini-toggle input{opacity:0;width:0;height:0;position:absolute}
@@ -65,8 +53,6 @@
     .mini-slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform 0.18s}
     .mini-toggle input:checked+.mini-slider{background:var(--accent)}
     .mini-toggle input:checked+.mini-slider::before{transform:translateX(16px);background:var(--on-accent)}
-
-    /* ── SPLIT LAYOUT ── */
     .split{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:start}
     .split.with-divider{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--bg-card)}
     .split.with-divider>.platform-col{padding:16px}
@@ -78,67 +64,49 @@
     .plat-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:8px 12px;border-radius:9px;font-size:13px;font-weight:700}
     .plat-header.ios{background:var(--ios-bg);border:1px solid var(--ios-bd);color:var(--ios)}
     .plat-header.android{background:var(--android-bg);border:1px solid var(--android-bd);color:var(--android)}
-    .plat-icon{font-size:16px}
-
-    /* ── GENERATE BUTTON ── */
     .generate-btn{width:100%;padding:14px;background:var(--accent);border:none;border-radius:10px;color:var(--on-accent);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.18s;font-family:inherit;box-shadow:0 0 24px rgba(212,255,58,0.18);margin-top:4px}
     .generate-btn:hover{background:var(--accent-h);box-shadow:0 0 36px rgba(212,255,58,0.32);transform:translateY(-1px)}
-
-    /* ── OUTPUT BLOCKS ── */
     .output-wrap{display:none}
     .section-h{display:flex;align-items:center;gap:10px;margin:18px 0 8px}
     .section-h:first-child{margin-top:6px}
     .section-h .dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-    .section-h .dot.ios{background:var(--ios)}
-    .section-h .dot.android{background:var(--android)}
-    .section-h .dot.build{background:var(--warning)}
+    .section-h .dot.ios{background:var(--ios)}.section-h .dot.android{background:var(--android)}.section-h .dot.build{background:var(--warning)}.section-h .dot.shared{background:var(--accent)}
     .section-h .label{font-size:10.5px;font-weight:600;color:var(--text-2);letter-spacing:0.06em;text-transform:uppercase;font-family:var(--mono)}
     .section-h .line{flex:1;height:1px;background:var(--border)}
-
     .out-block{background:var(--bg-sub);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-bottom:8px}
     .out-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
     .out-title{font-size:12px;font-weight:600;color:var(--text-2)}
     .out-hint{font-size:10.5px;color:var(--text-4);margin-bottom:6px;line-height:1.5}
     .out-box{background:var(--bg-input);border:1px solid var(--border);border-radius:7px;padding:10px 12px;font-family:var(--mono);font-size:11.5px;color:var(--text-2);line-height:1.9;white-space:pre;overflow-x:auto;max-height:300px;overflow-y:auto}
     .ok{color:var(--info-text)}.ov{color:#6ee7b7}.oi1{color:var(--ios)}.oi2{color:var(--warning)}
-
     .btn-copy{padding:4px 10px;border:1px solid var(--border);border-radius:6px;font-size:10.5px;font-weight:600;cursor:pointer;background:var(--bg-card);color:var(--text-3);font-family:inherit;transition:all 0.12s;white-space:nowrap}
     .btn-copy:hover{background:var(--bg-muted);border-color:var(--border-hov);color:var(--text-1)}
-
     .cmd-box{background:var(--bg-input);border:1px solid var(--border);border-radius:7px;padding:10px 12px;font-family:var(--mono);font-size:11.5px;color:var(--accent);line-height:1.8;white-space:pre-wrap;word-break:break-all;min-height:40px}
-    .cmd-box.ios-cmd{color:var(--ios)}
-    .cmd-box.android-cmd{color:var(--android)}
-
+    .cmd-box.ios-cmd{color:var(--ios)}.cmd-box.android-cmd{color:var(--android)}
     .warn-box{padding:8px 10px;background:var(--warning-bg);border:1px solid rgba(251,191,36,0.3);border-radius:6px;font-size:11px;color:var(--warning);line-height:1.5;margin:6px 0}
     .info-box{padding:8px 10px;background:var(--info-bg);border:1px solid var(--info-bd);border-radius:6px;font-size:11px;color:var(--info-text);line-height:1.5;margin:6px 0}
     .danger-box{padding:8px 10px;background:var(--danger-bg);border:1px solid rgba(248,113,113,0.3);border-radius:6px;font-size:11px;color:var(--danger);line-height:1.5;margin:6px 0;font-weight:600}
-
     .branch-pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;margin-bottom:8px}
     .bp-loading{background:var(--info-bg);border:1px solid var(--info-bd);color:var(--info-text)}
     .bp-ok{background:var(--success-bg);border:1px solid var(--success-bd);color:var(--success)}
     .bp-fail{background:var(--warning-bg);border:1px solid rgba(251,191,36,0.3);color:var(--warning)}
     .bp-dot{width:6px;height:6px;border-radius:50%}
     .bp-loading .bp-dot{background:var(--info-text);animation:bpulse 1s infinite}
-    .bp-ok .bp-dot{background:var(--success)}
-    .bp-fail .bp-dot{background:var(--warning)}
+    .bp-ok .bp-dot{background:var(--success)}.bp-fail .bp-dot{background:var(--warning)}
     @keyframes bpulse{0%,100%{opacity:1}50%{opacity:0.3}}
-
     .derived-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
     .derived-cell{background:var(--bg-sub);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
     .derived-cell-label{font-size:9px;color:var(--text-4);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;font-family:var(--mono);margin-bottom:2px}
     .derived-cell-value{font-family:var(--mono);font-size:12px;color:var(--text-1);font-weight:500;word-break:break-all}
     .derived-cell-value.empty{color:var(--text-mute)}
-
     .counter-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:var(--bg-card);border:1px solid var(--border);border-radius:99px;font-family:var(--mono);font-size:10.5px;color:var(--text-3);transition:opacity 0.35s,transform 0.35s}
     .counter-pill.hidden{opacity:0;transform:translateY(3px);pointer-events:none}
     .counter-pill .counter-num{color:var(--accent);font-weight:700}
     .counter-pill .counter-label{color:var(--text-4)}
-
     .studio-footer{padding:18px 28px 22px;text-align:center;font-size:11px;color:var(--text-4);border-top:1px solid var(--border);margin-top:32px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
     .studio-footer .dot{width:3px;height:3px;border-radius:50%;background:var(--border)}
     .studio-footer strong{color:var(--text-3);font-weight:600}
-
-    @media(max-width:860px){.split,.two-col,.three-col,.derived-row{grid-template-columns:1fr}.split.with-divider>.platform-col:first-child{border-right:none;border-bottom:1px solid var(--border)}}
+    @media(max-width:860px){.split,.two-col,.derived-row{grid-template-columns:1fr}.split.with-divider>.platform-col:first-child{border-right:none;border-bottom:1px solid var(--border)}}
     @media(max-width:540px){.studio-shell{padding:18px 14px 40px}.studio-toolbar-title{display:none}}
   </style>
 </head>
@@ -171,7 +139,10 @@
       <div class="field"><label>App name <span class="hint">e.g. FoodStorm</span></label><input type="text" id="app-name" placeholder="FoodStorm" oninput="onNameChange()"></div>
     </div>
     <div id="takeover-fields" style="display:none">
-      <div class="field"><label>Current iOS version <span class="hint">takeover only — current production version number</span></label><input type="number" id="ios-current-version" placeholder="e.g. 10" min="1"></div>
+      <div class="two-col">
+        <div class="field"><label>Current iOS version <span class="hint">current production version</span></label><input type="number" id="ios-current-version" placeholder="e.g. 10" min="1"></div>
+        <div class="field"><label>Current Android version code <span class="hint">from Google Play Console</span></label><input type="number" id="an-current-vcode" placeholder="e.g. 90800100" min="0"></div>
+      </div>
     </div>
     <div class="derived-row">
       <div class="derived-cell"><div class="derived-cell-label">🍎 iOS bundle ID</div><div class="derived-cell-value empty" id="d-bundle">—</div></div>
@@ -220,8 +191,8 @@
         <div class="section-h"><div class="dot ios"></div><div class="label">1 · Bundle Identifier</div><div class="line"></div></div>
         <div class="out-block"><div class="out-top"><div class="out-title">Bundle Identifier</div><button class="btn-copy" onclick="cb('i1',this)">Copy</button></div><div class="out-hint">Use in IPP Application Details and App Store Connect</div><div class="out-box" id="i1"></div></div>
 
-        <div class="section-h"><div class="dot ios"></div><div class="label">2 · Apple App Site Association</div><div class="line"></div></div>
-        <div class="out-block"><div class="out-top"><div class="out-title">AASA ID</div><button class="btn-copy" onclick="cb('i2',this)">Copy</button></div><div class="out-hint">Add to Store Configuration → "Apple app site association ids"</div><div class="out-box" id="i2"></div></div>
+        <div class="section-h"><div class="dot ios"></div><div class="label">2 · AASA ID + Verification</div><div class="line"></div></div>
+        <div class="out-block"><div class="out-top"><div class="out-title">Apple App Site Association</div><button class="btn-copy" onclick="cb('i2',this)">Copy</button></div><div class="out-hint">Add to Store Configuration → "Apple app site association ids"</div><div class="out-box" id="i2"></div></div>
 
         <div class="section-h"><div class="dot ios"></div><div class="label">3 · App Version</div><div class="line"></div></div>
         <div class="out-block"><div class="out-top"><div class="out-title">App version for IPP</div><button class="btn-copy" onclick="cb('i3',this)">Copy</button></div><div class="out-box" id="i3"></div></div>
@@ -237,6 +208,8 @@
           <div class="out-top" style="margin-top:10px"><div class="out-title">Force push cert (if standard fails)</div><button class="btn-copy" onclick="cbCmd('i5b',this)">Copy</button></div>
           <div class="warn-box">⚠ Takeover: identifier may already exist. Use this to force-create push cert.</div>
           <div class="cmd-box ios-cmd" id="i5b"></div>
+          <div class="out-top" style="margin-top:10px"><div class="out-title">Available SKIP flags (reference)</div></div>
+          <div class="out-box" id="i5flags" style="font-size:10.5px;line-height:1.7"></div>
         </div>
 
         <div class="section-h"><div class="dot ios"></div><div class="label">6 · .p12 Extraction</div><div class="line"></div></div>
@@ -266,23 +239,49 @@
         <div class="plat-header android"><span class="plat-icon">🤖</span> Android Outputs</div>
 
         <div class="section-h"><div class="dot android"></div><div class="label">1 · App Configuration</div><div class="line"></div></div>
-        <div class="out-block"><div class="out-top"><div class="out-title">Complete Android configuration</div><button class="btn-copy" onclick="cb('a1',this)">Copy</button></div><div class="out-box" id="a1"></div></div>
+        <div class="out-block"><div class="out-top"><div class="out-title">IPP configuration summary</div><button class="btn-copy" onclick="cb('a1',this)">Copy</button></div><div class="out-box" id="a1"></div></div>
 
-        <div class="section-h"><div class="dot android"></div><div class="label">2 · Recaptcha Whitelist</div><div class="line"></div></div>
-        <div class="out-block"><div class="out-top"><div class="out-title">Package name for GCP Recaptcha</div><button class="btn-copy" onclick="cb('a2',this)">Copy</button></div><div class="out-box" id="a2"></div></div>
+        <div class="section-h"><div class="dot android"></div><div class="label">2 · Version Offsets</div><div class="line"></div></div>
+        <div class="out-block"><div class="out-top"><div class="out-title">Major version offset + Version code offset</div><button class="btn-copy" onclick="cb('a2',this)">Copy</button></div><div class="out-hint">Enter in IPP Application Details</div><div class="out-box" id="a2"></div></div>
 
-        <div class="section-h"><div class="dot android"></div><div class="label">3 · Android Build Command</div><div class="line"></div></div>
+        <div class="section-h"><div class="dot android"></div><div class="label">3 · Script Commands</div><div class="line"></div></div>
+        <div class="out-block"><div class="out-top"><div class="out-title">Keystore, certs, SHA, fingerprints</div><button class="btn-copy" onclick="cb('a3',this)">Copy</button></div><div class="out-hint">Run these in instacart-android repo</div><div class="out-box" id="a3"></div></div>
+
+        <div class="section-h"><div class="dot android"></div><div class="label">4 · ISC Naming Conventions</div><div class="line"></div></div>
+        <div class="out-block"><div class="out-top"><div class="out-title">All ISC key names for this app</div><button class="btn-copy" onclick="cb('a4',this)">Copy</button></div><div class="out-box" id="a4"></div></div>
+
+        <div class="section-h"><div class="dot android"></div><div class="label">5 · SNS Terraform Entry</div><div class="line"></div></div>
+        <div class="out-block"><div class="out-top"><div class="out-title">Add to groups/customers-android/shared/main.tf</div><button class="btn-copy" onclick="cb('a5',this)">Copy</button></div><div class="out-hint">Under sns_app_new in tf-instacart</div><div class="out-box" id="a5"></div></div>
+
+        <div class="section-h"><div class="dot android"></div><div class="label">6 · Recaptcha Whitelist</div><div class="line"></div></div>
+        <div class="out-block"><div class="out-top"><div class="out-title">Package name for GCP Recaptcha</div><button class="btn-copy" onclick="cb('a6',this)">Copy</button></div><div class="out-box" id="a6"></div></div>
+
+        <div class="section-h"><div class="dot android"></div><div class="label">7 · Android Build Command</div><div class="line"></div></div>
         <div class="out-block">
           <div id="an-branch-pill" class="branch-pill bp-loading"><div class="bp-dot"></div> Loading branch…</div>
-          <div class="out-top"><div class="out-title">Buildkite build trigger</div><button class="btn-copy" onclick="cbCmd('a3',this)">Copy</button></div>
-          <div class="cmd-box android-cmd" id="a3"></div>
+          <div class="out-top"><div class="out-title">Buildkite build trigger</div><button class="btn-copy" onclick="cbCmd('a7',this)">Copy</button></div>
+          <div class="cmd-box android-cmd" id="a7"></div>
         </div>
       </div>
     </div>
 
+    <!-- ═══════ SHARED: FIREBASE TERRAFORM ═══════ -->
+    <div style="margin-top:20px">
+      <div class="plat-header" style="background:var(--accent-bg);border:1px solid var(--accent-bd);color:var(--accent)"><span class="plat-icon">🔥</span> Firebase Terraform — terraform.tfvars</div>
+      <div class="out-block">
+        <div class="out-top"><div class="out-title">Combined iOS + Android entry for tf-instacart-gcp</div><button class="btn-copy" onclick="cb('tf-firebase',this)">Copy</button></div>
+        <div class="out-hint">Add to {retailer}-firebase/terraform.tfvars in tf-instacart-gcp repo</div>
+        <div class="out-box" id="tf-firebase" style="max-height:400px"></div>
+      </div>
+      <div class="out-block" style="margin-top:8px">
+        <div class="out-top"><div class="out-title">atlantis.yaml entry</div><button class="btn-copy" onclick="cb('tf-atlantis',this)">Copy</button></div>
+        <div class="out-box" id="tf-atlantis"></div>
+      </div>
+    </div>
+
     <!-- ═══════ BUILD COMMANDS (full width) ═══════ -->
-    <div style="margin-top:24px">
-      <div class="plat-header" style="background:var(--warning-bg);border:1px solid rgba(251,191,36,0.3);color:var(--warning)"><span class="plat-icon">⚡</span> Build Commands — batch & reprovisioning</div>
+    <div style="margin-top:20px">
+      <div class="plat-header" style="background:var(--warning-bg);border:1px solid rgba(251,191,36,0.3);color:var(--warning)"><span class="plat-icon">⚡</span> Build Commands — batch &amp; reprovisioning</div>
       <div class="step">
         <div class="two-col" style="margin-bottom:14px">
           <div class="field"><label>iOS release branch</label><input type="text" id="build-ios-branch" placeholder="e.g. 9.14.0" oninput="updateBuildCmds()"></div>
@@ -293,7 +292,6 @@
           <div><div class="out-top"><div class="out-title">🍎 iOS batch build</div><button class="btn-copy" onclick="cbCmd('batch-ios',this)">Copy</button></div><div class="cmd-box ios-cmd" id="batch-ios">Enter slug(s) above</div></div>
           <div><div class="out-top"><div class="out-title">🤖 Android batch build</div><button class="btn-copy" onclick="cbCmd('batch-an',this)">Copy</button></div><div class="cmd-box android-cmd" id="batch-an">Enter slug(s) above</div></div>
         </div>
-
         <div class="section-h" style="margin-top:20px"><div class="dot" style="background:var(--ios)"></div><div class="label">iOS Reprovisioning — Apple Pay</div><div class="line"></div></div>
         <div class="field"><label>Retailer slug</label><input type="text" id="repro-slug" placeholder="e.g. foodstorm-sfp" oninput="updateRepro()"></div>
         <div class="out-top"><div class="out-title">Reprovisioning env vars</div><button class="btn-copy" onclick="cbCmd('repro-cmd',this)">Copy</button></div>
@@ -319,7 +317,6 @@
 
   /* ═══════ STATE ═══════ */
   var appType='new', iosBranch='', anBranch='';
-
   function gv(id){var e=document.getElementById(id);return e?e.value.trim():''}
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
@@ -335,6 +332,7 @@
 
   function toBundleId(n){var c=n.toLowerCase().replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,' ').trim().replace(/\s/g,'');if(c.length>20)c=n.toLowerCase().replace(/[^a-z0-9\s]/g,'').trim().split(' ').slice(0,2).join('');return'com.'+c+'.app.ios'}
   function toPackage(n){var c=n.toLowerCase().replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,' ').trim().replace(/\s/g,'');if(c.length>20)c=n.toLowerCase().replace(/[^a-z0-9\s]/g,'').trim().split(' ').slice(0,2).join('');return'com.'+c+'.app.android'}
+  function toDeeplink(n){return n.toLowerCase().replace(/[^a-z0-9]/g,'')}
 
   function onSlugChange(){document.getElementById('bc-name').textContent=gv('slug')||'untitled'}
   function onNameChange(){
@@ -350,8 +348,9 @@
 
   function toCamelFromPascal(p){return p?p.charAt(0).toLowerCase()+p.slice(1):''}
   function snsKey(cs,t){return cs+(t==='cert'?'_app_prod_sns_certificate':'_app_prod_sns_private_key')}
+  function sanitizeSlug(s){return s.toUpperCase().replace(/-/g,'_')}
 
-  function rp(id,lines){var el=document.getElementById(id),html=lines.map(function(l){if(!l.trim())return'';var m=l.match(/^(\s*)([\w_{}]+)\s*=\s*(.*)$/);if(m)return m[1]+'<span class="ok">'+esc(m[2])+'</span> = <span class="ov">'+esc(m[3])+'</span>';var m2=l.match(/^(\s*)(#.*)$/);if(m2)return'<span style="color:var(--text-mute)">'+esc(l)+'</span>';return'<span class="oi1">'+esc(l)+'</span>'}).join('\n');el.innerHTML=html;el.dataset.raw=lines.join('\n')}
+  function rp(id,lines){var el=document.getElementById(id),html=lines.map(function(l){if(!l.trim())return'';var m=l.match(/^(\s*)([\w_{}."]+)\s*=\s*(.*)$/);if(m)return m[1]+'<span class="ok">'+esc(m[2])+'</span> = <span class="ov">'+esc(m[3])+'</span>';var m2=l.match(/^(\s*)(#.*)$/);if(m2)return'<span style="color:var(--text-mute)">'+esc(l)+'</span>';return'<span class="oi1">'+esc(l)+'</span>'}).join('\n');el.innerHTML=html;el.dataset.raw=lines.join('\n')}
 
   /* ═══════ GENERATE ═══════ */
   function generateAll(){
@@ -363,53 +362,216 @@
     var bundleId=toBundleId(name);
     if(!pkg)pkg=toPackage(name);
     var cs=toCamelFromPascal(scheme),cert=snsKey(cs,'cert'),key=snsKey(cs,'key');
-    var tid=devTeam.toUpperCase(),slugU=slug.toUpperCase().replace(/-/g,'_');
+    var tid=devTeam.toUpperCase(),slugU=sanitizeSlug(slug);
     var isNew=appType==='new';
     var curVer=isNew?0:(parseInt(gv('ios-current-version'))||0);
     var newVer=isNew?1:curVer+1;
     var airship=document.getElementById('ios-airship').checked;
+    var deeplink=toDeeplink(name);
+    var whitelabelUrl='https://'+slug+'.instacart.com';
 
-    /* ── iOS 1: Bundle ID ── */
+    // Android version offset calculations
+    var ab=anBranch||gv('build-an-branch')||'9.14';
+    var abParts=ab.split('.'); var abMajor=parseInt(abParts[0])||9; var abMinor=parseInt(abParts[1])||14; var abPatch=parseInt(abParts[2])||0;
+    var icVersionCode=(abMajor*10000000)+(abMinor*100000)+(abPatch*1000);
+    var anMajorOffset,anVcodeOffset;
+    if(isNew){anMajorOffset=-8;anVcodeOffset=0;}
+    else{
+      var curAnVcode=parseInt(gv('an-current-vcode'))||0;
+      anMajorOffset=curVer-abMajor+1; // uses iOS current version as proxy for major
+      anVcodeOffset=curAnVcode>0?curAnVcode-icVersionCode+1:0;
+    }
+
+    /* ═══════ iOS OUTPUTS ═══════ */
+
+    /* 1: Bundle ID */
     rp('i1',[bundleId]);
-    /* ── iOS 2: AASA ── */
-    rp('i2',[tid+'.'+bundleId]);
-    /* ── iOS 3: Version ── */
+
+    /* 2: AASA + verification */
+    rp('i2',[tid+'.'+bundleId,'','# Verify at:','# '+whitelabelUrl+'/.well-known/apple-app-site-association']);
+
+    /* 3: Version */
     if(isNew)rp('i3',['1','','# New app — starts at 1']);
     else rp('i3',[String(newVer),'','# Current: '+curVer+' → New: '+newVer]);
-    /* ── iOS 4: ISC Conf ── */
+
+    /* 4: ISC Conf Pre-check + creation instructions */
     var c4=document.getElementById('i4');
-    c4.innerHTML='<span style="color:var(--danger);font-weight:700">Verify these exist in ISC:</span>\n\n<span class="ok">APP_STORE_CONNECT_API_KEY_ID_'+esc(tid)+'</span>\n<span class="ok">APP_STORE_CONNECT_API_KEY_CONTENT_'+esc(tid)+'</span>\n<span class="ok">APP_STORE_CONNECT_API_KEY_ISSUER_ID_'+esc(tid)+'</span>\n\n<span style="color:var(--success)">✅ Exist → skip ASC API key setup</span>\n<span style="color:var(--warning)">⚠ Don\'t exist → create in ISC first</span>';
+    c4.innerHTML='<span style="color:var(--danger);font-weight:700">Verify these exist in ISC:</span>\n\n'+
+      '<span class="ok">APP_STORE_CONNECT_API_KEY_ID_'+esc(tid)+'</span>\n'+
+      '<span class="ok">APP_STORE_CONNECT_API_KEY_CONTENT_'+esc(tid)+'</span>\n'+
+      '<span class="ok">APP_STORE_CONNECT_API_KEY_ISSUER_ID_'+esc(tid)+'</span>\n\n'+
+      '<span style="color:var(--success)">✅ Exist → skip ASC API key setup</span>\n'+
+      '<span style="color:var(--warning)">⚠ Don\'t exist → create in ISC:</span>\n\n'+
+      '<span style="color:var(--text-mute)"># ISC creation details (all three confs):</span>\n'+
+      '<span class="ok">Pattern</span>     = <span class="ov">instacart-ios.buildkite</span>\n'+
+      '<span class="ok">Environment</span> = <span class="ov">shared-services</span>\n\n'+
+      '<span style="color:var(--text-mute)"># KEY_ID → Conf type: Environment Variable</span>\n'+
+      '<span style="color:var(--text-mute)"># ISSUER_ID → Conf type: Secret Reference</span>\n'+
+      '<span style="color:var(--text-mute)"># KEY_CONTENT → Conf type: Secret Reference</span>\n'+
+      '<span style="color:var(--text-mute)"># Permissions: Platform - Retailer Core, Access = Owner</span>';
     c4.dataset.raw='APP_STORE_CONNECT_API_KEY_ID_'+tid+'\nAPP_STORE_CONNECT_API_KEY_CONTENT_'+tid+'\nAPP_STORE_CONNECT_API_KEY_ISSUER_ID_'+tid;
-    /* ── iOS 5: SFX ── */
+
+    /* 5: SFX Registration + SKIP flags */
     var regBase='isc build instacart-ios@master --env ISC_CRON_NAME=sfx_app_register --env IC_APP='+slug;
     document.getElementById('i5a').textContent=regBase;document.getElementById('i5a').dataset.raw=regBase;
     var regForce=regBase+' --env FORCE_CREATE_PUSH_CERT=true';
     document.getElementById('i5b').textContent=regForce;document.getElementById('i5b').dataset.raw=regForce;
-    /* ── iOS 6: .p12 ── */
+    rp('i5flags',[
+      'SKIP_CREATING_APP_RECORD=true       # Skip new app listing',
+      'SKIP_UPDATE_APP_CAPABILITIES=true    # Skip capability updates',
+      'SKIP_CREATING_DISTRIBUTION_CERT=true # Skip distribution cert + profile',
+      'SKIP_CREATING_PUSH_CERT=true         # Skip push cert',
+      'FORCE_CREATE_PUSH_CERT=true          # Force new push cert (takeover)',
+    ]);
+
+    /* 6: .p12 */
     var p12=cs+'.p12';
     rp('i6',['openssl pkcs12 -info -in '+p12+' -nodes','','# Password: delivery','# Legacy error? Add -legacy:','openssl pkcs12 -info -in '+p12+' -nodes -legacy','','# Certificate → -----BEGIN CERTIFICATE-----','# Private key → -----BEGIN PRIVATE KEY-----','','ISC SecretRef — Certificate:','  Name:        '+cert,'  Description: '+name+' APNS public key','','ISC SecretRef — Private Key:','  Name:        '+key,'  Description: '+name+' APNS private key']);
-    /* ── iOS 7: SNS ── */
-    rp('i7',['# ISC SecretRef names (from Step 6):',cert,key,'','# SNS ARN variable:','SNS_PLATFORM_APP_'+slugU+'_IOS','','# Terraform PR values:',cs+'  = "'+slug+'"',cs+'  = "'+scheme+'"']);
-    /* ── iOS 8: Recaptcha ── */
+
+    /* 7: SNS */
+    rp('i7',['# ISC SecretRef names (from Step 6):',cert,key,'','# SNS ARN ISC variable:','SNS_PLATFORM_APP_'+slugU+'_IOS','','# Terraform PR values (tf-instacart):','# sns_apps_secretref entry:',cs+'  = "'+slug+'"',cs+'  = "'+scheme+'"']);
+
+    /* 8: Recaptcha */
     rp('i8',[bundleId,'','# Add to GCP Recaptcha → iOS package whitelist']);
-    /* ── iOS 9: Airship ── */
+
+    /* 9: Airship */
     document.getElementById('ios-airship-out').style.display=airship?'block':'none';
-    if(airship)rp('i9',['IC_KEY_AIRSHIP_PRODUCTION_ENT_'+scheme.toUpperCase()+'=<paste key>','IC_KEY_AIRSHIP_PRODUCTION_SECRET_ENT_'+scheme.toUpperCase()+'=<paste secret>']);
-    /* ── iOS 10: Build ── */
+    if(airship)rp('i9',['# ISC Conf (Pattern: instacart-ios.buildkite, Env: shared-services)','','# App Key → Conf Type: Environment Variable','IC_KEY_AIRSHIP_PRODUCTION_ENT_'+scheme.toUpperCase()+'=<paste key>','','# Secret → Conf Type: Secret Reference','IC_KEY_AIRSHIP_PRODUCTION_SECRET_ENT_'+scheme.toUpperCase()+'=<paste secret>']);
+
+    /* 10: Build */
     var ib=iosBranch||gv('build-ios-branch')||'9.14.0';
     var iosCmd='isc build instacart-ios@releases/sfx/'+ib+' --env BUILD_SFX_APPS='+slug;
     document.getElementById('i10').textContent=iosCmd;document.getElementById('i10').dataset.raw=iosCmd;
 
-    /* ── Android 1: Config ── */
-    rp('a1',['# ── Android Configuration ──','# Type: '+(isNew?'New app':'Takeover'),'# Generated: '+new Date().toLocaleString(),'','slug          = "'+slug+'"','app_name      = "'+name+'"','package_name  = "'+pkg+'"']);
-    /* ── Android 2: Recaptcha ── */
-    rp('a2',[pkg,'','# Add to GCP Recaptcha → Android package whitelist']);
-    /* ── Android 3: Build ── */
-    var ab=anBranch||gv('build-an-branch')||'9.14';
-    var anCmd='isc build instacart-android@releases/sfx/'+ab+' --env app_type=pbi --env pbi='+slug;
-    document.getElementById('a3').textContent=anCmd;document.getElementById('a3').dataset.raw=anCmd;
+    /* ═══════ ANDROID OUTPUTS ═══════ */
 
-    /* Pre-fill build commands section */
+    /* A1: Full config */
+    rp('a1',[
+      '# ── Android IPP Configuration ──',
+      '# Type: '+(isNew?'New app':'Takeover'),
+      '# Generated: '+new Date().toLocaleString(),'',
+      'slug            = "'+slug+'"',
+      'app_name        = "'+name+'"',
+      'package_name    = "'+pkg+'"',
+      'base_url        = "'+whitelabelUrl+'"',
+      'deeplink_scheme = "'+deeplink+'"',
+      'app_type        = "sfx"',
+      'app_bundle      = "Yes"',
+      'braze_enabled   = "No"',
+      'airship_enabled = "'+(airship?'Yes':'No')+'"',
+    ]);
+
+    /* A2: Version offsets */
+    var vlines=['# ── Major Version Offset ──'];
+    if(isNew){vlines.push('major_version_offset = -8','','# New app: -8 starts at v1');}
+    else{vlines.push('major_version_offset = '+anMajorOffset,'','# Current app version: '+curVer,'# IC current version (branch major): '+abMajor,'# Formula: '+curVer+' - '+abMajor+' + 1 = '+anMajorOffset);}
+    vlines.push('','# ── Version Code Offset ──');
+    vlines.push('# IC version code (branch '+ab+'):');
+    vlines.push('#   ('+abMajor+'×10000000) + ('+abMinor+'×100000) + ('+abPatch+'×1000) = '+icVersionCode);
+    if(isNew){vlines.push('','version_code_offset = 0','','# New app: 0 (no existing version code)');}
+    else{
+      var curAnVcode=parseInt(gv('an-current-vcode'))||0;
+      if(curAnVcode>0){vlines.push('','version_code_offset = '+anVcodeOffset,'','# Current app version code: '+curAnVcode,'# Formula: '+curAnVcode+' - '+icVersionCode+' + 1 = '+anVcodeOffset);}
+      else{vlines.push('','version_code_offset = <calculate>','','# Enter current app version code in shared inputs to auto-calculate');}
+    }
+    rp('a2',vlines);
+
+    /* A3: Script commands */
+    rp('a3',[
+      '# 1. Generate keystores + build.properties (new apps):',
+      './scripts/sfx/create_keystores.rb -p '+slug,'',
+      '# 2. Download configs:',
+      './scripts/sfx/download_configs.rb','',
+      '# 3. Export certificates:',
+      (isNew?'./scripts/sfx/export_publish_certs.rb -p '+slug:'./scripts/sfx/export_publish_certs_v2.rb -p '+slug)+'',
+      (isNew?'':'# ↑ v2 script for existing/takeover apps'),'',
+      '# 4. Verify SHA:',
+      './scripts/sfx/get_sha.rb -p '+slug,'',
+      '# 5. Set fingerprints (app links):',
+      './scripts/sfx/set_fingerprints.rb -p '+slug,
+    ]);
+
+    /* A4: ISC naming conventions */
+    var sanSlug=sanitizeSlug(slug);
+    rp('a4',[
+      '# ── SNS ──',
+      'SNS_PLATFORM_APP_'+sanSlug+'_ANDROID_FCM','',
+      '# ── FCM Server Key (Carrot push) ──',
+      sanSlug.toLowerCase()+'_fcm_prod_sns_server_key','',
+      '# ── FCM Key (Airship) ──',
+      (airship?sanSlug.toLowerCase()+'_fcm_prod_airship_key':'# (Airship not enabled)'),'',
+      '# ── FCM Key (Braze) ──',
+      '# '+sanSlug.toLowerCase()+'_fcm_prod_braze_key  (if Braze enabled)','',
+      '# ── App Links Fingerprints ──',
+      sanSlug.toLowerCase()+'_android_app_links_fingerprints',
+    ]);
+
+    /* A5: SNS Terraform */
+    var snsName=name.replace(/[^a-zA-Z0-9]/g,'_')+'_PBI_App_Prod_Android';
+    rp('a5',[
+      '# Add to groups/customers-android/shared/main.tf',
+      '# Under: resource "aws_sns_platform_application" "sns_apps_new"','',
+      '  '+slug+' = "'+snsName+'"','',
+      '# After PR approval, run: atlantis apply',
+      '# Then copy SNS ARN from Atlantis comment to ISC',
+    ]);
+
+    /* A6: Recaptcha */
+    rp('a6',[pkg,'','# Add to GCP Recaptcha → Android package whitelist']);
+
+    /* A7: Build */
+    var anCmd='isc build instacart-android@releases/sfx/'+ab+' --env app_type=pbi --env pbi='+slug;
+    document.getElementById('a7').textContent=anCmd;document.getElementById('a7').dataset.raw=anCmd;
+
+    /* ═══════ SHARED: FIREBASE TERRAFORM ═══════ */
+    var retailerFb=slug.split('-').slice(0,-1).join('-')+'-firebase';
+    if(slug.indexOf('-')===-1)retailerFb=slug+'-firebase';
+    rp('tf-firebase',[
+      '# File: '+retailerFb+'/terraform.tfvars','',
+      'project_name = "'+name+' Firebase Apps"',
+      'short_name   = "'+retailerFb+'"','',
+      '# ── Android Apps ──',
+      'android_apps = {',
+      '  '+slug+' = {',
+      '    android_app_name         = "'+name+' Android"',
+      '    android_app_package_name = "'+pkg+'"',
+      '    braze_enabled            = false',
+      '    airship_enabled          = '+airship,
+      '    sha1_fingerprints = [',
+      '      "<from get_sha.rb>"',
+      '    ]',
+      '    sha256_fingerprints = [',
+      '      "<from get_sha.rb>"',
+      '    ]',
+      '  }',
+      '}','',
+      '# ── iOS Apps ──',
+      'ios_apps = {',
+      '  '+slug+' = {',
+      '    ios_app_name      = "'+name+'"',
+      '    ios_app_bundle_id = "'+bundleId+'"',
+      '  }',
+      '}','',
+      'project_id  = null',
+      'owner_email = "enterprise-mobile-platform@instacart.com"',
+      's3_bucket   = "instacart-sfx-mobile-app-build-data"',
+      'environment = "production"',
+    ]);
+
+    rp('tf-atlantis',[
+      '# Add to atlantis.yaml in tf-instacart-gcp root:','',
+      '- name: '+retailerFb,
+      '  dir: instacart-com/groups/'+retailerFb,
+      '  workspace: default',
+      '  terraform_version: 1.5.7',
+      '  workflow: common-no-env',
+      '  autoplan:',
+      '    when_modified:',
+      '      - "*.tf"',
+      '      - "*.tfvars"',
+    ]);
+
+    /* Pre-fill build commands */
     if(!gv('build-slugs'))document.getElementById('build-slugs').value=slug;
     updateBuildCmds();
 
