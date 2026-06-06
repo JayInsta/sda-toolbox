@@ -67,7 +67,13 @@
     .mini-toggle input:checked+.mini-slider::before{transform:translateX(16px);background:var(--on-accent)}
 
     /* ── SPLIT LAYOUT ── */
-    .split{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:start}
+    .split.with-divider{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--bg-card)}
+    .split.with-divider>.platform-col{padding:16px}
+    .split.with-divider>.platform-col:first-child{border-right:1px solid var(--border)}
+    .split.with-divider>.platform-col.ios-col{background:linear-gradient(180deg,rgba(192,132,252,0.03) 0%,transparent 40%)}
+    .split.with-divider>.platform-col.an-col{background:linear-gradient(180deg,rgba(74,222,128,0.03) 0%,transparent 40%)}
+    .split:not(.with-divider){gap:14px}
     .platform-col{min-width:0}
     .plat-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:8px 12px;border-radius:9px;font-size:13px;font-weight:700}
     .plat-header.ios{background:var(--ios-bg);border:1px solid var(--ios-bd);color:var(--ios)}
@@ -132,7 +138,7 @@
     .studio-footer .dot{width:3px;height:3px;border-radius:50%;background:var(--border)}
     .studio-footer strong{color:var(--text-3);font-weight:600}
 
-    @media(max-width:860px){.split,.two-col,.three-col,.derived-row{grid-template-columns:1fr}}
+    @media(max-width:860px){.split,.two-col,.three-col,.derived-row{grid-template-columns:1fr}.split.with-divider>.platform-col:first-child{border-right:none;border-bottom:1px solid var(--border)}}
     @media(max-width:540px){.studio-shell{padding:18px 14px 40px}.studio-toolbar-title{display:none}}
   </style>
 </head>
@@ -174,8 +180,8 @@
   </div>
 
   <!-- ═══════ STEP 02: PLATFORM-SPECIFIC ═══════ -->
-  <div class="split">
-    <div class="platform-col">
+  <div class="split with-divider">
+    <div class="platform-col ios-col">
       <div class="plat-header ios"><span class="plat-icon">🍎</span> iOS-specific</div>
       <div class="step">
         <div class="field"><label>Scheme name <span class="hint">IC SSO retailer name · PascalCase</span></label><input type="text" id="ios-scheme" placeholder="FoodStorm"></div>
@@ -189,7 +195,7 @@
         </div>
       </div>
     </div>
-    <div class="platform-col">
+    <div class="platform-col an-col">
       <div class="plat-header android"><span class="plat-icon">🤖</span> Android-specific</div>
       <div class="step">
         <div class="field">
@@ -205,10 +211,10 @@
 
   <!-- ═══════ OUTPUTS ═══════ -->
   <div class="output-wrap" id="output-wrap">
-    <div class="split" style="margin-top:20px">
+    <div class="split with-divider" style="margin-top:20px">
 
       <!-- ── iOS OUTPUTS ── -->
-      <div class="platform-col">
+      <div class="platform-col ios-col">
         <div class="plat-header ios"><span class="plat-icon">🍎</span> iOS Outputs</div>
 
         <div class="section-h"><div class="dot ios"></div><div class="label">1 · Bundle Identifier</div><div class="line"></div></div>
@@ -256,7 +262,7 @@
       </div>
 
       <!-- ── ANDROID OUTPUTS ── -->
-      <div class="platform-col">
+      <div class="platform-col an-col">
         <div class="plat-header android"><span class="plat-icon">🤖</span> Android Outputs</div>
 
         <div class="section-h"><div class="dot android"></div><div class="label">1 · App Configuration</div><div class="line"></div></div>
