@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SFP Release Tracker</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f7f7f5; --surface: #ffffff; --surface2: #f2f2ef;
+    --border: rgba(0,0,0,0.09); --border-med: rgba(0,0,0,0.15);
+    --text: #1a1a18; --text2: #5a5a56; --text3: #9a9a94;
+    --blue-bg: #e8f0fe; --blue-text: #1a4fa0;
+    --green-bg: #e6f4ea; --green-text: #1e6b3a;
+    --amber-bg: #fef3e0; --amber-text: #8a5800;
+    --red-bg: #fde8e8; --red-text: #9b2424;
+    --purple-bg: #ede8fe; --purple-text: #4a2fa0;
+    --teal-bg: #e0f5ee; --teal-text: #0d6b50;
+    --gray-bg: #efefec; --gray-text: #4a4a46;
+    --radius: 8px; --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'SF Mono', 'Fira Code', monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413; --surface: #1e1e1c; --surface2: #272724;
+      --border: rgba(255,255,255,0.08); --border-med: rgba(255,255,255,0.14);
+      --text: #e8e8e4; --text2: #9a9a94; --text3: #5a5a56;
+      --blue-bg: #0d2a5a; --blue-text: #93b8f8;
+      --green-bg: #0d3320; --green-text: #72d49a;
+      --amber-bg: #3a2800; --amber-text: #f5c060;
+      --red-bg: #3a1010; --red-text: #f48080;
+      --purple-bg: #1e1250; --purple-text: #b09ef8;
+      --teal-bg: #06352a; --teal-text: #60d4b0;
+      --gray-bg: #2a2a26; --gray-text: #b0b0a8;
+    }
+  }
+  html, body { height: 100%; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+  .app { display: flex; flex-direction: column; min-height: 100vh; }
+  .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px; position: sticky; top: 0; z-index: 100; }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .logo { display: flex; align-items: center; gap: 8px; }
+  .logo-icon { width: 30px; height: 30px; background: var(--text); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
+  .logo-icon svg { color: var(--bg); }
+  .logo-title { font-size: 15px; font-weight: 600; letter-spacing: -0.02em; }
+  .logo-sub { font-size: 12px; color: var(--text3); }
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font-size: 13px; font-family: var(--font); font-weight: 500; border: 1px solid var(--border-med); border-radius: var(--radius); background: var(--surface); color: var(--text); cursor: pointer; transition: all 0.1s; white-space: nowrap; }
+  .btn:hover { background: var(--surface2); }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .btn-primary:hover { opacity: 0.88; background: var(--text); }
+  .btn svg { flex-shrink: 0; }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn-icon { padding: 6px; border: none; background: none; color: var(--text2); cursor: pointer; border-radius: var(--radius); transition: all 0.1s; }
+  .btn-icon:hover { background: var(--surface2); color: var(--text); }
+  .btn-icon-danger:hover { background: var(--red-bg); color: var(--red-text); }
+  .stats-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 20px 24px; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .stat { background: var(--surface2); border-radius: var(--radius); padding: 14px 16px; }
+  .stat-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .stat-val { font-size: 26px; font-weight: 600; letter-spacing: -0.03em; }
+  .stat-val.green { color: var(--green-text); }
+  .stat-val.amber { color: var(--amber-text); }
+  .stat-val.red { color: var(--red-text); }
+  .filters { display: flex; gap: 8px; padding: 14px 24px; border-bottom: 1px solid var(--border); background: var(--surface); flex-wrap: wrap; align-items: center; }
+  .filter-search { position: relative; flex: 1; min-width: 200px; }
+  .filter-search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); pointer-events: none; }
+  .filter-search input { width: 100%; padding: 7px 10px 7px 32px; }
+  input, select, textarea { font-family: var(--font); font-size: 13px; background: var(--surface); color: var(--text); border: 1px solid var(--border-med); border-radius: var(--radius); padding: 7px 10px; outline: none; transition: border-color 0.1s; }
+  input:focus, select:focus, textarea:focus { border-color: var(--text2); }
+  select { cursor: pointer; }
+  .filter-clear { font-size: 12px; color: var(--text3); background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: var(--radius); }
+  .filter-clear:hover { color: var(--text); background: var(--surface2); }
+  .content { flex: 1; padding: 24px; }
+  .cycle-group { margin-bottom: 28px; }
+  .cycle-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .cycle-label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; }
+  .cycle-count { font-size: 11px; color: var(--text3); background: var(--surface2); border-radius: 20px; padding: 2px 8px; }
+  .cycle-line { flex: 1; height: 1px; background: var(--border); }
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  thead { background: var(--surface2); }
+  th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--surface2); }
+  .col-date { white-space: nowrap; font-size: 12px; color: var(--text2); font-variant-numeric: tabular-nums; }
+  .col-app { font-weight: 600; font-size: 13px; }
+  .col-version { font-size: 12px; color: var(--text2); font-family: var(--font-mono); }
+  .col-notes { font-size: 12px; color: var(--text2); max-width: 260px; }
+  .col-who { font-size: 12px; color: var(--text3); }
+  .col-actions { white-space: nowrap; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge-ios { background: var(--blue-bg); color: var(--blue-text); }
+  .badge-android { background: var(--green-bg); color: var(--green-text); }
+  .badge-both { background: var(--purple-bg); color: var(--purple-text); }
+  .badge-done { background: var(--green-bg); color: var(--green-text); }
+  .badge-pending { background: var(--amber-bg); color: var(--amber-text); }
+  .badge-inreview { background: var(--blue-bg); color: var(--blue-text); }
+  .badge-live { background: var(--teal-bg); color: var(--teal-text); }
+  .badge-rejected { background: var(--red-bg); color: var(--red-text); }
+  .badge-cat { background: var(--gray-bg); color: var(--gray-text); font-weight: 500; }
+  .empty { text-align: center; padding: 64px 24px; color: var(--text3); }
+  .empty svg { margin: 0 auto 16px; display: block; opacity: 0.3; }
+  .empty-title { font-size: 16px; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
+  .empty-sub { font-size: 13px; margin-bottom: 20px; }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; }
+  .modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { font-size: 16px; font-weight: 600; }
+  .modal-body { padding: 20px 24px; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group label { font-size: 12px; font-weight: 600; color: var(--text2); }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; }
+  .form-group textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+  .export-panel { display: none; position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; width: 240px; z-index: 150; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+  .export-panel.open { display: block; }
+  .export-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+  .export-btn { display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: none; color: var(--text); font-size: 13px; font-family: var(--font); cursor: pointer; margin-bottom: 6px; text-align: left; }
+  .export-btn:hover { background: var(--surface2); }
+  .export-note { font-size: 11px; color: var(--text3); margin-top: 8px; }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 500; z-index: 300; transition: transform 0.2s; pointer-events: none; white-space: nowrap; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  @media (max-width: 768px) {
+    .stats-bar { grid-template-columns: repeat(3, 1fr); }
+    .stat:nth-child(4), .stat:nth-child(5) { display: none; }
+    .topbar { padding: 0 16px; }
+    .content { padding: 16px; }
+    th:nth-child(3), td:nth-child(3), th:nth-child(8), td:nth-child(8) { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <div>
+          <div class="logo-title">SFP Release Tracker</div>
+          <div class="logo-sub">App Store Connect &amp; Google Play Console</div>
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-sm" onclick="toggleExport()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="openModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Log change
+      </button>
+    </div>
+  </header>
+  <div class="stats-bar" id="statsBar"></div>
+  <div class="filters">
+    <div class="filter-search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Search app, version, notes…" oninput="renderAll()" />
+    </div>
+    <select id="filterPlatform" onchange="renderAll()">
+      <option value="">All platforms</option>
+      <option value="iOS">iOS</option>
+      <option value="Android">Android</option>
+      <option value="Both">Both</option>
+    </select>
+    <select id="filterCategory" onchange="renderAll()">
+      <option value="">All categories</option>
+      <option>Build upload</option><option>TestFlight</option><option>Store listing</option>
+      <option>Privacy</option><option>Rejection response</option><option>Submit for review</option>
+      <option>Publish</option><option>New app onboarding</option><option>Pricing / availability</option>
+      <option>In-app purchase</option><option>Other</option>
+    </select>
+    <select id="filterStatus" onchange="renderAll()">
+      <option value="">All statuses</option>
+      <option>Done</option><option>Pending</option><option>In review</option><option>Live</option><option>Rejected</option>
+    </select>
+    <select id="filterCycle" onchange="renderAll()"><option value="">All cycles</option></select>
+    <button class="filter-clear" onclick="clearFilters()">Clear filters</button>
+  </div>
+  <main class="content" id="mainContent"></main>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Log a change</div>
+      <button class="btn-icon" onclick="closeModal()" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label for="fApp">App name *</label><input type="text" id="fApp" placeholder="e.g. MyApp" /></div>
+        <div class="form-group"><label for="fVersion">Version / build</label><input type="text" id="fVersion" placeholder="e.g. 2.4.1 (build 47)" /></div>
+        <div class="form-group"><label for="fPlatform">Platform</label>
+          <select id="fPlatform"><option value="iOS">iOS</option><option value="Android">Android</option><option value="Both">Both</option></select>
+        </div>
+        <div class="form-group"><label for="fCategory">Category</label>
+          <select id="fCategory">
+            <option>Build upload</option><option>TestFlight</option><option>Store listing</option>
+            <option>Privacy</option><option>Rejection response</option><option>Submit for review</option>
+            <option>Publish</option><option>New app onboarding</option><option>Pricing / availability</option>
+            <option>In-app purchase</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label for="fStatus">Status</label>
+          <select id="fStatus"><option>Done</option><option>Pending</option><option>In review</option><option>Live</option><option>Rejected</option></select>
+        </div>
+        <div class="form-group"><label for="fCycle">Release cycle</label><input type="text" id="fCycle" placeholder="e.g. 2025-W25" /></div>
+        <div class="form-group"><label for="fDate">Date</label><input type="date" id="fDate" /></div>
+        <div class="form-group"><label for="fWho">Changed by</label><input type="text" id="fWho" placeholder="Name or initials" /></div>
+        <div class="form-group full"><label for="fNotes">Notes / details</label>
+          <textarea id="fNotes" placeholder="What was changed, why, rejection reason, reviewer notes, links…"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEntry()">Save entry</button>
+    </div>
+  </div>
+</div>
+
+<div class="export-panel" id="exportPanel">
+  <div class="export-title">Export / share</div>
+  <button class="export-btn" onclick="exportCSV()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    Download as CSV
+  </button>
+  <button class="export-btn" onclick="exportJSON()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    Download as JSON
+  </button>
+  <button class="export-btn" onclick="printView()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print / save as PDF
+  </button>
+  <div class="export-note">CSV and JSON respect active filters.</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'sfp_tracker_v1';
+let entries = [], editId = null;
+
+function load() {
+  try { const r = localStorage.getItem(STORAGE_KEY); if (r) entries = JSON.parse(r); } catch(e) { entries = []; }
+  populateCycleFilter(); renderAll();
+}
+function persist() { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function todayStr() { return new Date().toISOString().slice(0,10); }
+function currentCycle() {
+  const d = new Date(), j = new Date(d.getFullYear(),0,1);
+  return d.getFullYear()+'-W'+String(Math.ceil(((d-j)/86400000+j.getDay()+1)/7)).padStart(2,'0');
+}
+function fmtDate(s) {
+  if (!s) return '—';
+  const [y,m,d] = s.split('-');
+  return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+ +d+', '+y;
+}
+function populateCycleFilter() {
+  const cycles = [...new Set(entries.map(e=>e.cycle).filter(Boolean))].sort().reverse();
+  const sel = document.getElementById('filterCycle'), cur = sel.value;
+  sel.innerHTML = '<option value="">All cycles</option>';
+  cycles.forEach(c => { const o = document.createElement('option'); o.value=o.textContent=c; if(c===cur)o.selected=true; sel.appendChild(o); });
+}
+function getFiltered() {
+  const s=(document.getElementById('searchInput').value||'').toLowerCase(),
+    pl=document.getElementById('filterPlatform').value,
+    ca=document.getElementById('filterCategory').value,
+    st=document.getElementById('filterStatus').value,
+    cy=document.getElementById('filterCycle').value;
+  return entries.filter(e=>{
+    if(s&&![(e.app||''),(e.notes||''),(e.version||'')].some(v=>v.toLowerCase().includes(s)))return false;
+    if(pl&&e.platform!==pl)return false;
+    if(ca&&e.category!==ca)return false;
+    if(st&&e.status!==st)return false;
+    if(cy&&e.cycle!==cy)return false;
+    return true;
+  });
+}
+function platBadge(p) {
+  const cls=p==='iOS'?'badge-ios':p==='Android'?'badge-android':'badge-both';
+  const icon=p==='iOS'?'<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>':p==='Android'?'<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48A5.84 5.84 0 0 0 12 1.5c-.96 0-1.86.23-2.66.63L7.85.65c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31A5.983 5.983 0 0 0 6 8h12a5.983 5.983 0 0 0-2.47-5.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/></svg>':'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>';
+  return `<span class="badge ${cls}">${icon}${p}</span>`;
+}
+function statusBadge(s) {
+  const m={'Done':'badge-done','Pending':'badge-pending','In review':'badge-inreview','Live':'badge-live','Rejected':'badge-rejected'};
+  return `<span class="badge ${m[s]||'badge-done'}">${s}</span>`;
+}
+function renderStats(f) {
+  const t=f.length,d=f.filter(e=>e.status==='Done'||e.status==='Live').length,
+    p=f.filter(e=>e.status==='Pending'||e.status==='In review').length,
+    r=f.filter(e=>e.status==='Rejected').length,
+    a=new Set(f.map(e=>e.app).filter(Boolean)).size;
+  document.getElementById('statsBar').innerHTML=`
+    <div class="stat"><div class="stat-label">Total changes</div><div class="stat-val">${t}</div></div>
+    <div class="stat"><div class="stat-label">Completed / live</div><div class="stat-val green">${d}</div></div>
+    <div class="stat"><div class="stat-label">In progress</div><div class="stat-val amber">${p}</div></div>
+    <div class="stat"><div class="stat-label">Rejections</div><div class="stat-val red">${r}</div></div>
+    <div class="stat"><div class="stat-label">Apps tracked</div><div class="stat-val">${a}</div></div>`;
+}
+function renderAll() {
+  const filtered=getFiltered(); renderStats(filtered);
+  const container=document.getElementById('mainContent');
+  if(!filtered.length){
+    container.innerHTML=`<div class="empty"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    <div class="empty-title">${entries.length===0?'No entries yet':'No results match your filters'}</div>
+    <div class="empty-sub">${entries.length===0?'Every change you make to App Store Connect or Google Play Console goes here.':'Try adjusting or clearing your filters.'}</div>
+    ${entries.length===0?'<button class="btn btn-primary" onclick="openModal()">Log your first change</button>':'<button class="btn" onclick="clearFilters()">Clear filters</button>'}</div>`;
+    return;
+  }
+  const sorted=[...filtered].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
+  const grouped={};
+  sorted.forEach(e=>{const k=e.cycle||'No cycle assigned';if(!grouped[k])grouped[k]=[];grouped[k].push(e);});
+  let html='';
+  Object.keys(grouped).sort().reverse().forEach(cycle=>{
+    const grp=grouped[cycle];
+    html+=`<div class="cycle-group"><div class="cycle-header"><div class="cycle-label">${cycle}</div><div class="cycle-count">${grp.length} change${grp.length!==1?'s':''}</div><div class="cycle-line"></div></div>
+    <div class="table-wrap"><table><thead><tr><th>Date</th><th>App</th><th>Version</th><th>Platform</th><th>Category</th><th>Status</th><th>Notes</th><th>By</th><th></th></tr></thead><tbody>`;
+    grp.forEach(e=>{
+      const notes=e.notes?(e.notes.length>90?e.notes.slice(0,90)+'…':e.notes):'<span style="color:var(--text3)">—</span>';
+      html+=`<tr><td class="col-date">${fmtDate(e.date)}</td><td class="col-app">${e.app||'—'}</td><td class="col-version">${e.version||'—'}</td><td>${platBadge(e.platform)}</td><td><span class="badge badge-cat">${e.category}</span></td><td>${statusBadge(e.status)}</td><td class="col-notes">${notes}</td><td class="col-who">${e.who||'—'}</td>
+      <td class="col-actions"><button class="btn-icon" onclick="editEntry('${e.id}')" aria-label="Edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="btn-icon btn-icon-danger" onclick="deleteEntry('${e.id}')" aria-label="Delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></td></tr>`;
+    });
+    html+=`</tbody></table></div></div>`;
+  });
+  container.innerHTML=html;
+}
+function openModal(entry) {
+  editId=entry?entry.id:null;
+  document.getElementById('modalTitle').textContent=entry?'Edit entry':'Log a change';
+  document.getElementById('fApp').value=entry?.app||'';
+  document.getElementById('fVersion').value=entry?.version||'';
+  document.getElementById('fPlatform').value=entry?.platform||'iOS';
+  document.getElementById('fCategory').value=entry?.category||'Build upload';
+  document.getElementById('fStatus').value=entry?.status||'Done';
+  document.getElementById('fCycle').value=entry?.cycle||currentCycle();
+  document.getElementById('fDate').value=entry?.date||todayStr();
+  document.getElementById('fWho').value=entry?.who||'';
+  document.getElementById('fNotes').value=entry?.notes||'';
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('fApp').focus(),50);
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); editId=null; }
+function handleOverlayClick(e) { if(e.target===document.getElementById('modalOverlay'))closeModal(); }
+function saveEntry() {
+  const app=document.getElementById('fApp').value.trim();
+  if(!app){document.getElementById('fApp').style.borderColor='var(--red-text)';document.getElementById('fApp').focus();setTimeout(()=>document.getElementById('fApp').style.borderColor='',1500);return;}
+  const entry={id:editId||uid(),app,version:document.getElementById('fVersion').value.trim(),platform:document.getElementById('fPlatform').value,category:document.getElementById('fCategory').value,status:document.getElementById('fStatus').value,cycle:document.getElementById('fCycle').value.trim()||currentCycle(),date:document.getElementById('fDate').value||todayStr(),who:document.getElementById('fWho').value.trim(),notes:document.getElementById('fNotes').value.trim()};
+  if(editId){const i=entries.findIndex(e=>e.id===editId);if(i>=0)entries[i]=entry;else entries.unshift(entry);}else entries.unshift(entry);
+  persist();populateCycleFilter();closeModal();renderAll();showToast(editId?'Entry updated':'Change logged');
+}
+function editEntry(id){const e=entries.find(x=>x.id===id);if(e)openModal(e);}
+function deleteEntry(id){if(!confirm('Delete this entry?'))return;entries=entries.filter(e=>e.id!==id);persist();populateCycleFilter();renderAll();showToast('Entry deleted');}
+function clearFilters(){['searchInput','filterPlatform','filterCategory','filterStatus','filterCycle'].forEach(id=>{const el=document.getElementById(id);if(el.tagName==='INPUT')el.value='';else el.value='';});renderAll();}
+function toggleExport(){document.getElementById('exportPanel').classList.toggle('open');}
+document.addEventListener('click',e=>{const p=document.getElementById('exportPanel');if(p.classList.contains('open')&&!p.contains(e.target)&&!e.target.closest('[onclick="toggleExport()"]'))p.classList.remove('open');});
+function exportCSV(){
+  const f=getFiltered();if(!f.length){showToast('Nothing to export');return;}
+  const cols=['date','app','version','platform','category','status','cycle','who','notes'];
+  const rows=[cols.map(c=>c.charAt(0).toUpperCase()+c.slice(1)).join(',')];
+  f.sort((a,b)=>b.date.localeCompare(a.date)).forEach(e=>rows.push(cols.map(c=>`"${(e[c]||'').toString().replace(/"/g,'""')}"`).join(',')));
+  download('sfp-release-tracker.csv',rows.join('\n'),'text/csv');showToast('CSV downloaded');
+}
+function exportJSON(){const f=getFiltered();if(!f.length){showToast('Nothing to export');return;}download('sfp-release-tracker.json',JSON.stringify(f,null,2),'application/json');showToast('JSON downloaded');}
+function printView(){window.print();}
+function download(name,content,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;a.click();}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if((e.metaKey||e.ctrlKey)&&e.key==='Enter'&&document.getElementById('modalOverlay').classList.contains('open'))saveEntry();});
+load();
+</script>
+</body>
+</html>
