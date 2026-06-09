@@ -9,6 +9,7 @@
     { label: 'Splash Previewer',  file: 'splash-preview.html',           icon: '📱' },
     { label: 'Tester Emails',     file: 'tester-email-extractor.html',   icon: '📧' },
     { label: 'App Privacy', file: 'app-privacy-configurator.html', icon: '🔒' },
+    { label: 'App Tracker', file: 'sfp-app-tracker.html', icon: '🎯' },
   ];
 
   /* ── ACTIVE PAGE DETECTION ── */
