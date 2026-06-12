@@ -201,7 +201,7 @@
       {t:'cmd', g:'lfs', code:'git lfs install'},
     ]},
 
-    { num:'04', title:'Clone the repo', sub:'Do NOT open it in Android Studio until after ./init.sh (Step 11)', body:[
+    { num:'04', title:'Clone the repo', sub:'Do NOT open it in Android Studio until after ./init.sh (Step 10)', body:[
       {t:'text', html:'Clone the <strong>instacart-android</strong> repo from GitHub, then enter it:'},
       {t:'cmd', g:'enter', code:'cd instacart-android'},
       {t:'cmd', g:'enter', code:'git lfs pull'},
@@ -249,11 +249,7 @@
       {t:'warn', html:'<span class="w-icon">⛔</span><div>Do not install node with <code>brew</code> or a .pkg installer — it causes permission errors later when node installs global packages.</div>'},
     ]},
 
-    { num:'10', title:'Install Android Studio', sub:'Install it but don’t open the project yet', body:[
-      {t:'text', html:'Download from <a href="https://developer.android.com/studio" target="_blank" rel="noopener">developer.android.com</a> and pick <strong>Mac with Apple chip</strong>, or use JetBrains Toolbox and pick <strong>Apple Silicon</strong>.'},
-    ]},
-
-    { num:'11', title:'Run project initialization', sub:'Requires: connected to VPN · inside instacart-android · Artifactory API key ready', body:[
+    { num:'10', title:'Run project initialization', sub:'Requires: connected to VPN · inside instacart-android · Artifactory API key ready', body:[
       {t:'cmd', code:'./init.sh'},
     ]},
   ];
