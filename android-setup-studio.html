@@ -72,6 +72,16 @@
     .cmd-copy.copied{color:var(--success)}
     .cmd-note{font-size:11px;color:var(--text-4);font-family:var(--mono);line-height:1.5;padding-left:2px}
 
+    /* ── Run-together group + run-alone tag ── */
+    .cmd-group{border:1px dashed var(--border-hov);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:6px;background:rgba(212,255,58,0.018)}
+    .cmd-group-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:1px 3px 2px}
+    .cmd-group-label{font-family:var(--mono);font-size:9.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:6px;font-weight:600}
+    .cmd-group-copy{flex-shrink:0;font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-4);padding:3px 9px;border:1px solid var(--border);border-radius:6px;transition:all 0.12s;cursor:pointer}
+    .cmd-group-copy:hover{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-bd)}
+    .cmd-group-copy.copied{color:var(--success);border-color:var(--success-bd)}
+    .cmd-solo-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-mute);display:flex;align-items:center;gap:5px;padding:0 0 1px 3px}
+    .cmd-solo{display:flex;flex-direction:column;gap:4px}
+
     /* ── Verify / expectation row ── */
     .verify{background:var(--bg-sub);border:1px solid var(--border);border-left:2px solid var(--success-bd);border-radius:7px;padding:9px 12px;font-family:var(--mono);font-size:11.5px;line-height:1.6}
     .verify .v-cmd{color:var(--text-2)}
@@ -130,7 +140,7 @@
 
   <div class="intro-card" data-no-print>
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <div>Run sections top to bottom. Tap the check on each step as you finish it. The one that prevents the <strong>system-Ruby permission error</strong> is <strong>Step 06</strong> — initialize rbenv before you ever call <code>gem</code> or <code>bundle</code>. Never use <code>sudo</code> with rbenv, gem, or bundle.</div>
+    <div>Run sections top to bottom. Tap the check on each step as you finish it. Commands inside a dashed <strong>⛓ run together</strong> box can be pasted as one block (use “copy N”); anything tagged <strong>▸ run on its own</strong> should be run one at a time. The step that prevents the <strong>system-Ruby permission error</strong> is <strong>Step 06</strong> — initialize rbenv before you ever call <code>gem</code> or <code>bundle</code>. Never use <code>sudo</code> with rbenv, gem, or bundle.</div>
   </div>
 
   <div class="progress-wrap" data-no-print>
@@ -176,8 +186,8 @@
     { num:'01', title:'Install Homebrew', sub:'Must be first. On Apple Silicon it installs to /opt/homebrew', body:[
       {t:'cmd', code:'/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'},
       {t:'text', html:'The installer prints these two lines at the end — run them to add brew to your PATH:'},
-      {t:'cmd', code:"echo 'eval \"$(/opt/homebrew/bin/brew shellenv)\"' >> ~/.zprofile"},
-      {t:'cmd', code:'eval "$(/opt/homebrew/bin/brew shellenv)"'},
+      {t:'cmd', g:'pathenv', code:"echo 'eval \"$(/opt/homebrew/bin/brew shellenv)\"' >> ~/.zprofile"},
+      {t:'cmd', g:'pathenv', code:'eval "$(/opt/homebrew/bin/brew shellenv)"'},
       {t:'verify', cmd:'which brew', expect:'/opt/homebrew/bin/brew'},
     ]},
 
@@ -187,14 +197,14 @@
     ]},
 
     { num:'03', title:'Install Git LFS', sub:'Binary files like gradle-wrapper.jar are tracked with git-lfs', body:[
-      {t:'cmd', code:'brew install git-lfs'},
-      {t:'cmd', code:'git lfs install'},
+      {t:'cmd', g:'lfs', code:'brew install git-lfs'},
+      {t:'cmd', g:'lfs', code:'git lfs install'},
     ]},
 
     { num:'04', title:'Clone the repo', sub:'Do NOT open it in Android Studio until after ./init.sh (Step 11)', body:[
       {t:'text', html:'Clone the <strong>instacart-android</strong> repo from GitHub, then enter it:'},
-      {t:'cmd', code:'cd instacart-android'},
-      {t:'cmd', code:'git lfs pull'},
+      {t:'cmd', g:'enter', code:'cd instacart-android'},
+      {t:'cmd', g:'enter', code:'git lfs pull'},
       {t:'text', html:'If clone fails on auth, add an SSH key at <a href="https://github.com/settings/keys" target="_blank" rel="noopener">github.com/settings/keys</a>. Stay inside <strong>instacart-android</strong> for the rest of the steps.'},
     ]},
 
@@ -205,39 +215,39 @@
     { num:'06', title:'Initialize rbenv in your shell', sub:'The missing step — this is what fixes the permission / bundler errors', highlight:true, body:[
       {t:'text', html:'Without this, <code>ruby</code>/<code>gem</code>/<code>bundle</code> keep resolving to macOS’s read-only system Ruby 2.6.0 — which causes both <strong>Gem::FilePermissionError</strong> and <strong>Could not find bundler (2.5.6)</strong>.'},
       {t:'cmd', code:'echo \'eval "$(rbenv init - zsh)"\' >> ~/.zshrc'},
-      {t:'cmd', code:'exec zsh', note:'reloads the shell so the change takes effect (or just open a new tab)'},
+      {t:'cmd', code:'exec zsh', note:'run this on its own — it replaces your current shell so the rbenv change takes effect (or just open a new tab)'},
       {t:'verify', cmd:'which rbenv', expect:'/opt/homebrew/bin/rbenv'},
     ]},
 
     { num:'07', title:'Install Ruby 3.2.2 + bundler', sub:'rbenv install reads the repo .ruby-version; RUBY_CFLAGS is the Apple Silicon workaround', body:[
       {t:'cmd', code:'RUBY_CFLAGS="-w" rbenv install', note:'reads .ruby-version (3.2.2). If it picks nothing: RUBY_CFLAGS="-w" rbenv install 3.2.2'},
-      {t:'cmd', code:'rbenv local 3.2.2'},
-      {t:'cmd', code:'rbenv rehash'},
+      {t:'cmd', g:'rbset', code:'rbenv local 3.2.2'},
+      {t:'cmd', g:'rbset', code:'rbenv rehash'},
       {t:'text', html:'<strong>Confirm you are NOT on system Ruby before continuing</strong> — the check that would have saved an hour:'},
       {t:'verify', cmd:'which ruby', expect:'/Users/<you>/.rbenv/shims/ruby   (NOT /usr/bin/ruby)'},
       {t:'verify', cmd:'ruby -v', expect:'ruby 3.2.2'},
       {t:'text', html:'Now install bundler — two separate commands (the original <code>gem install bundler bundle install</code> one-liner is wrong):'},
-      {t:'cmd', code:'gem install bundler'},
-      {t:'cmd', code:'bundle install'},
+      {t:'cmd', g:'bundler', code:'gem install bundler'},
+      {t:'cmd', g:'bundler', code:'bundle install'},
       {t:'text', html:'If it can’t find bundler <strong>2.5.6</strong> (the version pinned in Gemfile.lock), install that exact one and retry:'},
-      {t:'cmd', code:'gem install bundler:2.5.6'},
-      {t:'cmd', code:'bundle install'},
+      {t:'cmd', g:'bundlerfix', code:'gem install bundler:2.5.6'},
+      {t:'cmd', g:'bundlerfix', code:'bundle install'},
       {t:'warn', html:'<span class="w-icon">⛔</span><div>Never run <code>sudo rbenv global 3.2.2</code> or any <code>sudo gem</code>/<code>sudo bundle</code>. sudo runs as root with the wrong environment and breaks file ownership.</div>'},
     ]},
 
     { num:'08', title:'Install JDK 21 (Zulu) + set JAVA_HOME', sub:'', body:[
-      {t:'cmd', code:'brew tap mdogan/zulu'},
-      {t:'cmd', code:'brew install --cask zulu-jdk21'},
-      {t:'cmd', code:"echo 'export JAVA_HOME=$(/usr/libexec/java_home)' >> ~/.zshrc"},
-      {t:'cmd', code:'source ~/.zshrc'},
+      {t:'cmd', g:'jdk', code:'brew tap mdogan/zulu'},
+      {t:'cmd', g:'jdk', code:'brew install --cask zulu-jdk21'},
+      {t:'cmd', g:'javaenv', code:"echo 'export JAVA_HOME=$(/usr/libexec/java_home)' >> ~/.zshrc"},
+      {t:'cmd', g:'javaenv', code:'source ~/.zshrc'},
       {t:'verify', cmd:'java -version', expect:'a Zulu 21 build'},
     ]},
 
     { num:'09', title:'Install Node 20 via nvm', sub:'Use nvm — NOT Homebrew or an installer', body:[
-      {t:'cmd', code:'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash', note:'check github.com/nvm-sh/nvm for the latest version tag'},
-      {t:'cmd', code:'source ~/.zshrc'},
-      {t:'cmd', code:'nvm install 20'},
-      {t:'cmd', code:'nvm use 20'},
+      {t:'cmd', code:'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash', note:'run on its own — check github.com/nvm-sh/nvm for the latest version tag'},
+      {t:'cmd', g:'nvm', code:'source ~/.zshrc'},
+      {t:'cmd', g:'nvm', code:'nvm install 20'},
+      {t:'cmd', g:'nvm', code:'nvm use 20'},
       {t:'verify', cmd:'node -v', expect:'a v20.x release'},
       {t:'warn', html:'<span class="w-icon">⛔</span><div>Do not install node with <code>brew</code> or a .pkg installer — it causes permission errors later when node installs global packages.</div>'},
     ]},
@@ -273,17 +283,48 @@
   /* ═══════ RENDER ═══════ */
   function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
+  /* A single command row. Pass hideCopy=true for rows inside a run-together
+     group, since the group has one combined copy button instead. */
+  function cmdRowHtml(it, hideCopy){
+    var copyBtn = hideCopy ? '' : '<button class="cmd-copy" data-cmd="'+encodeURIComponent(it.code)+'">⧉ copy</button>';
+    return '<div class="cmd-row'+(hideCopy?' no-copy':'')+'"><div class="cmd-text"><span class="prompt">$</span>'+esc(it.code)+'</div>'+
+      copyBtn+'</div>'+
+      (it.note ? '<div class="cmd-note"># '+esc(it.note)+'</div>' : '');
+  }
+
+  /* Render a step body, grouping consecutive cmds that share a `g` (run-together).
+     Standalone cmds get a "run on its own" tag when the step has more than one command. */
+  function renderBody(body){
+    var cmdCount = body.filter(function(b){return b.t==='cmd'}).length;
+    var out='', i=0;
+    while(i<body.length){
+      var it=body[i];
+      if(it.t!=='cmd'){ out+=renderBodyItem(it); i++; continue; }
+      if(it.g){
+        var grp=[it], j=i+1;
+        while(j<body.length && body[j].t==='cmd' && body[j].g===it.g){ grp.push(body[j]); j++; }
+        if(grp.length>1){
+          var joined=grp.map(function(c){return c.code}).join('\n');
+          out+='<div class="cmd-group"><div class="cmd-group-head">'+
+            '<span class="cmd-group-label">⛓ run together · paste as one block</span>'+
+            '<button class="cmd-group-copy" data-cmd="'+encodeURIComponent(joined)+'">⧉ copy all '+grp.length+'</button></div>'+
+            grp.map(function(c){return cmdRowHtml(c, true)}).join('')+'</div>';
+          i=j; continue;
+        }
+      }
+      out+='<div class="cmd-solo">'+
+        (cmdCount>1 ? '<span class="cmd-solo-tag">▸ run on its own</span>' : '')+
+        cmdRowHtml(it)+'</div>';
+      i++;
+    }
+    return out;
+  }
+
   function renderBodyItem(it){
     if(it.t==='text') return '<div class="body-text">'+it.html+'</div>';
     if(it.t==='info') return '<div class="info">'+it.html+'</div>';
     if(it.t==='warn') return '<div class="warn">'+it.html+'</div>';
-    if(it.t==='cmd'){
-      var note = it.note ? '<div class="cmd-note"># '+esc(it.note)+'</div>' : '';
-      return '<div>'+
-        '<div class="cmd-row"><div class="cmd-text"><span class="prompt">$</span>'+esc(it.code)+'</div>'+
-        '<button class="cmd-copy" data-cmd="'+encodeURIComponent(it.code)+'">⧉ copy</button></div>'+
-        note+'</div>';
-    }
+    if(it.t==='cmd') return cmdRowHtml(it);
     if(it.t==='verify'){
       return '<div class="verify"><span class="v-label">verify</span>'+
         '<span class="v-cmd">$ '+esc(it.cmd)+'</span>  →  <span class="v-expect">'+esc(it.expect)+'</span></div>';
@@ -309,7 +350,7 @@
       html+='<button class="step-check" data-step="'+s.num+'" title="Mark done">'+
             '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>';
       html+='</div>';
-      html+='<div class="step-body">'+s.body.map(renderBodyItem).join('')+'</div>';
+      html+='<div class="step-body">'+renderBody(s.body)+'</div>';
       html+='</div>';
     });
     document.getElementById('steps').innerHTML=html;
@@ -328,7 +369,7 @@
   }
 
   function wire(){
-    document.querySelectorAll('.cmd-copy').forEach(function(b){
+    document.querySelectorAll('.cmd-copy, .cmd-group-copy').forEach(function(b){
       b.onclick=function(){
         var code=decodeURIComponent(b.getAttribute('data-cmd'));
         navigator.clipboard.writeText(code).then(function(){
