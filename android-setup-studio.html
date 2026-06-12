@@ -240,12 +240,12 @@
       {t:'verify', cmd:'java -version', expect:'a Zulu 21 build'},
     ]},
 
-    { num:'09', title:'Install Node 20 via nvm', sub:'Use nvm — NOT Homebrew or an installer', body:[
+    { num:'09', title:'Install Node 24.4.1 via nvm', sub:'Use nvm — NOT Homebrew or an installer', body:[
       {t:'cmd', code:'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash', note:'run on its own — check github.com/nvm-sh/nvm for the latest version tag'},
       {t:'cmd', g:'nvm', code:'source ~/.zshrc'},
-      {t:'cmd', g:'nvm', code:'nvm install 20'},
-      {t:'cmd', g:'nvm', code:'nvm use 20'},
-      {t:'verify', cmd:'node -v', expect:'a v20.x release'},
+      {t:'cmd', g:'nvm', code:'nvm install 24.4.1'},
+      {t:'cmd', g:'nvm', code:'nvm use 24.4.1'},
+      {t:'verify', cmd:'node -v', expect:'v24.4.1'},
       {t:'warn', html:'<span class="w-icon">⛔</span><div>Do not install node with <code>brew</code> or a .pkg installer — it causes permission errors later when node installs global packages.</div>'},
     ]},
 
