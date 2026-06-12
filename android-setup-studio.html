@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studio · Android Dev Setup (Apple Silicon)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    /* ── Design tokens: identical to the App Privacy Reference tool ── */
+    :root{--bg-page:#0a0a0f;--bg-card:#14141a;--bg-sub:#0f0f15;--bg-input:#08080d;--bg-muted:#1a1a22;--border:#26262e;--border-hov:#3a3a44;--text-1:#fafafa;--text-2:#d4d4d8;--text-3:#a1a1aa;--text-4:#71717a;--text-mute:#52525b;--accent:#d4ff3a;--accent-h:#c5f028;--accent-bg:rgba(212,255,58,0.10);--accent-bd:rgba(212,255,58,0.30);--on-accent:#0a0a0f;--success:#34d399;--success-bg:rgba(52,211,153,0.12);--success-bd:rgba(52,211,153,0.30);--warning:#fbbf24;--warning-bg:rgba(251,191,36,0.12);--warning-bd:rgba(251,191,36,0.30);--danger:#f87171;--danger-bg:rgba(248,113,113,0.12);--danger-bd:rgba(248,113,113,0.30);--info-bg:rgba(96,165,250,0.12);--info-bd:rgba(96,165,250,0.30);--info-text:#93c5fd;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--mono:'JetBrains Mono','SF Mono',Menlo,Consolas,monospace}
+    html,body{background:var(--bg-page);color:var(--text-1)}
+    body{font-family:var(--font);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5;min-height:100vh}
+    button{font:inherit;color:inherit;cursor:pointer;background:none;border:none}
+    code,.mono{font-family:var(--mono)}
+    a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+    ::selection{background:var(--accent-bg);color:var(--accent)}
+    ::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{background:var(--bg-page)}::-webkit-scrollbar-thumb{background:var(--bg-muted);border-radius:5px}
+
+    .studio-toolbar{position:sticky;top:0;z-index:50;background:rgba(10,10,15,0.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);padding:11px 22px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);height:54px}
+    .studio-logo{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--on-accent);font-size:15px;font-weight:800;flex-shrink:0;box-shadow:0 0 16px rgba(212,255,58,0.25);font-family:var(--mono)}
+    .studio-toolbar-title{font-size:14px;font-weight:600;color:var(--text-1)}
+    .studio-toolbar-title .tag{font-family:var(--mono);font-size:10.5px;color:var(--text-4);margin-left:8px}
+    .studio-toolbar-spacer{flex:1}
+    .toolbar-btn{padding:7px 14px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all 0.12s;display:inline-flex;align-items:center;gap:6px}
+    .toolbar-btn.primary{background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);box-shadow:0 0 14px rgba(212,255,58,0.18)}
+    .toolbar-btn.primary:hover{background:var(--accent-h);box-shadow:0 0 22px rgba(212,255,58,0.30)}
+    .toolbar-btn.secondary{background:var(--bg-card);color:var(--text-2);border:1px solid var(--border)}
+    .toolbar-btn.secondary:hover{background:var(--bg-muted);border-color:var(--border-hov);color:var(--text-1)}
+
+    .studio-shell{max-width:820px;margin:0 auto;padding:26px 28px 60px}
+    .intro-card{background:var(--bg-card);border:1px solid var(--border);border-radius:11px;padding:11px 15px;margin-bottom:14px;font-size:12.5px;color:var(--text-3);line-height:1.6;display:flex;align-items:flex-start;gap:10px}
+    .intro-card svg{color:var(--accent);flex-shrink:0;margin-top:1px}
+    .intro-card strong{color:var(--text-1);font-weight:600}
+
+    /* ── Progress bar ── */
+    .progress-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:11px;padding:13px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px}
+    .progress-track{flex:1;height:7px;background:var(--bg-input);border-radius:99px;overflow:hidden}
+    .progress-fill{height:100%;width:0;background:var(--accent);border-radius:99px;box-shadow:0 0 10px rgba(212,255,58,0.4);transition:width 0.35s ease}
+    .progress-label{font-family:var(--mono);font-size:11.5px;color:var(--text-3);white-space:nowrap}
+    .progress-label b{color:var(--accent);font-weight:700}
+
+    /* ── Step cards ── */
+    .step{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px;transition:border-color 0.15s}
+    .step.done{border-color:var(--success-bd)}
+    .step.highlight{border-color:var(--accent-bd);box-shadow:0 0 0 1px var(--accent-bd),0 0 24px rgba(212,255,58,0.08)}
+    .step-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    .step-num{width:26px;height:26px;border-radius:7px;background:var(--accent-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;font-family:var(--mono)}
+    .step.done .step-num{background:var(--success-bg);color:var(--success)}
+    .step-titles{flex:1;min-width:0}
+    .step-title{font-size:14px;font-weight:600;color:var(--text-1);display:flex;align-items:center;gap:8px}
+    .step-title .star{color:var(--accent)}
+    .step-sub{font-size:12px;color:var(--text-3);margin-top:2px}
+    /* round check toggle */
+    .step-check{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--border-hov);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.12s;color:transparent}
+    .step-check:hover{border-color:var(--accent)}
+    .step.done .step-check{background:var(--success);border-color:var(--success);color:var(--on-accent)}
+
+    .step-body{display:flex;flex-direction:column;gap:8px}
+    .body-text{font-size:12.5px;color:var(--text-3);line-height:1.6}
+    .body-text strong{color:var(--text-1);font-weight:600}
+
+    /* ── Command row ── */
+    .cmd-row{display:flex;align-items:stretch;gap:0;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color 0.12s}
+    .cmd-row:hover{border-color:var(--border-hov)}
+    .cmd-text{flex:1;padding:9px 12px;font-family:var(--mono);font-size:12.5px;color:var(--text-1);white-space:pre-wrap;word-break:break-word;line-height:1.55;display:flex;align-items:center}
+    .cmd-text .prompt{color:var(--accent);margin-right:8px;user-select:none;flex-shrink:0}
+    .cmd-copy{flex-shrink:0;padding:0 13px;border-left:1px solid var(--border);color:var(--text-4);font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;transition:all 0.12s;display:flex;align-items:center;gap:5px}
+    .cmd-copy:hover{background:var(--accent-bg);color:var(--accent)}
+    .cmd-copy.copied{color:var(--success)}
+    .cmd-note{font-size:11px;color:var(--text-4);font-family:var(--mono);line-height:1.5;padding-left:2px}
+
+    /* ── Verify / expectation row ── */
+    .verify{background:var(--bg-sub);border:1px solid var(--border);border-left:2px solid var(--success-bd);border-radius:7px;padding:9px 12px;font-family:var(--mono);font-size:11.5px;line-height:1.6}
+    .verify .v-cmd{color:var(--text-2)}
+    .verify .v-expect{color:var(--success)}
+    .verify .v-label{color:var(--text-4);text-transform:uppercase;font-size:9.5px;letter-spacing:0.06em;display:block;margin-bottom:3px}
+
+    /* ── Warn / don't-do ── */
+    .warn{background:var(--danger-bg);border:1px solid var(--danger-bd);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--text-2);line-height:1.55;display:flex;gap:8px;align-items:flex-start}
+    .warn .w-icon{flex-shrink:0}
+    .warn code{color:var(--danger);background:rgba(248,113,113,0.10);padding:1px 5px;border-radius:4px}
+    .info{background:var(--info-bg);border:1px solid var(--info-bd);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--info-text);line-height:1.55}
+
+    /* ── Checklist (no commands) ── */
+    .checklist{display:flex;flex-direction:column;gap:6px}
+    .check-item{background:var(--bg-sub);border:1px solid var(--border);border-radius:8px;padding:10px 13px;display:flex;align-items:flex-start;gap:10px}
+    .check-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:6px}
+    .check-item .ci-name{font-size:12.5px;font-weight:600;color:var(--text-1)}
+    .check-item .ci-note{font-size:11.5px;color:var(--text-4);margin-top:2px;line-height:1.5}
+
+    /* ── Category divider (matches privacy tool) ── */
+    .cat-header{display:flex;align-items:center;gap:10px;margin:26px 0 12px}
+    .cat-header .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0}
+    .cat-header .label{font-size:10.5px;font-weight:600;color:var(--text-2);letter-spacing:0.06em;text-transform:uppercase;font-family:var(--mono)}
+    .cat-header .line{flex:1;height:1px;background:var(--border)}
+
+    /* ── Troubleshooting (styled like the audit cards) ── */
+    .trouble{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+    .trouble-title{font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .tc{background:var(--bg-sub);border:1px solid var(--border);border-left:2px solid var(--warning-bd);border-radius:9px;padding:12px 14px;margin-bottom:6px}
+    .tc-symptom{font-family:var(--mono);font-size:11.5px;color:var(--danger);margin-bottom:6px;line-height:1.5}
+    .tc-row{font-size:12px;line-height:1.6}
+    .tc-row .t-label{color:var(--text-4);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.04em}
+    .tc-row .t-fix{color:var(--text-2)}
+    .tc-row code{font-family:var(--mono);color:var(--accent);font-size:11.5px}
+
+    .studio-footer{padding:18px 28px 22px;text-align:center;font-size:11px;color:var(--text-4);border-top:1px solid var(--border);margin-top:32px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+    .studio-footer .dot{width:3px;height:3px;border-radius:50%;background:var(--border)}
+    .studio-footer strong{color:var(--text-3);font-weight:600}
+
+    @media(max-width:540px){.studio-shell{padding:18px 14px 40px}.studio-toolbar-title .tag{display:none}.cmd-row{flex-direction:column}.cmd-copy{border-left:none;border-top:1px solid var(--border);justify-content:center;padding:7px}}
+    @media print{.studio-toolbar,.intro-card,.progress-wrap,.step-check,.cmd-copy,.studio-footer,[data-no-print]{display:none!important}body{background:#fff;color:#000;font-size:11px}.studio-shell{max-width:100%;padding:10px}.step,.trouble,.cmd-row,.tc{border-color:#ddd;break-inside:avoid}.cmd-text .prompt{color:#000}*{color-adjust:exact;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  </style>
+</head>
+<body>
+
+<header class="studio-toolbar">
+  <div class="studio-logo">~</div>
+  <div class="studio-toolbar-title">Android Dev Setup<span class="tag">// Apple Silicon · instacart-android</span></div>
+  <div class="studio-toolbar-spacer"></div>
+  <button class="toolbar-btn secondary" onclick="resetProgress()">↺ Reset</button>
+  <button class="toolbar-btn secondary" onclick="copyScript()" id="copy-btn">📋 Copy full script</button>
+  <button class="toolbar-btn primary" onclick="window.print()">🖨 Print</button>
+</header>
+
+<main class="studio-shell">
+
+  <div class="intro-card" data-no-print>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div>Run sections top to bottom. Tap the check on each step as you finish it. The one that prevents the <strong>system-Ruby permission error</strong> is <strong>Step 06</strong> — initialize rbenv before you ever call <code>gem</code> or <code>bundle</code>. Never use <code>sudo</code> with rbenv, gem, or bundle.</div>
+  </div>
+
+  <div class="progress-wrap" data-no-print>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-label"><b id="progress-done">0</b> / <span id="progress-total">0</span> steps</div>
+  </div>
+
+  <div id="steps"></div>
+
+  <!-- TROUBLESHOOTING -->
+  <div class="trouble">
+    <div class="trouble-title">🧯 Troubleshooting — maps to the errors from the Slack thread</div>
+    <div id="trouble-list"></div>
+  </div>
+
+  <div class="studio-footer">
+    <strong>Studio</strong><div class="dot"></div><span>Android Dev Setup</span><div class="dot"></div><span>Apple Silicon (M1/M2/M3)</span>
+  </div>
+
+</main>
+
+<script>
+  /* ═══════ DATA — the setup runbook, as a data model you can extend ═══════
+     Each step: { num, title, sub, highlight?, body:[...] }
+     body item types:
+       {t:'text', html}
+       {t:'cmd',  code, note?}
+       {t:'verify', cmd, expect}
+       {t:'warn', html}
+       {t:'info', html}
+       {t:'check', items:[{name, note?}]}   // for prerequisite / no-command steps
+  */
+  var STEPS = [
+    { num:'00', title:'Access prerequisites', sub:'Not terminal commands — kick these off first, they take time to grant', body:[
+      {t:'check', items:[
+        {name:'VPN access', note:'Activation can take a few hours after you request it.'},
+        {name:'AWS access (ConductorOne → Okta)', note:'Request the AWS-Developer role for 3 months. Usually granted instantly.'},
+        {name:'Artifactory access', note:'Request via go/artifactory-access-request, get manager approval, then generate + copy an API key. You paste it during ./init.sh.'},
+        {name:'ISC (Instacart Software Center)', note:'Set up per the Ultimate Guide to ISC.'},
+      ]},
+    ]},
+
+    { num:'01', title:'Install Homebrew', sub:'Must be first. On Apple Silicon it installs to /opt/homebrew', body:[
+      {t:'cmd', code:'/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'},
+      {t:'text', html:'The installer prints these two lines at the end — run them to add brew to your PATH:'},
+      {t:'cmd', code:"echo 'eval \"$(/opt/homebrew/bin/brew shellenv)\"' >> ~/.zprofile"},
+      {t:'cmd', code:'eval "$(/opt/homebrew/bin/brew shellenv)"'},
+      {t:'verify', cmd:'which brew', expect:'/opt/homebrew/bin/brew'},
+    ]},
+
+    { num:'02', title:'Create ~/.zshrc', sub:'A fresh macOS zsh has no ~/.zshrc — later steps need it to exist', body:[
+      {t:'cmd', code:'touch ~/.zshrc'},
+      {t:'info', html:'This is why the original thread hit “The file ~/.zshrc does not exist.”'},
+    ]},
+
+    { num:'03', title:'Install Git LFS', sub:'Binary files like gradle-wrapper.jar are tracked with git-lfs', body:[
+      {t:'cmd', code:'brew install git-lfs'},
+      {t:'cmd', code:'git lfs install'},
+    ]},
+
+    { num:'04', title:'Clone the repo', sub:'Do NOT open it in Android Studio until after ./init.sh (Step 11)', body:[
+      {t:'text', html:'Clone the <strong>instacart-android</strong> repo from GitHub, then enter it:'},
+      {t:'cmd', code:'cd instacart-android'},
+      {t:'cmd', code:'git lfs pull'},
+      {t:'text', html:'If clone fails on auth, add an SSH key at <a href="https://github.com/settings/keys" target="_blank" rel="noopener">github.com/settings/keys</a>. Stay inside <strong>instacart-android</strong> for the rest of the steps.'},
+    ]},
+
+    { num:'05', title:'Install rbenv + ruby-build', sub:'Ruby version manager', body:[
+      {t:'cmd', code:'brew install rbenv ruby-build'},
+    ]},
+
+    { num:'06', title:'Initialize rbenv in your shell', sub:'The missing step — this is what fixes the permission / bundler errors', highlight:true, body:[
+      {t:'text', html:'Without this, <code>ruby</code>/<code>gem</code>/<code>bundle</code> keep resolving to macOS’s read-only system Ruby 2.6.0 — which causes both <strong>Gem::FilePermissionError</strong> and <strong>Could not find bundler (2.5.6)</strong>.'},
+      {t:'cmd', code:'echo \'eval "$(rbenv init - zsh)"\' >> ~/.zshrc'},
+      {t:'cmd', code:'exec zsh', note:'reloads the shell so the change takes effect (or just open a new tab)'},
+      {t:'verify', cmd:'which rbenv', expect:'/opt/homebrew/bin/rbenv'},
+    ]},
+
+    { num:'07', title:'Install Ruby 3.2.2 + bundler', sub:'rbenv install reads the repo .ruby-version; RUBY_CFLAGS is the Apple Silicon workaround', body:[
+      {t:'cmd', code:'RUBY_CFLAGS="-w" rbenv install', note:'reads .ruby-version (3.2.2). If it picks nothing: RUBY_CFLAGS="-w" rbenv install 3.2.2'},
+      {t:'cmd', code:'rbenv local 3.2.2'},
+      {t:'cmd', code:'rbenv rehash'},
+      {t:'text', html:'<strong>Confirm you are NOT on system Ruby before continuing</strong> — the check that would have saved an hour:'},
+      {t:'verify', cmd:'which ruby', expect:'/Users/<you>/.rbenv/shims/ruby   (NOT /usr/bin/ruby)'},
+      {t:'verify', cmd:'ruby -v', expect:'ruby 3.2.2'},
+      {t:'text', html:'Now install bundler — two separate commands (the original <code>gem install bundler bundle install</code> one-liner is wrong):'},
+      {t:'cmd', code:'gem install bundler'},
+      {t:'cmd', code:'bundle install'},
+      {t:'text', html:'If it can’t find bundler <strong>2.5.6</strong> (the version pinned in Gemfile.lock), install that exact one and retry:'},
+      {t:'cmd', code:'gem install bundler:2.5.6'},
+      {t:'cmd', code:'bundle install'},
+      {t:'warn', html:'<span class="w-icon">⛔</span><div>Never run <code>sudo rbenv global 3.2.2</code> or any <code>sudo gem</code>/<code>sudo bundle</code>. sudo runs as root with the wrong environment and breaks file ownership.</div>'},
+    ]},
+
+    { num:'08', title:'Install JDK 21 (Zulu) + set JAVA_HOME', sub:'', body:[
+      {t:'cmd', code:'brew tap mdogan/zulu'},
+      {t:'cmd', code:'brew install --cask zulu-jdk21'},
+      {t:'cmd', code:"echo 'export JAVA_HOME=$(/usr/libexec/java_home)' >> ~/.zshrc"},
+      {t:'cmd', code:'source ~/.zshrc'},
+      {t:'verify', cmd:'java -version', expect:'a Zulu 21 build'},
+    ]},
+
+    { num:'09', title:'Install Node 20 via nvm', sub:'Use nvm — NOT Homebrew or an installer', body:[
+      {t:'cmd', code:'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash', note:'check github.com/nvm-sh/nvm for the latest version tag'},
+      {t:'cmd', code:'source ~/.zshrc'},
+      {t:'cmd', code:'nvm install 20'},
+      {t:'cmd', code:'nvm use 20'},
+      {t:'verify', cmd:'node -v', expect:'a v20.x release'},
+      {t:'warn', html:'<span class="w-icon">⛔</span><div>Do not install node with <code>brew</code> or a .pkg installer — it causes permission errors later when node installs global packages.</div>'},
+    ]},
+
+    { num:'10', title:'Install Android Studio', sub:'Install it but don’t open the project yet', body:[
+      {t:'text', html:'Download from <a href="https://developer.android.com/studio" target="_blank" rel="noopener">developer.android.com</a> and pick <strong>Mac with Apple chip</strong>, or use JetBrains Toolbox and pick <strong>Apple Silicon</strong>.'},
+    ]},
+
+    { num:'11', title:'Run project initialization', sub:'Requires: connected to VPN · inside instacart-android · Artifactory API key ready', body:[
+      {t:'cmd', code:'./init.sh'},
+      {t:'info', html:'When prompted “Please choose an AWS account”: environment <b>production</b>, role <b>developer</b>.'},
+      {t:'cmd', code:'cp local.properties.sample local.properties'},
+      {t:'text', html:'Edit <code>local.properties</code> so <code>sdk.dir</code> points to your SDK, by default <code>/Users/&lt;you&gt;/Library/Android/sdk</code>.'},
+    ]},
+
+    { num:'12', title:'Test the build', sub:'Build from the command line, then open Android Studio', body:[
+      {t:'cmd', code:'./gradlew clean assembleDeveloperDrawerDebug'},
+      {t:'text', html:'In Android Studio: set the Gradle JDK to your <strong>Zulu JDK</strong> (your $JAVA_HOME), switch the Build Variant to <strong>developerDrawerDebug</strong>, and hit Run. Ask in <strong>#eng-customers-android</strong> if a build fails.'},
+    ]},
+  ];
+
+  var TROUBLE = [
+    { symptom:'Gem::FilePermissionError ... /Library/Ruby/Gems/2.6.0', cause:'Using macOS system Ruby, not rbenv', fix:'Do Step 06, run <code>exec zsh</code>, then confirm <code>which ruby</code> shows <code>.rbenv/shims/ruby</code>.' },
+    { symptom:"Could not find 'bundler' (2.5.6)", cause:'System Ruby has no matching bundler', fix:'After fixing rbenv: <code>gem install bundler:2.5.6 && bundle install</code>.' },
+    { symptom:'.zshrc does not exist', cause:'Fresh zsh has no profile file', fix:'<code>touch ~/.zshrc</code> (Step 02).' },
+    { symptom:'brew: command not found', cause:'Homebrew not on PATH (Apple Silicon uses /opt/homebrew)', fix:'Run the <code>brew shellenv</code> lines from Step 01.' },
+    { symptom:'get_published_commit_version.rb script failed ... bundler (2.5.6)', cause:'Gradle picked up the wrong Ruby', fix:'Confirm <code>which ruby</code> → <code>.rbenv/shims/ruby</code>; in Android Studio set the Gradle JDK to Zulu / $JAVA_HOME.' },
+  ];
+
+  /* ═══════ STATE (in-memory) ═══════ */
+  var doneSteps = {};
+
+  /* ═══════ RENDER ═══════ */
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+  function renderBodyItem(it){
+    if(it.t==='text') return '<div class="body-text">'+it.html+'</div>';
+    if(it.t==='info') return '<div class="info">'+it.html+'</div>';
+    if(it.t==='warn') return '<div class="warn">'+it.html+'</div>';
+    if(it.t==='cmd'){
+      var note = it.note ? '<div class="cmd-note"># '+esc(it.note)+'</div>' : '';
+      return '<div>'+
+        '<div class="cmd-row"><div class="cmd-text"><span class="prompt">$</span>'+esc(it.code)+'</div>'+
+        '<button class="cmd-copy" data-cmd="'+encodeURIComponent(it.code)+'">⧉ copy</button></div>'+
+        note+'</div>';
+    }
+    if(it.t==='verify'){
+      return '<div class="verify"><span class="v-label">verify</span>'+
+        '<span class="v-cmd">$ '+esc(it.cmd)+'</span>  →  <span class="v-expect">'+esc(it.expect)+'</span></div>';
+    }
+    if(it.t==='check'){
+      return '<div class="checklist">'+it.items.map(function(c){
+        return '<div class="check-item"><div class="check-dot"></div><div><div class="ci-name">'+c.name+'</div>'+
+          (c.note?'<div class="ci-note">'+c.note+'</div>':'')+'</div></div>';
+      }).join('')+'</div>';
+    }
+    return '';
+  }
+
+  function render(){
+    var html='';
+    STEPS.forEach(function(s){
+      var done = !!doneSteps[s.num];
+      html+='<div class="step'+(done?' done':'')+(s.highlight?' highlight':'')+'" id="step-'+s.num+'">';
+      html+='<div class="step-header">';
+      html+='<div class="step-num">'+s.num+'</div>';
+      html+='<div class="step-titles"><div class="step-title">'+(s.highlight?'<span class="star">★</span>':'')+s.title+'</div>'+
+            (s.sub?'<div class="step-sub">'+s.sub+'</div>':'')+'</div>';
+      html+='<button class="step-check" data-step="'+s.num+'" title="Mark done">'+
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>';
+      html+='</div>';
+      html+='<div class="step-body">'+s.body.map(renderBodyItem).join('')+'</div>';
+      html+='</div>';
+    });
+    document.getElementById('steps').innerHTML=html;
+
+    var tHtml='';
+    TROUBLE.forEach(function(t){
+      tHtml+='<div class="tc"><div class="tc-symptom">'+esc(t.symptom)+'</div>'+
+        '<div class="tc-row"><span class="t-label">Cause:</span> <span class="t-fix">'+t.cause+'</span></div>'+
+        '<div class="tc-row"><span class="t-label">Fix:</span> <span class="t-fix">'+t.fix+'</span></div></div>';
+    });
+    document.getElementById('trouble-list').innerHTML=tHtml;
+
+    document.getElementById('progress-total').textContent=STEPS.length;
+    wire();
+    updateProgress();
+  }
+
+  function wire(){
+    document.querySelectorAll('.cmd-copy').forEach(function(b){
+      b.onclick=function(){
+        var code=decodeURIComponent(b.getAttribute('data-cmd'));
+        navigator.clipboard.writeText(code).then(function(){
+          var orig=b.innerHTML; b.innerHTML='✓ copied'; b.classList.add('copied');
+          setTimeout(function(){b.innerHTML=orig;b.classList.remove('copied')},1400);
+        });
+      };
+    });
+    document.querySelectorAll('.step-check').forEach(function(b){
+      b.onclick=function(){
+        var n=b.getAttribute('data-step');
+        doneSteps[n]=!doneSteps[n];
+        document.getElementById('step-'+n).classList.toggle('done',doneSteps[n]);
+        updateProgress();
+      };
+    });
+  }
+
+  function updateProgress(){
+    var done=Object.keys(doneSteps).filter(function(k){return doneSteps[k]}).length;
+    document.getElementById('progress-done').textContent=done;
+    document.getElementById('progress-fill').style.width=(done/STEPS.length*100)+'%';
+  }
+
+  function resetProgress(){doneSteps={};render()}
+
+  /* ═══════ COPY FULL SCRIPT ═══════ */
+  function copyScript(){
+    var lines=['#!/bin/zsh','# instacart-android — Apple Silicon setup','# Run section by section; verify rbenv before gem/bundle.',''];
+    STEPS.forEach(function(s){
+      lines.push('# ── '+s.num+'  '+s.title+' ──');
+      s.body.forEach(function(it){
+        if(it.t==='cmd'){ lines.push(it.code + (it.note?'   # '+it.note:'')); }
+        else if(it.t==='verify'){ lines.push(it.cmd + '   # expect: '+it.expect); }
+      });
+      lines.push('');
+    });
+    navigator.clipboard.writeText(lines.join('\n')).then(function(){
+      var b=document.getElementById('copy-btn');var o=b.innerHTML;
+      b.innerHTML='✅ Copied!';b.style.color='var(--success)';b.style.borderColor='var(--success)';
+      setTimeout(function(){b.innerHTML=o;b.style.color='';b.style.borderColor=''},2000);
+    });
+  }
+
+  render();
+</script>
+</body>
+</html>
