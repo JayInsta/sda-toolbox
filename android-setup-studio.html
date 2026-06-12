@@ -258,14 +258,6 @@
 
     { num:'11', title:'Run project initialization', sub:'Requires: connected to VPN · inside instacart-android · Artifactory API key ready', body:[
       {t:'cmd', code:'./init.sh'},
-      {t:'info', html:'When prompted “Please choose an AWS account”: environment <b>production</b>, role <b>developer</b>.'},
-      {t:'cmd', code:'cp local.properties.sample local.properties'},
-      {t:'text', html:'Edit <code>local.properties</code> so <code>sdk.dir</code> points to your SDK, by default <code>/Users/&lt;you&gt;/Library/Android/sdk</code>.'},
-    ]},
-
-    { num:'12', title:'Test the build', sub:'Build from the command line, then open Android Studio', body:[
-      {t:'cmd', code:'./gradlew clean assembleDeveloperDrawerDebug'},
-      {t:'text', html:'In Android Studio: set the Gradle JDK to your <strong>Zulu JDK</strong> (your $JAVA_HOME), switch the Build Variant to <strong>developerDrawerDebug</strong>, and hit Run. Ask in <strong>#eng-customers-android</strong> if a build fails.'},
     ]},
   ];
 
