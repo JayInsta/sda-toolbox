@@ -213,26 +213,23 @@
     ]},
 
     { num:'06', title:'Initialize rbenv in your shell', sub:'The missing step — this is what fixes the permission / bundler errors', highlight:true, body:[
-      {t:'text', html:'Without this, <code>ruby</code>/<code>gem</code>/<code>bundle</code> keep resolving to macOS’s read-only system Ruby 2.6.0 — which causes both <strong>Gem::FilePermissionError</strong> and <strong>Could not find bundler (2.5.6)</strong>.'},
+      {t:'text', html:'Without this, <code>ruby</code>/<code>gem</code>/<code>bundle</code> keep resolving to macOS’s read-only system Ruby 2.6.0 — which causes both <strong>Gem::FilePermissionError</strong> and <strong>Could not find bundler (the version Gemfile.lock pins)</strong>.'},
       {t:'cmd', code:'echo \'eval "$(rbenv init - zsh)"\' >> ~/.zshrc'},
       {t:'cmd', code:'exec zsh', note:'run this on its own — it replaces your current shell so the rbenv change takes effect (or just open a new tab)'},
       {t:'verify', cmd:'which rbenv', expect:'/opt/homebrew/bin/rbenv'},
     ]},
 
-    { num:'07', title:'Install Ruby 3.2.2 + bundler', sub:'rbenv install reads the repo .ruby-version; RUBY_CFLAGS is the Apple Silicon workaround', body:[
-      {t:'cmd', code:'RUBY_CFLAGS="-w" rbenv install', note:'reads .ruby-version (3.2.2). If it picks nothing: RUBY_CFLAGS="-w" rbenv install 3.2.2'},
-      {t:'cmd', g:'rbset', code:'rbenv local 3.2.2'},
-      {t:'cmd', g:'rbset', code:'rbenv rehash'},
-      {t:'text', html:'<strong>Confirm you are NOT on system Ruby before continuing</strong> — the check that would have saved an hour:'},
-      {t:'verify', cmd:'which ruby', expect:'/Users/<you>/.rbenv/shims/ruby   (NOT /usr/bin/ruby)'},
-      {t:'verify', cmd:'ruby -v', expect:'ruby 3.2.2'},
-      {t:'text', html:'Now install bundler — two separate commands (the original <code>gem install bundler bundle install</code> one-liner is wrong):'},
-      {t:'cmd', g:'bundler', code:'gem install bundler'},
-      {t:'cmd', g:'bundler', code:'bundle install'},
-      {t:'text', html:'If it can’t find bundler <strong>2.5.6</strong> (the version pinned in Gemfile.lock), install that exact one and retry:'},
-      {t:'cmd', g:'bundlerfix', code:'gem install bundler:2.5.6'},
-      {t:'cmd', g:'bundlerfix', code:'bundle install'},
-      {t:'warn', html:'<span class="w-icon">⛔</span><div>Never run <code>sudo rbenv global 3.2.2</code> or any <code>sudo gem</code>/<code>sudo bundle</code>. sudo runs as root with the wrong environment and breaks file ownership.</div>'},
+    { num:'07', title:'Install Ruby 3.4.9 + bundler', sub:'The repo’s Gemfile / .ruby-version pins the version — currently 3.4.9', body:[
+      {t:'info', html:'The <strong>Gemfile / .ruby-version</strong> is the source of truth for the Ruby version — currently <strong>3.4.9</strong>. A current Ruby builds cleanly on macOS 26 with no <code>RUBY_CFLAGS</code> or patches. If the repo bumps the version later, install whatever it pins instead.'},
+      {t:'cmd', g:'ruby', code:'rbenv install 3.4.9'},
+      {t:'cmd', g:'ruby', code:'rbenv local 3.4.9'},
+      {t:'cmd', g:'ruby', code:'rbenv rehash'},
+      {t:'cmd', g:'ruby', code:'ruby -v'},
+      {t:'cmd', g:'ruby', code:'gem install bundler'},
+      {t:'cmd', g:'ruby', code:'bundle install'},
+      {t:'text', html:'In the output, <code>ruby -v</code> should read <strong>3.4.9</strong>. If it shows <code>/usr/bin/ruby</code> or 2.6.x, rbenv didn’t load — redo Step 06 (<code>exec zsh</code>) and re-run.'},
+      {t:'text', html:'If <code>bundle install</code> complains it needs a specific bundler (the version in Gemfile.lock’s <code>BUNDLED WITH</code>), install exactly that and retry — <code>gem install bundler:&lt;version&gt;</code> then <code>bundle install</code>.'},
+      {t:'warn', html:'<span class="w-icon">⛔</span><div>Never use <code>sudo</code> with rbenv, gem, or bundle — it runs as root with the wrong environment and breaks file ownership. Match the version the repo pins; don’t hand-set a different one.</div>'},
     ]},
 
     { num:'08', title:'Install JDK 21 (Zulu) + set JAVA_HOME', sub:'', body:[
@@ -263,10 +260,11 @@
 
   var TROUBLE = [
     { symptom:'Gem::FilePermissionError ... /Library/Ruby/Gems/2.6.0', cause:'Using macOS system Ruby, not rbenv', fix:'Do Step 06, run <code>exec zsh</code>, then confirm <code>which ruby</code> shows <code>.rbenv/shims/ruby</code>.' },
-    { symptom:"Could not find 'bundler' (2.5.6)", cause:'System Ruby has no matching bundler', fix:'After fixing rbenv: <code>gem install bundler:2.5.6 && bundle install</code>.' },
+    { symptom:"Could not find 'bundler' (X.Y.Z)", cause:'System Ruby has no matching bundler', fix:'After fixing rbenv, install the version Gemfile.lock asks for: <code>gem install bundler:X.Y.Z && bundle install</code>.' },
     { symptom:'.zshrc does not exist', cause:'Fresh zsh has no profile file', fix:'<code>touch ~/.zshrc</code> (Step 02).' },
     { symptom:'brew: command not found', cause:'Homebrew not on PATH (Apple Silicon uses /opt/homebrew)', fix:'Run the <code>brew shellenv</code> lines from Step 01.' },
-    { symptom:'get_published_commit_version.rb script failed ... bundler (2.5.6)', cause:'Gradle picked up the wrong Ruby', fix:'Confirm <code>which ruby</code> → <code>.rbenv/shims/ruby</code>; in Android Studio set the Gradle JDK to Zulu / $JAVA_HOME.' },
+    { symptom:'get_published_commit_version.rb script failed ... bundler (X.Y.Z)', cause:'Gradle picked up the wrong Ruby', fix:'Confirm <code>which ruby</code> → <code>.rbenv/shims/ruby</code>; in Android Studio set the Gradle JDK to Zulu / $JAVA_HOME.' },
+    { symptom:'BUILD FAILED ... RuntimeError: missing -arch (macOS 26 / Tahoe)', cause:'Only affects old Rubies (< 3.2.3) — the macOS 26 toolchain is too new for them', fix:'The repo’s current Ruby (3.4.9) builds fine. Only relevant if you try an older version; if so, install a 3.2.3+ patch instead.' },
   ];
 
   /* ═══════ STATE (in-memory) ═══════ */
@@ -296,7 +294,7 @@
         var grp=[it], j=i+1;
         while(j<body.length && body[j].t==='cmd' && body[j].g===it.g){ grp.push(body[j]); j++; }
         if(grp.length>1){
-          var joined=grp.map(function(c){return c.code}).join('\n');
+          var joined=grp.map(function(c){return c.code}).join(' &&\n');
           out+='<div class="cmd-group"><div class="cmd-group-head">'+
             '<span class="cmd-group-label">⛓ run together · paste as one block</span>'+
             '<button class="cmd-group-copy" data-cmd="'+encodeURIComponent(joined)+'">⧉ copy all '+grp.length+'</button></div>'+
