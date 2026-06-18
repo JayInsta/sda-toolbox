@@ -81,13 +81,34 @@
     .stat-pill.sp-success .stat-num{color:var(--success)}
     .stat-pill.sp-info .stat-num{color:var(--info-text)}
     .stat-pill.sp-warning .stat-num{color:var(--warning)}
+    .stat-pill.sp-purple .stat-num{color:#c4b5fd}
+
+    /* ─── Team selector ─── */
+    .team-panel{background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:13px 14px;margin-bottom:14px}
+    .team-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}
+    .team-panel-title{font-size:11px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);display:flex;align-items:center;gap:7px}
+    .team-panel-title .dot{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+    .team-controls{display:flex;gap:6px}
+    .team-ctrl-btn{padding:3px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-3);font-size:10.5px;font-weight:600;font-family:var(--mono);cursor:pointer;transition:all 0.12s}
+    .team-ctrl-btn:hover{border-color:var(--border-hov);color:var(--text-1)}
+    .team-chips{display:flex;flex-wrap:wrap;gap:8px}
+    .team-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--accent-bd);background:var(--accent-bg);border-radius:9px;cursor:pointer;transition:all 0.12s;user-select:none}
+    .team-chip:hover{border-color:var(--accent)}
+    .team-chip .tc-check{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--accent);color:var(--on-accent);font-size:10px;font-weight:800;line-height:1}
+    .team-chip .tc-name{font-size:12.5px;font-weight:600;color:var(--text-1)}
+    .team-chip .tc-count{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--accent);background:rgba(212,255,58,0.12);padding:1px 7px;border-radius:99px}
+    .team-chip.off{border-color:var(--border);background:var(--bg-card)}
+    .team-chip.off .tc-check{background:transparent;border-color:var(--text-mute);color:transparent}
+    .team-chip.off .tc-name{color:var(--text-4)}
+    .team-chip.off .tc-count{color:var(--text-4);background:var(--bg-muted)}
 
     .email-table-wrap{border:1px solid var(--border);border-radius:10px;overflow-x:auto}
-    .email-table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:600px}
+    .email-table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:680px}
     .email-table th{background:var(--bg-sub);padding:9px 12px;text-align:left;font-size:10px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono);border-bottom:1px solid var(--border)}
     .email-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:middle}
     .email-table tr:last-child td{border-bottom:none}
     .email-table tr:hover td{background:rgba(212,255,58,0.03)}
+    .email-table tr.row-off td{opacity:0.4}
     .email-col{font-family:var(--mono);font-size:12px;color:var(--text-1);font-weight:500}
     .name-col{font-size:12.5px;color:var(--text-2)}
     .domain-col{font-family:var(--mono);font-size:11px;color:var(--text-4)}
@@ -103,14 +124,22 @@
     .name-edit{background:transparent;border:1px solid transparent;border-radius:4px;padding:2px 6px;font-size:12px;color:var(--text-2);outline:none;font-family:inherit;width:100%;transition:border-color 0.12s,background 0.12s}
     .name-edit:hover{border-color:var(--border);background:var(--bg-input)}
     .name-edit:focus{border-color:var(--accent);background:var(--bg-input);box-shadow:0 0 0 2px rgba(212,255,58,0.12)}
+    .team-edit{font-family:var(--mono);font-size:11px;color:var(--text-3)}
 
     .empty-state{text-align:center;padding:40px 20px;color:var(--text-4)}
     .empty-state-title{font-size:14px;color:var(--text-3);font-weight:600;margin-bottom:4px}
     .empty-state-desc{font-size:12.5px;color:var(--text-4);line-height:1.5}
 
+    /* ─── Export mode toggle ─── */
+    .mode-toggle{display:inline-flex;background:var(--bg-input);border:1px solid var(--border);border-radius:9px;padding:3px;gap:3px;margin-bottom:12px}
+    .mode-opt{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;color:var(--text-4);cursor:pointer;transition:all 0.12s;display:inline-flex;align-items:center;gap:7px;font-family:inherit}
+    .mode-opt .mo-sub{font-size:10px;font-weight:400;color:var(--text-mute)}
+    .mode-opt.active{background:var(--accent-bg);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent-bd)}
+    .mode-opt.active .mo-sub{color:rgba(212,255,58,0.5)}
+
     .export-row{display:flex;gap:8px;flex-wrap:wrap}
     .export-btn{flex:1;padding:12px 16px;border-radius:9px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-2);font-size:12.5px;font-weight:600;cursor:pointer;transition:all 0.12s;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:170px}
-    .export-btn:hover{background:var(--bg-muted);border-color:var(--border-hov);color:var(--text-1)}
+    .export-btn:hover:not(:disabled){background:var(--bg-muted);border-color:var(--border-hov);color:var(--text-1)}
     .export-btn:disabled{opacity:0.35;cursor:not-allowed}
     .export-btn.primary{background:var(--accent-bg);border-color:var(--accent-bd);color:var(--accent)}
     .export-btn.primary:hover:not(:disabled){background:rgba(212,255,58,0.18);border-color:var(--accent);box-shadow:0 0 18px rgba(212,255,58,0.15)}
@@ -118,7 +147,7 @@
     .exp-sub{font-size:10px;color:var(--text-4);font-weight:400;display:block;margin-top:2px}
     .export-btn.primary .exp-sub{color:rgba(212,255,58,0.5)}
 
-    .preview-box{background:var(--bg-input);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:var(--mono);font-size:11.5px;color:var(--text-3);line-height:1.8;max-height:200px;overflow-y:auto;white-space:pre;margin-top:10px}
+    .preview-box{background:var(--bg-input);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:var(--mono);font-size:11.5px;color:var(--text-3);line-height:1.8;max-height:240px;overflow-y:auto;white-space:pre-wrap;margin-top:10px}
     .preview-label{font-size:10.5px;font-weight:600;color:var(--text-4);text-transform:uppercase;letter-spacing:0.06em;margin-top:14px;margin-bottom:4px;font-family:var(--mono)}
 
     .counter-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:var(--bg-card);border:1px solid var(--border);border-radius:99px;font-family:var(--mono);font-size:10.5px;color:var(--text-3);transition:opacity 0.35s ease-out,transform 0.35s ease-out,border-color 0.25s,box-shadow 0.25s}
@@ -153,7 +182,7 @@
 
   <div class="intro-card">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <div>Paste a ticket description — the tool extracts <strong>emails + names</strong> from any format. Exports as <code>First,Last,Email</code> CSV for <strong>App Store Connect</strong> or plain emails for <strong>Google Play Console</strong>. Click any name cell to edit.</div>
+    <div>Paste a ticket description — the tool extracts <strong>emails, names &amp; teams</strong> from any format. Detects <strong>team groups</strong> automatically, lets you pick which to include, and exports a <strong>combined</strong> CSV or <strong>one CSV per team</strong> for <strong>App Store Connect</strong> / <strong>Google Play Console</strong>. Click any name or team cell to edit.</div>
   </div>
 
   <div class="step">
@@ -161,18 +190,21 @@
       <div class="step-num">01</div>
       <div>
         <div class="step-title">Paste ticket or add emails</div>
-        <div class="step-sub">Handles: <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">"Last, First" email</code> · <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">First Last email</code> · <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">[email](mailto:email)</code> · <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">first.last@domain</code></div>
+        <div class="step-sub">Handles: <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">Team / Name / Email columns</code> · <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">"Last, First" email</code> · <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">First Last email</code> · <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">@Name email</code> · <code style="background:var(--bg-muted);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)">[email](mailto:email)</code></div>
       </div>
     </div>
-    <textarea class="big-textarea" id="source-text" placeholder='Paste your Jira ticket, Slack message, or email thread here...
+    <textarea class="big-textarea" id="source-text" placeholder='Paste your Jira ticket, Slack message, or grouped tester table here...
 
-Example formats the parser handles:
-"Smith, Jane" jane.smith@retailer.com, john.doe@retailer.com
-Alex Johnson alex.johnson@company.com
-Sarah Miller (sarah.miller@example.org)
-[mike.wilson@domain.com](mailto:mike.wilson@domain.com)
-Please add qa-tester@retailer.com as a tester'></textarea>
-    <button class="extract-btn" onclick="extractEmails()">📧 Extract emails + names</button>
+Team-grouped format (auto-detected):
+Team       Name of Tester     Corporate Email
+Team A     Jane Doe           jane.doe@example.com
+Team A     John Smith         john.smith@example.com
+Team B     @Sam Rivera        sam.rivera@example.com
+
+Also handles free-form:
+"Doe, Jane" jane.doe@example.com, taylor.lee@example.com
+Alex Morgan alex.morgan@example.com'></textarea>
+    <button class="extract-btn" onclick="extractEmails()">📧 Extract emails, names &amp; teams</button>
 
     <div class="section-h" style="margin-top:18px"><div class="dot"></div><div class="label">Manual add</div><div class="line"></div></div>
     <div class="manual-row">
@@ -186,29 +218,50 @@ Please add qa-tester@retailer.com as a tester'></textarea>
       <div class="step-num">02</div>
       <div>
         <div class="step-title">Extracted testers</div>
-        <div class="step-sub">Click any <strong>First</strong> or <strong>Last</strong> name cell to edit inline. Names are optional for Play Store.</div>
+        <div class="step-sub">Click any <strong>name</strong> or <strong>team</strong> cell to edit inline. Toggle teams below to choose who gets exported.</div>
       </div>
     </div>
 
     <div class="stats-bar" id="stats-bar"></div>
 
+    <!-- TEAM SELECTOR -->
+    <div class="team-panel" id="team-panel" style="display:none">
+      <div class="team-panel-head">
+        <div class="team-panel-title"><span class="dot"></span>Teams detected — pick who to export</div>
+        <div class="team-controls">
+          <button class="team-ctrl-btn" onclick="selectAllTeams(true)">All</button>
+          <button class="team-ctrl-btn" onclick="selectAllTeams(false)">None</button>
+        </div>
+      </div>
+      <div class="team-chips" id="team-chips"></div>
+    </div>
+
     <div class="email-table-wrap">
       <table class="email-table">
-        <thead><tr><th class="idx-col">#</th><th>First name</th><th>Last name</th><th>Email</th><th>Domain</th><th class="action-col"></th></tr></thead>
+        <thead><tr><th class="idx-col">#</th><th>Team</th><th>First name</th><th>Last name</th><th>Email</th><th>Domain</th><th class="action-col"></th></tr></thead>
         <tbody id="email-tbody"></tbody>
       </table>
     </div>
 
     <div class="section-h"><div class="dot"></div><div class="label">Export</div><div class="line"></div></div>
 
+    <div class="mode-toggle" id="mode-toggle">
+      <button class="mode-opt active" id="mode-combined" onclick="setMode('combined')">
+        <span>📄 Combined</span><span class="mo-sub">one file</span>
+      </button>
+      <button class="mode-opt" id="mode-perteam" onclick="setMode('perteam')">
+        <span>🗂 One per team</span><span class="mo-sub">separate files</span>
+      </button>
+    </div>
+
     <div class="export-row">
       <button class="export-btn primary" id="btn-appstore" onclick="exportAppStore()" disabled>
         <span class="exp-icon">🍎</span>
-        <div>App Store Connect CSV<span class="exp-sub">First,Last,Email · TestFlight import</span></div>
+        <div>App Store Connect CSV<span class="exp-sub" id="appstore-sub">First,Last,Email · TestFlight import</span></div>
       </button>
       <button class="export-btn primary" id="btn-playstore" onclick="exportPlayStore()" disabled>
         <span class="exp-icon">🤖</span>
-        <div>Google Play Console CSV<span class="exp-sub">Email per line · internal testing</span></div>
+        <div>Google Play Console CSV<span class="exp-sub" id="playstore-sub">Email per line · internal testing</span></div>
       </button>
       <button class="export-btn" id="btn-copy" onclick="copyAllEmails()" disabled>
         <span class="exp-icon">📋</span>
@@ -225,7 +278,7 @@ Please add qa-tester@retailer.com as a tester'></textarea>
   <div id="empty-state" class="step">
     <div class="empty-state">
       <div class="empty-state-title">No emails extracted yet</div>
-      <div class="empty-state-desc">Paste text above and click "Extract emails + names" — or add emails manually.</div>
+      <div class="empty-state-desc">Paste text above and click "Extract emails, names &amp; teams" — or add emails manually.</div>
     </div>
   </div>
 
@@ -234,7 +287,7 @@ Please add qa-tester@retailer.com as a tester'></textarea>
     <div class="dot"></div>
     <span>Tester Email Extractor</span>
     <div class="dot"></div>
-    <span>100% client-side — no data leaves your browser</span>
+    <span>Your pasted data never leaves your browser</span>
     <div class="dot"></div>
     <span class="counter-pill hidden" id="visit-pill" title="Total page visits"><span class="counter-icon">👁</span><span class="counter-num" id="visit-count">—</span><span class="counter-label">visits</span></span>
     <span class="counter-pill hidden" id="action-pill" title="Total exports"><span class="counter-icon">📧</span><span class="counter-num" id="action-count">—</span><span class="counter-label">exports</span></span>
@@ -254,7 +307,6 @@ Please add qa-tester@retailer.com as a tester'></textarea>
   function revealPill(id){var p=document.getElementById(id);if(p)p.classList.remove('hidden')}
   function bumpPill(id){var p=document.getElementById(id);if(!p)return;p.classList.add('bumped');setTimeout(function(){p.classList.remove('bumped')},900)}
 
-  /* ── Baseline offset: stored in localStorage, subtracted from display ── */
   function getBaseline(key){
     try{var v=localStorage.getItem('counter-baseline-'+key);return v?parseInt(v,10):0;}
     catch(e){return 0;}
@@ -268,7 +320,6 @@ Please add qa-tester@retailer.com as a tester'></textarea>
     return Number(adjusted).toLocaleString();
   }
 
-  /* ── Triple-click reset ── */
   var clickCounts={};
   var clickTimers={};
   function setupResetListener(pillId,counterKey,displayElId){
@@ -283,8 +334,6 @@ Please add qa-tester@retailer.com as a tester'></textarea>
         clickCounts[pillId]=0;
         var pw=prompt('Enter reset password:');
         if(pw===RESET_PASSWORD){
-          /* Read current raw value and store as baseline */
-          var getFunc=(counterKey===KEY_VISITS)?abacusGet:abacusGet;
           abacusGet(counterKey).then(function(raw){
             if(raw==null)raw=0;
             setBaseline(counterKey,raw);
@@ -299,7 +348,6 @@ Please add qa-tester@retailer.com as a tester'></textarea>
         }
         return;
       }
-      /* Reset click count after 800ms of no clicks */
       clickTimers[pillId]=setTimeout(function(){clickCounts[pillId]=0;},800);
     });
   }
@@ -315,7 +363,6 @@ Please add qa-tester@retailer.com as a tester'></textarea>
       document.getElementById('action-count').textContent=displayCount(v,KEY_ACTIONS);
       revealPill('action-pill');
     }).catch(function(){});
-    /* Attach triple-click reset to both pills */
     setupResetListener('visit-pill',KEY_VISITS,'visit-count');
     setupResetListener('action-pill',KEY_ACTIONS,'action-count');
   }
@@ -323,275 +370,242 @@ Please add qa-tester@retailer.com as a tester'></textarea>
   initCounters();
 
   /* ═══════ DATA ═══════ */
-  var testers = []; // { first, last, email, domain, nameSource }
+  var testers = []; // { first, last, email, domain, team, nameSource }
   var lastDupCount = 0;
+  var selectedTeams = {}; // teamKey -> bool (included in export)
+  var exportMode = 'combined'; // 'combined' | 'perteam'
+  var UNGROUPED = 'Ungrouped';
 
-  var EMAIL_RE = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g;
+  /* Global regex ONLY for .match()/extraction. NEVER use .test() on a /g regex
+     (its lastIndex is stateful and makes repeated .test() calls non-deterministic). */
+  var EMAIL_RE   = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g;
+  var EMAIL_TEST = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/;   // non-global, safe for .test()
+  var EMAIL_ONLY = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
 
   /* ═══════════════════════════════════════════════════════════
-     NAME + EMAIL EXTRACTION ENGINE
-     Handles these real-world ticket formats:
-       "Last, First" email
-       "Last, First" [email](mailto:email)
-       First Last email
-       First Last [email](mailto:email)
-       First Last (email)
-       [email](mailto:email)  — standalone markdown link
-       bare email@domain.com  — infer name from first.last prefix
+     EXTRACTION ENGINE — team aware
+     Detects "Team / Name / Email" columnar tickets (team repeated
+     before each tester, with header rows, @mentions, blank lines
+     and divider sentences as noise) AND free-form inline tickets.
      ═══════════════════════════════════════════════════════════ */
 
   function extractEmails() {
     var raw = document.getElementById('source-text').value || '';
-    /* Normalize markdown email links: [email](mailto:email) → email */
-    var text = raw.replace(/\[([^\]]+)\]\(mailto:[^)]+\)/g, '$1');
-    /* Also handle (email) parenthetical */
-    text = text.replace(/\(mailto:[^)]+\)/g, '');
-
-    /* ── Pre-process: detect multi-line columnar format ──
-       Pattern:  FirstName\nLastName\nemail@domain.com
-       We scan lines and when we find an email-only line,
-       look backwards 1-2 lines for name-only text and merge them. */
-    var rawLines = text.split('\n').map(function(l) { return l.trim(); });
-
-    /* Filter out common header rows */
-    var headerWords = ['first name','last name','email','email address','first','last'];
-    var lines = rawLines.filter(function(l) {
-      return headerWords.indexOf(l.toLowerCase()) === -1;
-    });
-
-    var merged = [];
-    var consumed = {}; /* track lines already merged upward */
-
-    for (var i = 0; i < lines.length; i++) {
-      if (consumed[i]) continue;
-      var line = lines[i];
-      /* Is this line ONLY an email (no other text)? */
-      var emailOnly = line.match(/^\s*([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})\s*$/);
-      if (emailOnly) {
-        /* Look back for name-only lines (no email, no noise) */
-        var firstName = '', lastName = '';
-        var isNameLine = function(idx) {
-          if (idx < 0 || consumed[idx]) return false;
-          var t = lines[idx].trim();
-          if (!t || t.length > 40) return false;
-          if (EMAIL_RE.test(t)) return false;
-          /* Must look like a name: letters, hyphens, apostrophes, spaces */
-          if (!/^[A-Za-z\s\-'\.]+$/.test(t)) return false;
-          return true;
-        };
-
-        if (isNameLine(i - 2) && isNameLine(i - 1)) {
-          /* Two lines above: first name, then last name */
-          firstName = lines[i - 2].trim();
-          lastName = lines[i - 1].trim();
-          consumed[i - 2] = true;
-          consumed[i - 1] = true;
-        } else if (isNameLine(i - 1)) {
-          /* One line above: could be "First Last" on one line */
-          var parts = lines[i - 1].trim().split(/\s+/);
-          if (parts.length >= 2) {
-            firstName = parts[0];
-            lastName = parts.slice(1).join(' ');
-          } else {
-            firstName = parts[0];
-          }
-          consumed[i - 1] = true;
-        }
-
-        if (firstName || lastName) {
-          merged.push(firstName + ' ' + lastName + ' ' + line);
-        } else {
-          merged.push(line);
-        }
-        consumed[i] = true;
-      } else {
-        merged.push(line);
-      }
-    }
-
-    /* Strategy: process merged lines, then also comma-separated chunks */
-    var chunks = [];
-    merged.forEach(function(line) {
-      var parts = splitTesterChunks(line);
-      parts.forEach(function(p) { if (p.trim()) chunks.push(p.trim()); });
-    });
-
+    var parsed = parseInput(raw);
     var dupCount = 0;
 
-    chunks.forEach(function(chunk) {
-      var parsed = parseChunk(chunk);
-      if (parsed && parsed.email) {
-        var existing = testers.find(function(t) { return t.email === parsed.email; });
-        if (!existing) {
-          testers.push(parsed);
-        } else {
-          dupCount++;
-          if (parsed.first && !existing.first) {
-            existing.first = parsed.first;
-            existing.last = parsed.last;
-            existing.nameSource = parsed.nameSource;
-          }
-        }
+    parsed.forEach(function(p){
+      if (!p.email) return;
+      var existing = testers.find(function(t){ return t.email === p.email; });
+      if (!existing) {
+        testers.push(p);
+      } else {
+        dupCount++;
+        // enrich existing record with anything new
+        if (p.first && !existing.first) { existing.first = p.first; existing.last = p.last; existing.nameSource = p.nameSource; }
+        if (p.team && p.team !== UNGROUPED && (existing.team === UNGROUPED || !existing.team)) existing.team = p.team;
       }
     });
 
     lastDupCount = dupCount;
+    syncSelectedTeams();
     renderTable();
     updateUI();
   }
 
-  /* Split a line into individual tester chunks, respecting "Quoted, Name" blocks */
-  function splitTesterChunks(line) {
-    var results = [];
-    var current = '';
-    var inQuote = false;
-    for (var i = 0; i < line.length; i++) {
-      var ch = line[i];
-      if (ch === '"') { inQuote = !inQuote; current += ch; continue; }
-      if (ch === ',' && !inQuote) {
-        results.push(current);
-        current = '';
-        continue;
-      }
-      current += ch;
+  function parseInput(raw){
+    // Normalize markdown email links + mailto parentheticals
+    var text = raw.replace(/\[([^\]]+)\]\(mailto:[^)]+\)/g, '$1').replace(/\(mailto:[^)]+\)/g, '');
+
+    var headerWords = ['team','name of tester','corporate email','email','email address','first name','last name','first','last','name'];
+    var lines = text.split('\n').map(function(l){ return l.trim(); })
+      .filter(function(l){ return l && headerWords.indexOf(l.toLowerCase()) === -1; });
+
+    // Frequency of non-email text lines → repeated labels are almost certainly team names
+    var freq = {};
+    lines.forEach(function(l){ if (!EMAIL_TEST.test(l)) { var k = l.toLowerCase(); freq[k] = (freq[k]||0) + 1; } });
+
+    function isTeamLabel(l){
+      if (EMAIL_TEST.test(l)) return false;
+      var k = l.toLowerCase();
+      if (freq[k] >= 2) return true;                                 // repeated → team
+      if (/(?:team|project|squad|group|pod|crew)\s*$/i.test(l) && l.length <= 40) return true;
+      if (/^[A-Z0-9][A-Z0-9 ]{1,5}$/.test(l)) return true;           // short all-caps token e.g. MDI
+      return false;
     }
-    if (current.trim()) results.push(current);
-    return results;
-  }
 
-  /* Parse a single chunk into { first, last, email, domain, nameSource } */
-  function parseChunk(chunk) {
-    chunk = chunk.trim();
-    if (!chunk) return null;
+    var out = [], currentTeam = '', nameBuf = [];
 
-    /* Extract the email from this chunk */
-    var emailMatch = chunk.match(EMAIL_RE);
-    if (!emailMatch) return null;
-    var email = emailMatch[0].toLowerCase();
-    var domain = email.split('@')[1] || '';
-
-    /* Remove the email (and surrounding brackets/parens) from the chunk to isolate the name part */
-    var nameStr = chunk
-      .replace(/\[?[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}\]?/g, '')
-      .replace(/\(mailto:[^)]*\)/g, '')
-      .replace(/\(?\)?/g, '')
-      .replace(/[,\s]+$/, '')
-      .replace(/^[,\s]+/, '')
-      .trim();
-
-    var first = '', last = '', nameSource = '';
-
-    if (nameStr) {
-      /* Pattern 1: "Last, First" (quoted with comma) */
-      var quotedMatch = nameStr.match(/^"([^"]+)"\s*$/);
-      if (quotedMatch) {
-        var parts = quotedMatch[1].split(',').map(function(s) { return s.trim(); });
-        if (parts.length === 2) {
-          first = titleCase(parts[1]);
-          last = titleCase(parts[0]);
-          nameSource = 'parsed';
+    lines.forEach(function(line){
+      if (EMAIL_TEST.test(line)) {
+        if (EMAIL_ONLY.test(line)) {
+          var nm = nameBuf.length ? nameBuf[nameBuf.length - 1] : '';
+          out.push(buildTester(nm, line, currentTeam, 'parsed'));
         } else {
-          /* Single quoted name, no comma */
-          var words = quotedMatch[1].trim().split(/\s+/);
-          first = titleCase(words[0] || '');
-          last = titleCase(words.slice(1).join(' '));
-          nameSource = 'parsed';
+          // inline "Name <email>" / "Name (email)" / "Name email"
+          var em = (line.match(EMAIL_RE) || [''])[0];
+          var nm2 = line.replace(EMAIL_RE, '').replace(/[()<>\[\]"]/g,'').replace(/[,\s]+$/,'').replace(/^[-•·*,\s]+/,'').trim();
+          out.push(buildTester(nm2, em, currentTeam, 'parsed'));
         }
+        nameBuf = [];
+      } else if (isTeamLabel(line)) {
+        currentTeam = line.replace(/[:\s]+$/, '').trim();
+        nameBuf = [];   // new group starts → drop any stray divider text
+      } else {
+        nameBuf.push(line);
       }
+    });
 
-      /* Pattern 2: Unquoted multi-word name (e.g. "Chris Chan", "Anna Brady") */
-      if (!first && !quotedMatch) {
-        var cleaned = nameStr.replace(/^[-•·*]\s*/, '').replace(/[""]/g, '').trim();
-        if (cleaned) {
-          var words = cleaned.split(/\s+/).filter(function(w) {
-            /* Filter out noise words that aren't names */
-            return w && !/^(please|add|to|for|the|and|as|a|an|tester|testers|testflight|app)$/i.test(w);
-          });
-          if (words.length >= 2) {
-            first = titleCase(words[0]);
-            last = titleCase(words.slice(1).join(' '));
-            nameSource = 'parsed';
-          } else if (words.length === 1 && /^[A-Z][a-z]+$/.test(words[0])) {
-            first = titleCase(words[0]);
-            nameSource = 'parsed';
-          }
-        }
-      }
-    }
+    return out;
+  }
 
-    /* Pattern 3: Infer from email prefix (first.last@domain) */
-    if (!first && !last) {
-      var prefix = email.split('@')[0];
+  function buildTester(name, email, team, srcWhenNamed){
+    email = (email || '').toLowerCase();
+    var domain = email.split('@')[1] || '';
+    var n = splitName(name);
+    var nameSource = (n.first || n.last) ? srcWhenNamed : '';
+
+    // Fall back to inferring first.last from the email prefix
+    if (!n.first && !n.last) {
+      var prefix = email.split('@')[0] || '';
       if (prefix.indexOf('.') > 0) {
-        var emailParts = prefix.split('.');
-        if (emailParts.length === 2 && emailParts[0].length > 1 && emailParts[1].length > 1) {
-          first = titleCase(emailParts[0]);
-          last = titleCase(emailParts[1]);
-          nameSource = 'inferred';
+        var ep = prefix.split('.');
+        if (ep.length === 2 && ep[0].length > 1 && ep[1].length > 1) {
+          n.first = titleCase(ep[0]); n.last = titleCase(ep[1]); nameSource = 'inferred';
         }
       }
     }
-
-    if (!nameSource) nameSource = 'none';
-
-    return { first: first, last: last, email: email, domain: domain, nameSource: nameSource };
+    return { first:n.first, last:n.last, email:email, domain:domain, team:(team && team.length ? team : UNGROUPED), nameSource: nameSource || 'none' };
   }
 
-  function titleCase(s) {
-    if (!s) return '';
-    return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  function splitName(name){
+    name = (name || '').replace(/^@+/, '').replace(/["']/g, '').replace(/\s+/g, ' ').trim();
+    if (!name) return { first:'', last:'' };
+    // "Last, First"
+    if (name.indexOf(',') >= 0) {
+      var p = name.split(',').map(function(s){ return s.trim(); });
+      if (p.length === 2 && p[0] && p[1]) return { first: titleCase(p[1]), last: titleCase(p[0]) };
+    }
+    var w = name.split(/\s+/).filter(function(x){
+      return x && !/^(please|add|to|for|the|and|as|a|an|tester|testers|testflight|app|will|be|tested|by)$/i.test(x);
+    });
+    if (!w.length) return { first:'', last:'' };
+    if (w.length === 1) return { first: titleCase(w[0]), last:'' };
+    return { first: titleCase(w[0]), last: w.slice(1).map(titleCase).join(' ') };
   }
 
+  /* Uppercase first letter only; preserve the rest (keeps McDonald, O'Brien, María, hyphenated) */
+  function titleCase(s){ if (!s) return ''; return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  /* ═══════ MANUAL ADD ═══════ */
   function addManual() {
     var input = document.getElementById('manual-email');
     var val = (input.value || '').trim();
     if (!val) return;
 
-    /* Try parsing as a chunk (could be "First Last email" or just "email") */
-    var parsed = parseChunk(val);
-    if (!parsed || !parsed.email) {
+    var em = (val.match(EMAIL_RE) || [''])[0];
+    if (!em) {
       input.style.borderColor = 'var(--danger)';
       input.style.boxShadow = '0 0 0 3px rgba(248,113,113,0.18)';
-      setTimeout(function() { input.style.borderColor = ''; input.style.boxShadow = ''; }, 1500);
+      setTimeout(function(){ input.style.borderColor=''; input.style.boxShadow=''; }, 1500);
       return;
     }
-    parsed.nameSource = parsed.nameSource === 'none' ? 'none' : 'manual';
-    if (testers.some(function(t) { return t.email === parsed.email; })) {
-      /* Duplicate — flash warning on input */
+    var nm = val.replace(EMAIL_RE,'').replace(/[()<>\[\]"]/g,'').replace(/[,\s]+$/,'').trim();
+    var parsed = buildTester(nm, em, '', 'manual');
+    if (parsed.nameSource !== 'none') parsed.nameSource = 'manual';
+
+    if (testers.some(function(t){ return t.email === parsed.email; })) {
       input.style.borderColor = 'var(--warning)';
       input.style.boxShadow = '0 0 0 3px rgba(251,191,36,0.18)';
       input.value = '';
       input.placeholder = 'Already in list: ' + parsed.email;
-      setTimeout(function() { input.style.borderColor = ''; input.style.boxShadow = ''; input.placeholder = 'email or: First Last email@domain.com'; }, 2000);
+      setTimeout(function(){ input.style.borderColor=''; input.style.boxShadow=''; input.placeholder='email or: First Last email@domain.com'; }, 2000);
       return;
     }
     testers.push(parsed);
     input.value = '';
+    syncSelectedTeams();
     renderTable();
     updateUI();
   }
 
-  function removeEmail(idx) { testers.splice(idx, 1); renderTable(); updateUI(); }
+  function removeEmail(idx) { testers.splice(idx, 1); syncSelectedTeams(); renderTable(); updateUI(); }
 
   function editName(idx, field, el) {
     testers[idx][field] = el.value.trim();
-    if (testers[idx].first || testers[idx].last) {
-      testers[idx].nameSource = 'manual';
-    }
+    if (testers[idx].first || testers[idx].last) testers[idx].nameSource = 'manual';
+  }
+  function editTeam(idx, el) {
+    var v = el.value.trim();
+    testers[idx].team = v.length ? v : UNGROUPED;
+    syncSelectedTeams();
+    renderTable();
+    updateUI();
   }
 
+  /* ═══════ TEAMS ═══════ */
+  function teamKey(t){ return (t.team && t.team.length) ? t.team : UNGROUPED; }
+
+  function teamOrder(){
+    var order = [], seen = {};
+    testers.forEach(function(t){ var k = teamKey(t); if (!seen[k]) { seen[k] = true; order.push(k); } });
+    return order;
+  }
+  function teamCounts(){
+    var c = {}; testers.forEach(function(t){ var k = teamKey(t); c[k] = (c[k]||0) + 1; }); return c;
+  }
+  function syncSelectedTeams(){
+    var order = teamOrder(), present = {};
+    order.forEach(function(k){ present[k] = true; if (!(k in selectedTeams)) selectedTeams[k] = true; });
+    Object.keys(selectedTeams).forEach(function(k){ if (!present[k]) delete selectedTeams[k]; });
+  }
+  function toggleTeamByIndex(i){
+    var order = teamOrder(); var k = order[i]; if (k == null) return;
+    selectedTeams[k] = !selectedTeams[k];
+    renderTable(); updateUI();
+  }
+  function selectAllTeams(on){
+    teamOrder().forEach(function(k){ selectedTeams[k] = on; });
+    renderTable(); updateUI();
+  }
+  function getSelectedTesters(){ return testers.filter(function(t){ return selectedTeams[teamKey(t)]; }); }
+
+  function setMode(m){
+    exportMode = m;
+    document.getElementById('mode-combined').classList.toggle('active', m === 'combined');
+    document.getElementById('mode-perteam').classList.toggle('active', m === 'perteam');
+    updateExportSubs();
+  }
+  function updateExportSubs(){
+    var sel = getSelectedTesters();
+    var nTeams = distinctTeams(sel).length;
+    if (exportMode === 'perteam' && nTeams > 1) {
+      document.getElementById('appstore-sub').textContent = nTeams + ' files · First,Last,Email each';
+      document.getElementById('playstore-sub').textContent = nTeams + ' files · email per line each';
+    } else {
+      document.getElementById('appstore-sub').textContent = 'First,Last,Email · TestFlight import';
+      document.getElementById('playstore-sub').textContent = 'Email per line · internal testing';
+    }
+  }
+  function distinctTeams(list){
+    var s = {}, o = []; list.forEach(function(t){ var k = teamKey(t); if (!s[k]) { s[k]=true; o.push(k); } }); return o;
+  }
+
+  /* ═══════ RENDER ═══════ */
   function renderTable() {
     var tbody = document.getElementById('email-tbody');
     if (!testers.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-mute)">No emails yet</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-mute)">No emails yet</td></tr>';
       return;
     }
     tbody.innerHTML = testers.map(function(t, i) {
       var srcCls = t.nameSource === 'parsed' ? 'src-parsed' : t.nameSource === 'inferred' ? 'src-inferred' : t.nameSource === 'manual' ? 'src-manual' : '';
       var srcLabel = t.nameSource === 'parsed' ? 'parsed' : t.nameSource === 'inferred' ? 'inferred' : t.nameSource === 'manual' ? 'edited' : '';
       var badge = srcLabel ? '<span class="source-badge ' + srcCls + '">' + srcLabel + '</span>' : '';
-      return '<tr>' +
+      var off = !selectedTeams[teamKey(t)];
+      return '<tr class="' + (off ? 'row-off' : '') + '">' +
         '<td class="idx-col">' + (i + 1) + '</td>' +
+        '<td><input class="name-edit team-edit" value="' + esc(t.team) + '" placeholder="—" onchange="editTeam(' + i + ',this)"></td>' +
         '<td><input class="name-edit" value="' + esc(t.first) + '" placeholder="—" oninput="editName(' + i + ',\'first\',this)">' + badge + '</td>' +
         '<td><input class="name-edit" value="' + esc(t.last) + '" placeholder="—" oninput="editName(' + i + ',\'last\',this)"></td>' +
         '<td class="email-col">' + esc(t.email) + '</td>' +
@@ -601,14 +615,29 @@ Please add qa-tester@retailer.com as a tester'></textarea>
     }).join('');
   }
 
+  function renderTeamPanel(){
+    var panel = document.getElementById('team-panel');
+    var order = teamOrder();
+    var counts = teamCounts();
+    // Only show the panel when there is real grouping to act on
+    var hasGroups = order.length > 1 || (order.length === 1 && order[0] !== UNGROUPED);
+    if (!hasGroups) { panel.style.display = 'none'; return; }
+    panel.style.display = 'block';
+    document.getElementById('team-chips').innerHTML = order.map(function(k, i){
+      var on = !!selectedTeams[k];
+      return '<div class="team-chip ' + (on ? '' : 'off') + '" onclick="toggleTeamByIndex(' + i + ')">' +
+        '<span class="tc-check">✓</span>' +
+        '<span class="tc-name">' + esc(k) + '</span>' +
+        '<span class="tc-count">' + counts[k] + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
   function updateUI() {
     var n = testers.length;
-    var domains = {};
-    var withNames = 0;
-    testers.forEach(function(t) {
-      domains[t.domain] = true;
-      if (t.first || t.last) withNames++;
-    });
+    var domains = {}, withNames = 0;
+    testers.forEach(function(t){ domains[t.domain] = true; if (t.first || t.last) withNames++; });
+    var nTeams = teamOrder().length;
 
     document.getElementById('results-step').style.display = n > 0 ? 'block' : 'none';
     document.getElementById('empty-state').style.display = n > 0 ? 'none' : 'block';
@@ -619,71 +648,91 @@ Please add qa-tester@retailer.com as a tester'></textarea>
 
     document.getElementById('stats-bar').innerHTML =
       '<div class="stat-pill sp-accent"><div class="stat-num">' + n + '</div><div class="stat-label">Testers</div></div>' +
+      '<div class="stat-pill sp-purple"><div class="stat-num">' + nTeams + '</div><div class="stat-label">Teams</div></div>' +
       '<div class="stat-pill sp-success"><div class="stat-num">' + withNames + '</div><div class="stat-label">With names</div></div>' +
       '<div class="stat-pill sp-info"><div class="stat-num">' + Object.keys(domains).length + '</div><div class="stat-label">Domains</div></div>' +
       dupStat;
 
-    document.getElementById('btn-appstore').disabled = !n;
-    document.getElementById('btn-playstore').disabled = !n;
-    document.getElementById('btn-copy').disabled = !n;
+    renderTeamPanel();
+
+    var selCount = getSelectedTesters().length;
+    document.getElementById('btn-appstore').disabled = !selCount;
+    document.getElementById('btn-playstore').disabled = !selCount;
+    document.getElementById('btn-copy').disabled = !selCount;
+    updateExportSubs();
 
     document.getElementById('breadcrumb-status').textContent = n + ' email' + (n !== 1 ? 's' : '');
     var badge = document.getElementById('live-badge');
     var badgeTxt = document.getElementById('live-badge-text');
-    if (n > 0) { badge.className = 'live-badge'; badgeTxt.textContent = n + ' ready'; }
+    if (n > 0) { badge.className = 'live-badge'; badgeTxt.textContent = selCount + ' selected'; }
     else { badge.className = 'live-badge idle'; badgeTxt.textContent = 'idle'; }
     document.getElementById('preview-section').style.display = 'none';
   }
 
   /* ═══════ EXPORTS ═══════ */
+  function slug(s){ return (s||'').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'') || 'ungrouped'; }
+  function csvField(val){ if (!val) return ''; val = String(val); if (/^[=+\-@]/.test(val)) val = "'" + val; /* block CSV formula injection */ if (/[,"\n]/.test(val)) return '"' + val.replace(/"/g,'""') + '"'; return val; }
+  function appStoreCsv(list){ return list.map(function(t){ return csvField(t.first) + ',' + csvField(t.last) + ',' + csvField(t.email); }).join('\n'); }
+  function playStoreCsv(list){ return list.map(function(t){ return t.email; }).join('\n'); }
 
-  function exportAppStore() {
-    if (!testers.length) return;
-    /* App Store Connect TestFlight CSV: First Name,Last Name,Email */
-    var csv = testers.map(function(t) {
-      return csvField(t.first) + ',' + csvField(t.last) + ',' + csvField(t.email);
-    }).join('\n');
-    downloadFile(csv, 'testers_appstore_connect.csv', 'text/csv');
-    showPreview('App Store Connect CSV — First,Last,Email', csv);
+  function groupSelectedByTeam(){
+    var sel = getSelectedTesters(), groups = {}, order = [];
+    sel.forEach(function(t){ var k = teamKey(t); if (!groups[k]) { groups[k] = []; order.push(k); } groups[k].push(t); });
+    return { order: order, groups: groups };
+  }
+
+  function runExport(kind){ // kind: 'appstore' | 'playstore'
+    var sel = getSelectedTesters();
+    if (!sel.length) return;
+    var build = kind === 'appstore' ? appStoreCsv : playStoreCsv;
+    var prefix = kind === 'appstore' ? 'testers_appstore_connect' : 'testers_google_play';
+    var label  = kind === 'appstore' ? 'App Store Connect CSV — First,Last,Email' : 'Google Play Console CSV — email per line';
+
+    var byTeam = groupSelectedByTeam();
+    if (exportMode === 'perteam' && byTeam.order.length > 1) {
+      var summary = [];
+      byTeam.order.forEach(function(k, i){
+        var csv = build(byTeam.groups[k]);
+        var fname = prefix + '_' + slug(k) + '.csv';
+        // stagger downloads so the browser doesn't merge/block them
+        (function(c, f){ setTimeout(function(){ downloadFile(c, f, 'text/csv'); }, i * 350); })(csv, fname);
+        summary.push(fname + '   (' + byTeam.groups[k].length + ' tester' + (byTeam.groups[k].length !== 1 ? 's' : '') + ')');
+      });
+      showPreview(label + ' — ' + byTeam.order.length + ' files\nIf only one downloaded, allow "multiple downloads" for this site.',
+                  summary.join('\n'));
+    } else {
+      var csvAll = build(sel);
+      downloadFile(csvAll, prefix + '.csv', 'text/csv');
+      showPreview(label + ' — ' + sel.length + ' testers', csvAll);
+    }
     bumpExportCounter();
   }
 
-  function exportPlayStore() {
-    if (!testers.length) return;
-    /* Google Play Console: just emails, one per line */
-    var csv = testers.map(function(t) { return t.email; }).join('\n');
-    downloadFile(csv, 'testers_google_play.csv', 'text/csv');
-    showPreview('Google Play Console CSV — email per line', csv);
-    bumpExportCounter();
-  }
+  function exportAppStore(){ runExport('appstore'); }
+  function exportPlayStore(){ runExport('playstore'); }
 
   function copyAllEmails() {
-    if (!testers.length) return;
-    var text = testers.map(function(t) { return t.email; }).join('\n');
-    navigator.clipboard.writeText(text).then(function() {
+    var sel = getSelectedTesters();
+    if (!sel.length) return;
+    var text = sel.map(function(t){ return t.email; }).join('\n');
+    navigator.clipboard.writeText(text).then(function(){
       var btn = document.getElementById('btn-copy');
       var orig = btn.innerHTML;
-      btn.innerHTML = '<span class="exp-icon">✅</span><div>Copied!</div>';
+      btn.innerHTML = '<span class="exp-icon">✅</span><div>Copied ' + sel.length + '!</div>';
       btn.style.borderColor = 'var(--success)';
       btn.style.color = 'var(--success)';
-      setTimeout(function() { btn.innerHTML = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 2000);
+      setTimeout(function(){ btn.innerHTML = orig; btn.style.borderColor=''; btn.style.color=''; }, 2000);
     });
-    showPreview('All emails (newline-separated)', text);
+    showPreview('Selected emails (newline-separated) — ' + sel.length + ' testers', text);
     bumpExportCounter();
-  }
-
-  function csvField(val) {
-    if (!val) return '';
-    if (/[,"\n]/.test(val)) return '"' + val.replace(/"/g, '""') + '"';
-    return val;
   }
 
   function downloadFile(content, filename, mimeType) {
     var blob = new Blob([content], { type: mimeType });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
-    a.href = url; a.download = filename; a.click();
-    URL.revokeObjectURL(url);
+    a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
   }
 
   function showPreview(label, content) {
@@ -693,7 +742,7 @@ Please add qa-tester@retailer.com as a tester'></textarea>
     document.getElementById('preview-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
   renderTable();
   updateUI();
