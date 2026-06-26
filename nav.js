@@ -10,7 +10,6 @@
     { label: 'Tester Emails',     file: 'tester-email-extractor.html',   icon: '📧' },
     { label: 'Android Env Setup', file: 'android-setup-studio.html', icon: '🤖' },
     { label: 'App Privacy', file: 'app-privacy-configurator.html', icon: '🔒' },
-    { label: 'App Tracker', file: 'sfp-app-tracker.html', icon: '🎯' },
   ];
 
   /* ── ACTIVE PAGE DETECTION ── */
