@@ -370,7 +370,7 @@
 
   <div class="intro-card">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <div>Pick <strong>PR</strong> or <strong>Instaform</strong>, choose what you’re working on, set the deadline date, then copy the message into the thread. The form starts fresh on every refresh.</div>
+    <div>Pick <strong>PR</strong>, <strong>Instaform</strong> or <strong>Carrot Ads PR</strong>, choose what you’re working on, set the deadline date, then copy the message into the thread. The form starts fresh on every refresh.</div>
   </div>
 
   <div class="layout">
@@ -564,7 +564,8 @@
    ═════════════════════════════════════════════════════════ */
 var CATEGORIES = {
   pr:        { label: 'PR approval',        emoji: '🔀', sub: 'Code review for a PR' },
-  instaform: { label: 'Instaform approval', emoji: '📝', sub: 'Sign-off on an Instaform' }
+  instaform: { label: 'Instaform approval', emoji: '📝', sub: 'Sign-off on an Instaform' },
+  ads:       { label: 'Carrot Ads PR',      emoji: '🥕', sub: 'Ads configuration for SFP', noPhase: true, noun: 'Carrot Ads PR' }
 };
 var PHASES = {
   spinup: { label: 'Web spinup', emoji: '🌱' },
@@ -598,6 +599,13 @@ var PRESETS = {
   }
 };
 
+PRESETS['ads'] = {
+  title: 'Carrot Ads PR for SFP Ads configuration',
+  ask: 'I’m requesting approval to merge this Carrot Ads PR so we can get Ads configured for SFP.',
+  why: 'This PR needs to be merged to get Ads configured for SFP.',
+  priority: 'medium', reason: 'sprint', impacts: ['ads', 'sprint']
+};
+
 var REASONS = {
   sprint: 'sprint deadline',
   launch: 'web launch date',
@@ -609,7 +617,8 @@ var IMPACTS = {
   sprint:   'The work misses the sprint deadline.',
   launch:   'The web launch is delayed.',
   retailer: 'The retailer’s go-live date slips.',
-  blocked:  'Dependent work stays blocked.'
+  blocked:  'Dependent work stays blocked.',
+  ads:      'Ads can’t be configured for SFP.'
 };
 
 var PRIORITIES = {
@@ -624,7 +633,8 @@ var TOTAL_FIELDS = 6;
 /* ═════════════════════════════════════════════════════════
    STATE
    ═════════════════════════════════════════════════════════ */
-function typeKey(cat, phase) { return cat + '-' + phase; }
+function typeKey(cat, phase) { return CATEGORIES[cat] && CATEGORIES[cat].noPhase ? cat : cat + '-' + phase; }
+function linkNoun() { return CATEGORIES[S.cat].noun || (S.cat === 'pr' ? 'PR' : 'Instaform'); }
 function freshState(cat, phase) {
   cat = CATEGORIES[cat] ? cat : 'pr';
   phase = PHASES[phase] ? phase : 'spinup';
@@ -804,7 +814,7 @@ function renderPreview() {
   if (missing.length) checks.push(['mb-warn', 'Still needed: <strong>' + missing.join(', ') + '</strong>']);
   if (ph.length) checks.push(['mb-warn', 'Replace placeholders: <strong>' + ph.map(esc).join(' ') + '</strong>']);
   if (days !== null && days < 0) checks.push(['mb-danger', 'The deadline date is in the past.']);
-  if (!c.done.links && c.done.due) checks.push(['mb-blue', 'Add the ' + (S.cat === 'pr' ? 'PR' : 'Instaform') + ' link in step 07 so approvers can open it.']);
+  if (!c.done.links && c.done.due) checks.push(['mb-blue', 'Add the ' + linkNoun() + ' link in step 07 so approvers can open it.']);
   var ready = c.count === TOTAL_FIELDS && !ph.length && !(days !== null && days < 0);
   if (ready && c.done.links) checks.push(['mb-info', 'Ready to send.']);
   $('checks').innerHTML = checks.map(function (x) {
@@ -863,9 +873,12 @@ function renderType() {
     return '<button type="button" role="radio" aria-checked="' + on + '" class="toggle-btn' + (on ? ' active' : '') +
       '" onclick="applyPreset(S.cat, \'' + k + '\')"><span>' + PHASES[k].emoji + '</span>' + esc(label) + '</button>';
   }).join('');
-  $('breadcrumb-type').textContent = (S.cat === 'pr' ? 'PR' : 'Instaform') + ' / ' + PHASES[S.phase].label;
+  var noPhase = CATEGORIES[S.cat].noPhase;
+  document.querySelector('.sub-wrap').classList.toggle('hidden', !!noPhase);
+  $('breadcrumb-type').textContent = noPhase ? CATEGORIES[S.cat].label
+    : (S.cat === 'pr' ? 'PR' : 'Instaform') + ' / ' + PHASES[S.phase].label;
   var first = $('link-rows').querySelector('input[type="url"]');
-  if (first) first.placeholder = 'Paste the ' + (S.cat === 'pr' ? 'PR' : 'Instaform') + ' link';
+  if (first) first.placeholder = 'Paste the ' + linkNoun() + ' link';
 }
 
 function renderPriority() {
@@ -885,7 +898,7 @@ function renderImpacts() {
 }
 
 function renderLinks() {
-  var noun = S.cat === 'pr' ? 'PR' : 'Instaform';
+  var noun = linkNoun();
   $('link-rows').innerHTML = S.links.map(function (l, i) {
     var d = detectLink(l.url);
     return '<div class="link-row">' +
@@ -945,7 +958,7 @@ function removeLink(i) {
 }
 
 function applyPreset(cat, phase) {
-  if (cat === S.cat && phase === S.phase) return;
+  if (typeKey(cat, phase) === typeKey(S.cat, S.phase)) return;
   var p = PRESETS[typeKey(cat, phase)];
   if (!p) return;
   if (S.dirty && !confirm('Replace your edited title, why and impact with the default text for this request?\n\nYour date and links stay as they are.')) return;
