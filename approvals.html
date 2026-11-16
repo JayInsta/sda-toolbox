@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studio · Approval Request Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ───────── STUDIO TOKENS (same as Offset calculator) ───────── */
+    :root {
+      color-scheme: dark;
+      --bg-page:    #0a0a0f;
+      --bg-card:    #14141a;
+      --bg-sub:     #0f0f15;
+      --bg-input:   #08080d;
+      --bg-muted:   #1a1a22;
+      --border:     #26262e;
+      --border-hov: #3a3a44;
+      --text-1:     #fafafa;
+      --text-2:     #d4d4d8;
+      --text-3:     #a1a1aa;
+      --text-4:     #71717a;
+      --text-mute:  #52525b;
+      --accent:     #d4ff3a;
+      --accent-h:   #c5f028;
+      --accent-bg:  rgba(212,255,58,0.10);
+      --accent-bd:  rgba(212,255,58,0.30);
+      --on-accent:  #0a0a0f;
+      --success:    #34d399;
+      --success-bg: rgba(52,211,153,0.12);
+      --success-bd: rgba(52,211,153,0.30);
+      --warning:    #fbbf24;
+      --warning-bg: rgba(251,191,36,0.12);
+      --warning-bd: rgba(251,191,36,0.30);
+      --danger:     #f87171;
+      --danger-bg:  rgba(248,113,113,0.12);
+      --danger-bd:  rgba(248,113,113,0.30);
+      --info-bg:    rgba(96,165,250,0.12);
+      --info-bd:    rgba(96,165,250,0.30);
+      --info-text:  #93c5fd;
+
+      --font:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --mono:  'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    }
+
+    html, body { background: var(--bg-page); color: var(--text-1); }
+    body { font-family: var(--font); -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.5; min-height: 100vh; }
+    button { font: inherit; color: inherit; cursor: pointer; background: none; border: none; }
+    a { color: var(--accent); }
+    code, .mono { font-family: var(--mono); }
+    ::selection { background: var(--accent-bg); color: var(--accent); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg-page); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-muted); border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-hov); }
+
+    /* ───────── TOOLBAR ───────── */
+    .studio-toolbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(10,10,15,0.78);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      padding: 11px 22px;
+      display: flex; align-items: center; gap: 14px;
+      border-bottom: 1px solid var(--border);
+      height: 54px;
+    }
+    .studio-logo {
+      width: 30px; height: 30px; background: var(--accent); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--on-accent); font-size: 15px; font-weight: 800; flex-shrink: 0;
+      box-shadow: 0 0 16px rgba(212,255,58,0.25);
+    }
+    .studio-toolbar-title { font-size: 14px; font-weight: 600; color: var(--text-1); }
+    .studio-breadcrumb { font-size: 12px; color: var(--text-3); display: flex; align-items: center; gap: 6px; }
+    .studio-breadcrumb .crumb-sep { color: var(--text-mute); }
+    .studio-toolbar-spacer { flex: 1; }
+
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+      background: rgba(212,255,58,0.08); border: 1px solid rgba(212,255,58,0.2);
+      border-radius: 99px; font-size: 11px; color: var(--accent); font-weight: 500; font-family: var(--mono); white-space: nowrap;
+    }
+    .live-badge.idle { background: var(--warning-bg); border-color: var(--warning-bd); color: var(--warning); }
+    .live-badge.idle .live-dot { background: var(--warning); box-shadow: none; animation: none; }
+    .live-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(212,255,58,0.6); }
+    @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
+
+    /* ───────── SHELL + TWO-COLUMN LAYOUT ───────── */
+    .studio-shell { max-width: 1220px; margin: 0 auto; padding: 26px 28px 60px; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 22px; align-items: start; }
+    .preview-col { position: sticky; top: 72px; }
+
+    /* ───────── INTRO ───────── */
+    .intro-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 11px;
+      padding: 11px 15px; margin-bottom: 14px; font-size: 12.5px; color: var(--text-3); line-height: 1.6;
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .intro-card svg { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+    .intro-card strong { color: var(--text-1); font-weight: 600; }
+
+    /* ───────── STEP CARD ───────── */
+    .step {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 18px 20px; margin-bottom: 10px; transition: border-color 0.15s;
+    }
+    .step:hover { border-color: var(--border-hov); }
+    .step:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(212,255,58,0.10); }
+    .step-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .step-num {
+      width: 26px; height: 26px; border-radius: 7px; background: var(--accent-bg); color: var(--accent);
+      display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;
+      flex-shrink: 0; font-family: var(--mono);
+    }
+    .step-num.done { background: var(--success-bg); color: var(--success); }
+    .step-title { font-size: 14px; font-weight: 600; color: var(--text-1); }
+    .step-sub { font-size: 12px; color: var(--text-3); margin-top: 2px; line-height: 1.45; }
+    .step-head-right { margin-left: auto; }
+
+    /* ───────── FIELDS / INPUTS ───────── */
+    .field label {
+      display: block; font-size: 10.5px; font-weight: 600; color: var(--text-3);
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; font-family: var(--mono);
+    }
+    .field + .field { margin-top: 12px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid-ask { display: grid; grid-template-columns: 150px 1fr 190px; gap: 10px; }
+    .grid-2 .field + .field, .grid-ask .field + .field { margin-top: 0; }
+
+    input[type="text"], input[type="url"], input[type="date"], select, textarea {
+      width: 100%; padding: 10px 12px; background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 8px; font-size: 13.5px; font-weight: 500; color: var(--text-1); outline: none;
+      transition: border-color 0.12s, box-shadow 0.12s; font-family: var(--font);
+    }
+    input[type="date"] { font-family: var(--mono); font-size: 13px; min-height: 41px; cursor: pointer; }
+    textarea { resize: vertical; min-height: 84px; line-height: 1.55; }
+    input::placeholder, textarea::placeholder { color: var(--text-mute); }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(212,255,58,0.18); }
+    select {
+      appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 34px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+    }
+    select option { background: var(--bg-card); color: var(--text-1); }
+    .hidden { display: none !important; }
+
+    .hint { font-size: 11.5px; color: var(--text-4); margin-top: 6px; font-family: var(--mono); }
+    .hint.ok { color: var(--success); }
+    .hint.warn { color: var(--warning); }
+
+    /* ───────── CHIPS (quick picks, impacts) ───────── */
+    .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .chip {
+      padding: 6px 11px; border-radius: 99px; border: 1px solid var(--border); background: var(--bg-input);
+      color: var(--text-3); font-size: 12px; font-weight: 500; transition: all 0.12s; text-align: left;
+    }
+    .chip:hover { border-color: var(--border-hov); color: var(--text-2); }
+    .chip.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+    .chip.quick { font-family: var(--mono); font-size: 11px; }
+
+    /* ───────── TOGGLE GROUP (priority, ask mode) ───────── */
+    .toggle-group { display: flex; gap: 8px; }
+    .toggle-btn {
+      flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-input);
+      color: var(--text-3); font-size: 13px; font-weight: 500; text-align: center; transition: all 0.12s;
+      user-select: none; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    }
+    .toggle-btn:hover { border-color: var(--border-hov); color: var(--text-2); }
+    .toggle-btn .pdot { width: 8px; height: 8px; border-radius: 50%; }
+    .p-low .pdot    { background: var(--info-text); }
+    .p-medium .pdot { background: var(--success); }
+    .p-high .pdot   { background: var(--warning); }
+    .p-urgent .pdot { background: var(--danger); }
+    .toggle-btn.active.p-low    { background: var(--info-bg);    border-color: var(--info-text); color: var(--info-text); }
+    .toggle-btn.active.p-medium { background: var(--success-bg); border-color: var(--success);   color: var(--success); }
+    .toggle-btn.active.p-high   { background: var(--warning-bg); border-color: var(--warning);   color: var(--warning); }
+    .toggle-btn.active.p-urgent { background: var(--danger-bg);  border-color: var(--danger);    color: var(--danger); }
+
+    .seg { display: inline-flex; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 3px; gap: 2px; }
+    .seg button {
+      padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; font-family: var(--mono);
+      color: var(--text-4); transition: all 0.12s;
+    }
+    .seg button:hover { color: var(--text-2); }
+    .seg button.active { background: var(--accent-bg); color: var(--accent); }
+
+    .toggle-btn.cat { padding: 13px 11px; flex-direction: column; gap: 3px; }
+    .toggle-btn.cat .tb-main { display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 600; }
+    .toggle-btn.cat .tb-sub { font-size: 11px; color: var(--text-4); font-weight: 500; }
+    .toggle-btn.cat.active .tb-sub { color: var(--accent); opacity: 0.75; }
+    .toggle-btn.active:not([class*="p-"]) { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 14px rgba(212,255,58,0.10); }
+    .sub-wrap { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
+    .sub-wrap > label, .details > label.dlabel {
+      display: block; font-size: 10.5px; font-weight: 600; color: var(--text-3); text-transform: uppercase;
+      letter-spacing: 0.06em; margin-bottom: 6px; font-family: var(--mono);
+    }
+    .details { margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+    .details .field + .field { margin-top: 0; }
+    .details .field.wide { grid-column: 1 / -1; }
+
+    .req { color: var(--danger); margin-left: 3px; }
+    input.invalid { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(248,113,113,0.15); }
+    .hint.err { color: var(--danger); }
+    .ask-auto { font-size: 14px; color: var(--text-1); margin-top: 0; }
+
+    /* ───────── FORMULA STRIP (generated sentence) ───────── */
+    .formula-strip {
+      background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 10px 13px;
+      font-size: 13px; color: var(--text-2); margin-top: 12px; line-height: 1.6;
+    }
+    .formula-strip .fl { display: block; font-family: var(--mono); font-size: 10.5px; color: var(--text-4); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+    .formula-strip.empty { color: var(--text-mute); font-style: italic; }
+
+    /* ───────── WARN / INFO BOXES ───────── */
+    .msg-box {
+      border-radius: 8px; padding: 10px 13px; font-size: 12.5px; margin-top: 10px;
+      display: flex; gap: 9px; align-items: flex-start; line-height: 1.55;
+    }
+    .msg-box .mdot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; background: currentColor; }
+    .msg-box strong { font-weight: 700; }
+    .msg-box button.inline {
+      margin-left: 6px; padding: 2px 8px; border-radius: 5px; border: 1px solid currentColor;
+      font-size: 11px; font-weight: 600; font-family: var(--mono);
+    }
+    .mb-info   { background: var(--accent-bg);  border: 1px solid var(--accent-bd);  color: var(--accent); }
+    .mb-warn   { background: var(--warning-bg); border: 1px solid var(--warning-bd); color: var(--warning); }
+    .mb-danger { background: var(--danger-bg);  border: 1px solid var(--danger-bd);  color: var(--danger); }
+    .mb-blue   { background: var(--info-bg);    border: 1px solid var(--info-bd);    color: var(--info-text); }
+
+    /* ───────── LINK ROWS ───────── */
+    .link-row { display: grid; grid-template-columns: 74px 1fr 160px 34px; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .link-type {
+      font-family: var(--mono); font-size: 10.5px; font-weight: 600; text-align: center; padding: 4px 6px;
+      border-radius: 99px; background: var(--bg-muted); border: 1px solid var(--border); color: var(--text-4);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .link-type.known { background: var(--accent-bg); border-color: var(--accent-bd); color: var(--accent); }
+    .icon-btn {
+      width: 34px; height: 38px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input);
+      color: var(--text-4); display: inline-flex; align-items: center; justify-content: center; transition: all 0.12s;
+    }
+    .icon-btn:hover { border-color: var(--danger-bd); color: var(--danger); }
+    .add-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px;
+      border: 1px dashed var(--border-hov); color: var(--text-3); font-size: 12px; font-weight: 500;
+    }
+    .add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ───────── PREVIEW PANEL ───────── */
+    .preview-card {
+      background: var(--bg-card); border: 1px solid var(--accent-bd); border-radius: 12px; overflow: hidden;
+      box-shadow: 0 0 26px rgba(212,255,58,0.06);
+    }
+    .preview-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .preview-head .step-title { flex: 1; }
+    .preview-body {
+      padding: 16px 18px; max-height: calc(100vh - 360px); min-height: 200px; overflow: auto;
+      font-size: 13px; line-height: 1.65; color: var(--text-2); background: var(--bg-sub);
+    }
+    .preview-body pre { font-family: var(--mono); font-size: 12px; white-space: pre-wrap; word-break: break-word; color: var(--text-2); }
+    .preview-body .rich b { color: var(--text-1); }
+    .preview-body .rich p { margin-bottom: 2px; }
+    .preview-body .rich ul { margin: 2px 0 0 18px; }
+    .preview-body .rich a { color: var(--info-text); }
+    .ph { color: var(--warning); background: var(--warning-bg); border-radius: 3px; padding: 0 2px; }
+
+    .preview-checks { padding: 0 16px 4px; }
+    .preview-checks:empty { display: none; }
+    .preview-actions { display: flex; gap: 8px; padding: 14px 16px 16px; flex-wrap: wrap; }
+    .btn-primary {
+      flex: 1 1 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px; border-radius: 10px; background: var(--accent); color: var(--on-accent);
+      font-size: 14px; font-weight: 700; transition: background 0.12s, transform 0.08s;
+      box-shadow: 0 0 18px rgba(212,255,58,0.18);
+    }
+    .btn-primary:hover { background: var(--accent-h); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary.copied { background: var(--success); }
+    .btn-ghost {
+      flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input);
+      color: var(--text-3); font-size: 11.5px; font-weight: 600; font-family: var(--mono); transition: all 0.12s; white-space: nowrap;
+    }
+    .btn-ghost:hover { border-color: var(--accent-bd); color: var(--accent); }
+    .btn-ghost.copied { border-color: var(--success-bd); color: var(--success); background: var(--success-bg); }
+    .btn-ghost.danger:hover { border-color: var(--danger-bd); color: var(--danger); }
+    .btn-primary svg, .btn-ghost svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 600; padding: 3px 10px;
+      border-radius: 99px; font-family: var(--mono); letter-spacing: 0.02em;
+    }
+    .b-green { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-bd); }
+    .b-amber { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-bd); }
+
+    /* ───────── FOOTER (same as Offset calculator) ───────── */
+    .studio-footer {
+      padding: 18px 28px 22px; text-align: center; font-size: 11px; color: var(--text-4);
+      border-top: 1px solid var(--border); margin-top: 28px;
+      display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+    }
+    .studio-footer .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+    .studio-footer strong { color: var(--text-3); font-weight: 600; }
+    .counter-pill {
+      display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: 99px; font-family: var(--mono); font-size: 10.5px; color: var(--text-3);
+      transition: opacity 0.35s ease-out, transform 0.35s ease-out, border-color 0.25s, box-shadow 0.25s;
+    }
+    .counter-pill.is-hidden { opacity: 0; transform: translateY(3px); pointer-events: none; }
+    .counter-pill .counter-num { color: var(--accent); font-weight: 700; letter-spacing: -0.02em; }
+    .counter-pill .counter-label { color: var(--text-4); }
+    .counter-pill.bumped { border-color: var(--accent); box-shadow: 0 0 14px rgba(212,255,58,0.18); }
+
+    /* ───────── TOAST ───────── */
+    .toast {
+      position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0;
+      background: var(--bg-card); border: 1px solid var(--accent-bd); color: var(--accent);
+      padding: 9px 16px; border-radius: 99px; font-size: 12px; font-weight: 600; font-family: var(--mono);
+      transition: all 0.25s; pointer-events: none; z-index: 100; box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, .live-dot { animation: none !important; transition: none !important; }
+    }
+
+    /* ───────── RESPONSIVE ───────── */
+    @media (max-width: 1020px) {
+      .layout { grid-template-columns: 1fr; }
+      .preview-col { position: static; }
+      .preview-body { max-height: none; }
+    }
+    @media (max-width: 640px) {
+      .studio-shell { padding: 18px 14px 40px; }
+      .grid-2, .grid-ask { grid-template-columns: 1fr; }
+      .toggle-group { flex-wrap: wrap; }
+      .toggle-btn { flex: 1 1 40%; }
+      .link-row { grid-template-columns: 1fr 34px; }
+      .link-row .link-type { grid-column: 1 / -1; justify-self: start; }
+      .link-row .link-label { grid-column: 1 / 2; }
+      .studio-toolbar-title, .studio-breadcrumb { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="studio-toolbar">
+  <div class="studio-logo">✓</div>
+  <div class="studio-toolbar-title">Approval Request Builder</div>
+  <div class="studio-breadcrumb">
+    <span>Approvals</span>
+    <span class="crumb-sep">/</span>
+    <span id="breadcrumb-type" class="mono">Production release</span>
+  </div>
+  <div class="studio-toolbar-spacer"></div>
+  <div class="live-badge idle" id="live-badge">
+    <div class="live-dot"></div>
+    <span id="live-badge-text">0/6 ready</span>
+  </div>
+</header>
+
+<main class="studio-shell">
+
+  <div class="intro-card">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div>Pick <strong>PR</strong> or <strong>Instaform</strong>, choose what you’re working on, set the deadline date, then copy the message into the thread. Your draft is saved in this browser as you type.</div>
+  </div>
+
+  <div class="layout">
+    <!-- ═══════════════ FORM ═══════════════ -->
+    <section class="form-col" aria-label="Request details">
+
+      <!-- 00 TYPE -->
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">00</div>
+          <div>
+            <div class="step-title">Request type</div>
+            <div class="step-sub">Sets the title, ask, why and impact for you</div>
+          </div>
+        </div>
+        <div class="toggle-group" id="cat-group" role="radiogroup" aria-label="Approval for"></div>
+        <div class="sub-wrap">
+          <label>Working on</label>
+          <div class="toggle-group" id="sub-group" role="radiogroup" aria-label="Working on"></div>
+        </div>
+      </div>
+
+      <!-- 01 TITLE -->
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num" data-step="title">01</div>
+          <div>
+            <div class="step-title">Short title</div>
+            <div class="step-sub">Appears as “Approval Request: …” and as the email subject</div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-title">Title</label>
+          <input type="text" id="f-title" data-f="title" placeholder="e.g. PR for web spinup" autocomplete="off">
+        </div>
+      </div>
+
+      <!-- 02 NEEDED BY -->
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num" data-step="due">02</div>
+          <div>
+            <div class="step-title">Needed by<span class="req" aria-hidden="true">*</span></div>
+            <div class="step-sub">Required. The date approval is needed by, and why</div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="f-due">Deadline date<span class="req" aria-hidden="true">*</span></label>
+            <input type="date" id="f-due" data-f="due" required aria-required="true">
+          </div>
+          <div class="field">
+            <label for="f-reason">Reason</label>
+            <select id="f-reason" data-f="reason"></select>
+          </div>
+        </div>
+        <div class="field hidden" id="reason-custom-wrap">
+          <label for="f-reason-custom">Custom reason</label>
+          <input type="text" id="f-reason-custom" data-f="reasonCustom" placeholder="e.g. retailer go-live call">
+        </div>
+        <div class="chip-row" id="quick-dates"></div>
+        <div class="hint" id="due-hint"></div>
+      </div>
+
+      <!-- 03 PRIORITY -->
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num done" data-step="priority">03</div>
+          <div>
+            <div class="step-title">Priority</div>
+            <div class="step-sub">Suggested from the request type and deadline</div>
+          </div>
+        </div>
+        <div class="toggle-group" id="priority-group" role="radiogroup" aria-label="Priority"></div>
+        <div id="priority-note"></div>
+      </div>
+
+      <!-- 04 ASK -->
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num done" data-step="ask">04</div>
+          <div>
+            <div class="step-title">Ask</div>
+            <div class="step-sub">Written for you from the request type</div>
+          </div>
+        </div>
+        <div class="formula-strip ask-auto" id="ask-sentence"></div>
+      </div>
+
+      <!-- 05 WHY -->
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num" data-step="why">05</div>
+          <div>
+            <div class="step-title">Why</div>
+            <div class="step-sub">Prefilled from the request type. Edit it if you need to add context.</div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-why">Business reason</label>
+          <textarea id="f-why" data-f="why" rows="3"></textarea>
+        </div>
+        <div class="hint" id="why-hint"></div>
+      </div>
+
+      <!-- 06 IMPACT -->
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num" data-step="impact">06</div>
+          <div>
+            <div class="step-title">Impact if not approved</div>
+            <div class="step-sub">Pick what happens on a delay or a “no”, or write your own</div>
+          </div>
+        </div>
+        <div class="chip-row" id="impact-chips" style="margin-top:0"></div>
+        <div class="field" style="margin-top:12px">
+          <label for="f-impact-extra">Anything else</label>
+          <input type="text" id="f-impact-extra" data-f="impactExtra" placeholder="e.g. Retailer go-live moves to next month" autocomplete="off">
+        </div>
+      </div>
+
+      <!-- 07 LINKS -->
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num" data-step="links">07</div>
+          <div>
+            <div class="step-title">Supporting links</div>
+            <div class="step-sub">Paste the PR or Instaform link. Known links get short labels automatically.</div>
+          </div>
+        </div>
+        <div id="link-rows"></div>
+        <button type="button" class="add-btn" id="add-link">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add link
+        </button>
+      </div>
+    </section>
+
+    <!-- ═══════════════ PREVIEW ═══════════════ -->
+    <aside class="preview-col" aria-label="Message preview">
+      <div class="preview-card">
+        <div class="preview-head">
+          <div class="step-title">Message</div>
+          <div class="seg" id="format-seg" role="tablist" aria-label="Output format">
+            <button type="button" data-fmt="rich" title="Bold labels and clickable links. Best for Slack, Gmail, Google Docs">Rich</button>
+            <button type="button" data-fmt="slack" title="Slack markdown text">Slack</button>
+            <button type="button" data-fmt="markdown" title="GitHub / Markdown">MD</button>
+            <button type="button" data-fmt="jira" title="Jira wiki markup">Jira</button>
+            <button type="button" data-fmt="plain" title="Plain text">Plain</button>
+          </div>
+        </div>
+        <div class="preview-body" id="preview" aria-live="polite"></div>
+        <div class="preview-checks" id="checks"></div>
+        <div class="preview-actions">
+          <button type="button" class="btn-primary" id="copy-msg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span class="lbl">Copy message</span>
+          </button>
+          <button type="button" class="btn-ghost" id="copy-subject" title="Copy an email subject line">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span class="lbl">Subject</span>
+          </button>
+          <button type="button" class="btn-ghost" id="copy-share" title="Copy a link that opens this page with your fields filled in">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <span class="lbl">Share link</span>
+          </button>
+          <button type="button" class="btn-ghost danger" id="clear-form" title="Start a new request">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            <span class="lbl">New</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="studio-footer">
+    <strong>Studio</strong>
+    <div class="dot"></div>
+    <span>Approval builder</span>
+    <div class="dot"></div>
+    <span>SDA Toolbox</span>
+    <div class="dot"></div>
+    <span class="counter-pill is-hidden" id="visit-pill" title="Total page visits across all users">
+      <span>👁</span><span class="counter-num" id="visit-count">—</span><span class="counter-label">visits</span>
+    </span>
+    <span class="counter-pill is-hidden" id="action-pill" title="Total messages copied across all users">
+      <span>✨</span><span class="counter-num" id="action-count">—</span><span class="counter-label">copies</span>
+    </span>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═════════════════════════════════════════════════════════
+   CONFIG — edit these to change the wording of each request.
+   Optional: an approval-presets.json next to this file with
+   { "presets": {...} } is merged in on load.
+   ═════════════════════════════════════════════════════════ */
+var CATEGORIES = {
+  pr:        { label: 'PR approval',        emoji: '🔀', sub: 'Code review for a PR' },
+  instaform: { label: 'Instaform approval', emoji: '📝', sub: 'Sign-off on an Instaform' }
+};
+var PHASES = {
+  spinup: { label: 'Web spinup', emoji: '🌱' },
+  launch: { label: 'Web launch', emoji: '🚀' }
+};
+
+var PRESETS = {
+  'pr-spinup': {
+    title: 'PR for web spinup',
+    ask: 'I’m requesting approval for this PR as we are working on the web spinup.',
+    why: 'Required to complete web spinup to meet sprint deadline.',
+    priority: 'high', reason: 'sprint', impacts: ['spinup', 'sprint']
+  },
+  'pr-launch': {
+    title: 'PR for web launch',
+    ask: 'I’m requesting approval for this PR as we are working on the web launch.',
+    why: 'This approval is essential to complete web launch.',
+    priority: 'high', reason: 'launch', impacts: ['launch']
+  },
+  'instaform-spinup': {
+    title: 'Instaform for initial web spinup',
+    ask: 'I’m requesting approval for this Instaform for the initial web spinup.',
+    why: 'Required to complete web spinup to meet sprint deadline.',
+    priority: 'high', reason: 'sprint', impacts: ['spinup', 'sprint']
+  },
+  'instaform-launch': {
+    title: 'Instaform for web launch',
+    ask: 'I’m requesting approval for this Instaform for the web launch.',
+    why: 'This approval is essential to complete web launch.',
+    priority: 'high', reason: 'launch', impacts: ['launch', 'retailer']
+  }
+};
+
+var REASONS = {
+  sprint: 'sprint deadline',
+  launch: 'web launch date',
+  custom: 'Other…'
+};
+
+var IMPACTS = {
+  spinup:   'The web spinup can’t be completed this sprint.',
+  sprint:   'The work misses the sprint deadline.',
+  launch:   'The web launch is delayed.',
+  retailer: 'The retailer’s go-live date slips.',
+  blocked:  'Dependent work stays blocked.'
+};
+
+var PRIORITIES = {
+  low:    { label: 'Low',    emoji: '🔵' },
+  medium: { label: 'Medium', emoji: '🟢' },
+  high:   { label: 'High',   emoji: '🟠' },
+  urgent: { label: 'Urgent', emoji: '🔴' }
+};
+
+var STORAGE_KEY = 'sda-approval-draft-v3';
+var TOTAL_FIELDS = 6;
+
+/* ═════════════════════════════════════════════════════════
+   STATE
+   ═════════════════════════════════════════════════════════ */
+function typeKey(cat, phase) { return cat + '-' + phase; }
+function freshState(cat, phase) {
+  cat = CATEGORIES[cat] ? cat : 'pr';
+  phase = PHASES[phase] ? phase : 'spinup';
+  var p = PRESETS[typeKey(cat, phase)];
+  return {
+    cat: cat, phase: phase, title: p.title, due: '', reason: p.reason, reasonCustom: '',
+    priority: p.priority, why: p.why, impacts: p.impacts.slice(), impactExtra: '',
+    links: [{ url: '', label: '' }], format: 'rich', dirty: false
+  };
+}
+var S = freshState();
+var triedCopy = false;
+
+function $(id) { return document.getElementById(id); }
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function fillSelect(el, map, labelFn) {
+  el.innerHTML = Object.keys(map).map(function (k) {
+    return '<option value="' + esc(k) + '">' + esc(labelFn ? labelFn(k, map[k]) : map[k]) + '</option>';
+  }).join('');
+}
+function preset() { return PRESETS[typeKey(S.cat, S.phase)]; }
+
+/* ═════════════════════════════════════════════════════════
+   DERIVED VALUES
+   ═════════════════════════════════════════════════════════ */
+function reasonText() {
+  if (S.reason === 'custom') return S.reasonCustom.trim();
+  return REASONS[S.reason] || '';
+}
+function dueDate() {
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(S.due || '');
+  return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+}
+function fmtDate(d) {
+  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+}
+function fmtDue() {
+  var d = dueDate();
+  if (!d) return '';
+  var r = reasonText();
+  return r ? fmtDate(d) + ' (' + r + ')' : fmtDate(d);
+}
+function daysUntilDue() {
+  var d = dueDate();
+  if (!d) return null;
+  var t = new Date(); t.setHours(0, 0, 0, 0);
+  return Math.round((d - t) / 864e5);
+}
+function askSentence() { return preset().ask; }
+function impactText() {
+  var parts = S.impacts.map(function (k) { return IMPACTS[k]; }).filter(Boolean);
+  var extra = S.impactExtra.trim();
+  if (extra) parts.push(/[.!?]$/.test(extra) ? extra : extra + '.');
+  return parts.join(' ');
+}
+function sentenceCount(t) {
+  return t.split(/[.!?]+(?:\s|$)/).filter(function (s) { return s.trim().length > 2; }).length;
+}
+
+/* Smart link labels */
+function detectLink(url) {
+  var u = url.trim();
+  if (!u) return { type: 'Link', label: '', known: false };
+  var m;
+  if ((m = u.match(/github\.com\/[^/]+\/([^/]+)\/pull\/(\d+)/)))   return { type: 'PR', label: m[1] + ' PR #' + m[2], known: true };
+  if (/instaform/i.test(u))                                       return { type: 'Instaform', label: 'Instaform', known: true };
+  if ((m = u.match(/atlassian\.net\/browse\/([A-Z][A-Z0-9]+-\d+)/)) ||
+      (m = u.match(/selectedIssue=([A-Z][A-Z0-9]+-\d+)/)))         return { type: 'Jira', label: m[1], known: true };
+  if (/docs\.google\.com\/document/.test(u))                      return { type: 'Doc', label: 'Doc', known: true };
+  if (/docs\.google\.com\/spreadsheets/.test(u))                  return { type: 'Sheet', label: 'Sheet', known: true };
+  if (/slack\.com\/archives/.test(u))                             return { type: 'Slack', label: 'Slack thread', known: true };
+  if (/figma\.com/.test(u))                                       return { type: 'Figma', label: 'Figma', known: true };
+  try {
+    var host = new URL(/^https?:\/\//.test(u) ? u : 'https://' + u).hostname.replace(/^www\./, '');
+    return { type: 'Link', label: host, known: false };
+  } catch (e) { return { type: 'Link', label: u, known: false }; }
+}
+
+/* ═════════════════════════════════════════════════════════
+   MODEL → OUTPUT FORMATS
+   ═════════════════════════════════════════════════════════ */
+var MISSING = '[missing]';
+function buildModel() {
+  var pri = PRIORITIES[S.priority];
+  return {
+    title: S.title.trim() || MISSING,
+    rows: [
+      ['Needed by', fmtDue() || MISSING],
+      ['Priority', pri ? pri.emoji + ' ' + pri.label : MISSING],
+      ['Ask', askSentence()],
+      ['Why', S.why.trim() || MISSING],
+      ['Impact if not approved', impactText() || MISSING]
+    ],
+    links: S.links.filter(function (l) { return l.url.trim(); }).map(function (l) {
+      var url = l.url.trim();
+      if (!/^https?:\/\//.test(url)) url = 'https://' + url;
+      return { url: url, label: l.label.trim() || detectLink(url).label };
+    })
+  };
+}
+
+function fmtText(m, fmt) {
+  var B = { slack: ['*', '*'], markdown: ['**', '**'], jira: ['*', '*'], plain: ['', ''] }[fmt];
+  var out = [B[0] + 'Approval Request: ' + m.title + B[1]];
+  m.rows.forEach(function (r) { out.push(B[0] + r[0] + ':' + B[1] + ' ' + r[1]); });
+  if (m.links.length) {
+    out.push(B[0] + 'Supporting links:' + B[1]);
+    m.links.forEach(function (l) {
+      if (fmt === 'markdown')   out.push('- [' + l.label + '](' + l.url + ')');
+      else if (fmt === 'jira')  out.push('* [' + l.label + '|' + l.url + ']');
+      else if (fmt === 'slack') out.push('• ' + l.label + ': ' + l.url);
+      else                      out.push('- ' + l.label + ': ' + l.url);
+    });
+  } else {
+    out.push(B[0] + 'Supporting links:' + B[1] + ' None');
+  }
+  return out.join('\n');
+}
+
+function fmtRich(m) {
+  var h = '<p><b>Approval Request: ' + esc(m.title) + '</b></p>';
+  m.rows.forEach(function (r) { h += '<p><b>' + esc(r[0]) + ':</b> ' + esc(r[1]) + '</p>'; });
+  if (m.links.length) {
+    h += '<p><b>Supporting links:</b></p><ul>';
+    m.links.forEach(function (l) { h += '<li><a href="' + esc(l.url) + '">' + esc(l.label) + '</a></li>'; });
+    h += '</ul>';
+  } else {
+    h += '<p><b>Supporting links:</b> None</p>';
+  }
+  return h;
+}
+
+function emailSubject() {
+  var d = dueDate();
+  var when = d ? ' (by ' + d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) + ')' : '';
+  var pri = (S.priority === 'urgent' || S.priority === 'high') ? '[' + PRIORITIES[S.priority].label + '] ' : '';
+  return pri + 'Approval needed: ' + (S.title.trim() || 'request') + when;
+}
+
+function findPlaceholders() {
+  var src = [S.title, S.why, impactText()].join(' ');
+  var found = {}, m, re = /\[([^\]\n]+)\]/g;
+  while ((m = re.exec(src))) found['[' + m[1] + ']'] = true;
+  delete found[MISSING];
+  return Object.keys(found);
+}
+function highlightPh(html) {
+  return html.replace(/\[([^\]\n|]+)\](?!\()/g, '<span class="ph">[$1]</span>');
+}
+
+/* ═════════════════════════════════════════════════════════
+   RENDER
+   ═════════════════════════════════════════════════════════ */
+function completeness() {
+  var done = {
+    title: !!S.title.trim(),
+    due: !!dueDate(),
+    priority: !!S.priority,
+    ask: true,
+    why: !!S.why.trim(),
+    impact: !!impactText(),
+    links: S.links.some(function (l) { return l.url.trim(); })
+  };
+  var count = ['title', 'due', 'priority', 'ask', 'why', 'impact'].filter(function (k) { return done[k]; }).length;
+  return { done: done, count: count };
+}
+
+function renderPreview() {
+  var m = buildModel();
+  var html = S.format === 'rich'
+    ? '<div class="rich">' + fmtRich(m) + '</div>'
+    : '<pre>' + esc(fmtText(m, S.format)) + '</pre>';
+  $('preview').innerHTML = highlightPh(html);
+
+  var c = completeness();
+  var ph = findPlaceholders();
+  var days = daysUntilDue();
+  var checks = [];
+  if (!c.done.due) checks.push(['mb-danger', 'Pick a <strong>deadline date</strong> in step 02. It’s required before copying.']);
+  var names = { title: 'title', why: 'why', impact: 'impact' };
+  var missing = Object.keys(names).filter(function (k) { return !c.done[k]; }).map(function (k) { return names[k]; });
+  if (missing.length) checks.push(['mb-warn', 'Still needed: <strong>' + missing.join(', ') + '</strong>']);
+  if (ph.length) checks.push(['mb-warn', 'Replace placeholders: <strong>' + ph.map(esc).join(' ') + '</strong>']);
+  if (days !== null && days < 0) checks.push(['mb-danger', 'The deadline date is in the past.']);
+  if (!c.done.links && c.done.due) checks.push(['mb-blue', 'Add the ' + (S.cat === 'pr' ? 'PR' : 'Instaform') + ' link in step 07 so approvers can open it.']);
+  var ready = c.count === TOTAL_FIELDS && !ph.length && !(days !== null && days < 0);
+  if (ready && c.done.links) checks.push(['mb-info', 'Ready to send.']);
+  $('checks').innerHTML = checks.map(function (x) {
+    return '<div class="msg-box ' + x[0] + '"><div class="mdot"></div><div>' + x[1] + '</div></div>';
+  }).join('');
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-step]'), function (el) {
+    el.classList.toggle('done', !!c.done[el.getAttribute('data-step')]);
+  });
+  $('live-badge').className = 'live-badge' + (ready ? '' : ' idle');
+  $('live-badge-text').textContent = ready ? 'ready to send' : (!c.done.due ? 'date required' : c.count + '/' + TOTAL_FIELDS + ' ready');
+}
+
+function renderDueHints() {
+  var days = daysUntilDue();
+  var hint = $('due-hint');
+  var input = $('f-due');
+  input.classList.toggle('invalid', triedCopy && days === null);
+  if (days === null) {
+    hint.textContent = triedCopy ? 'A deadline date is required' : 'Required';
+    hint.className = 'hint' + (triedCopy ? ' err' : '');
+  } else if (days < 0) {
+    hint.textContent = 'This date has already passed'; hint.className = 'hint err';
+  } else {
+    var rel = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : 'In ' + days + ' days';
+    hint.textContent = rel + ' · ' + fmtDue(); hint.className = 'hint ok';
+  }
+  var note = '';
+  if (days !== null && days >= 0 && days <= 1 && (S.priority === 'low' || S.priority === 'medium')) {
+    note = '<div class="msg-box mb-warn"><div class="mdot"></div><div>The deadline is ' + (days === 0 ? 'today' : 'tomorrow') + '. Should this be High?' +
+           '<button type="button" class="inline" onclick="setPriority(\'high\')">Set High</button></div></div>';
+  }
+  $('priority-note').innerHTML = note;
+}
+
+function renderAsk() { $('ask-sentence').textContent = askSentence(); }
+
+function renderWhyHint() {
+  var n = sentenceCount(S.why);
+  var el = $('why-hint');
+  if (!S.why.trim()) { el.textContent = 'Required'; el.className = 'hint'; return; }
+  el.textContent = n + (n === 1 ? ' sentence' : ' sentences') + ' · 1–3 is ideal';
+  el.className = 'hint ' + (n <= 3 ? 'ok' : 'warn');
+}
+
+function renderType() {
+  $('cat-group').innerHTML = Object.keys(CATEGORIES).map(function (k) {
+    var c = CATEGORIES[k], on = S.cat === k;
+    return '<button type="button" role="radio" aria-checked="' + on + '" class="toggle-btn cat' + (on ? ' active' : '') +
+      '" onclick="applyPreset(\'' + k + '\', S.phase)"><span class="tb-main"><span>' + c.emoji + '</span>' + esc(c.label) +
+      '</span><span class="tb-sub">' + esc(c.sub) + '</span></button>';
+  }).join('');
+  $('sub-group').innerHTML = Object.keys(PHASES).map(function (k) {
+    var on = S.phase === k;
+    var label = (S.cat === 'instaform' && k === 'spinup') ? 'Initial web spinup' : PHASES[k].label;
+    return '<button type="button" role="radio" aria-checked="' + on + '" class="toggle-btn' + (on ? ' active' : '') +
+      '" onclick="applyPreset(S.cat, \'' + k + '\')"><span>' + PHASES[k].emoji + '</span>' + esc(label) + '</button>';
+  }).join('');
+  $('breadcrumb-type').textContent = (S.cat === 'pr' ? 'PR' : 'Instaform') + ' / ' + PHASES[S.phase].label;
+  var first = $('link-rows').querySelector('input[type="url"]');
+  if (first) first.placeholder = 'Paste the ' + (S.cat === 'pr' ? 'PR' : 'Instaform') + ' link';
+}
+
+function renderPriority() {
+  $('priority-group').innerHTML = Object.keys(PRIORITIES).map(function (k) {
+    var on = S.priority === k;
+    return '<button type="button" role="radio" aria-checked="' + on + '" class="toggle-btn p-' + k + (on ? ' active' : '') +
+           '" onclick="setPriority(\'' + k + '\')"><span class="pdot"></span>' + PRIORITIES[k].label + '</button>';
+  }).join('');
+}
+
+function renderImpacts() {
+  $('impact-chips').innerHTML = Object.keys(IMPACTS).map(function (k) {
+    var on = S.impacts.indexOf(k) !== -1;
+    return '<button type="button" class="chip' + (on ? ' active' : '') + '" aria-pressed="' + on +
+           '" onclick="toggleImpact(\'' + k + '\')">' + esc(IMPACTS[k].replace(/\.$/, '')) + '</button>';
+  }).join('');
+}
+
+function renderLinks() {
+  var noun = S.cat === 'pr' ? 'PR' : 'Instaform';
+  $('link-rows').innerHTML = S.links.map(function (l, i) {
+    var d = detectLink(l.url);
+    return '<div class="link-row">' +
+      '<span class="link-type' + (d.known ? ' known' : '') + '" id="lt-' + i + '">' + esc(d.type) + '</span>' +
+      '<input type="url" placeholder="' + (i === 0 ? 'Paste the ' + noun + ' link' : 'Paste another link') + '" value="' + esc(l.url) +
+        '" oninput="setLink(' + i + ',\'url\',this.value)" aria-label="Link URL">' +
+      '<input type="text" class="link-label" placeholder="' + esc(d.label || 'Label (optional)') + '" value="' + esc(l.label) +
+        '" id="ll-' + i + '" oninput="setLink(' + i + ',\'label\',this.value)" aria-label="Link label">' +
+      '<button type="button" class="icon-btn" onclick="removeLink(' + i + ')" aria-label="Remove link">' +
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' +
+      '</div>';
+  }).join('');
+}
+
+function renderFormat() {
+  Array.prototype.forEach.call($('format-seg').children, function (b) {
+    b.classList.toggle('active', b.getAttribute('data-fmt') === S.format);
+  });
+}
+
+function syncDom() {
+  Array.prototype.forEach.call(document.querySelectorAll('[data-f]'), function (el) {
+    var v = S[el.getAttribute('data-f')];
+    if (el.value !== v) el.value = v == null ? '' : v;
+  });
+  $('reason-custom-wrap').classList.toggle('hidden', S.reason !== 'custom');
+  renderLinks(); renderType(); renderPriority(); renderImpacts(); renderFormat();
+  update();
+}
+
+var saveTimer;
+function update() {
+  renderAsk(); renderWhyHint(); renderDueHints(); renderPreview();
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function () {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(S)); } catch (e) {}
+  }, 300);
+}
+
+/* ═════════════════════════════════════════════════════════
+   ACTIONS
+   ═════════════════════════════════════════════════════════ */
+function setPriority(k) { S.priority = k; renderPriority(); update(); }
+function toggleImpact(k) {
+  var i = S.impacts.indexOf(k);
+  if (i === -1) S.impacts.push(k); else S.impacts.splice(i, 1);
+  S.dirty = true; renderImpacts(); update();
+}
+function setLink(i, key, val) {
+  S.links[i][key] = val;
+  if (key === 'url') {
+    var d = detectLink(val), lt = $('lt-' + i), ll = $('ll-' + i);
+    lt.textContent = d.type; lt.className = 'link-type' + (d.known ? ' known' : '');
+    ll.placeholder = d.label || 'Label (optional)';
+  }
+  update();
+}
+function removeLink(i) {
+  S.links.splice(i, 1);
+  if (!S.links.length) S.links.push({ url: '', label: '' });
+  renderLinks(); update();
+}
+
+function applyPreset(cat, phase) {
+  if (cat === S.cat && phase === S.phase) return;
+  var p = PRESETS[typeKey(cat, phase)];
+  if (!p) return;
+  if (S.dirty && !confirm('Replace your edited title, why and impact with the default text for this request?\n\nYour date and links stay as they are.')) return;
+  S.cat = cat; S.phase = phase;
+  S.title = p.title; S.why = p.why; S.impacts = p.impacts.slice(); S.priority = p.priority;
+  S.reason = p.reason; S.reasonCustom = ''; S.dirty = false;
+  syncDom();
+}
+
+/* Quick date chips */
+function toDateInput(d) {
+  function p(n) { return (n < 10 ? '0' : '') + n; }
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+}
+function quickDates() {
+  function plus(n) { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + n); return d; }
+  var today = new Date().getDay();
+  var toFri = (5 - today + 7) % 7;
+  var list = [['Today', plus(0)], ['Tomorrow', plus(1)]];
+  if (toFri > 1) list.push(['This Fri', plus(toFri)]);
+  list.push(['Next Fri', plus(toFri + 7)]);
+  list.push(['In 2 weeks', plus(14)]);
+  return list;
+}
+function renderQuickDates() {
+  var list = quickDates();
+  $('quick-dates').innerHTML = list.map(function (q, i) {
+    return '<button type="button" class="chip quick" data-q="' + i + '">' + q[0] + '</button>';
+  }).join('');
+  Array.prototype.forEach.call($('quick-dates').children, function (b) {
+    b.onclick = function () {
+      S.due = toDateInput(list[+b.getAttribute('data-q')][1]);
+      $('f-due').value = S.due; update();
+    };
+  });
+}
+
+/* ═════════════════════════════════════════════════════════
+   CLIPBOARD
+   ═════════════════════════════════════════════════════════ */
+function toast(msg) {
+  var t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove('show'); }, 2000);
+}
+function flash(btn, text) {
+  var lbl = btn.querySelector('.lbl'); var orig = lbl.getAttribute('data-orig') || lbl.textContent;
+  lbl.setAttribute('data-orig', orig); lbl.textContent = text; btn.classList.add('copied');
+  clearTimeout(btn._h); btn._h = setTimeout(function () { lbl.textContent = orig; btn.classList.remove('copied'); }, 1500);
+}
+function fallbackCopy(text) {
+  try {
+    var ta = document.createElement('textarea'); ta.value = text;
+    ta.style.position = 'fixed'; ta.style.opacity = '0'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.select();
+    var ok = document.execCommand('copy'); document.body.removeChild(ta); return ok;
+  } catch (e) { return false; }
+}
+function copyText(text, html) {
+  if (html && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+    var item = new ClipboardItem({
+      'text/html':  new Blob([html], { type: 'text/html' }),
+      'text/plain': new Blob([text], { type: 'text/plain' })
+    });
+    return navigator.clipboard.write([item]).catch(function () { return copyText(text); });
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(text).catch(function () {
+      if (!fallbackCopy(text)) throw new Error('copy failed');
+    });
+  }
+  return fallbackCopy(text) ? Promise.resolve() : Promise.reject(new Error('copy failed'));
+}
+
+function requireDate() {
+  if (dueDate()) return true;
+  triedCopy = true; update();
+  var input = $('f-due');
+  input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(function () { input.focus(); }, 300);
+  toast('Pick a deadline date first');
+  return false;
+}
+
+function copyMessage() {
+  if (!requireDate()) return;
+  var m = buildModel();
+  var p = S.format === 'rich' ? copyText(fmtText(m, 'plain'), fmtRich(m)) : copyText(fmtText(m, S.format));
+  p.then(function () {
+    flash($('copy-msg'), 'Copied!');
+    toast(findPlaceholders().length ? 'Copied, but placeholders are still in the text' : 'Message copied');
+    countCopy();
+  }).catch(function () { toast('Copy blocked. Select the preview and press Ctrl+C'); });
+}
+
+function shareUrl() {
+  var data = JSON.parse(JSON.stringify(S)); delete data.dirty;
+  var enc = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  return location.origin + location.pathname + '#d=' + enc;
+}
+function loadFromHash() {
+  var m = location.hash.match(/#d=(.+)$/);
+  if (!m) return false;
+  try {
+    var data = JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    if (!CATEGORIES[data.cat] || !PHASES[data.phase]) return false;
+    S = Object.assign(freshState(data.cat, data.phase), data, { dirty: true });
+    history.replaceState(null, '', location.pathname);
+    setTimeout(function () { toast('Loaded a shared request'); }, 300);
+    return true;
+  } catch (e) { return false; }
+}
+
+/* ═════════════════════════════════════════════════════════
+   USAGE COUNTERS — Abacus (same service as Offset calculator)
+   ═════════════════════════════════════════════════════════ */
+var COUNTER_NS  = 'instacart-sda-toolbox';
+var KEY_VISITS  = 'approval-builder-visits';
+var KEY_COPIES  = 'approval-builder-copies';
+var ABACUS_BASE = 'https://abacus.jasoncameron.dev';
+
+function fmtCount(n) { return n == null ? '—' : Number(n).toLocaleString(); }
+function abacus(endpoint, key) {
+  return fetch(ABACUS_BASE + '/' + endpoint + '/' + COUNTER_NS + '/' + key, { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (d) { return d && typeof d.value === 'number' ? d.value : null; });
+}
+function showCount(pill, numId, v, bump) {
+  if (v == null) return;
+  $(numId).textContent = fmtCount(v);
+  var el = $(pill); el.classList.remove('is-hidden');
+  if (bump) { el.classList.add('bumped'); setTimeout(function () { el.classList.remove('bumped'); }, 900); }
+}
+function initCounters() {
+  abacus('hit', KEY_VISITS).then(function (v) { showCount('visit-pill', 'visit-count', v); })
+    .catch(function (e) { console.warn('[counter] visits failed:', e && e.message); });
+  abacus('get', KEY_COPIES).then(function (v) { showCount('action-pill', 'action-count', v); })
+    .catch(function (e) { console.warn('[counter] copies failed:', e && e.message); });
+}
+function countCopy() {
+  abacus('hit', KEY_COPIES).then(function (v) { showCount('action-pill', 'action-count', v, true); })
+    .catch(function (e) { console.warn('[counter] copy hit failed:', e && e.message); });
+}
+
+/* ═════════════════════════════════════════════════════════
+   INIT
+   ═════════════════════════════════════════════════════════ */
+function populateSelects() {
+  fillSelect($('f-reason'), REASONS, function (k, v) { return k === 'custom' ? v : v.charAt(0).toUpperCase() + v.slice(1); });
+}
+
+function bindInputs() {
+  var textFields = { title: 1, why: 1, impactExtra: 1 };
+  Array.prototype.forEach.call(document.querySelectorAll('[data-f]'), function (el) {
+    var f = el.getAttribute('data-f');
+    var handler = function () {
+      S[f] = el.value;
+      if (textFields[f]) S.dirty = true;
+      if (f === 'reason') $('reason-custom-wrap').classList.toggle('hidden', S.reason !== 'custom');
+      update();
+    };
+    el.addEventListener('input', handler);
+    el.addEventListener('change', handler);
+  });
+  Array.prototype.forEach.call($('format-seg').children, function (b) {
+    b.onclick = function () { S.format = b.getAttribute('data-fmt'); renderFormat(); update(); };
+  });
+  $('add-link').onclick = function () {
+    S.links.push({ url: '', label: '' }); renderLinks();
+    var inputs = $('link-rows').querySelectorAll('input[type="url"]'); inputs[inputs.length - 1].focus();
+  };
+  $('copy-msg').onclick = copyMessage;
+  $('copy-subject').onclick = function () {
+    copyText(emailSubject()).then(function () { flash($('copy-subject'), 'Copied!'); toast('Subject copied'); });
+  };
+  $('copy-share').onclick = function () {
+    copyText(shareUrl()).then(function () { flash($('copy-share'), 'Copied!'); toast('Share link copied'); });
+  };
+  $('clear-form').onclick = function () {
+    if (!confirm('Start a new request? This clears the current draft.')) return;
+    var fmt = S.format; S = freshState(S.cat, S.phase); S.format = fmt; triedCopy = false; syncDom();
+    toast('Started a new request');
+  };
+  document.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); copyMessage(); }
+  });
+}
+
+function restoreDraft() {
+  if (loadFromHash()) return;
+  try {
+    var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    if (saved && CATEGORIES[saved.cat] && PHASES[saved.phase]) S = Object.assign(freshState(saved.cat, saved.phase), saved);
+  } catch (e) {}
+}
+
+function loadRemotePresets() {
+  return fetch('approval-presets.json?t=' + Date.now())
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (data) {
+      if (data.presets) Object.keys(data.presets).forEach(function (k) {
+        PRESETS[k] = Object.assign({}, PRESETS[k] || {}, data.presets[k]);
+      });
+      syncDom();
+    })
+    .catch(function () { /* no presets file: built-in text is used */ });
+}
+
+(function init() {
+  restoreDraft();
+  populateSelects();
+  bindInputs();
+  renderQuickDates();
+  syncDom();
+  initCounters();
+  loadRemotePresets();
+})();
+</script>
+
+<script src="nav.js"></script>
+</body>
+</html>
