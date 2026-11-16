@@ -729,8 +729,10 @@ function detectLink(url) {
    MODEL → OUTPUT FORMATS
    ═════════════════════════════════════════════════════════ */
 var MISSING = '[missing]';
+function normUrl(u) { u = u.trim(); return /^https?:\/\//.test(u) ? u : 'https://' + u; }
 function buildModel() {
   var pri = PRIORITIES[S.priority];
+  var main = S.link.trim() ? normUrl(S.link) : '';
   return {
     title: S.title.trim() || MISSING,
     rows: [
@@ -740,9 +742,10 @@ function buildModel() {
       ['Why', S.why.trim() || MISSING],
       ['Impact if not approved', impactText() || MISSING]
     ],
-    links: [{ url: S.link, label: '' }].concat(S.links).filter(function (l) { return l.url.trim(); }).map(function (l) {
-      var url = l.url.trim();
-      if (!/^https?:\/\//.test(url)) url = 'https://' + url;
+    mainLabel: linkNoun() + ' link',               // "PR link" or "Instaform link"
+    mainUrl: main,
+    extras: S.links.filter(function (l) { return l.url.trim(); }).map(function (l) {
+      var url = normUrl(l.url);
       return { url: url, label: l.label.trim() || detectLink(url).label };
     })
   };
@@ -752,16 +755,15 @@ function fmtText(m, fmt) {
   var B = { slack: ['*', '*'], markdown: ['**', '**'], jira: ['*', '*'], plain: ['', ''] }[fmt];
   var out = [B[0] + 'Approval Request: ' + m.title + B[1]];
   m.rows.forEach(function (r) { out.push(B[0] + r[0] + ':' + B[1] + ' ' + r[1]); });
-  if (m.links.length) {
-    out.push(B[0] + 'Supporting links:' + B[1]);
-    m.links.forEach(function (l) {
+  out.push(B[0] + m.mainLabel + ':' + B[1] + ' ' + (m.mainUrl || MISSING));
+  if (m.extras.length) {
+    out.push(B[0] + 'Other links:' + B[1]);
+    m.extras.forEach(function (l) {
       if (fmt === 'markdown')   out.push('- [' + l.label + '](' + l.url + ')');
       else if (fmt === 'jira')  out.push('* [' + l.label + '|' + l.url + ']');
       else if (fmt === 'slack') out.push('• ' + l.label + ': ' + l.url);
       else                      out.push('- ' + l.label + ': ' + l.url);
     });
-  } else {
-    out.push(B[0] + 'Supporting links:' + B[1] + ' None');
   }
   return out.join('\n');
 }
@@ -769,12 +771,12 @@ function fmtText(m, fmt) {
 function fmtRich(m) {
   var h = '<p><b>Approval Request: ' + esc(m.title) + '</b></p>';
   m.rows.forEach(function (r) { h += '<p><b>' + esc(r[0]) + ':</b> ' + esc(r[1]) + '</p>'; });
-  if (m.links.length) {
-    h += '<p><b>Supporting links:</b></p><ul>';
-    m.links.forEach(function (l) { h += '<li><a href="' + esc(l.url) + '">' + esc(l.label) + '</a></li>'; });
+  h += '<p><b>' + esc(m.mainLabel) + ':</b> ' +
+       (m.mainUrl ? '<a href="' + esc(m.mainUrl) + '">' + esc(m.mainUrl) + '</a>' : MISSING) + '</p>';
+  if (m.extras.length) {
+    h += '<p><b>Other links:</b></p><ul>';
+    m.extras.forEach(function (l) { h += '<li><a href="' + esc(l.url) + '">' + esc(l.label) + '</a></li>'; });
     h += '</ul>';
-  } else {
-    h += '<p><b>Supporting links:</b> None</p>';
   }
   return h;
 }
