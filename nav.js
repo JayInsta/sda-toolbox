@@ -60,7 +60,6 @@
       '  justify-content: center;',
       '  height: 52px;',
       '  gap: 10px;',
-      '  max-width: 1400px;',
       '  margin: 0 auto;',
       '}',
 
@@ -90,7 +89,8 @@
 
       /* Link list */
       '#sda-links {',
-      '  display: flex; align-items: center; gap: 2px;',
+      '  display: flex; align-items: center; gap: 0;',
+      '  min-width: 0;',
       '  overflow-x: auto;',
       '  scrollbar-width: none;',
       '  -ms-overflow-style: none;',
@@ -98,7 +98,7 @@
       '#sda-links::-webkit-scrollbar { display: none; }',
 
       '.sda-link {',
-      '  padding: 6px 11px;',
+      '  padding: 6px 9px;',
       '  border-radius: 7px;',
       '  font-size: 12.5px; font-weight: 500;',
       '  color: var(--sda-text-3);',
@@ -168,8 +168,13 @@
       '}',
       '.sda-mobile-link span { font-size: 15px; opacity: 0.9; }',
 
-      /* Mobile breakpoint */
-      '@media (max-width: 720px) {',
+      /* Medium screens: drop the icons so all links still fit on one row */
+      '@media (max-width: 1440px) {',
+      '  .sda-link .sda-link-icon { display: none; }',
+      '  .sda-link { padding: 6px 8px; }',
+      '}',
+      /* Narrow screens: switch to the menu button (raised from 720px so links never get cut off) */
+      '@media (max-width: 1180px) {',
       '  #sda-links { display: none; }',
       '  #sda-menu-btn { display: block; }',
       '}',
@@ -209,6 +214,8 @@
 
     document.body.insertBefore(mobileMenu, document.body.firstChild);
     document.body.insertBefore(nav, mobileMenu);
+    var activeLink = nav.querySelector('.sda-link.active');
+    if (activeLink && activeLink.scrollIntoView) activeLink.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 
     /* Close mobile menu on outside click */
     document.addEventListener('click', function (e) {
