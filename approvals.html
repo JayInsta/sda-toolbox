@@ -370,7 +370,7 @@
 
   <div class="intro-card">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <div>Pick <strong>PR</strong>, <strong>Instaform</strong> or <strong>Carrot Ads PR</strong>, choose what you’re working on, set the deadline date, then copy the message into the thread. The form starts fresh on every refresh.</div>
+    <div>Enter the <strong>retailer banner</strong>, pick <strong>PR</strong>, <strong>Instaform</strong> or <strong>Carrot Ads PR</strong>, choose what you’re working on, set the deadline date, then copy the message into the thread. The form starts fresh on every refresh.</div>
   </div>
 
   <div class="layout">
@@ -382,10 +382,16 @@
         <div class="step-header">
           <div class="step-num">00</div>
           <div>
-            <div class="step-title">Request type</div>
+            <div class="step-title">Retailer and request type</div>
             <div class="step-sub">Sets the title, ask, why and impact for you</div>
           </div>
         </div>
+        <div class="field" style="margin-bottom:14px">
+          <label for="f-banner">Retailer banner<span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="f-banner" data-f="banner" placeholder="e.g. ABC" autocomplete="off" required aria-required="true">
+          <div class="hint" id="banner-hint">Required. Used in the title, ask and why. “banner” is added for you.</div>
+        </div>
+        <label class="dlabel" style="display:block;font-size:10.5px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;font-family:var(--mono)">Approval for</label>
         <div class="toggle-group" id="cat-group" role="radiogroup" aria-label="Approval for"></div>
         <div class="sub-wrap">
           <label>Working on</label>
@@ -574,35 +580,35 @@ var PHASES = {
 
 var PRESETS = {
   'pr-spinup': {
-    title: 'PR for web spinup',
-    ask: 'I’m requesting approval for this PR as we are working on the web spinup.',
-    why: 'Required to complete web spinup to meet sprint deadline.',
+    title: 'PR approval for {banner} web spinup',
+    ask: 'I’m requesting approval for this PR as we are working on the {banner} web spinup.',
+    why: 'Required to complete the {banner} web spinup to meet sprint deadline.',
     priority: 'medium', reason: 'sprint', impacts: ['spinup', 'sprint']
   },
   'pr-launch': {
-    title: 'PR for web launch',
-    ask: 'I’m requesting approval for this PR as we are working on the web launch.',
-    why: 'This approval is essential to complete web launch.',
+    title: 'PR approval for {banner} web launch',
+    ask: 'I’m requesting approval for this PR as we are working on the {banner} web launch.',
+    why: 'This approval is essential to complete the {banner} web launch.',
     priority: 'high', reason: 'launch', impacts: ['launch']
   },
   'instaform-spinup': {
-    title: 'Instaform for initial web spinup',
-    ask: 'I’m requesting approval for this Instaform for the initial web spinup.',
-    why: 'Required to complete web spinup to meet sprint deadline.',
+    title: 'Instaform approval for {banner} initial web spinup',
+    ask: 'I’m requesting approval for this Instaform for the {banner} initial web spinup.',
+    why: 'Required to complete the {banner} web spinup to meet sprint deadline.',
     priority: 'medium', reason: 'sprint', impacts: ['spinup', 'sprint']
   },
   'instaform-launch': {
-    title: 'Instaform for web launch',
-    ask: 'I’m requesting approval for this Instaform for the web launch.',
-    why: 'This approval is essential to complete web launch.',
+    title: 'Instaform approval for {banner} web launch',
+    ask: 'I’m requesting approval for this Instaform for the {banner} web launch.',
+    why: 'This approval is essential to complete the {banner} web launch.',
     priority: 'high', reason: 'launch', impacts: ['launch', 'retailer']
   }
 };
 
 PRESETS['ads'] = {
-  title: 'Carrot Ads PR for SFP Ads configuration',
-  ask: 'I’m requesting approval to merge this Carrot Ads PR so we can get Ads configured for SFP.',
-  why: 'This PR needs to be merged to get Ads configured for SFP.',
+  title: 'Carrot Ads PR approval for {banner} SFP Ads configuration',
+  ask: 'I’m requesting approval to merge this Carrot Ads PR so we can get Ads configured for {banner} on SFP.',
+  why: 'This PR needs to be merged to get Ads configured for {banner} on SFP.',
   priority: 'medium', reason: 'sprint', impacts: ['ads', 'sprint']
 };
 
@@ -628,7 +634,7 @@ var PRIORITIES = {
   urgent: { label: 'Urgent', emoji: '🔴' }
 };
 
-var TOTAL_FIELDS = 6;
+var TOTAL_FIELDS = 7;
 
 /* ═════════════════════════════════════════════════════════
    STATE
@@ -640,8 +646,8 @@ function freshState(cat, phase) {
   phase = PHASES[phase] ? phase : 'spinup';
   var p = PRESETS[typeKey(cat, phase)];
   return {
-    cat: cat, phase: phase, title: p.title, due: '', reason: p.reason, reasonCustom: '',
-    priority: p.priority, why: p.why, impacts: p.impacts.slice(), impactExtra: '',
+    banner: '', cat: cat, phase: phase, title: '', titleEdited: false, whyEdited: false, due: '', reason: p.reason, reasonCustom: '',
+    priority: p.priority, why: '', impacts: p.impacts.slice(), impactExtra: '',
     links: [{ url: '', label: '' }], format: 'rich', dirty: false
   };
 }
@@ -685,7 +691,20 @@ function daysUntilDue() {
   var t = new Date(); t.setHours(0, 0, 0, 0);
   return Math.round((d - t) / 864e5);
 }
-function askSentence() { return preset().ask; }
+var BANNER_PH = '[retailer banner]';
+function bannerText() {
+  var b = (S.banner || '').trim();
+  if (!b) return BANNER_PH;
+  return /\bbanner$/i.test(b) ? b : b + ' banner';
+}
+function tpl(t) { return String(t || '').replace(/\{banner\}/g, bannerText()); }
+/* Keep title and why in sync with the banner until the user edits them */
+function autoText() {
+  var p = preset();
+  if (!S.titleEdited) { S.title = tpl(p.title); var t = $('f-title'); if (t && t.value !== S.title) t.value = S.title; }
+  if (!S.whyEdited)   { S.why = tpl(p.why);     var w = $('f-why');   if (w && w.value !== S.why) w.value = S.why; }
+}
+function askSentence() { return tpl(preset().ask); }
 function impactText() {
   var parts = S.impacts.map(function (k) { return IMPACTS[k]; }).filter(Boolean);
   var extra = S.impactExtra.trim();
@@ -773,7 +792,7 @@ function findPlaceholders() {
   var src = [S.title, S.why, impactText()].join(' ');
   var found = {}, m, re = /\[([^\]\n]+)\]/g;
   while ((m = re.exec(src))) found['[' + m[1] + ']'] = true;
-  delete found[MISSING];
+  delete found[MISSING]; delete found[BANNER_PH];
   return Object.keys(found);
 }
 function highlightPh(html) {
@@ -785,6 +804,7 @@ function highlightPh(html) {
    ═════════════════════════════════════════════════════════ */
 function completeness() {
   var done = {
+    banner: !!S.banner.trim(),
     title: !!S.title.trim(),
     due: !!dueDate(),
     priority: !!S.priority,
@@ -793,7 +813,7 @@ function completeness() {
     impact: !!impactText(),
     links: S.links.some(function (l) { return l.url.trim(); })
   };
-  var count = ['title', 'due', 'priority', 'ask', 'why', 'impact'].filter(function (k) { return done[k]; }).length;
+  var count = ['banner', 'title', 'due', 'priority', 'ask', 'why', 'impact'].filter(function (k) { return done[k]; }).length;
   return { done: done, count: count };
 }
 
@@ -808,6 +828,7 @@ function renderPreview() {
   var ph = findPlaceholders();
   var days = daysUntilDue();
   var checks = [];
+  if (!c.done.banner) checks.push(['mb-danger', 'Enter the <strong>retailer banner</strong> at the top. It’s required before copying.']);
   if (!c.done.due) checks.push(['mb-danger', 'Pick a <strong>deadline date</strong> in step 02. It’s required before copying.']);
   var names = { title: 'title', why: 'why', impact: 'impact' };
   var missing = Object.keys(names).filter(function (k) { return !c.done[k]; }).map(function (k) { return names[k]; });
@@ -825,7 +846,7 @@ function renderPreview() {
     el.classList.toggle('done', !!c.done[el.getAttribute('data-step')]);
   });
   $('live-badge').className = 'live-badge' + (ready ? '' : ' idle');
-  $('live-badge-text').textContent = ready ? 'ready to send' : (!c.done.due ? 'date required' : c.count + '/' + TOTAL_FIELDS + ' ready');
+  $('live-badge-text').textContent = ready ? 'ready to send' : (!c.done.banner ? 'banner required' : !c.done.due ? 'date required' : c.count + '/' + TOTAL_FIELDS + ' ready');
 }
 
 function renderDueHints() {
@@ -848,6 +869,18 @@ function renderDueHints() {
            '<button type="button" class="inline" onclick="setPriority(\'high\')">Set High</button></div></div>';
   }
   $('priority-note').innerHTML = note;
+}
+
+function renderBannerHint() {
+  var missing = !S.banner.trim();
+  $('f-banner').classList.toggle('invalid', triedCopy && missing);
+  var h = $('banner-hint');
+  if (missing) {
+    h.textContent = triedCopy ? 'A retailer banner is required' : 'Required. Used in the title, ask and why. “banner” is added for you.';
+    h.className = 'hint' + (triedCopy ? ' err' : '');
+  } else {
+    h.textContent = 'Shows as “' + bannerText() + '”'; h.className = 'hint ok';
+  }
 }
 
 function renderAsk() { $('ask-sentence').textContent = askSentence(); }
@@ -930,7 +963,7 @@ function syncDom() {
 }
 
 function update() {
-  renderAsk(); renderWhyHint(); renderDueHints(); renderPreview();
+  autoText(); renderBannerHint(); renderAsk(); renderWhyHint(); renderDueHints(); renderPreview();
 }
 
 /* ═════════════════════════════════════════════════════════
@@ -961,9 +994,9 @@ function applyPreset(cat, phase) {
   if (typeKey(cat, phase) === typeKey(S.cat, S.phase)) return;
   var p = PRESETS[typeKey(cat, phase)];
   if (!p) return;
-  if (S.dirty && !confirm('Replace your edited title, why and impact with the default text for this request?\n\nYour date and links stay as they are.')) return;
+  if (S.dirty && !confirm('Replace your edited title, why and impact with the default text for this request?\n\nYour banner, date and links stay as they are.')) return;
   S.cat = cat; S.phase = phase;
-  S.title = p.title; S.why = p.why; S.impacts = p.impacts.slice(); S.priority = p.priority;
+  S.titleEdited = false; S.whyEdited = false; S.impacts = p.impacts.slice(); S.priority = p.priority;
   S.reason = p.reason; S.reasonCustom = ''; S.dirty = false;
   syncDom();
 }
@@ -1032,6 +1065,16 @@ function copyText(text, html) {
   return fallbackCopy(text) ? Promise.resolve() : Promise.reject(new Error('copy failed'));
 }
 
+function requireBanner() {
+  if (S.banner.trim()) return true;
+  triedCopy = true; update();
+  var input = $('f-banner');
+  input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(function () { input.focus(); }, 300);
+  toast('Enter the retailer banner first');
+  return false;
+}
+
 function requireDate() {
   if (dueDate()) return true;
   triedCopy = true; update();
@@ -1043,7 +1086,7 @@ function requireDate() {
 }
 
 function copyMessage() {
-  if (!requireDate()) return;
+  if (!requireBanner() || !requireDate()) return;
   var m = buildModel();
   var p = S.format === 'rich' ? copyText(fmtText(m, 'plain'), fmtRich(m)) : copyText(fmtText(m, S.format));
   p.then(function () {
@@ -1098,6 +1141,8 @@ function bindInputs() {
     var handler = function () {
       S[f] = el.value;
       if (textFields[f]) S.dirty = true;
+      if (f === 'title') S.titleEdited = true;
+      if (f === 'why') S.whyEdited = true;
       if (f === 'reason') $('reason-custom-wrap').classList.toggle('hidden', S.reason !== 'custom');
       update();
     };
@@ -1114,7 +1159,7 @@ function bindInputs() {
   $('copy-msg').onclick = copyMessage;
   $('clear-form').onclick = function () {
     if (!confirm('Start a new request? This clears the current draft.')) return;
-    var fmt = S.format; S = freshState(S.cat, S.phase); S.format = fmt; triedCopy = false; syncDom();
+    var fmt = S.format, banner = S.banner; S = freshState(S.cat, S.phase); S.format = fmt; S.banner = banner; triedCopy = false; syncDom();
     toast('Started a new request');
   };
   document.addEventListener('keydown', function (e) {
