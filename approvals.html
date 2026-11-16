@@ -210,6 +210,27 @@
     .hint.err { color: var(--danger); }
     .ask-auto { font-size: 14px; color: var(--text-1); margin-top: 0; }
 
+    .step.required-card { border-color: var(--accent-bd); }
+    .req-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .req-grid .field + .field { margin-top: 0; }
+    .req-grid .field.wide { grid-column: 1 / -1; }
+    .field-label {
+      display: block; font-size: 10.5px; font-weight: 600; color: var(--text-3); text-transform: uppercase;
+      letter-spacing: 0.06em; margin-bottom: 6px; font-family: var(--mono);
+    }
+    details.extras { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; }
+    details.extras[open] { border-color: var(--border-hov); }
+    details.extras > summary { list-style: none; cursor: pointer; padding: 16px 20px; display: flex; align-items: center; gap: 12px; user-select: none; }
+    details.extras > summary::-webkit-details-marker { display: none; }
+    details.extras > summary .chev { margin-left: auto; color: var(--text-4); transition: transform 0.15s; }
+    details.extras[open] > summary .chev { transform: rotate(180deg); }
+    details.extras > summary:hover .step-title { color: var(--accent); }
+    .extras-body { padding: 0 20px 18px; }
+    .extra-sec { padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--border); }
+    .extra-sec:first-child { border-top: none; margin-top: 0; padding-top: 0; }
+    .extra-sec > .field-label { margin-bottom: 8px; }
+    .opt-tag { font-family: var(--mono); font-size: 10px; color: var(--text-4); border: 1px solid var(--border); border-radius: 99px; padding: 1px 7px; margin-left: 6px; vertical-align: 1px; }
+
     /* ───────── FORMULA STRIP (generated sentence) ───────── */
     .formula-strip {
       background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 10px 13px;
@@ -339,7 +360,7 @@
     }
     @media (max-width: 640px) {
       .studio-shell { padding: 18px 14px 40px; }
-      .grid-2, .grid-ask { grid-template-columns: 1fr; }
+      .grid-2, .grid-ask, .req-grid { grid-template-columns: 1fr; }
       .toggle-group { flex-wrap: wrap; }
       .toggle-btn { flex: 1 1 40%; }
       .link-row { grid-template-columns: 1fr 34px; }
@@ -370,149 +391,119 @@
 
   <div class="intro-card">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <div>Enter the <strong>retailer banner</strong>, pick <strong>PR</strong>, <strong>Instaform</strong> or <strong>Carrot Ads PR</strong>, choose what you’re working on, set the deadline date, then copy the message into the thread. The form starts fresh on every refresh.</div>
+    <div>Pick the request type and fill in the <strong>retailer name</strong>, <strong>due date</strong> and <strong>link</strong>. That’s all that’s required. Then copy the message into the thread. The form starts fresh on every refresh.</div>
   </div>
 
   <div class="layout">
     <!-- ═══════════════ FORM ═══════════════ -->
     <section class="form-col" aria-label="Request details">
 
-      <!-- 00 TYPE -->
-      <div class="step">
+      <!-- 01 REQUIRED -->
+      <div class="step required-card">
         <div class="step-header">
-          <div class="step-num">00</div>
+          <div class="step-num" data-step="required">01</div>
           <div>
-            <div class="step-title">Retailer and request type</div>
-            <div class="step-sub">Sets the title, ask, why and impact for you</div>
+            <div class="step-title">Required</div>
+            <div class="step-sub">Only these fields are needed. Everything else is filled in for you.</div>
           </div>
         </div>
-        <div class="field" style="margin-bottom:14px">
-          <label for="f-banner">Retailer banner<span class="req" aria-hidden="true">*</span></label>
-          <input type="text" id="f-banner" data-f="banner" placeholder="e.g. ABC" autocomplete="off" required aria-required="true">
-          <div class="hint" id="banner-hint">Required. Used in the title, ask and why. “banner” is added for you.</div>
-        </div>
-        <label class="dlabel" style="display:block;font-size:10.5px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;font-family:var(--mono)">Approval for</label>
+
+        <span class="field-label">Approval for</span>
         <div class="toggle-group" id="cat-group" role="radiogroup" aria-label="Approval for"></div>
         <div class="sub-wrap">
           <label>Working on</label>
           <div class="toggle-group" id="sub-group" role="radiogroup" aria-label="Working on"></div>
         </div>
-      </div>
 
-      <!-- 01 TITLE -->
-      <div class="step">
-        <div class="step-header">
-          <div class="step-num" data-step="title">01</div>
-          <div>
-            <div class="step-title">Short title</div>
-            <div class="step-sub">Appears as “Approval Request: …” and as the email subject</div>
-          </div>
-        </div>
-        <div class="field">
-          <label for="f-title">Title</label>
-          <input type="text" id="f-title" data-f="title" placeholder="e.g. PR for web spinup" autocomplete="off">
-        </div>
-      </div>
-
-      <!-- 02 NEEDED BY -->
-      <div class="step">
-        <div class="step-header">
-          <div class="step-num" data-step="due">02</div>
-          <div>
-            <div class="step-title">Needed by<span class="req" aria-hidden="true">*</span></div>
-            <div class="step-sub">Required. The date approval is needed by, and why</div>
-          </div>
-        </div>
-        <div class="grid-2">
+        <div class="req-grid">
           <div class="field">
-            <label for="f-due">Deadline date<span class="req" aria-hidden="true">*</span></label>
+            <label for="f-banner">Retailer name<span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="f-banner" data-f="banner" placeholder="e.g. ABC" autocomplete="off" required aria-required="true">
+            <div class="hint" id="banner-hint"></div>
+          </div>
+          <div class="field">
+            <label for="f-due">Due date<span class="req" aria-hidden="true">*</span></label>
             <input type="date" id="f-due" data-f="due" required aria-required="true">
+            <div class="hint" id="due-hint"></div>
           </div>
-          <div class="field">
-            <label for="f-reason">Reason</label>
-            <select id="f-reason" data-f="reason"></select>
+          <div class="field wide" style="margin-top:-4px">
+            <div class="chip-row" id="quick-dates" style="margin-top:0"></div>
           </div>
-        </div>
-        <div class="field hidden" id="reason-custom-wrap">
-          <label for="f-reason-custom">Custom reason</label>
-          <input type="text" id="f-reason-custom" data-f="reasonCustom" placeholder="e.g. retailer go-live call">
-        </div>
-        <div class="chip-row" id="quick-dates"></div>
-        <div class="hint" id="due-hint"></div>
-      </div>
-
-      <!-- 03 PRIORITY -->
-      <div class="step">
-        <div class="step-header">
-          <div class="step-num done" data-step="priority">03</div>
-          <div>
-            <div class="step-title">Priority</div>
-            <div class="step-sub">Suggested from the request type and deadline</div>
+          <div class="field wide">
+            <label for="f-link" id="link-label">PR link<span class="req" aria-hidden="true">*</span></label>
+            <input type="url" id="f-link" data-f="link" placeholder="Paste the PR link" autocomplete="off" required aria-required="true">
+            <div class="hint" id="link-hint"></div>
           </div>
-        </div>
-        <div class="toggle-group" id="priority-group" role="radiogroup" aria-label="Priority"></div>
-        <div id="priority-note"></div>
-      </div>
-
-      <!-- 04 ASK -->
-      <div class="step">
-        <div class="step-header">
-          <div class="step-num done" data-step="ask">04</div>
-          <div>
-            <div class="step-title">Ask</div>
-            <div class="step-sub">Written for you from the request type</div>
-          </div>
-        </div>
-        <div class="formula-strip ask-auto" id="ask-sentence"></div>
-      </div>
-
-      <!-- 05 WHY -->
-      <div class="step">
-        <div class="step-header">
-          <div class="step-num" data-step="why">05</div>
-          <div>
-            <div class="step-title">Why</div>
-            <div class="step-sub">Prefilled from the request type. Edit it if you need to add context.</div>
-          </div>
-        </div>
-        <div class="field">
-          <label for="f-why">Business reason</label>
-          <textarea id="f-why" data-f="why" rows="3"></textarea>
-        </div>
-        <div class="hint" id="why-hint"></div>
-      </div>
-
-      <!-- 06 IMPACT -->
-      <div class="step">
-        <div class="step-header">
-          <div class="step-num" data-step="impact">06</div>
-          <div>
-            <div class="step-title">Impact if not approved</div>
-            <div class="step-sub">Pick what happens on a delay or a “no”, or write your own</div>
-          </div>
-        </div>
-        <div class="chip-row" id="impact-chips" style="margin-top:0"></div>
-        <div class="field" style="margin-top:12px">
-          <label for="f-impact-extra">Anything else</label>
-          <input type="text" id="f-impact-extra" data-f="impactExtra" placeholder="e.g. Retailer go-live moves to next month" autocomplete="off">
         </div>
       </div>
 
-      <!-- 07 LINKS -->
-      <div class="step">
-        <div class="step-header">
-          <div class="step-num" data-step="links">07</div>
+      <!-- 02 OPTIONAL EXTRAS -->
+      <details class="extras" id="extras">
+        <summary>
+          <div class="step-num">02</div>
           <div>
-            <div class="step-title">Supporting links</div>
-            <div class="step-sub">Paste the PR or Instaform link. Known links get short labels automatically.</div>
+            <div class="step-title">Optional extras</div>
+            <div class="step-sub">Title, priority, reason, why, impact and more links. Already filled in, so only open this to change something.</div>
+          </div>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="extras-body">
+
+          <div class="extra-sec">
+            <div class="field">
+              <label for="f-title">Title</label>
+              <input type="text" id="f-title" data-f="title" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="extra-sec">
+            <div class="field">
+              <label for="f-reason">Deadline reason</label>
+              <select id="f-reason" data-f="reason"></select>
+            </div>
+            <div class="field hidden" id="reason-custom-wrap">
+              <label for="f-reason-custom">Custom reason</label>
+              <input type="text" id="f-reason-custom" data-f="reasonCustom" placeholder="e.g. retailer go-live call">
+            </div>
+          </div>
+
+          <div class="extra-sec">
+            <span class="field-label">Priority</span>
+            <div class="toggle-group" id="priority-group" role="radiogroup" aria-label="Priority"></div>
+            <div id="priority-note"></div>
+          </div>
+
+          <div class="extra-sec">
+            <span class="field-label">Ask <span class="opt-tag">auto</span></span>
+            <div class="formula-strip ask-auto" id="ask-sentence"></div>
+          </div>
+
+          <div class="extra-sec">
+            <div class="field">
+              <label for="f-why">Why</label>
+              <textarea id="f-why" data-f="why" rows="2"></textarea>
+            </div>
+            <div class="hint" id="why-hint"></div>
+          </div>
+
+          <div class="extra-sec">
+            <span class="field-label">Impact if not approved</span>
+            <div class="chip-row" id="impact-chips" style="margin-top:0"></div>
+            <div class="field" style="margin-top:10px">
+              <input type="text" id="f-impact-extra" data-f="impactExtra" placeholder="Anything else (optional)" autocomplete="off" aria-label="Additional impact">
+            </div>
+          </div>
+
+          <div class="extra-sec">
+            <span class="field-label">More links</span>
+            <div id="link-rows"></div>
+            <button type="button" class="add-btn" id="add-link">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add link
+            </button>
           </div>
         </div>
-        <div id="link-rows"></div>
-        <button type="button" class="add-btn" id="add-link">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add link
-        </button>
-      </div>
+      </details>
     </section>
 
     <!-- ═══════════════ PREVIEW ═══════════════ -->
@@ -571,7 +562,7 @@
 var CATEGORIES = {
   pr:        { label: 'PR approval',        emoji: '🔀', sub: 'Code review for a PR' },
   instaform: { label: 'Instaform approval', emoji: '📝', sub: 'Sign-off on an Instaform' },
-  ads:       { label: 'Carrot Ads PR',      emoji: '🥕', sub: 'Ads configuration for SFP', noPhase: true, noun: 'Carrot Ads PR' }
+  ads:       { label: 'Carrot Ads PR',      emoji: '🥕', sub: 'Ads configuration for SFP', noPhase: true, noun: 'PR' }
 };
 var PHASES = {
   spinup: { label: 'Web spinup', emoji: '🌱' },
@@ -634,7 +625,7 @@ var PRIORITIES = {
   urgent: { label: 'Urgent', emoji: '🔴' }
 };
 
-var TOTAL_FIELDS = 7;
+var TOTAL_FIELDS = 3;
 
 /* ═════════════════════════════════════════════════════════
    STATE
@@ -646,9 +637,9 @@ function freshState(cat, phase) {
   phase = PHASES[phase] ? phase : 'spinup';
   var p = PRESETS[typeKey(cat, phase)];
   return {
-    banner: '', cat: cat, phase: phase, title: '', titleEdited: false, whyEdited: false, due: '', reason: p.reason, reasonCustom: '',
+    banner: '', link: '', cat: cat, phase: phase, title: '', titleEdited: false, whyEdited: false, due: '', reason: p.reason, reasonCustom: '',
     priority: p.priority, why: '', impacts: p.impacts.slice(), impactExtra: '',
-    links: [{ url: '', label: '' }], format: 'rich', dirty: false
+    links: [], format: 'rich', dirty: false
   };
 }
 var S = freshState();
@@ -749,7 +740,7 @@ function buildModel() {
       ['Why', S.why.trim() || MISSING],
       ['Impact if not approved', impactText() || MISSING]
     ],
-    links: S.links.filter(function (l) { return l.url.trim(); }).map(function (l) {
+    links: [{ url: S.link, label: '' }].concat(S.links).filter(function (l) { return l.url.trim(); }).map(function (l) {
       var url = l.url.trim();
       if (!/^https?:\/\//.test(url)) url = 'https://' + url;
       return { url: url, label: l.label.trim() || detectLink(url).label };
@@ -802,18 +793,11 @@ function highlightPh(html) {
 /* ═════════════════════════════════════════════════════════
    RENDER
    ═════════════════════════════════════════════════════════ */
+function linkOk() { return /^(https?:\/\/)?[^\s.]+\.[^\s]+$/.test(S.link.trim()); }
 function completeness() {
-  var done = {
-    banner: !!S.banner.trim(),
-    title: !!S.title.trim(),
-    due: !!dueDate(),
-    priority: !!S.priority,
-    ask: true,
-    why: !!S.why.trim(),
-    impact: !!impactText(),
-    links: S.links.some(function (l) { return l.url.trim(); })
-  };
-  var count = ['banner', 'title', 'due', 'priority', 'ask', 'why', 'impact'].filter(function (k) { return done[k]; }).length;
+  var done = { banner: !!S.banner.trim(), due: !!dueDate(), link: linkOk() };
+  done.required = done.banner && done.due && done.link;
+  var count = ['banner', 'due', 'link'].filter(function (k) { return done[k]; }).length;
   return { done: done, count: count };
 }
 
@@ -828,16 +812,14 @@ function renderPreview() {
   var ph = findPlaceholders();
   var days = daysUntilDue();
   var checks = [];
-  if (!c.done.banner) checks.push(['mb-danger', 'Enter the <strong>retailer banner</strong> at the top. It’s required before copying.']);
-  if (!c.done.due) checks.push(['mb-danger', 'Pick a <strong>deadline date</strong> in step 02. It’s required before copying.']);
-  var names = { title: 'title', why: 'why', impact: 'impact' };
-  var missing = Object.keys(names).filter(function (k) { return !c.done[k]; }).map(function (k) { return names[k]; });
-  if (missing.length) checks.push(['mb-warn', 'Still needed: <strong>' + missing.join(', ') + '</strong>']);
+  var reqNames = { banner: 'retailer name', due: 'due date', link: linkNoun() + ' link' };
+  var missing = Object.keys(reqNames).filter(function (k) { return !c.done[k]; }).map(function (k) { return reqNames[k]; });
+  if (missing.length) checks.push(['mb-danger', 'Required: <strong>' + missing.join(', ') + '</strong>']);
+  if (!S.title.trim() || !S.why.trim()) checks.push(['mb-warn', 'The title or why is empty. Open <strong>Optional extras</strong> to fill it in.']);
   if (ph.length) checks.push(['mb-warn', 'Replace placeholders: <strong>' + ph.map(esc).join(' ') + '</strong>']);
   if (days !== null && days < 0) checks.push(['mb-danger', 'The deadline date is in the past.']);
-  if (!c.done.links && c.done.due) checks.push(['mb-blue', 'Add the ' + linkNoun() + ' link in step 07 so approvers can open it.']);
   var ready = c.count === TOTAL_FIELDS && !ph.length && !(days !== null && days < 0);
-  if (ready && c.done.links) checks.push(['mb-info', 'Ready to send.']);
+  if (ready) checks.push(['mb-info', 'Ready to send.']);
   $('checks').innerHTML = checks.map(function (x) {
     return '<div class="msg-box ' + x[0] + '"><div class="mdot"></div><div>' + x[1] + '</div></div>';
   }).join('');
@@ -846,7 +828,7 @@ function renderPreview() {
     el.classList.toggle('done', !!c.done[el.getAttribute('data-step')]);
   });
   $('live-badge').className = 'live-badge' + (ready ? '' : ' idle');
-  $('live-badge-text').textContent = ready ? 'ready to send' : (!c.done.banner ? 'banner required' : !c.done.due ? 'date required' : c.count + '/' + TOTAL_FIELDS + ' ready');
+  $('live-badge-text').textContent = ready ? 'ready to send' : (c.count + '/' + TOTAL_FIELDS + ' required');
 }
 
 function renderDueHints() {
@@ -855,7 +837,7 @@ function renderDueHints() {
   var input = $('f-due');
   input.classList.toggle('invalid', triedCopy && days === null);
   if (days === null) {
-    hint.textContent = triedCopy ? 'A deadline date is required' : 'Required';
+    hint.textContent = triedCopy ? 'Due date is required' : '';
     hint.className = 'hint' + (triedCopy ? ' err' : '');
   } else if (days < 0) {
     hint.textContent = 'This date has already passed'; hint.className = 'hint err';
@@ -876,11 +858,25 @@ function renderBannerHint() {
   $('f-banner').classList.toggle('invalid', triedCopy && missing);
   var h = $('banner-hint');
   if (missing) {
-    h.textContent = triedCopy ? 'A retailer banner is required' : 'Required. Used in the title, ask and why. “banner” is added for you.';
+    h.textContent = triedCopy ? 'Retailer name is required' : '“banner” is added for you';
     h.className = 'hint' + (triedCopy ? ' err' : '');
   } else {
     h.textContent = 'Shows as “' + bannerText() + '”'; h.className = 'hint ok';
   }
+}
+
+function renderLinkField() {
+  var noun = linkNoun();
+  $('link-label').innerHTML = esc(noun) + ' link<span class="req" aria-hidden="true">*</span>';
+  $('f-link').placeholder = 'Paste the ' + noun + ' link';
+  var url = S.link.trim(), h = $('link-hint');
+  $('f-link').classList.toggle('invalid', triedCopy && !linkOk());
+  if (!url) { h.textContent = triedCopy ? noun + ' link is required' : ''; h.className = 'hint' + (triedCopy ? ' err' : ''); return; }
+  if (!linkOk()) { h.textContent = 'This doesn’t look like a link'; h.className = 'hint err'; return; }
+  var d = detectLink(url);
+  var isPR = d.type === 'PR', wantPR = noun === 'PR';
+  if (wantPR && !isPR) { h.textContent = 'This doesn’t look like a GitHub PR link. It will still be included.'; h.className = 'hint warn'; return; }
+  h.textContent = 'Shows as “' + d.label + '”'; h.className = 'hint ok';
 }
 
 function renderAsk() { $('ask-sentence').textContent = askSentence(); }
@@ -910,8 +906,6 @@ function renderType() {
   document.querySelector('.sub-wrap').classList.toggle('hidden', !!noPhase);
   $('breadcrumb-type').textContent = noPhase ? CATEGORIES[S.cat].label
     : (S.cat === 'pr' ? 'PR' : 'Instaform') + ' / ' + PHASES[S.phase].label;
-  var first = $('link-rows').querySelector('input[type="url"]');
-  if (first) first.placeholder = 'Paste the ' + linkNoun() + ' link';
 }
 
 function renderPriority() {
@@ -931,12 +925,11 @@ function renderImpacts() {
 }
 
 function renderLinks() {
-  var noun = linkNoun();
   $('link-rows').innerHTML = S.links.map(function (l, i) {
     var d = detectLink(l.url);
     return '<div class="link-row">' +
       '<span class="link-type' + (d.known ? ' known' : '') + '" id="lt-' + i + '">' + esc(d.type) + '</span>' +
-      '<input type="url" placeholder="' + (i === 0 ? 'Paste the ' + noun + ' link' : 'Paste another link') + '" value="' + esc(l.url) +
+      '<input type="url" placeholder="' + 'Paste a ticket, doc or other link' + '" value="' + esc(l.url) +
         '" oninput="setLink(' + i + ',\'url\',this.value)" aria-label="Link URL">' +
       '<input type="text" class="link-label" placeholder="' + esc(d.label || 'Label (optional)') + '" value="' + esc(l.label) +
         '" id="ll-' + i + '" oninput="setLink(' + i + ',\'label\',this.value)" aria-label="Link label">' +
@@ -963,7 +956,7 @@ function syncDom() {
 }
 
 function update() {
-  autoText(); renderBannerHint(); renderAsk(); renderWhyHint(); renderDueHints(); renderPreview();
+  autoText(); renderBannerHint(); renderLinkField(); renderAsk(); renderWhyHint(); renderDueHints(); renderPreview();
 }
 
 /* ═════════════════════════════════════════════════════════
@@ -986,7 +979,6 @@ function setLink(i, key, val) {
 }
 function removeLink(i) {
   S.links.splice(i, 1);
-  if (!S.links.length) S.links.push({ url: '', label: '' });
   renderLinks(); update();
 }
 
@@ -1071,7 +1063,7 @@ function requireBanner() {
   var input = $('f-banner');
   input.scrollIntoView({ behavior: 'smooth', block: 'center' });
   setTimeout(function () { input.focus(); }, 300);
-  toast('Enter the retailer banner first');
+  toast('Enter the retailer name first');
   return false;
 }
 
@@ -1081,12 +1073,22 @@ function requireDate() {
   var input = $('f-due');
   input.scrollIntoView({ behavior: 'smooth', block: 'center' });
   setTimeout(function () { input.focus(); }, 300);
-  toast('Pick a deadline date first');
+  toast('Pick a due date first');
+  return false;
+}
+
+function requireLink() {
+  if (linkOk()) return true;
+  triedCopy = true; update();
+  var input = $('f-link');
+  input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(function () { input.focus(); }, 300);
+  toast('Paste the ' + linkNoun() + ' link first');
   return false;
 }
 
 function copyMessage() {
-  if (!requireBanner() || !requireDate()) return;
+  if (!requireBanner() || !requireDate() || !requireLink()) return;
   var m = buildModel();
   var p = S.format === 'rich' ? copyText(fmtText(m, 'plain'), fmtRich(m)) : copyText(fmtText(m, S.format));
   p.then(function () {
