@@ -284,7 +284,7 @@
     .btn-primary:active { transform: scale(0.98); }
     .btn-primary.copied { background: var(--success); }
     .btn-ghost {
-      flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      flex: 1 1 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
       padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input);
       color: var(--text-3); font-size: 11.5px; font-weight: 600; font-family: var(--mono); transition: all 0.12s; white-space: nowrap;
     }
@@ -370,7 +370,7 @@
 
   <div class="intro-card">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <div>Pick <strong>PR</strong> or <strong>Instaform</strong>, choose what you’re working on, set the deadline date, then copy the message into the thread. Your draft is saved in this browser as you type.</div>
+    <div>Pick <strong>PR</strong> or <strong>Instaform</strong>, choose what you’re working on, set the deadline date, then copy the message into the thread. The form starts fresh on every refresh.</div>
   </div>
 
   <div class="layout">
@@ -529,14 +529,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             <span class="lbl">Copy message</span>
           </button>
-          <button type="button" class="btn-ghost" id="copy-subject" title="Copy an email subject line">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <span class="lbl">Subject</span>
-          </button>
-          <button type="button" class="btn-ghost" id="copy-share" title="Copy a link that opens this page with your fields filled in">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            <span class="lbl">Share link</span>
-          </button>
           <button type="button" class="btn-ghost danger" id="clear-form" title="Start a new request">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
             <span class="lbl">New</span>
@@ -584,7 +576,7 @@ var PRESETS = {
     title: 'PR for web spinup',
     ask: 'I’m requesting approval for this PR as we are working on the web spinup.',
     why: 'Required to complete web spinup to meet sprint deadline.',
-    priority: 'high', reason: 'sprint', impacts: ['spinup', 'sprint']
+    priority: 'medium', reason: 'sprint', impacts: ['spinup', 'sprint']
   },
   'pr-launch': {
     title: 'PR for web launch',
@@ -596,7 +588,7 @@ var PRESETS = {
     title: 'Instaform for initial web spinup',
     ask: 'I’m requesting approval for this Instaform for the initial web spinup.',
     why: 'Required to complete web spinup to meet sprint deadline.',
-    priority: 'high', reason: 'sprint', impacts: ['spinup', 'sprint']
+    priority: 'medium', reason: 'sprint', impacts: ['spinup', 'sprint']
   },
   'instaform-launch': {
     title: 'Instaform for web launch',
@@ -627,7 +619,6 @@ var PRIORITIES = {
   urgent: { label: 'Urgent', emoji: '🔴' }
 };
 
-var STORAGE_KEY = 'sda-approval-draft-v3';
 var TOTAL_FIELDS = 6;
 
 /* ═════════════════════════════════════════════════════════
@@ -766,13 +757,6 @@ function fmtRich(m) {
     h += '<p><b>Supporting links:</b> None</p>';
   }
   return h;
-}
-
-function emailSubject() {
-  var d = dueDate();
-  var when = d ? ' (by ' + d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) + ')' : '';
-  var pri = (S.priority === 'urgent' || S.priority === 'high') ? '[' + PRIORITIES[S.priority].label + '] ' : '';
-  return pri + 'Approval needed: ' + (S.title.trim() || 'request') + when;
 }
 
 function findPlaceholders() {
@@ -932,13 +916,8 @@ function syncDom() {
   update();
 }
 
-var saveTimer;
 function update() {
   renderAsk(); renderWhyHint(); renderDueHints(); renderPreview();
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(function () {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(S)); } catch (e) {}
-  }, 300);
 }
 
 /* ═════════════════════════════════════════════════════════
@@ -1061,24 +1040,6 @@ function copyMessage() {
   }).catch(function () { toast('Copy blocked. Select the preview and press Ctrl+C'); });
 }
 
-function shareUrl() {
-  var data = JSON.parse(JSON.stringify(S)); delete data.dirty;
-  var enc = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-  return location.origin + location.pathname + '#d=' + enc;
-}
-function loadFromHash() {
-  var m = location.hash.match(/#d=(.+)$/);
-  if (!m) return false;
-  try {
-    var data = JSON.parse(decodeURIComponent(escape(atob(m[1]))));
-    if (!CATEGORIES[data.cat] || !PHASES[data.phase]) return false;
-    S = Object.assign(freshState(data.cat, data.phase), data, { dirty: true });
-    history.replaceState(null, '', location.pathname);
-    setTimeout(function () { toast('Loaded a shared request'); }, 300);
-    return true;
-  } catch (e) { return false; }
-}
-
 /* ═════════════════════════════════════════════════════════
    USAGE COUNTERS — Abacus (same service as Offset calculator)
    ═════════════════════════════════════════════════════════ */
@@ -1138,12 +1099,6 @@ function bindInputs() {
     var inputs = $('link-rows').querySelectorAll('input[type="url"]'); inputs[inputs.length - 1].focus();
   };
   $('copy-msg').onclick = copyMessage;
-  $('copy-subject').onclick = function () {
-    copyText(emailSubject()).then(function () { flash($('copy-subject'), 'Copied!'); toast('Subject copied'); });
-  };
-  $('copy-share').onclick = function () {
-    copyText(shareUrl()).then(function () { flash($('copy-share'), 'Copied!'); toast('Share link copied'); });
-  };
   $('clear-form').onclick = function () {
     if (!confirm('Start a new request? This clears the current draft.')) return;
     var fmt = S.format; S = freshState(S.cat, S.phase); S.format = fmt; triedCopy = false; syncDom();
@@ -1152,14 +1107,6 @@ function bindInputs() {
   document.addEventListener('keydown', function (e) {
     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); copyMessage(); }
   });
-}
-
-function restoreDraft() {
-  if (loadFromHash()) return;
-  try {
-    var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-    if (saved && CATEGORIES[saved.cat] && PHASES[saved.phase]) S = Object.assign(freshState(saved.cat, saved.phase), saved);
-  } catch (e) {}
 }
 
 function loadRemotePresets() {
@@ -1175,7 +1122,7 @@ function loadRemotePresets() {
 }
 
 (function init() {
-  restoreDraft();
+  try { localStorage.removeItem('sda-approval-draft-v3'); } catch (e) {} // clear drafts saved by older versions
   populateSelects();
   bindInputs();
   renderQuickDates();
